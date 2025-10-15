@@ -118,6 +118,18 @@ export const questDatabase = [
         ],
         correctAnswer: 'Contract bazlı izole storage',
         explanation: 'Her contract kendi storage alanına sahiptir ve diğer contract\'lardan izole edilmiştir.'
+      },
+      {
+        id: 'soroban-5',
+        question: 'Soroban\'da transaction fee olarak ne kullanılır?',
+        choices: [
+          'ETH',
+          'BTC',
+          'Gas fee olarak XLM kullanılır',
+          'Sabit ücret'
+        ],
+        correctAnswer: 'Gas fee olarak XLM kullanılır',
+        explanation: 'Soroban\'da smart contract işlemleri için XLM (Stellar Lumens) gas fee olarak kullanılır.'
       }
     ],
     prerequisites: ['stellar-fundamentals'],
@@ -177,6 +189,18 @@ export const questDatabase = [
         ],
         correctAnswer: 'Likidite sağlarken token fiyat değişimlerinden kaynaklanan kayıp',
         explanation: 'Impermanent loss, AMM pool\'larında likidite sağlarken token fiyat değişimlerinden kaynaklanan geçici kayıptır.'
+      },
+      {
+        id: 'defi-5',
+        question: 'AMM protokolü ne anlama gelir?',
+        choices: [
+          'Automated Market Maker protokolü',
+          'Asset Management Module',
+          'Advanced Money Market',
+          'Automated Mining Machine'
+        ],
+        correctAnswer: 'AMM (Automated Market Maker) protokolü',
+        explanation: 'AMM, merkeziyetsiz borsalarda likidite sağlayarak otomatik fiyat belirleme yapan protokoldür.'
       }
     ],
     prerequisites: ['stellar-fundamentals'],
@@ -224,6 +248,30 @@ export const questDatabase = [
         ],
         correctAnswer: 'IPFS\'de',
         explanation: 'NFT metadata\'ları genellikle merkeziyetsiz IPFS ağında saklanır.'
+      },
+      {
+        id: 'nft-4',
+        question: 'NFT\'lerin benzersizliği nasıl sağlanır?',
+        choices: [
+          'Metadata hash ile',
+          'Sıralı numara ile',
+          'Renk kodu ile',
+          'Boyut ile'
+        ],
+        correctAnswer: 'Metadata hash ile',
+        explanation: 'NFT\'lerin benzersizliği metadata\'nın hash değeri ile sağlanır.'
+      },
+      {
+        id: 'nft-5',
+        question: 'SEP-005 nedir?',
+        choices: [
+          'Stellar\'ın yerel NFT standardı',
+          'Bir token standardı',
+          'Bir consensus algoritması',
+          'Bir cüzdan protokolü'
+        ],
+        correctAnswer: 'Stellar\'ın yerel NFT standardı',
+        explanation: 'SEP-005, Stellar ağında NFT\'lerin oluşturulması ve yönetimi için standart protokoldür.'
       }
     ],
     prerequisites: ['stellar-fundamentals'],
@@ -276,6 +324,30 @@ export const questDatabase = [
         ],
         correctAnswer: 'Transaction birden fazla operation içerebilir',
         explanation: 'Bir transaction içinde birden fazla operation bulunabilir ve hepsi atomik olarak işlenir.'
+      },
+      {
+        id: 'advanced-4',
+        question: 'Path payment\'in avantajı nedir?',
+        choices: [
+          'Path payment ile otomatik dönüşüm',
+          'Daha hızlı işlem',
+          'Daha az fee',
+          'Daha güvenli'
+        ],
+        correctAnswer: 'Path payment ile otomatik dönüşüm',
+        explanation: 'Path payment, farklı asset\'ler arasında otomatik dönüşüm yaparak kullanıcı deneyimini kolaylaştırır.'
+      },
+      {
+        id: 'advanced-5',
+        question: 'Multi-signature hesabın güvenlik avantajı nedir?',
+        choices: [
+          'Multi-signature hesap güvenliği',
+          'Daha hızlı işlem',
+          'Daha az fee',
+          'Daha fazla token'
+        ],
+        correctAnswer: 'Multi-signature hesap güvenliği',
+        explanation: 'Multi-sig hesaplar, tek bir private key\'in tehlikeye girmesi durumunda bile fonların güvende kalmasını sağlar.'
       }
     ],
     prerequisites: ['stellar-fundamentals', 'soroban-smart-contracts'],

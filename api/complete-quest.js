@@ -27,7 +27,8 @@ const QUEST_DATA = {
       { id: 'soroban-1', correctAnswer: 'Stellar üzerinde bir akıllı kontrat platformu' },
       { id: 'soroban-2', correctAnswer: 'Rust' },
       { id: 'soroban-3', correctAnswer: 'Smart contract\'ların Stellar ağı ile etkileşim kurmasını sağlayan fonksiyonlar' },
-      { id: 'soroban-4', correctAnswer: 'Contract bazlı izole storage' }
+      { id: 'soroban-4', correctAnswer: 'Contract bazlı izole storage' },
+      { id: 'soroban-5', correctAnswer: 'Gas fee olarak XLM kullanılır' }
     ]
   },
   'defi-protocols': {
@@ -36,7 +37,8 @@ const QUEST_DATA = {
       { id: 'defi-1', correctAnswer: 'Blockchain tabanlı finansal hizmetler' },
       { id: 'defi-2', correctAnswer: 'StellarSwap' },
       { id: 'defi-3', correctAnswer: 'Likidite sağlayarak token ödülleri kazanma' },
-      { id: 'defi-4', correctAnswer: 'Likidite sağlarken token fiyat değişimlerinden kaynaklanan kayıp' }
+      { id: 'defi-4', correctAnswer: 'Likidite sağlarken token fiyat değişimlerinden kaynaklanan kayıp' },
+      { id: 'defi-5', correctAnswer: 'AMM (Automated Market Maker) protokolü' }
     ]
   },
   'nft-ecosystem': {
@@ -44,7 +46,9 @@ const QUEST_DATA = {
     lessons: [
       { id: 'nft-1', correctAnswer: 'Non-Fungible Token' },
       { id: 'nft-2', correctAnswer: 'SEP-005' },
-      { id: 'nft-3', correctAnswer: 'IPFS\'de' }
+      { id: 'nft-3', correctAnswer: 'IPFS\'de' },
+      { id: 'nft-4', correctAnswer: 'Metadata hash ile' },
+      { id: 'nft-5', correctAnswer: 'Stellar\'ın yerel NFT standardı' }
     ]
   },
   'advanced-stellar': {
@@ -52,7 +56,9 @@ const QUEST_DATA = {
     lessons: [
       { id: 'advanced-1', correctAnswer: 'Çoklu imza gerektiren işlemler' },
       { id: 'advanced-2', correctAnswer: 'Farklı asset\'ler arasında otomatik dönüşüm yapan ödeme' },
-      { id: 'advanced-3', correctAnswer: 'Transaction birden fazla operation içerebilir' }
+      { id: 'advanced-3', correctAnswer: 'Transaction birden fazla operation içerebilir' },
+      { id: 'advanced-4', correctAnswer: 'Path payment ile otomatik dönüşüm' },
+      { id: 'advanced-5', correctAnswer: 'Multi-signature hesap güvenliği' }
     ]
   }
 };
