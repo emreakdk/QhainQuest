@@ -1,10 +1,12 @@
 // Vercel Serverless Function for Secure Quest Completion
 // This function handles the secure token distribution logic
 
-const { Server, Keypair, Asset, Operation, TransactionBuilder, Networks } = require('stellar-sdk');
+// Import stellar-sdk for CommonJS environment
+// Using StellarSdk.default.Server to correctly access the class from the ESM module in a CommonJS environment
+const StellarSdk = require('stellar-sdk');
 
 // Initialize Stellar server for testnet
-const server = new Server('https://horizon-testnet.stellar.org');
+const server = new StellarSdk.default.Server('https://horizon-testnet.stellar.org');
 
 // Quest validation data (should match frontend questData.js)
 const QUEST_DATA = {
@@ -204,23 +206,23 @@ async function performTokenPayment(userAddress, amount) {
     }
 
     // Create the custom asset
-    const customAsset = new Asset(TOKEN_CODE, TOKEN_ISSUER);
+    const customAsset = new StellarSdk.default.Asset(TOKEN_CODE, TOKEN_ISSUER);
 
     // Load the distributor account
-    const distributorKeypair = Keypair.fromSecret(DISTRIBUTOR_SECRET_KEY);
+    const distributorKeypair = StellarSdk.default.Keypair.fromSecret(DISTRIBUTOR_SECRET_KEY);
     const distributorAccount = await server.loadAccount(distributorKeypair.publicKey());
 
     // Create the payment operation
-    const paymentOperation = Operation.payment({
+    const paymentOperation = StellarSdk.default.Operation.payment({
       destination: userAddress,
       asset: customAsset,
       amount: amount.toString()
     });
 
     // Build the transaction
-    const transaction = new TransactionBuilder(distributorAccount, {
+    const transaction = new StellarSdk.default.TransactionBuilder(distributorAccount, {
       fee: '100', // Base fee
-      networkPassphrase: Networks.TESTNET
+      networkPassphrase: StellarSdk.default.Networks.TESTNET
     })
       .addOperation(paymentOperation)
       .setTimeout(30) // 30 seconds timeout
