@@ -1,7 +1,7 @@
 // Vercel Serverless Function for Secure Quest Completion
 // This function handles the secure token distribution logic
 
-import { Server, Keypair, Asset, Operation, TransactionBuilder, Networks } from 'stellar-sdk';
+const { Server, Keypair, Asset, Operation, TransactionBuilder, Networks } = require('stellar-sdk');
 
 // Initialize Stellar server for testnet
 const server = new Server('https://horizon-testnet.stellar.org');
