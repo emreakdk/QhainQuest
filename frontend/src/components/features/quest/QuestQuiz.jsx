@@ -23,7 +23,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
-  const [wrongAnswers, setWrongAnswers] = useState([]); // Yanlış cevaplar için
+  const [wrongAnswers, setWrongAnswers] = useState([]);
   const [showWrongAnswers, setShowWrongAnswers] = useState(false);
   const [currentWrongIndex, setCurrentWrongIndex] = useState(0);
   const [showCelebration, setShowCelebration] = useState(false);
@@ -63,53 +63,46 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
     };
   }, []);
 
-  // Yanlış şıklar oluştur
+  // Yanlış cevaplar oluştur
   const generateIncorrectAnswers = (correctAnswer) => {
     const answerType = detectAnswerType(correctAnswer);
-    const incorrectAnswers = [];
+    let incorrectAnswers = [];
 
     switch (answerType) {
       case 'protocol':
-        incorrectAnswers.push(
-          'Proof of Work (PoW)',
-          'Proof of Stake (PoS)',
-          'Delegated Proof of Stake (DPoS)'
-        );
+        incorrectAnswers = [
+          'Proof of Work',
+          'Proof of Stake', 
+          'Delegated Proof of Stake'
+        ];
         break;
       case 'time':
-        incorrectAnswers.push(
-          '10-15 saniye',
-          '1-2 dakika',
-          '5-10 dakika'
-        );
+        incorrectAnswers = [
+          '5 saniye',
+          '30 saniye',
+          '2 dakika'
+        ];
         break;
       case 'token':
-        incorrectAnswers.push(
-          'ETH (Ethereum)',
-          'BTC (Bitcoin)',
-          'ADA (Cardano)'
-        );
+        incorrectAnswers = [
+          'Bitcoin',
+          'Ethereum',
+          'Litecoin'
+        ];
         break;
       case 'language':
-        incorrectAnswers.push(
+        incorrectAnswers = [
           'JavaScript',
           'Python',
           'Go'
-        );
-        break;
-      case 'concept':
-        incorrectAnswers.push(
-          'Merkle Tree',
-          'Hash Function',
-          'Digital Signature'
-        );
+        ];
         break;
       default:
-        incorrectAnswers.push(
-          'Seçenek A',
+        incorrectAnswers = [
+          'Seçenek A', 
           'Seçenek B', 
           'Seçenek C'
-        );
+        ];
     }
 
     return incorrectAnswers.slice(0, 3);
@@ -129,51 +122,40 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
     // Quest verilerini yükle
     const loadQuest = async () => {
       try {
-        // Mock quest data - 4 şıklı sorular ile
+        // Mock quest verisi oluştur
         const mockQuest = {
           id: questId,
-          name: "Stellar Temelleri",
-          description: "Stellar blockchain'in temel kavramlarını öğrenin.",
+          name: "Stellar Blockchain Temelleri",
+          description: "Stellar blockchain'in temel kavramlarını öğrenin",
           lessons: [
             {
               id: 0,
-              question: "Stellar ağında işlemler hangi konsensüs algoritması ile doğrulanır?",
-              correctAnswer: "Stellar Consensus Protocol (SCP)"
-            },
-            {
-              id: 1,
-              question: "Stellar'da bir işlem kaç saniyede onaylanır?",
+              question: "Stellar blockchain'de işlem onay süresi ne kadardır?",
               correctAnswer: "3-5 saniye"
             },
             {
+              id: 1,
+              question: "Stellar'da kullanılan consensus algoritması nedir?",
+              correctAnswer: "Stellar Consensus Protocol"
+            },
+            {
               id: 2,
-              question: "Stellar ağında kullanılan native token'ın adı nedir?",
-              correctAnswer: "XLM (Lumen)"
-            },
-            {
-              id: 3,
-              question: "Soroban hangi programlama dili ile yazılır?",
+              question: "Stellar'da akıllı kontratlar hangi dilde yazılır?",
               correctAnswer: "Rust"
-            },
-            {
-              id: 4,
-              question: "Stellar'da bir hesap oluşturmak için minimum kaç XLM gerekir?",
-              correctAnswer: "1 XLM"
             }
           ],
           rewardAmount: 100,
-          certificateNftUrl: 'https://ipfs.io/ipfs/QmMockCert'
+          certificateNftUrl: "https://ipfs.io/ipfs/QmStellarBasics"
         };
 
-        // Her ders için 4 şıklı soru oluştur
-        const enhancedLessons = mockQuest.lessons.map(lesson => ({
-          ...lesson,
-          ...generateMultipleChoice(lesson.question, lesson.correctAnswer)
-        }));
+        // Her ders için multiple choice oluştur
+        const lessonsWithChoices = mockQuest.lessons.map(lesson => 
+          generateMultipleChoice(lesson.question, lesson.correctAnswer)
+        );
 
         setQuest({
           ...mockQuest,
-          lessons: enhancedLessons
+          lessons: lessonsWithChoices
         });
         
         // Kullanıcının mevcut ilerlemesini al
@@ -250,49 +232,17 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
   const handleNextWrongAnswer = () => {
     if (currentWrongIndex < wrongAnswers.length - 1) {
       setCurrentWrongIndex(currentWrongIndex + 1);
-      setSelectedAnswer(null);
-      setShowResult(false);
     } else {
-      // Tüm yanlış cevaplar tekrar edildi
       setShowWrongAnswers(false);
       setWrongAnswers([]);
       setCurrentWrongIndex(0);
-      setSelectedAnswer(null);
-      setShowResult(false);
-    }
-  };
-
-  const handleContinueFromWrong = () => {
-    setShowResult(false);
-    setSelectedAnswer(null);
-    
-    // Yanlış cevaplar varsa onları göster
-    if (wrongAnswers.length > 0) {
-      setShowWrongAnswers(true);
-      setCurrentWrongIndex(0);
-    } else {
-      // Sonraki derse geç
-      if (currentLessonIndex < quest.lessons.length - 1) {
-        setCurrentLessonIndex(currentLessonIndex + 1);
-      } else {
-        onComplete?.();
-      }
     }
   };
 
   const handleSkipWrongAnswers = () => {
-    setWrongAnswers([]);
     setShowWrongAnswers(false);
+    setWrongAnswers([]);
     setCurrentWrongIndex(0);
-    setSelectedAnswer(null);
-    setShowResult(false);
-    
-    // Sonraki derse geç
-    if (currentLessonIndex < quest.lessons.length - 1) {
-      setCurrentLessonIndex(currentLessonIndex + 1);
-    } else {
-      onComplete?.();
-    }
   };
 
   // Yanlış cevapları tekrar etme modu
@@ -306,99 +256,73 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-2xl font-bold text-red-600 dark:text-red-400">
-                  🔄 {t('quiz.wrongAnswers')}
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+                  {t('quiz.wrongAnswers')}
                 </h2>
-                <p className="text-slate-600 dark:text-slate-300">
-                  {t('quiz.question')} {currentWrongIndex + 1} / {wrongAnswers.length}
+                <p className="text-slate-700 dark:text-slate-300">
+                  {t('quiz.wrongAnswersDesc')}
                 </p>
               </div>
-              <Button variant="ghost" onClick={handleSkipWrongAnswers} className="cursor-pointer">
-                ✕
-              </Button>
+              <Badge variant="warning" className="text-sm">
+                {currentWrongIndex + 1} / {wrongAnswers.length}
+              </Badge>
             </div>
           </CardHeader>
-        </Card>
-
-        {/* Yanlış cevap sorusu */}
-        <Card className="mb-6">
-          <CardContent className="p-8">
-            <div className="text-center">
-              <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-6">
-                {wrongLesson.lesson.question}
-              </h3>
-
-              {!showResult ? (
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 gap-3">
-                    {wrongLesson.lesson.choices.map((choice, index) => (
-                      <button
-                        key={index}
-                        onClick={() => handleAnswerSelect(index)}
-                        className={`p-4 rounded-lg border-2 text-left transition-all cursor-pointer ${
-                          selectedAnswer === index
-                            ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20'
-                            : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'
-                        }`}
-                      >
-                        <div className="flex items-center">
-                          <div className={`w-6 h-6 rounded-full border-2 mr-3 ${
-                            selectedAnswer === index
-                              ? 'border-indigo-500 bg-indigo-500'
-                              : 'border-slate-300 dark:border-slate-600'
-                          }`}>
-                            {selectedAnswer === index && (
-                              <div className="w-full h-full rounded-full bg-white scale-50"></div>
-                            )}
-                          </div>
-                          <span className="text-slate-900 dark:text-white">{choice}</span>
+          <CardContent>
+            <div className="space-y-6">
+              <div className="p-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg">
+                <h3 className="text-lg font-semibold text-red-800 dark:text-red-200 mb-4">
+                  {wrongLesson.lesson.question}
+                </h3>
+                <div className="space-y-3">
+                  {wrongLesson.lesson.choices.map((choice, index) => (
+                    <div
+                      key={index}
+                      className={`p-3 rounded-lg border-2 ${
+                        index === wrongLesson.wrongAnswer
+                          ? 'border-red-500 bg-red-100 dark:bg-red-800/30'
+                          : index === wrongLesson.lesson.choices.indexOf(wrongLesson.correctAnswer)
+                          ? 'border-green-500 bg-green-100 dark:bg-green-800/30'
+                          : 'border-slate-200 dark:border-slate-600'
+                      }`}
+                    >
+                      <div className="flex items-center">
+                        <div className={`w-6 h-6 rounded-full border-2 mr-3 ${
+                          index === wrongLesson.wrongAnswer
+                            ? 'border-red-500 bg-red-500'
+                            : index === wrongLesson.lesson.choices.indexOf(wrongLesson.correctAnswer)
+                            ? 'border-green-500 bg-green-500'
+                            : 'border-slate-300 dark:border-slate-600'
+                        }`}>
+                          {index === wrongLesson.wrongAnswer && (
+                            <div className="w-full h-full rounded-full bg-white scale-50">❌</div>
+                          )}
+                          {index === wrongLesson.lesson.choices.indexOf(wrongLesson.correctAnswer) && (
+                            <div className="w-full h-full rounded-full bg-white scale-50">✅</div>
+                          )}
                         </div>
-                      </button>
-                    ))}
-                  </div>
-                  
-                  <Button
-                    onClick={handleSubmitAnswer}
-                    disabled={selectedAnswer === null || isSubmitting}
-                    loading={isSubmitting}
-                    size="lg"
-                    className="w-full cursor-pointer"
-                  >
-                    {isSubmitting ? t('quiz.submitting') : t('quiz.submitAnswer')}
-                  </Button>
-                </div>
-              ) : (
-                <div className={`p-6 rounded-lg ${
-                  isCorrect 
-                    ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700' 
-                    : 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700'
-                }`}>
-                  <div className="text-center">
-                    <div className={`text-4xl mb-4 ${isCorrect ? 'text-green-500' : 'text-red-500'}`}>
-                      {isCorrect ? '✅' : '❌'}
+                        <span className="text-slate-900 dark:text-white">{choice}</span>
+                      </div>
                     </div>
-                    <h4 className={`text-xl font-semibold mb-2 ${
-                      isCorrect ? 'text-green-800 dark:text-green-200' : 'text-red-800 dark:text-red-200'
-                    }`}                    >
-                      {isCorrect ? t('quiz.correct') : t('quiz.incorrect')}
-                    </h4>
-                    {!isCorrect && (
-                      <p className="text-slate-600 dark:text-slate-300 mb-4">
-                        {t('quiz.correctAnswer')}: <strong>{wrongLesson.lesson.correctAnswer}</strong>
-                      </p>
-                    )}
-                    <div className="flex gap-3 justify-center">
-                      <Button
-                        onClick={handleNextWrongAnswer}
-                        variant={isCorrect ? 'primary' : 'outline'}
-                        className="cursor-pointer"
-                      >
-                        {isLastWrong ? t('common.save') : t('common.next')}
-                      </Button>
-                    </div>
-                  </div>
+                  ))}
                 </div>
-              )}
+              </div>
+              
+              <div className="flex gap-3">
+                <Button
+                  onClick={handleSkipWrongAnswers}
+                  variant="outline"
+                  className="flex-1 cursor-pointer"
+                >
+                  {t('quiz.skip')}
+                </Button>
+                <Button
+                  onClick={handleNextWrongAnswer}
+                  className="flex-1 cursor-pointer"
+                >
+                  {isLastWrong ? t('quiz.finish') : t('quiz.next')}
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -423,36 +347,27 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
           <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
             {t('celebration.title')}
           </h2>
-          <p className="text-slate-600 dark:text-slate-300 mb-6">
+          <p className="text-slate-700 dark:text-slate-300 mb-6">
             {t('celebration.message')}
           </p>
-          <div className="space-y-3 mb-6">
-            <div className="flex items-center justify-center space-x-2">
-              <span className="text-green-500">✓</span>
-              <span className="text-slate-700 dark:text-slate-300">{quest.name}</span>
+          <div className="space-y-4">
+            <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-700 rounded-lg">
+              <span className="text-slate-600 dark:text-slate-300">{t('celebration.tokensEarned')}</span>
+              <span className="font-bold text-slate-900 dark:text-white">{quest.rewardAmount || 100}</span>
             </div>
-            <div className="flex items-center justify-center space-x-2">
-              <span className="text-yellow-500">💰</span>
-              <span className="text-slate-700 dark:text-slate-300">{quest.rewardAmount || 100} {t('celebration.tokensEarned')}</span>
-            </div>
-            <div className="flex items-center justify-center space-x-2">
-              <span className="text-purple-500">🏆</span>
-              <span className="text-slate-700 dark:text-slate-300">{t('celebration.certificateEarned')}</span>
+            <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-700 rounded-lg">
+              <span className="text-slate-600 dark:text-slate-300">{t('celebration.certificate')}</span>
+              <span className="font-bold text-slate-900 dark:text-white">
+                {(quest.certificateNftUrl || quest.nftUrl) ? '✓' : '✗'}
+              </span>
             </div>
           </div>
-          <div className="flex gap-3 justify-center">
-            <Button
-              onClick={() => {
-                setShowCelebration(false);
-                onComplete?.();
-              }}
-              variant="primary"
-              size="lg"
-              className="cursor-pointer"
-            >
-              {t('celebration.continue')}
-            </Button>
-          </div>
+          <Button
+            onClick={onComplete}
+            className="w-full mt-6 cursor-pointer"
+          >
+            {t('celebration.continue')}
+          </Button>
         </div>
       </div>
     );
@@ -479,47 +394,52 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
                 {quest.description}
               </p>
             </div>
-            <Button variant="ghost" onClick={onClose} className="cursor-pointer">
-              ✕
+            <Button
+              onClick={onClose}
+              variant="outline"
+              size="sm"
+              className="cursor-pointer"
+            >
+              {t('quiz.close')}
             </Button>
           </div>
         </CardHeader>
-      </Card>
+        <CardContent>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-4">
+              <div className="text-sm text-slate-600 dark:text-slate-400">
+                {t('quiz.progress')}
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-32 bg-slate-200 dark:bg-slate-700 rounded-full h-2">
+                  <div 
+                    className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${((currentLessonIndex + 1) / quest.lessons.length) * 100}%` }}
+                  ></div>
+                </div>
+                <span className="text-sm font-medium text-slate-900 dark:text-white">
+                  {currentLessonIndex + 1} / {quest.lessons.length}
+                </span>
+              </div>
+            </div>
+            <div className="text-sm text-slate-600 dark:text-slate-400">
+              {t('quiz.timeEstimate')}: {quest.lessons.length * 2} {t('quiz.minutes')}
+            </div>
+          </div>
 
-      {/* Progress */}
-      <div className="mb-6">
-        <div className="flex justify-between text-sm mb-2">
-          <span className="text-slate-700 dark:text-slate-400">
-            {t('quiz.lesson')} {currentLessonIndex + 1} / {quest.lessons.length}
-          </span>
-          <span className="text-slate-700 dark:text-slate-400">
-            {Math.round(((currentLessonIndex + 1) / quest.lessons.length) * 100)}% {t('quiz.completed')}
-          </span>
-        </div>
-        <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-3">
-          <div 
-            className="bg-gradient-to-r from-indigo-500 to-purple-600 h-3 rounded-full transition-all duration-300"
-            style={{ width: `${((currentLessonIndex + 1) / quest.lessons.length) * 100}%` }}
-          ></div>
-        </div>
-      </div>
-
-      {/* Question Card */}
-      <Card className="mb-6">
-        <CardContent className="p-8">
-          <div className="text-center">
-            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-6">
-              {currentLesson.question}
-            </h3>
-
-            {!showResult ? (
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 gap-3">
+          <div className="space-y-6">
+            <div className="p-6 bg-slate-50 dark:bg-slate-800 rounded-lg">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
+                {currentLesson.question}
+              </h3>
+              
+              {!showResult ? (
+                <div className="space-y-3">
                   {currentLesson.choices.map((choice, index) => (
                     <button
                       key={index}
                       onClick={() => handleAnswerSelect(index)}
-                      className={`p-4 rounded-lg border-2 text-left transition-all cursor-pointer ${
+                      className={`w-full p-4 text-left rounded-lg border-2 transition-all cursor-pointer ${
                         selectedAnswer === index
                           ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20'
                           : 'border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500'
@@ -539,80 +459,63 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
                       </div>
                     </button>
                   ))}
+                  
+                  <Button
+                    onClick={handleSubmitAnswer}
+                    disabled={selectedAnswer === null || isSubmitting}
+                    loading={isSubmitting}
+                    size="lg"
+                    className="w-full cursor-pointer"
+                  >
+                    {isSubmitting ? t('quiz.submitting') : t('quiz.submitAnswer')}
+                  </Button>
                 </div>
-                
-                <Button
-                  onClick={handleSubmitAnswer}
-                  disabled={selectedAnswer === null || isSubmitting}
-                  loading={isSubmitting}
-                  size="lg"
-                  className="w-full cursor-pointer"
-                >
-                  {isSubmitting ? t('quiz.submitting') : t('quiz.submitAnswer')}
-                </Button>
-              </div>
-            ) : (
-              <div className={`p-6 rounded-lg ${
-                isCorrect 
-                  ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700' 
-                  : 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700'
-              }`}>
-                <div className="text-center">
-                  <div className={`text-4xl mb-4 ${isCorrect ? 'text-green-500' : 'text-red-500'}`}>
-                    {isCorrect ? '✅' : '❌'}
-                  </div>
-                  <h4 className={`text-xl font-semibold mb-2 ${
-                    isCorrect ? 'text-green-800 dark:text-green-200' : 'text-red-800 dark:text-red-200'
-                  }`}                    >
+              ) : (
+                <div className={`p-6 rounded-lg ${
+                  isCorrect 
+                    ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700' 
+                    : 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700'
+                }`}>
+                  <div className="text-center">
+                    <div className={`text-4xl mb-4 ${isCorrect ? 'text-green-500' : 'text-red-500'}`}>
+                      {isCorrect ? '✅' : '❌'}
+                    </div>
+                    <h4 className={`text-xl font-semibold mb-2 ${
+                      isCorrect ? 'text-green-800 dark:text-green-200' : 'text-red-800 dark:text-red-200'
+                    }`}>
                       {isCorrect ? t('quiz.correct') : t('quiz.incorrect')}
                     </h4>
+                    <p className={`text-sm ${
+                      isCorrect ? 'text-green-700 dark:text-green-300' : 'text-red-700 dark:text-red-300'
+                    }`}>
+                      {isCorrect ? t('quiz.greatJob') : t('quiz.tryAgain')}
+                    </p>
                     {!isCorrect && (
-                      <p className="text-slate-600 dark:text-slate-300 mb-4">
-                        {t('quiz.correctAnswer')}: <strong>{currentLesson.correctAnswer}</strong>
-                      </p>
-                    )}
-                  <div className="flex gap-3 justify-center">
-                    {isCorrect ? (
-                      <Button
-                        onClick={() => {
-                          setShowResult(false);
-                          setSelectedAnswer(null);
-                          if (currentLessonIndex < quest.lessons.length - 1) {
-                            setCurrentLessonIndex(currentLessonIndex + 1);
-                          } else {
-                            onComplete?.();
-                          }
-                        }}
-                        variant="primary"
-                        className="cursor-pointer"
-                      >
-                        {currentLessonIndex < quest.lessons.length - 1 ? t('quiz.nextLesson') : t('quiz.completeQuest')}
-                      </Button>
-                    ) : (
-                      <Button
-                        onClick={handleContinueFromWrong}
-                        variant="primary"
-                        className="cursor-pointer"
-                      >
-                        {t('quiz.continue')}
-                      </Button>
+                      <div className="mt-4 p-4 bg-white dark:bg-slate-800 rounded-lg">
+                        <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
+                          {t('quiz.correctAnswer')}:
+                        </p>
+                        <p className="font-medium text-slate-900 dark:text-white">
+                          {currentLesson.correctAnswer}
+                        </p>
+                      </div>
                     )}
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Quest Info */}
+      {/* Quest İstatistikleri */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
           <CardContent className="p-4 text-center">
-            <div className="text-2xl mb-2">💰</div>
-            <div className="text-sm text-slate-700 dark:text-slate-400">{t('quiz.reward')}</div>
+            <div className="text-2xl mb-2">🪙</div>
+            <div className="text-sm text-slate-700 dark:text-slate-400">{t('quest.reward')}</div>
             <div className="font-semibold text-slate-900 dark:text-white">
-              {quest.rewardAmount || 100} Token
+              {quest.rewardAmount || 100}
             </div>
           </CardContent>
         </Card>
@@ -637,20 +540,20 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
           </CardContent>
         </Card>
       </div>
-    </div>
 
-    {/* Celebration Modal */}
-    {showCelebration && (
-      <CelebrationModal
-        quest={quest}
-        onClose={() => {
-          console.log('DEBUG: CelebrationModal closed');
-          setShowCelebration(false);
-          onComplete();
-        }}
-        onComplete={onComplete}
-      />
-    )}
+      {/* Celebration Modal */}
+      {showCelebration && (
+        <CelebrationModal
+          quest={quest}
+          onClose={() => {
+            console.log('DEBUG: CelebrationModal closed');
+            setShowCelebration(false);
+            onComplete();
+          }}
+          onComplete={onComplete}
+        />
+      )}
+    </div>
   );
 };
 

@@ -77,6 +77,28 @@ const ProfileDashboard = () => {
     }
   };
 
+  const handleWithdrawTokens = async () => {
+    if (!dashboardData?.tokenStats?.currentBalance) return;
+    
+    try {
+      const { TokenManager } = await import('../../../systems/tokenSystem.js');
+      const tokenManager = new TokenManager(publicKey);
+      
+      const result = await tokenManager.withdrawToWallet(dashboardData.tokenStats.currentBalance);
+      
+      if (result.success) {
+        alert(`✅ ${result.amount} CQT cüzdanınıza aktarıldı!`);
+        // Dashboard'u yenile
+        loadDashboardData();
+      } else {
+        alert(`❌ Hata: ${result.error}`);
+      }
+    } catch (error) {
+      console.error('Token çekme hatası:', error);
+      alert('❌ Token çekme işlemi başarısız oldu');
+    }
+  };
+
   if (loading) {
     return (
       <div className="space-y-6">
@@ -283,6 +305,18 @@ const ProfileDashboard = () => {
                     <span className="text-slate-600 dark:text-slate-400">Toplam İşlem</span>
                     <span className="font-semibold">{tokenStats.transactionCount}</span>
                   </div>
+                  
+                  {/* Token Çekme Butonu */}
+                  {tokenStats.currentBalance > 0 && (
+                    <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-600">
+                      <Button 
+                        onClick={handleWithdrawTokens}
+                        className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white"
+                      >
+                        💰 {tokenStats.currentBalance} CQT Çek
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>

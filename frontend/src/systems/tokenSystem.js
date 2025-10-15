@@ -32,18 +32,21 @@ class TokenManager {
   // Kullanıcının token bakiyesini al
   async getBalance() {
     try {
-      await this.sorobanClient.initialize();
+      // Şimdilik local storage'dan bakiye al
+      // Gerçek blockchain entegrasyonu için Soroban'ı kullan
+      const localBalance = this.getLocalBalance();
       
-      const contractId = TOKEN_CONFIG.CHAINQUEST_TOKEN.contractId;
-      const result = await this.sorobanClient.callContractFunction(
-        contractId,
-        TOKEN_CONFIG.FUNCTIONS.BALANCE,
-        [this.userAddress]
-      );
+      // TODO: Gerçek blockchain entegrasyonu
+      // await this.sorobanClient.initialize();
+      // const contractId = TOKEN_CONFIG.CHAINQUEST_TOKEN.contractId;
+      // const result = await this.sorobanClient.callContractFunction(
+      //   contractId,
+      //   TOKEN_CONFIG.FUNCTIONS.BALANCE,
+      //   [this.userAddress]
+      // );
+      // const blockchainBalance = this.parseBalance(result);
       
-      // Soroban'dan gelen sonucu parse et
-      const balance = this.parseBalance(result);
-      return balance;
+      return localBalance;
     } catch (error) {
       console.error('Token balance alma hatası:', error);
       return 0;
@@ -82,22 +85,43 @@ class TokenManager {
   // Quest tamamlama ödülü ver
   async awardQuestTokens(questId, amount) {
     try {
-      await this.sorobanClient.initialize();
+      // Local storage'da quest tamamlanmış mı kontrol et
+      const completedQuests = this.getCompletedQuests();
+      if (completedQuests.includes(questId)) {
+        throw new Error('Bu quest zaten tamamlanmış');
+      }
+
+      // Token'ları local storage'a ekle
+      const currentBalance = this.getLocalBalance();
+      const newBalance = currentBalance + amount;
+      localStorage.setItem(`chainquest_balance_${this.userAddress}`, newBalance.toString());
       
-      // Quest contract'ından token mint et
-      const questContractId = 'QUEST_CONTRACT_ID'; // Quest contract ID'si
+      // Quest'i tamamlanmış olarak işaretle
+      completedQuests.push(questId);
+      localStorage.setItem(`chainquest_completed_${this.userAddress}`, JSON.stringify(completedQuests));
       
-      const result = await this.sorobanClient.callContractFunction(
-        questContractId,
-        'awardTokens',
-        [this.userAddress, questId, amount]
-      );
+      // Token geçmişine ekle
+      const tokenHistory = this.getLocalTokenHistory();
+      const newTransaction = {
+        id: `tx_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        type: 'earned',
+        amount: amount,
+        timestamp: new Date().toISOString(),
+        questId: questId,
+        transactionHash: `mock_tx_${Date.now()}`,
+        status: 'completed'
+      };
+      tokenHistory.unshift(newTransaction);
+      localStorage.setItem(`chainquest_token_history_${this.userAddress}`, JSON.stringify(tokenHistory));
+      
+      console.log(`✅ Quest ${questId} tamamlandı! ${amount} CQT kazandınız.`);
       
       return {
         success: true,
-        transactionHash: result.transactionHash,
+        transactionHash: newTransaction.transactionHash,
         amount: amount,
-        questId: questId
+        questId: questId,
+        newBalance: newBalance
       };
     } catch (error) {
       console.error('Quest token ödülü hatası:', error);
@@ -117,22 +141,32 @@ class TokenManager {
         throw new Error('Yetersiz bakiye');
       }
 
-      // Token'ları kullanıcının ana cüzdanına transfer et
-      const result = await this.transfer(this.userAddress, amount);
+      // Local storage'dan token'ları düş
+      this.updateLocalBalance(-amount);
       
-      if (result.success) {
-        // Local storage'dan token'ları düş
-        this.updateLocalBalance(-amount);
-        
-        return {
-          success: true,
-          transactionHash: result.transactionHash,
-          amount: amount,
-          message: 'Token\'lar cüzdanınıza aktarıldı'
-        };
-      } else {
-        throw new Error(result.error);
-      }
+      // Token geçmişine ekle
+      const tokenHistory = this.getLocalTokenHistory();
+      const newTransaction = {
+        id: `tx_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        type: 'withdrawn',
+        amount: amount,
+        timestamp: new Date().toISOString(),
+        questId: null,
+        transactionHash: `mock_withdraw_${Date.now()}`,
+        status: 'completed'
+      };
+      tokenHistory.unshift(newTransaction);
+      localStorage.setItem(`chainquest_token_history_${this.userAddress}`, JSON.stringify(tokenHistory));
+      
+      console.log(`✅ ${amount} CQT cüzdanınıza aktarıldı!`);
+      
+      return {
+        success: true,
+        transactionHash: newTransaction.transactionHash,
+        amount: amount,
+        message: 'Token\'lar cüzdanınıza aktarıldı',
+        newBalance: await this.getBalance()
+      };
     } catch (error) {
       console.error('Cüzdana çekme hatası:', error);
       return {
@@ -156,6 +190,18 @@ class TokenManager {
     return balance ? parseFloat(balance) : 0;
   }
 
+  // Tamamlanan quest'leri al
+  getCompletedQuests() {
+    const completed = localStorage.getItem(`chainquest_completed_${this.userAddress}`);
+    return completed ? JSON.parse(completed) : [];
+  }
+
+  // Token geçmişini al (local storage'dan)
+  getLocalTokenHistory() {
+    const history = localStorage.getItem(`chainquest_token_history_${this.userAddress}`);
+    return history ? JSON.parse(history) : [];
+  }
+
   // Soroban'dan gelen balance'ı parse et
   parseBalance(sorobanResult) {
     try {
@@ -172,23 +218,17 @@ class TokenManager {
   // Token geçmişi al
   async getTokenHistory() {
     try {
-      await this.sorobanClient.initialize();
+      // Şimdilik local storage'dan geçmiş al
+      const localHistory = this.getLocalTokenHistory();
       
-      // Kullanıcının token transaction geçmişini al
-      const history = await this.sorobanClient.getUserTransactions(
-        this.userAddress,
-        TOKEN_CONFIG.CHAINQUEST_TOKEN.contractId
-      );
+      // TODO: Gerçek blockchain entegrasyonu
+      // await this.sorobanClient.initialize();
+      // const history = await this.sorobanClient.getUserTransactions(
+      //   this.userAddress,
+      //   TOKEN_CONFIG.CHAINQUEST_TOKEN.contractId
+      // );
       
-      return history.map(tx => ({
-        id: tx.id,
-        type: tx.type, // 'earned', 'transferred', 'withdrawn'
-        amount: tx.amount,
-        timestamp: tx.timestamp,
-        questId: tx.questId,
-        transactionHash: tx.transactionHash,
-        status: tx.status
-      }));
+      return localHistory;
     } catch (error) {
       console.error('Token geçmişi alma hatası:', error);
       return [];

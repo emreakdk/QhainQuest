@@ -91,13 +91,17 @@ class DataManager {
       this.statsManager.saveStats();
       
       return {
-        id: certificate.id,
-        questId: certificate.questId,
-        questName: certificate.questName,
-        earnedAt: certificate.earnedAt,
-        nftUrl: certificate.nftUrl,
-        rarity: certificate.rarity,
-        transactionHash: certificate.transactionHash
+        id: certificate.id || 'unknown',
+        questId: certificate.questId || 'unknown',
+        questName: certificate.questName || 'Unknown Quest',
+        title: certificate.title || certificate.questName || 'Sertifika',
+        description: certificate.description || `${certificate.questName || 'Quest'} başarıyla tamamlandı`,
+        category: certificate.category || 'Blockchain',
+        rarity: certificate.rarity || 'Common',
+        completedAt: certificate.completedAt || null,
+        earnedAt: certificate.earnedAt || new Date().toISOString(),
+        nftUrl: certificate.nftUrl || null,
+        transactionHash: certificate.transactionHash || null
       };
     } catch (error) {
       console.error('Sertifika verme hatası:', error);
@@ -150,21 +154,21 @@ class DataManager {
       const activities = [
         ...(tokenHistory || []).slice(0, 5).map(tx => ({
           type: 'token',
-          id: tx.id,
-          title: this.getTokenActivityTitle(tx),
-          description: this.getTokenActivityDescription(tx),
-          timestamp: tx.timestamp,
-          amount: tx.amount,
-          status: tx.status
+          id: tx?.id || 'unknown',
+          title: this.getTokenActivityTitle(tx) || 'Token İşlemi',
+          description: this.getTokenActivityDescription(tx) || 'Token işlemi gerçekleştirildi',
+          timestamp: tx?.timestamp || new Date().toISOString(),
+          amount: tx?.amount || 0,
+          status: tx?.status || 'completed'
         })),
         ...questHistory.slice(0, 5).map(quest => ({
           type: 'quest',
-          id: quest.id,
-          title: `Quest Tamamlandı: ${quest.name}`,
-          description: `${quest.xpGained} XP ve ${quest.tokensGained} token kazandınız`,
-          timestamp: quest.completedAt,
-          xp: quest.xpGained,
-          tokens: quest.tokensGained
+          id: quest?.id || 'unknown',
+          title: `Quest Tamamlandı: ${quest?.name || 'Unknown Quest'}`,
+          description: `${quest?.xpGained || 0} XP ve ${quest?.tokensGained || 0} token kazandınız`,
+          timestamp: quest?.completedAt || new Date().toISOString(),
+          xp: quest?.xpGained || 0,
+          tokens: quest?.tokensGained || 0
         }))
       ];
       
@@ -178,6 +182,7 @@ class DataManager {
   }
 
   getTokenActivityTitle(tx) {
+    if (!tx || typeof tx !== 'object') return 'Token İşlemi';
     switch (tx.type) {
       case 'earned': return 'Token Kazandınız';
       case 'transferred': return 'Token Transfer';
@@ -187,10 +192,11 @@ class DataManager {
   }
 
   getTokenActivityDescription(tx) {
+    if (!tx || typeof tx !== 'object') return 'Token işlemi gerçekleşti';
     switch (tx.type) {
-      case 'earned': return `Quest tamamlama ödülü: ${tx.amount} CQT`;
-      case 'transferred': return `${tx.amount} CQT transfer edildi`;
-      case 'withdrawn': return `${tx.amount} CQT cüzdanınıza aktarıldı`;
+      case 'earned': return `Quest tamamlama ödülü: ${tx.amount || 0} CQT`;
+      case 'transferred': return `${tx.amount || 0} CQT transfer edildi`;
+      case 'withdrawn': return `${tx.amount || 0} CQT cüzdanınıza aktarıldı`;
       default: return 'Token işlemi gerçekleşti';
     }
   }

@@ -11,10 +11,12 @@ const CertificateCard = ({ certificate }) => {
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
             <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
-              {certificate.title || certificate.questName || 'Sertifika'}
+              {typeof certificate.title === 'string' ? certificate.title : 
+               (typeof certificate.questName === 'string' ? certificate.questName : 'Sertifika')}
             </h3>
             <p className="text-sm text-slate-600 dark:text-slate-300 mb-3">
-              {certificate.description || certificate.questName ? `${certificate.questName} quest'ini başarıyla tamamladınız` : 'Quest başarıyla tamamlandı'}
+              {typeof certificate.description === 'string' ? certificate.description : 
+               (typeof certificate.questName === 'string' ? `${certificate.questName} quest'ini başarıyla tamamladınız` : 'Quest başarıyla tamamlandı')}
             </p>
           </div>
           <div className="ml-4">

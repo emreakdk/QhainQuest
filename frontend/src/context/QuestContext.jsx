@@ -132,9 +132,13 @@ export const QuestProvider = ({ children }) => {
               id: result.certificate.id || 'unknown',
               questId: result.certificate.questId || 'unknown',
               questName: result.certificate.questName || 'Unknown Quest',
+              title: result.certificate.title || result.certificate.questName || 'Sertifika',
+              description: result.certificate.description || `${result.certificate.questName || 'Quest'} başarıyla tamamlandı`,
+              category: result.certificate.category || 'Blockchain',
+              rarity: result.certificate.rarity || 'Common',
+              completedAt: result.certificate.completedAt || null,
               earnedAt: result.certificate.earnedAt || new Date().toISOString(),
               nftUrl: result.certificate.nftUrl || null,
-              rarity: result.certificate.rarity || 'common',
               transactionHash: result.certificate.transactionHash || null
             };
             return [...current, safeCertificate];

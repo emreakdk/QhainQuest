@@ -57,10 +57,22 @@ const QuestGrid = () => {
   });
 
   const handleStartQuest = (quest) => {
+    // Quest tamamlanmış mı kontrol et
+    const questProgress = userProgress.get(quest.id);
+    if (questProgress && questProgress.completed) {
+      console.log(`Quest ${quest.id} zaten tamamlanmış!`);
+      return;
+    }
     setSelectedQuest(quest);
   };
 
   const handleContinueQuest = (quest) => {
+    // Quest tamamlanmış mı kontrol et
+    const questProgress = userProgress.get(quest.id);
+    if (questProgress && questProgress.completed) {
+      console.log(`Quest ${quest.id} zaten tamamlanmış!`);
+      return;
+    }
     setSelectedQuest(quest);
   };
 
