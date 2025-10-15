@@ -245,6 +245,11 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
     try {
       console.log('Completing quest securely with answers:', answers);
       
+      // Validate that all questions are answered
+      if (answers.length !== quest.lessons.length) {
+        throw new Error(`Quest tamamlanamadı: ${answers.length}/${quest.lessons.length} soru cevaplandı. Tüm soruları cevaplamalısınız.`);
+      }
+      
       // Call the secure API
       const result = await questApiService.completeQuest(publicKey, questId, answers);
       
