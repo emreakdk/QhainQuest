@@ -72,6 +72,14 @@ export default async function handler(req, res) {
     return res.status(204).end(); // 204 No Content for preflight
   }
 
+  // --- INCOMING REQUEST DIAGNOSTIC ---
+  console.log('--- INCOMING REQUEST DIAGNOSTIC ---');
+  console.log('Method:', req.method);
+  console.log('Headers:', req.headers);
+  console.log('Received Body:', req.body);
+  console.log('Body Type:', typeof req.body);
+  console.log('--- END DIAGNOSTIC ---');
+
   // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ 
@@ -83,11 +91,33 @@ export default async function handler(req, res) {
   try {
     const { userAddress, questId, answers } = req.body;
 
+    // Enhanced validation with detailed logging
+    console.log('--- VALIDATION DIAGNOSTIC ---');
+    console.log('userAddress:', userAddress, 'Type:', typeof userAddress);
+    console.log('questId:', questId, 'Type:', typeof questId);
+    console.log('answers:', answers, 'Type:', typeof answers);
+    console.log('answers is Array:', Array.isArray(answers));
+    
     // Validate required fields
     if (!userAddress || !questId || !answers) {
+      console.log('Validation failed: Missing required fields');
       return res.status(400).json({
         success: false,
-        error: 'Missing required fields: userAddress, questId, and answers are required.'
+        error: 'Missing required fields: userAddress, questId, and answers are required.',
+        details: {
+          userAddress: userAddress || 'MISSING',
+          questId: questId || 'MISSING', 
+          answers: answers || 'MISSING'
+        }
+      });
+    }
+
+    // Validate answers is an array
+    if (!Array.isArray(answers)) {
+      console.log('Validation failed: answers is not an array');
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid answers: answers must be an array.'
       });
     }
 
