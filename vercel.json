@@ -3,10 +3,5 @@
     "api/complete-quest.js": {
       "maxDuration": 30
     }
-  },
-  "env": {
-    "TOKEN_CODE": "@token-code",
-    "TOKEN_ISSUER_PUBLIC_KEY": "@token-issuer-public-key",
-    "DISTRIBUTOR_SECRET_KEY": "@distributor-secret-key"
   }
 }
