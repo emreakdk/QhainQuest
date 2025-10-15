@@ -5,6 +5,7 @@ import { useLanguage } from '../../../context/LanguageContext';
 import { useQuest } from '../../../context/QuestContext';
 import { useNotification } from '../../../context/NotificationContext';
 import useSound from '../../../hooks/useSound';
+import { questApiService } from '../../../services/questApi';
 import { Card, CardContent, CardHeader } from '../../ui/Card';
 import Button from '../../ui/Button';
 import Badge from '../../ui/Badge';
@@ -27,6 +28,8 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
   const [showWrongAnswers, setShowWrongAnswers] = useState(false);
   const [currentWrongIndex, setCurrentWrongIndex] = useState(0);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [userAnswers, setUserAnswers] = useState([]); // Track all user answers
+  const [questCompleted, setQuestCompleted] = useState(false); // Track quest completion
 
   // DEBUG: isSubmitting state değişimini izle
   useEffect(() => {
@@ -37,6 +40,18 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
   useEffect(() => {
     console.log('DEBUG: showCelebration state changed to:', showCelebration);
   }, [showCelebration]);
+
+  // Check if quest is already completed
+  useEffect(() => {
+    const checkQuestCompletion = async () => {
+      if (publicKey && questId) {
+        const isCompleted = await questApiService.isQuestCompleted(publicKey, questId);
+        setQuestCompleted(isCompleted);
+      }
+    };
+    
+    checkQuestCompletion();
+  }, [publicKey, questId]);
 
   // Zorluk seviyeleri için quest kategorileri
   const getDifficultyLevel = (questName) => {
@@ -178,7 +193,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
   };
 
   const handleSubmitAnswer = async () => {
-    if (selectedAnswer === null) return;
+    if (selectedAnswer === null || questCompleted) return;
 
     setIsSubmitting(true);
     try {
@@ -186,11 +201,11 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
       setIsCorrect(isAnswerCorrect);
       setShowResult(true);
 
+      // Store the user's answer
+      const newAnswers = [...userAnswers, currentLesson.choices[selectedAnswer]];
+      setUserAnswers(newAnswers);
+
       if (isAnswerCorrect) {
-        // Doğru cevap - sadece son ders için blockchain'e gönder
-        if (currentLessonIndex === quest.lessons.length - 1) {
-          await submitAnswer(publicKey, questId, currentLessonIndex, currentLesson.choices[selectedAnswer]);
-        }
         showSuccess(t('quiz.correct'), t('quiz.greatJob'));
         playSuccessSound();
         
@@ -203,12 +218,8 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
             setIsSubmitting(false);
           }, 2000);
         } else {
-          // Quest tamamlandı - kutlama göster
-          console.log('DEBUG: Quest completed path - calling setShowCelebration(true)');
-          setShowCelebration(true);
-          showSuccess(t('celebration.questCompleted'), t('celebration.congratulations'));
-          console.log('DEBUG: Quest completed path - calling setIsSubmitting(false)');
-          setIsSubmitting(false);
+          // Quest tamamlandı - secure API'ye gönder
+          await completeQuestSecurely(newAnswers);
         }
       } else {
         // Yanlış cevap - wrongAnswers listesine ekle
@@ -225,6 +236,41 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
       console.error('Cevap gönderme hatası:', error);
       setIsCorrect(false);
       setShowResult(true);
+      setIsSubmitting(false);
+    }
+  };
+
+  // Secure quest completion function
+  const completeQuestSecurely = async (answers) => {
+    try {
+      console.log('Completing quest securely with answers:', answers);
+      
+      // Call the secure API
+      const result = await questApiService.completeQuest(publicKey, questId, answers);
+      
+      if (result.success) {
+        // Mark quest as completed locally
+        questApiService.markQuestCompleted(publicKey, questId);
+        setQuestCompleted(true);
+        
+        // Show celebration
+        setShowCelebration(true);
+        showSuccess(
+          t('celebration.questCompleted'), 
+          `${t('celebration.congratulations')} ${result.data.rewardAmount} token kazandınız!`
+        );
+        
+        // Update user stats in context
+        await submitAnswer(publicKey, questId, currentLessonIndex, answers[answers.length - 1]);
+        
+        console.log('Quest completed successfully:', result.data);
+      } else {
+        throw new Error(result.error || 'Quest completion failed');
+      }
+    } catch (error) {
+      console.error('Secure quest completion error:', error);
+      showError('Quest Tamamlanamadı', error.message);
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -334,6 +380,33 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      </div>
+    );
+  }
+
+  // Show completed quest message
+  if (questCompleted) {
+    return (
+      <div className="max-w-4xl mx-auto p-6">
+        <Card className="mb-6">
+          <CardHeader>
+            <div className="text-center">
+              <div className="text-6xl mb-4">✅</div>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+                Quest Tamamlandı!
+              </h2>
+              <p className="text-slate-700 dark:text-slate-300 mb-6">
+                Bu quest'i zaten başarıyla tamamladınız. Yeni quest'leri keşfetmek için ana sayfaya dönün.
+              </p>
+              <Button
+                onClick={onClose}
+                className="cursor-pointer"
+              >
+                Ana Sayfaya Dön
+              </Button>
+            </div>
+          </CardHeader>
+        </Card>
       </div>
     );
   }

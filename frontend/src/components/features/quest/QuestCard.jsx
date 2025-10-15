@@ -1,19 +1,36 @@
+import { useState, useEffect } from 'react';
 import { useLanguage } from '../../../context/LanguageContext';
 import { useQuest } from '../../../context/QuestContext';
+import { questApiService } from '../../../services/questApi';
 import { Card, CardContent, CardHeader, CardFooter } from '../../ui/Card';
 import Button from '../../ui/Button';
 import Badge from '../../ui/Badge';
 import ProgressRing from '../../ui/ProgressRing';
 import { difficultyLevels } from '../../../data/questData';
 
-const QuestCard = ({ quest, userProgress, onStart, onContinue }) => {
+const QuestCard = ({ quest, userProgress, onStart, onContinue, userAddress }) => {
   const { t } = useLanguage();
   const { getQuestStatus, getQuestProgress, hasCertificate } = useQuest();
+  const [isApiCompleted, setIsApiCompleted] = useState(false);
 
-  const questStatus = userProgress ? 
-    (userProgress.completed ? 'completed' : 
-     (userProgress.currentStep > 0 ? 'in-progress' : 'available')) : 
-    'available';
+  // Check API completion status
+  useEffect(() => {
+    const checkApiCompletion = async () => {
+      if (userAddress && quest.id) {
+        const completed = await questApiService.isQuestCompleted(userAddress, quest.id);
+        setIsApiCompleted(completed);
+      }
+    };
+    
+    checkApiCompletion();
+  }, [userAddress, quest.id]);
+
+  // Determine quest status - prioritize API completion status
+  const questStatus = isApiCompleted ? 'completed' : 
+    (userProgress ? 
+      (userProgress.completed ? 'completed' : 
+       (userProgress.currentStep > 0 ? 'in-progress' : 'available')) : 
+      'available');
   
   const questProgress = userProgress || { currentStep: 0, totalSteps: quest.lessons.length, progress: 0 };
   const hasQuestCertificate = hasCertificate(quest.id);

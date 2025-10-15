@@ -1,0 +1,12 @@
+{
+  "name": "chainquest-api",
+  "version": "1.0.0",
+  "description": "ChainQuest API for secure quest completion and token distribution",
+  "main": "complete-quest.js",
+  "dependencies": {
+    "stellar-sdk": "^11.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

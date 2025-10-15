@@ -1,21 +1,48 @@
 // Simplified Soroban client - Mock implementation for now
 // This avoids the large bundle size issue while maintaining functionality
 
-// Soroban client konfigürasyonu
-const SOROBAN_RPC_URL = 'https://soroban-testnet.stellar.org';
+import { TESTNET_CONFIG, getRpcUrl, getNetworkPassphrase, getContractAddress } from '../config/testnet.js';
+
+// Soroban client konfigürasyonu - Config dosyasından al
+const SOROBAN_RPC_URL = getRpcUrl();
+const NETWORK_PASSPHRASE = getNetworkPassphrase();
 
 // Contract adresleri (deploy edildikten sonra güncellenecek)
-const CHAINQUEST_CONTRACT_ADDRESS = 'CONTRACT_ADDRESS_HERE';
-const TOKEN_CONTRACT_ADDRESS = 'TOKEN_ADDRESS_HERE';
+const CHAINQUEST_CONTRACT_ADDRESS = getContractAddress('chainquest');
+const TOKEN_CONTRACT_ADDRESS = getContractAddress('token');
+
+// Application configuration
+const APP_ENVIRONMENT = TESTNET_CONFIG.environment;
+const DEFAULT_QUEST_REWARD = TESTNET_CONFIG.quest.defaultReward;
 
 class SorobanClientService {
   constructor() {
     this.initialized = false;
+    this.config = {
+      rpcUrl: SOROBAN_RPC_URL,
+      networkPassphrase: NETWORK_PASSPHRASE,
+      chainquestContract: CHAINQUEST_CONTRACT_ADDRESS,
+      tokenContract: TOKEN_CONTRACT_ADDRESS,
+      environment: APP_ENVIRONMENT,
+      defaultReward: DEFAULT_QUEST_REWARD
+    };
   }
 
   async initialize() {
     if (this.initialized) return;
+    
+    console.log('SorobanClient initializing with config:', {
+      rpcUrl: this.config.rpcUrl,
+      networkPassphrase: this.config.networkPassphrase,
+      environment: this.config.environment
+    });
+    
     this.initialized = true;
+  }
+
+  // Configuration getter
+  getConfig() {
+    return this.config;
   }
 
   // Quest verilerini blockchain'den çek - Mock implementation
@@ -57,7 +84,7 @@ class SorobanClientService {
             correctAnswer: "XLM (Lumen)"
           }
         ],
-        rewardAmount: 100,
+        rewardAmount: this.config.defaultReward,
         certificateNftUrl: "https://ipfs.io/ipfs/QmStellarBasics"
       },
       {
@@ -76,7 +103,7 @@ class SorobanClientService {
             correctAnswer: "Env"
           }
         ],
-        rewardAmount: 200,
+        rewardAmount: this.config.defaultReward * 2,
         certificateNftUrl: "https://ipfs.io/ipfs/QmSorobanBasics"
       },
       {
@@ -90,7 +117,7 @@ class SorobanClientService {
             correctAnswer: "StellarX"
           }
         ],
-        rewardAmount: 150,
+        rewardAmount: Math.floor(this.config.defaultReward * 1.5),
         certificateNftUrl: "https://ipfs.io/ipfs/QmDeFiBasics"
       }
     ];
@@ -138,7 +165,7 @@ class SorobanClientService {
         question: lesson.question,
         correctAnswer: lesson.correctAnswer
       })),
-      rewardAmount: data.reward_amount || data.rewardAmount || 100,
+      rewardAmount: data.reward_amount || data.rewardAmount || this.config.defaultReward,
       certificateNftUrl: data.certificate_nft_url || data.certificateNftUrl
     };
   }

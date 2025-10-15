@@ -276,6 +276,7 @@ const QuestGrid = () => {
             key={quest.id}
             quest={quest}
             userProgress={userProgress.get(quest.id)}
+            userAddress={publicKey}
             onStart={handleStartQuest}
             onContinue={handleContinueQuest}
           />
