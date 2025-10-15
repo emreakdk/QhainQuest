@@ -196,8 +196,8 @@ async function performTokenPayment(userAddress, amount) {
   try {
     // TODO: Replace with actual token configuration
     const TOKEN_CODE = process.env.TOKEN_CODE || 'CQT'; // Will be provided by user
-    const TOKEN_ISSUER = process.env.TOKEN_ISSUER_PUBLIC_KEY; // Will be provided by user
-    const DISTRIBUTOR_SECRET_KEY = process.env.DISTRIBUTOR_SECRET_KEY;
+    const TOKEN_ISSUER = process.env.TOKEN_ISSUER_PUBLIC_KEY || 'GDUKMGUGDZQK6YHYA5Z6AY2G4XDSZPSZ3SW5UN3ARVMO6QSRDWP5YLEX'; // Will be provided by user
+    const DISTRIBUTOR_SECRET_KEY = process.env.DISTRIBUTOR_SECRET_KEY || 'SDUKMGUGDZQK6YHYA5Z6AY2G4XDSZPSZ3SW5UN3ARVMO6QSRDWP5YLEX'; // Will be provided by user
 
     if (!TOKEN_ISSUER || !DISTRIBUTOR_SECRET_KEY) {
       throw new Error('Token configuration missing. Please set TOKEN_ISSUER_PUBLIC_KEY and DISTRIBUTOR_SECRET_KEY environment variables.');
