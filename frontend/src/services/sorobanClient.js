@@ -82,6 +82,16 @@ class SorobanClientService {
             id: 2,
             question: "Stellar ağında kullanılan native token'ın adı nedir?",
             correctAnswer: "XLM (Lumen)"
+          },
+          {
+            id: 3,
+            question: "Stellar'da minimum hesap bakiyesi nedir?",
+            correctAnswer: "2 XLM"
+          },
+          {
+            id: 4,
+            question: "Stellar geliştiricileri için ana SDK hangi dillerde mevcuttur?",
+            correctAnswer: "Python, JavaScript, Go, Java, C++"
           }
         ],
         rewardAmount: this.config.defaultReward,
@@ -101,6 +111,21 @@ class SorobanClientService {
             id: 1,
             question: "Soroban'da storage için hangi trait kullanılır?",
             correctAnswer: "Env"
+          },
+          {
+            id: 2,
+            question: "Soroban nedir?",
+            correctAnswer: "Stellar üzerinde bir akıllı kontrat platformu"
+          },
+          {
+            id: 3,
+            question: "Soroban'da storage nasıl çalışır?",
+            correctAnswer: "Contract bazlı izole storage"
+          },
+          {
+            id: 4,
+            question: "Soroban'da transaction fee olarak ne kullanılır?",
+            correctAnswer: "Gas fee olarak XLM kullanılır"
           }
         ],
         rewardAmount: this.config.defaultReward * 2,
@@ -115,6 +140,26 @@ class SorobanClientService {
             id: 0,
             question: "Stellar'da en popüler DeFi protokolü hangisidir?",
             correctAnswer: "StellarX"
+          },
+          {
+            id: 1,
+            question: "DeFi nedir?",
+            correctAnswer: "Blockchain tabanlı finansal hizmetler"
+          },
+          {
+            id: 2,
+            question: "DeFi'de yield farming nedir?",
+            correctAnswer: "Likidite sağlayarak token ödülleri kazanma"
+          },
+          {
+            id: 3,
+            question: "DeFi'de impermanent loss nedir?",
+            correctAnswer: "Likidite sağlarken token fiyat değişimlerinden kaynaklanan kayıp"
+          },
+          {
+            id: 4,
+            question: "AMM protokolü ne anlama gelir?",
+            correctAnswer: "AMM (Automated Market Maker) protokolü"
           }
         ],
         rewardAmount: Math.floor(this.config.defaultReward * 1.5),
