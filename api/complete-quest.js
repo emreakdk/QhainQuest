@@ -5,26 +5,9 @@
 // Using StellarSdk.default.Server to correctly access the class from the ESM module in a CommonJS environment
 const StellarSdk = require('stellar-sdk');
 
-// DIAGNOSTIC: Inspect stellar-sdk module structure
-console.log('--- DIAGNOSTIC START ---');
-try {
-    const StellarSdkModule = require('stellar-sdk');
-    console.log('Type of StellarSdkModule:', typeof StellarSdkModule);
-    console.log('StellarSdkModule Keys:', Object.keys(StellarSdkModule));
-
-    if (StellarSdkModule.default) {
-        console.log('Type of StellarSdkModule.default:', typeof StellarSdkModule.default);
-        console.log('StellarSdkModule.default Keys:', Object.keys(StellarSdkModule.default));
-    } else {
-        console.log('StellarSdkModule.default does not exist.');
-    }
-} catch (e) {
-    console.error('Error during diagnostic logging:', e);
-}
-console.log('--- DIAGNOSTIC END ---');
-
 // Initialize Stellar server for testnet
-const server = new StellarSdk.default.Server('https://horizon-testnet.stellar.org');
+// Using Horizon instead of Server (Stellar SDK v11+ change)
+const server = new StellarSdk.default.Horizon.Server('https://horizon-testnet.stellar.org');
 
 // Quest validation data (should match frontend questData.js)
 const QUEST_DATA = {
