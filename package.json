@@ -1,0 +1,45 @@
+{
+  "name": "chainquest",
+  "version": "1.0.0",
+  "description": "ChainQuest - Learn-to-Earn Platform for PatikaDev Challenge",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "preview": "cd frontend && npm run preview",
+    "lint": "cd frontend && npm run lint",
+    "clean": "cd frontend && npm run clean",
+    "install:frontend": "cd frontend && npm install",
+    "install:all": "npm run install:frontend",
+    "start": "npm run dev"
+  },
+  "keywords": [
+    "blockchain",
+    "stellar",
+    "soroban",
+    "learn-to-earn",
+    "nft",
+    "tokens",
+    "education",
+    "patikadev",
+    "react",
+    "vite"
+  ],
+  "author": "ChainQuest Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/ChainQuest.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/ChainQuest/issues"
+  },
+  "homepage": "https://github.com/yourusername/ChainQuest#readme",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "workspaces": [
+    "frontend"
+  ]
+}
