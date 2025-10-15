@@ -4,7 +4,8 @@
 class QuestApiService {
   constructor() {
     // API base URL - will be set based on environment
-    this.baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
+    // In production, this will use the Vercel deployment URL
+    this.baseUrl = import.meta.env.VITE_API_URL || '/api';
     this.timeout = 30000; // 30 seconds
   }
 
