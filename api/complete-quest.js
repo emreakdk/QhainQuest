@@ -197,9 +197,19 @@ export default async function handler(req, res) {
 function validateAnswers(quest, userAnswers) {
   const errors = [];
   
+  // Enhanced validation logging
+  console.log('--- ANSWER VALIDATION DIAGNOSTIC ---');
+  console.log('Quest ID:', quest.id || 'unknown');
+  console.log('Expected answers count:', quest.lessons.length);
+  console.log('Received answers count:', userAnswers.length);
+  console.log('Quest lessons:', quest.lessons.map(l => l.id || 'no-id'));
+  console.log('User answers:', userAnswers);
+  
   // Check if all required lessons are answered
   if (userAnswers.length !== quest.lessons.length) {
-    errors.push(`Expected ${quest.lessons.length} answers, got ${userAnswers.length}`);
+    const errorMsg = `Expected ${quest.lessons.length} answers, got ${userAnswers.length}. Quest requires ${quest.lessons.length} lessons to be completed.`;
+    console.log('Validation failed:', errorMsg);
+    errors.push(errorMsg);
     return { isValid: false, errors };
   }
 
