@@ -195,9 +195,9 @@ function validateAnswers(quest, userAnswers) {
 async function performTokenPayment(userAddress, amount) {
   try {
     // TODO: Replace with actual token configuration
-    const TOKEN_CODE = 'CQT'; // Geçici sabit değer - gerçek token kodunuzla değiştirin
-    const TOKEN_ISSUER = 'GDUKMGUGDZQK6YHYA5Z6AY2G4XDSZPSZ3SW5UN3ARVMO6QSRDWP5YLEX'; // Geçici sabit değer - gerçek issuer adresinizle değiştirin
-    const DISTRIBUTOR_SECRET_KEY = 'SDUKMGUGDZQK6YHYA5Z6AY2G4XDSZPSZ3SW5UN3ARVMO6QSRDWP5YLEX'; // Geçici sabit değer - gerçek secret key'inizle değiştirin
+    const TOKEN_CODE = process.env.TOKEN_CODE || 'CQT'; // Will be provided by user
+    const TOKEN_ISSUER = process.env.TOKEN_ISSUER_PUBLIC_KEY; // Will be provided by user
+    const DISTRIBUTOR_SECRET_KEY = process.env.DISTRIBUTOR_SECRET_KEY;
 
     if (!TOKEN_ISSUER || !DISTRIBUTOR_SECRET_KEY) {
       throw new Error('Token configuration missing. Please set TOKEN_ISSUER_PUBLIC_KEY and DISTRIBUTOR_SECRET_KEY environment variables.');
