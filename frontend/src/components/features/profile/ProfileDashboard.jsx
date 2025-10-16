@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext, memo } from 'react';
 import { useLanguage } from '../../../context/LanguageContext';
 import { WalletContext } from '../../../context/WalletContext';
+import { useToken } from '../../../context/TokenContext';
 import { useDataManager } from '../../../systems/dataManager.js';
 import { Card, CardContent, CardHeader } from '../../ui/Card';
 import AnimatedCounter from '../../ui/AnimatedCounter';
@@ -47,6 +48,7 @@ const SimpleChart = ({ data, type = 'line', height = 200 }) => {
 const ProfileDashboard = () => {
   const { t } = useLanguage();
   const { publicKey } = useContext(WalletContext);
+  const { tokenData } = useToken(); // Use centralized token data
   const { getDashboardData, getPerformanceData, getUserStats } = useDataManager(publicKey);
   
   const [dashboardData, setDashboardData] = useState(null);
@@ -142,11 +144,14 @@ const ProfileDashboard = () => {
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-3xl font-bold">
-                  <AnimatedCounter value={tokenStats.currentBalance} duration={1500} />
+                  <AnimatedCounter value={tokenData.totalEarned} duration={1500} />
                 </div>
                 <div className="text-yellow-100 text-sm">Token Bakiyesi</div>
                 <div className="text-xs text-yellow-200 mt-1">
-                  Toplam kazanılan: {tokenStats.totalEarned}
+                  Toplam kazanılan: {tokenData.totalEarned}
+                  {tokenData.claimableBalance > 0 && (
+                    <span className="ml-2">(+{tokenData.claimableBalance} claimable)</span>
+                  )}
                 </div>
               </div>
               <div className="text-4xl opacity-80">💰</div>
@@ -234,29 +239,29 @@ const ProfileDashboard = () => {
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="text-slate-600 dark:text-slate-400">Toplam Kazanılan</span>
-                    <span className="font-semibold text-green-600">{tokenStats.totalEarned} CQT</span>
+                    <span className="font-semibold text-green-600">{tokenData.totalEarned} CQT</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-600 dark:text-slate-400">Transfer Edilen</span>
-                    <span className="font-semibold text-blue-600">{tokenStats.totalTransferred} CQT</span>
+                    <span className="text-slate-600 dark:text-slate-400">Claimable Balance</span>
+                    <span className="font-semibold text-blue-600">{tokenData.claimableBalance} CQT</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-slate-600 dark:text-slate-400">Cüzdana Çekilen</span>
-                    <span className="font-semibold text-purple-600">{tokenStats.totalWithdrawn} CQT</span>
+                    <span className="font-semibold text-purple-600">{tokenData.claimedBalance} CQT</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-600 dark:text-slate-400">Toplam İşlem</span>
-                    <span className="font-semibold">{tokenStats.transactionCount}</span>
+                    <span className="text-slate-600 dark:text-slate-400">Tamamlanan Quest</span>
+                    <span className="font-semibold">{tokenData.completedQuests}</span>
                   </div>
                   
                   {/* Token Çekme Butonu */}
-                  {tokenStats.currentBalance > 0 && (
+                  {tokenData.claimableBalance > 0 && (
                     <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-600">
                       <Button 
                         onClick={handleWithdrawTokens}
                         className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white"
                       >
-                        💰 {tokenStats.currentBalance} CQT Çek
+                        💰 {tokenData.claimableBalance} CQT Çek
                       </Button>
                     </div>
                   )}

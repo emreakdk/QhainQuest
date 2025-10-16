@@ -1,5 +1,6 @@
 import { useContext, useState } from 'react';
 import { WalletContext } from '../../context/WalletContext';
+import { useToken } from '../../context/TokenContext';
 import { useTheme } from '../../context/ThemeContext';
 import { useLanguage } from '../../context/LanguageContext';
 import Button from '../ui/Button';
@@ -7,6 +8,7 @@ import FreighterConnect from '../features/wallet/FreighterConnect';
 
 const Header = ({ currentPage, onPageChange }) => {
   const { publicKey, setPublicKey } = useContext(WalletContext);
+  const { tokenData } = useToken(); // Get centralized token data
   const { theme, toggleTheme } = useTheme();
   const { t, toggleLanguage, language } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -89,6 +91,21 @@ const Header = ({ currentPage, onPageChange }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
+          )}
+
+          {/* Token Balance Display */}
+          {publicKey && tokenData.totalEarned > 0 && (
+            <div className="hidden md:flex items-center space-x-2 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 px-3 py-1.5 rounded-lg border border-yellow-200 dark:border-yellow-700">
+              <span className="text-yellow-600 dark:text-yellow-400">💰</span>
+              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                {tokenData.totalEarned} CQT
+              </span>
+              {tokenData.claimableBalance > 0 && (
+                <span className="text-xs text-blue-600 dark:text-blue-400">
+                  (+{tokenData.claimableBalance})
+                </span>
+              )}
+            </div>
           )}
 
           {/* Wallet Connection */}

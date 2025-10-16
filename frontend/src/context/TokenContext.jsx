@@ -11,6 +11,8 @@ export const TokenProvider = ({ children }) => {
     claimedBalance: 0,     // Tokens already transferred to wallet
     totalBalance: 0,       // claimable + claimed
     completedQuests: 0,
+    inProgressQuests: 0,   // Quest'ler in progress
+    totalQuests: 0,        // Total available quests
     lastUpdated: null
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -26,6 +28,8 @@ export const TokenProvider = ({ children }) => {
         claimedBalance: 0,
         totalBalance: 0,
         completedQuests: 0,
+        inProgressQuests: 0,
+        totalQuests: 0,
         lastUpdated: null
       });
       return;
@@ -39,12 +43,22 @@ export const TokenProvider = ({ children }) => {
       const breakdown = getTokenBalanceBreakdown(userAddress);
       const claimableBalance = questApiService.getClaimableBalance(userAddress);
       
+      // Get quest database for total quest count
+      const { questDatabase } = await import('../data/questData');
+      
+      // Calculate in-progress quests (this would need quest progress data)
+      // For now, we'll calculate it as: total quests - completed quests
+      const totalQuests = questDatabase.length;
+      const inProgressQuests = Math.max(0, totalQuests - breakdown.questCount);
+      
       const tokenData = {
         totalEarned: breakdown.totalBalance,           // All-time earned (including claimable)
         claimableBalance: claimableBalance,            // Ready to claim
         claimedBalance: breakdown.claimedBalance,      // Already claimed
         totalBalance: breakdown.totalBalance,          // Total current balance
         completedQuests: breakdown.questCount,
+        inProgressQuests: inProgressQuests,
+        totalQuests: totalQuests,
         lastUpdated: new Date().toISOString()
       };
       

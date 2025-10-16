@@ -3,7 +3,8 @@ import { useContext } from 'react';
 import { WalletContext } from '../../../context/WalletContext';
 import { useLanguage } from '../../../context/LanguageContext';
 import { useQuest } from '../../../context/QuestContext';
-import { getCompletedQuestsForUser, getTokenBalanceBreakdown } from '../../../utils/tokenBalanceCalculator';
+import { useToken } from '../../../context/TokenContext';
+import { getCompletedQuestsForUser } from '../../../utils/tokenBalanceCalculator';
 import ProfileStats from './ProfileStats';
 import CertificateCard from './CertificateCard';
 import ProfileDashboard from './ProfileDashboard';
@@ -14,9 +15,10 @@ const UserProfile = () => {
   const { publicKey } = useContext(WalletContext);
   const { t } = useLanguage();
   const { userStats, userCertificates, loadUserProgress } = useQuest();
+  const { tokenData } = useToken(); // Use centralized token data
   const [activeTab, setActiveTab] = useState('dashboard');
   const [completedQuests, setCompletedQuests] = useState([]);
-  const [completedQuestsCount, setCompletedQuestsCount] = useState(0);
+  // Remove completedQuestsCount state - use tokenData.completedQuests instead
 
   // Kullanıcı verilerini yükle - Fixed: Removed userStats from dependencies to prevent infinite loop
   useEffect(() => {
@@ -28,11 +30,10 @@ const UserProfile = () => {
   // Load completed quests from localStorage - Fixed: Separate useEffect for completed quests
   useEffect(() => {
     if (publicKey) {
-      const breakdown = getTokenBalanceBreakdown(publicKey);
-      setCompletedQuests(breakdown.completedQuests);
-      setCompletedQuestsCount(breakdown.questCount);
+      const completedQuestsData = getCompletedQuestsForUser(publicKey);
+      setCompletedQuests(completedQuestsData);
     }
-  }, [publicKey, userStats]); // Only recalculate when userStats changes (for completed quests)
+  }, [publicKey, tokenData.completedQuests]); // Use tokenData.completedQuests for updates
 
   // Memoized tabs array to prevent unnecessary re-renders
   const tabs = useMemo(() => [
@@ -83,7 +84,7 @@ const UserProfile = () => {
             {truncateKey(publicKey)}
           </Badge>
           <Badge variant="success">
-            {completedQuestsCount} Quest Tamamlandı
+            {tokenData.completedQuests} Quest Tamamlandı
           </Badge>
         </div>
       </div>
@@ -167,7 +168,7 @@ const UserProfile = () => {
                 Sertifikalarınız
               </h3>
               <Badge variant="primary">
-                {completedQuestsCount} Sertifika
+                {tokenData.completedQuests} Sertifika
               </Badge>
             </div>
             

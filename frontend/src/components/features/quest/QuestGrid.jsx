@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext, lazy, Suspense } from 'react';
 import { useLanguage } from '../../../context/LanguageContext';
 import { useQuest } from '../../../context/QuestContext';
+import { useToken } from '../../../context/TokenContext';
 import { WalletContext } from '../../../context/WalletContext';
 import { SkeletonCard, SkeletonStats } from '../../ui/Skeleton';
 import AnimatedCounter from '../../ui/AnimatedCounter';
@@ -17,6 +18,7 @@ const QuestGrid = () => {
   const { t } = useLanguage();
   const { publicKey } = useContext(WalletContext);
   const { quests, loading, error, userStats, userProgress, getQuestStatus, getQuestProgress, refreshData } = useQuest();
+  const { tokenData } = useToken(); // Use centralized token data
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedDifficulty, setSelectedDifficulty] = useState('all');
   const [selectedQuest, setSelectedQuest] = useState(null);
@@ -44,11 +46,12 @@ const QuestGrid = () => {
 
   // Data processing moved after all Hooks
   const realQuests = quests.length > 0 ? quests : questDatabase;
-  const realUserStats = userStats || { 
+  // Use centralized token data instead of userStats
+  const realUserStats = {
     level: 1, 
     totalXP: 0, 
-    totalTokens: 0, 
-    completedQuests: [], 
+    totalTokens: tokenData.totalEarned,  // Use centralized token data
+    completedQuests: tokenData.completedQuests,  // Use centralized quest count
     perfectScores: 0,
     dailyStreak: 0,
     certificates: []
@@ -178,7 +181,7 @@ const QuestGrid = () => {
           <div className="flex items-center justify-between">
             <div>
               <div className="text-3xl font-bold">
-                <AnimatedCounter value={realQuests.length} duration={1500} />
+                <AnimatedCounter value={tokenData.totalQuests || 0} duration={1500} />
               </div>
               <div className="text-blue-100 text-sm">{t('stats.totalQuests')}</div>
             </div>
@@ -190,7 +193,7 @@ const QuestGrid = () => {
           <div className="flex items-center justify-between">
             <div>
               <div className="text-3xl font-bold">
-                <AnimatedCounter value={realUserStats.completedQuests?.length || 0} duration={1500} />
+                <AnimatedCounter value={tokenData.completedQuests || 0} duration={1500} />
               </div>
               <div className="text-green-100 text-sm">{t('stats.completedQuests')}</div>
             </div>
@@ -202,13 +205,7 @@ const QuestGrid = () => {
           <div className="flex items-center justify-between">
             <div>
               <div className="text-3xl font-bold">
-                <AnimatedCounter value={realQuests?.filter(q => {
-                  // Fixed: Add null check for quest object and lessons property
-                  if (!q || !q.lessons || !Array.isArray(q.lessons)) {
-                    return false;
-                  }
-                  return getQuestStatus(q) === 'in-progress';
-                }).length || 0} duration={1500} />
+                <AnimatedCounter value={tokenData.inProgressQuests || 0} duration={1500} />
               </div>
               <div className="text-purple-100 text-sm">{t('stats.inProgress')}</div>
             </div>
@@ -220,7 +217,7 @@ const QuestGrid = () => {
           <div className="flex items-center justify-between">
             <div>
               <div className="text-3xl font-bold">
-                <AnimatedCounter value={realUserStats.totalTokens || 0} duration={1500} />
+                <AnimatedCounter value={tokenData.totalEarned || 0} duration={1500} />
               </div>
               <div className="text-yellow-100 text-sm">{t('stats.earnedTokens')}</div>
             </div>
