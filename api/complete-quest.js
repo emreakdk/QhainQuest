@@ -1,13 +1,6 @@
-// Vercel Serverless Function for Secure Quest Completion
-// This function handles the secure token distribution logic
-
-// Import stellar-sdk for CommonJS environment
-// Using StellarSdk.default.Server to correctly access the class from the ESM module in a CommonJS environment
-const StellarSdk = require('stellar-sdk');
-
-// Initialize Stellar server for testnet
-// Using Horizon instead of Server (Stellar SDK v11+ change)
-const server = new StellarSdk.default.Horizon.Server('https://horizon-testnet.stellar.org');
+// Vercel Serverless Function for Quest Completion Validation
+// This function ONLY validates quest answers - NO token distribution
+// Token distribution is now handled by /api/claim-tokens endpoint
 
 // Quest validation data - imported from frontend questData.js
 // This ensures backend and frontend use the same quest definitions
@@ -283,28 +276,16 @@ export default async function handler(req, res) {
       });
     }
 
-    // Perform Stellar token payment
-    const paymentResult = await performTokenPayment(userAddress, quest.rewardAmount, req);
-
-    if (!paymentResult.success) {
-      return res.status(500).json({
-        success: false,
-        error: 'Token payment failed.',
-        details: paymentResult.error
-      });
-    }
-
-    // Record quest completion
+    // Record quest completion (no token payment - handled by claim-tokens endpoint)
     completedQuests.add(completionKey);
 
-    // Return success response
+    // Return success response with reward amount for frontend to add to claimable balance
     return res.status(200).json({
       success: true,
       message: 'Quest completed successfully!',
       data: {
         questId,
         rewardAmount: quest.rewardAmount,
-        transactionHash: paymentResult.transactionHash,
         completedAt: new Date().toISOString()
       }
     });
@@ -360,99 +341,4 @@ function validateAnswers(quest, userAnswers) {
   };
 }
 
-// Perform the actual Stellar token payment
-async function performTokenPayment(userAddress, amount, req) {
-  try {
-    // TODO: Replace with actual token configuration
-    const TOKEN_CODE = process.env.TOKEN_CODE || 'CQT'; // Will be provided by user
-    const TOKEN_ISSUER = process.env.TOKEN_ISSUER_PUBLIC_KEY; // Will be provided by user
-    const DISTRIBUTOR_SECRET_KEY = process.env.DISTRIBUTOR_SECRET_KEY;
-
-    if (!TOKEN_ISSUER || !DISTRIBUTOR_SECRET_KEY) {
-      throw new Error('Token configuration missing. Please set TOKEN_ISSUER_PUBLIC_KEY and DISTRIBUTOR_SECRET_KEY environment variables.');
-    }
-
-    // --- START CRITICAL DIAGNOSTIC LOGS ---
-    console.log('--- RUNTIME KEY DIAGNOSTICS ---');
-
-    // 1. Log the Issuer Public Key from environment variables
-    const issuerPublicKey = process.env.TOKEN_ISSUER_PUBLIC_KEY;
-    console.log(`[DIAGNOSTIC] Issuer Public Key from env: ${issuerPublicKey}`);
-
-    // 2. Derive and log the Distributor Public Key from the secret key
-    const distributorSecretKey = process.env.DISTRIBUTOR_SECRET_KEY;
-    const distributorKeypair = StellarSdk.default.Keypair.fromSecret(distributorSecretKey);
-    const distributorPublicKey = distributorKeypair.publicKey();
-    console.log(`[DIAGNOSTIC] Distributor Public Key derived from secret: ${distributorPublicKey}`);
-
-    // 3. Log the User Public Key from the request body
-    const userPublicKey = req.body.userAddress;
-    console.log(`[DIAGNOSTIC] User Public Key from request: ${userPublicKey}`);
-
-    // 4. Log Token Code
-    console.log(`[DIAGNOSTIC] Token Code: ${TOKEN_CODE}`);
-    
-    console.log('--- END DIAGNOSTIC LOGS ---');
-    // --- DIAGNOSTIC CODE ENDS HERE ---
-
-    // Create the custom asset
-    const customAsset = new StellarSdk.default.Asset(TOKEN_CODE, TOKEN_ISSUER);
-
-    // Load the distributor account
-    const distributorAccount = await server.loadAccount(distributorPublicKey);
-
-    // --- FINAL PRE-FLIGHT DIAGNOSTICS ---
-    console.log('--- FINAL TRANSACTION PARAMETERS ---');
-    
-    const finalDistributorPublicKey = distributorKeypair.publicKey();
-    const finalUserPublicKey = req.body.userAddress;
-    const finalIssuerPublicKey = process.env.TOKEN_ISSUER_PUBLIC_KEY;
-    const finalTokenCode = process.env.TOKEN_CODE;
-    const finalTokenAmount = amount.toString();
-
-    console.log(`[FINAL CHECK] Distributor Account: ${finalDistributorPublicKey}`);
-    console.log(`[FINAL CHECK] User Destination Account: ${finalUserPublicKey}`);
-    console.log(`[FINAL CHECK] Token Issuer Account: ${finalIssuerPublicKey}`);
-    console.log(`[FINAL CHECK] Token Code: ${finalTokenCode}`);
-    console.log(`[FINAL CHECK] Token Amount: ${finalTokenAmount}`);
-
-    const asset = new StellarSdk.default.Asset(finalTokenCode, finalIssuerPublicKey);
-
-    console.log('[FINAL CHECK] Asset Object Created:', asset);
-    console.log('--- END OF FINAL DIAGNOSTICS ---');
-
-    // Create the payment operation
-    const paymentOperation = StellarSdk.default.Operation.payment({
-      destination: finalUserPublicKey,
-      asset: asset,
-      amount: finalTokenAmount
-    });
-
-    // Build the transaction
-    const transaction = new StellarSdk.default.TransactionBuilder(distributorAccount, {
-      fee: '100', // Base fee
-      networkPassphrase: StellarSdk.default.Networks.TESTNET
-    })
-      .addOperation(paymentOperation)
-      .setTimeout(30) // 30 seconds timeout
-      .build();
-
-    // Sign the transaction
-    transaction.sign(distributorKeypair);
-
-    // Submit the transaction
-    const result = await server.submitTransaction(transaction);
-
-    return {
-      success: true,
-      transactionHash: result.hash
-    };
-
-  } catch (error) {
-    console.error('Token payment error:', error);
-    return {
-      success: false,
-      error: error.message
-    };
-  }
-}
+// Token payment logic moved to /api/claim-tokens.js endpoint

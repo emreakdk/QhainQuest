@@ -256,6 +256,9 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
         questApiService.markQuestCompleted(publicKey, questId);
         setQuestCompleted(true);
         
+        // Add reward to claimable balance instead of immediate transfer
+        questApiService.addToClaimableBalance(publicKey, result.data.rewardAmount);
+        
         // CRITICAL: Set loading to false immediately on success
         setIsSubmitting(false);
         
@@ -263,7 +266,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
         setShowCelebration(true);
         showSuccess(
           'Tebrikler! Görevi tamamladınız.', 
-          `${result.data.rewardAmount} token kazandınız!`
+          `${result.data.rewardAmount} token claimable balance'a eklendi!`
         );
         
         // Update user stats in context

@@ -134,6 +134,101 @@ class QuestApiService {
       console.error('Error clearing completed quests:', error);
     }
   }
+
+  /**
+   * Get claimable balance for a user from localStorage
+   * @param {string} userAddress - User's Stellar wallet address
+   * @returns {number} Claimable balance amount
+   */
+  getClaimableBalance(userAddress) {
+    try {
+      const key = `claimableBalance_${userAddress}`;
+      const balance = localStorage.getItem(key);
+      return balance ? parseFloat(balance) : 0;
+    } catch (error) {
+      console.error('Error getting claimable balance:', error);
+      return 0;
+    }
+  }
+
+  /**
+   * Add reward to claimable balance
+   * @param {string} userAddress - User's Stellar wallet address
+   * @param {number} rewardAmount - Amount to add to claimable balance
+   */
+  addToClaimableBalance(userAddress, rewardAmount) {
+    try {
+      const key = `claimableBalance_${userAddress}`;
+      const currentBalance = this.getClaimableBalance(userAddress);
+      const newBalance = currentBalance + rewardAmount;
+      localStorage.setItem(key, newBalance.toString());
+      console.log(`Added ${rewardAmount} to claimable balance. New balance: ${newBalance}`);
+    } catch (error) {
+      console.error('Error adding to claimable balance:', error);
+    }
+  }
+
+  /**
+   * Reset claimable balance to 0
+   * @param {string} userAddress - User's Stellar wallet address
+   */
+  resetClaimableBalance(userAddress) {
+    try {
+      const key = `claimableBalance_${userAddress}`;
+      localStorage.setItem(key, '0');
+      console.log('Claimable balance reset to 0');
+    } catch (error) {
+      console.error('Error resetting claimable balance:', error);
+    }
+  }
+
+  /**
+   * Claim tokens by calling the claim-tokens API
+   * @param {string} userAddress - User's Stellar wallet address
+   * @param {number} amount - Amount to claim
+   * @returns {Promise<Object>} API response
+   */
+  async claimTokens(userAddress, amount) {
+    try {
+      const response = await fetch(`${this.baseUrl}/claim-tokens`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userAddress,
+          amount
+        }),
+        signal: AbortSignal.timeout(this.timeout)
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || `HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      return {
+        success: true,
+        data: data.data,
+        message: data.message
+      };
+
+    } catch (error) {
+      console.error('Token claim API error:', error);
+
+      // Handle different types of errors
+      if (error.name === 'AbortError') {
+        throw new Error('Request timeout. Please try again.');
+      }
+
+      if (error.message.includes('Token payment failed')) {
+        throw new Error('Token ödülü gönderilemedi. Lütfen daha sonra tekrar deneyin.');
+      }
+
+      throw new Error(error.message || 'Token claim işlemi sırasında bir hata oluştu.');
+    }
+  }
 }
 
 // Export singleton instance
