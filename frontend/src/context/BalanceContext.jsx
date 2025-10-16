@@ -93,7 +93,7 @@ export const BalanceProvider = ({ children }) => {
   }, [claimableBalance]);
 
   /**
-   * Reset claimable balance to 0
+   * Reset claimable balance to 0 and add to claimed balance
    * @param {string} userAddress - User's wallet address
    */
   const resetClaimableBalance = useCallback((userAddress) => {
@@ -103,20 +103,26 @@ export const BalanceProvider = ({ children }) => {
     }
 
     try {
-      const key = `claimableBalance_${userAddress}`;
+      const claimableKey = `claimableBalance_${userAddress}`;
+      const claimedKey = `claimedBalance_${userAddress}`;
+      
+      // Get current values
+      const currentClaimable = claimableBalance;
+      const currentClaimed = parseFloat(localStorage.getItem(claimedKey) || '0');
       
       // Update React state
       setClaimableBalance(0);
       setLastUpdated(new Date().toISOString());
       
       // Update localStorage
-      localStorage.setItem(key, '0');
+      localStorage.setItem(claimableKey, '0');
+      localStorage.setItem(claimedKey, (currentClaimed + currentClaimable).toString());
       
-      console.log(`[BalanceContext] Reset balance to 0 for ${userAddress}`);
+      console.log(`[BalanceContext] Reset claimable balance to 0 and added ${currentClaimable} to claimed balance for ${userAddress}`);
     } catch (error) {
       console.error('[BalanceContext] Error resetting claimable balance:', error);
     }
-  }, []);
+  }, [claimableBalance]);
 
   /**
    * Set claimable balance to a specific value

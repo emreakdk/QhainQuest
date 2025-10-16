@@ -39,7 +39,7 @@ export const TokenProvider = ({ children }) => {
     try {
       setCurrentUser(userAddress);
       
-      // Get comprehensive breakdown
+      // Get comprehensive breakdown (FIXED: Don't double-count claimable balance)
       const breakdown = getTokenBalanceBreakdown(userAddress);
       // Get claimable balance from localStorage directly (BalanceContext will sync this)
       const claimableBalance = questApiService.getClaimableBalance(userAddress);
@@ -52,9 +52,10 @@ export const TokenProvider = ({ children }) => {
       const totalQuests = questDatabase.length;
       const inProgressQuests = Math.max(0, totalQuests - breakdown.questCount);
       
+      // Use the corrected breakdown from tokenBalanceCalculator
       const tokenData = {
-        totalEarned: breakdown.totalBalance,           // All-time earned (including claimable)
-        claimableBalance: claimableBalance,            // Ready to claim
+        totalEarned: breakdown.totalBalance,           // FIXED: Now correctly calculated
+        claimableBalance: breakdown.claimableBalance,  // Ready to claim
         claimedBalance: breakdown.claimedBalance,      // Already claimed
         totalBalance: breakdown.totalBalance,          // Total current balance
         completedQuests: breakdown.questCount,

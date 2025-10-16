@@ -81,20 +81,22 @@ export const getTokenBalanceBreakdown = (userAddress) => {
     }
     
     const completedQuests = getCompletedQuestsForUser(userAddress);
-    const earnedFromQuests = completedQuests.reduce((sum, quest) => sum + (quest.rewardAmount || 0), 0);
     
-    // Get claimable balance from localStorage
+    // Get claimable balance from localStorage (amount ready to claim)
     const claimableBalance = parseFloat(localStorage.getItem(`claimableBalance_${userAddress}`) || '0');
     
-    // Total balance = earned from quests + claimable balance
-    const totalBalance = earnedFromQuests + claimableBalance;
+    // Get claimed balance from localStorage (amount already transferred to wallet)
+    const claimedBalance = parseFloat(localStorage.getItem(`claimedBalance_${userAddress}`) || '0');
+    
+    // Total earned = claimable + claimed (all tokens ever earned)
+    const totalBalance = claimableBalance + claimedBalance;
     
     return {
       totalBalance,
       completedQuests,
       questCount: completedQuests.length,
       claimableBalance,
-      claimedBalance: earnedFromQuests - claimableBalance // Already claimed amount
+      claimedBalance
     };
   } catch (error) {
     console.error('Error getting token balance breakdown:', error);
