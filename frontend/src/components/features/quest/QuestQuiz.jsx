@@ -16,7 +16,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
   const { publicKey } = useContext(WalletContext);
   const { t } = useLanguage();
   const { showSuccess, showError } = useNotification();
-  const { submitAnswer, getQuestProgress } = useQuest();
+  const { submitAnswer, getQuestProgress, refreshUserBalance } = useQuest();
   const { playSuccessSound, playErrorSound, playClickSound } = useSound();
   
   const [quest, setQuest] = useState(null);
@@ -245,6 +245,9 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
         questApiService.markQuestCompleted(publicKey, questId);
         setQuestCompleted(true);
         
+        // CRITICAL: Set loading to false immediately on success
+        setIsSubmitting(false);
+        
         // Show celebration
         setShowCelebration(true);
         showSuccess(
@@ -255,6 +258,9 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
         // Update user stats in context
         await submitAnswer(publicKey, questId, currentLessonIndex, answers[answers.length - 1]);
         
+        // CRITICAL: Refresh user balance to show updated token amount
+        await refreshUserBalance(publicKey);
+        
         console.log('Quest completed successfully:', result.data);
       } else {
         throw new Error(result.error || 'Quest completion failed');
@@ -262,7 +268,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
     } catch (error) {
       console.error('Secure quest completion error:', error);
       showError('Quest Tamamlanamadı', error.message);
-    } finally {
+      // CRITICAL: Set loading to false on error too
       setIsSubmitting(false);
     }
   };

@@ -197,6 +197,22 @@ export const QuestProvider = ({ children }) => {
     loadQuests();
   }, [loadQuests]);
 
+  // Refresh user balance after quest completion
+  const refreshUserBalance = useCallback(async (userAddress) => {
+    if (!userAddress) return;
+    
+    try {
+      console.log('Refreshing user balance for:', userAddress);
+      
+      // Reload user progress to get updated stats
+      await loadUserProgress(userAddress);
+      
+      console.log('User balance refreshed successfully');
+    } catch (error) {
+      console.error('Error refreshing user balance:', error);
+    }
+  }, [loadUserProgress]);
+
   // Context value'yu useMemo ile optimize et
   const value = useMemo(() => ({
     // State
@@ -212,6 +228,7 @@ export const QuestProvider = ({ children }) => {
     loadUserProgress,
     submitAnswer,
     refreshData,
+    refreshUserBalance,
     
     // Helpers
     getQuestStatus,
@@ -229,6 +246,7 @@ export const QuestProvider = ({ children }) => {
     loadUserProgress,
     submitAnswer,
     refreshData,
+    refreshUserBalance,
     getQuestStatus,
     getQuestProgress,
     isQuestCompleted,
