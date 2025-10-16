@@ -401,11 +401,31 @@ async function performTokenPayment(userAddress, amount, req) {
     // Load the distributor account
     const distributorAccount = await server.loadAccount(distributorPublicKey);
 
+    // --- FINAL PRE-FLIGHT DIAGNOSTICS ---
+    console.log('--- FINAL TRANSACTION PARAMETERS ---');
+    
+    const finalDistributorPublicKey = distributorKeypair.publicKey();
+    const finalUserPublicKey = req.body.userAddress;
+    const finalIssuerPublicKey = process.env.TOKEN_ISSUER_PUBLIC_KEY;
+    const finalTokenCode = process.env.TOKEN_CODE;
+    const finalTokenAmount = amount.toString();
+
+    console.log(`[FINAL CHECK] Distributor Account: ${finalDistributorPublicKey}`);
+    console.log(`[FINAL CHECK] User Destination Account: ${finalUserPublicKey}`);
+    console.log(`[FINAL CHECK] Token Issuer Account: ${finalIssuerPublicKey}`);
+    console.log(`[FINAL CHECK] Token Code: ${finalTokenCode}`);
+    console.log(`[FINAL CHECK] Token Amount: ${finalTokenAmount}`);
+
+    const asset = new StellarSdk.default.Asset(finalTokenCode, finalIssuerPublicKey);
+
+    console.log('[FINAL CHECK] Asset Object Created:', asset);
+    console.log('--- END OF FINAL DIAGNOSTICS ---');
+
     // Create the payment operation
     const paymentOperation = StellarSdk.default.Operation.payment({
-      destination: userAddress,
-      asset: customAsset,
-      amount: amount.toString()
+      destination: finalUserPublicKey,
+      asset: asset,
+      amount: finalTokenAmount
     });
 
     // Build the transaction
