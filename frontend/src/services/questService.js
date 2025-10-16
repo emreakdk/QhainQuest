@@ -188,6 +188,10 @@ class QuestService {
 
   // Quest durumunu belirle
   getQuestStatus(quest, progress) {
+    // Fixed: Add null checks for quest object and lessons property
+    if (!quest || !quest.lessons || !Array.isArray(quest.lessons)) {
+      return 'available';
+    }
     if (progress >= quest.lessons.length) {
       return 'completed';
     } else if (progress > 0) {

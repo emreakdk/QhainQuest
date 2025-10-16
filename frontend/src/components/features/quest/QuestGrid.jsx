@@ -31,10 +31,14 @@ const QuestGrid = () => {
 
   // Helper functions moved after all Hooks
   const getQuestCategory = (quest) => {
+    // Fixed: Add null check for quest object
+    if (!quest) return 'blockchain';
     return quest.category || 'blockchain';
   };
 
   const getQuestDifficulty = (quest) => {
+    // Fixed: Add null check for quest object
+    if (!quest) return 'beginner';
     return quest.difficulty || 'beginner';
   };
 
@@ -51,6 +55,10 @@ const QuestGrid = () => {
   };
 
   const filteredQuests = realQuests.filter(quest => {
+    // Fixed: Add null checks for quest object properties
+    if (!quest || !quest.name || !quest.description) {
+      return false;
+    }
     const matchesCategory = selectedCategory === 'all' || getQuestCategory(quest) === selectedCategory;
     const matchesDifficulty = selectedDifficulty === 'all' || getQuestDifficulty(quest) === selectedDifficulty;
     const matchesSearch = quest.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -188,7 +196,13 @@ const QuestGrid = () => {
           <div className="flex items-center justify-between">
             <div>
               <div className="text-3xl font-bold">
-                <AnimatedCounter value={realQuests?.filter(q => getQuestStatus(q) === 'in-progress').length || 0} duration={1500} />
+                <AnimatedCounter value={realQuests?.filter(q => {
+                  // Fixed: Add null check for quest object and lessons property
+                  if (!q || !q.lessons || !Array.isArray(q.lessons)) {
+                    return false;
+                  }
+                  return getQuestStatus(q) === 'in-progress';
+                }).length || 0} duration={1500} />
               </div>
               <div className="text-purple-100 text-sm">{t('stats.inProgress')}</div>
             </div>
@@ -229,7 +243,11 @@ const QuestGrid = () => {
                   variant={selectedCategory === category.id ? 'default' : 'outline'}
                   className="ml-1"
                 >
-                  {realQuests.filter(q => getQuestCategory(q) === category.id || category.id === 'all').length}
+                  {realQuests.filter(q => {
+                    // Fixed: Add null check for quest object
+                    if (!q) return false;
+                    return getQuestCategory(q) === category.id || category.id === 'all';
+                  }).length}
                 </Badge>
               </button>
             ))}
