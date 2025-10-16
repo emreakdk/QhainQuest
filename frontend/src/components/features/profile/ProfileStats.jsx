@@ -17,6 +17,7 @@ const ProfileStats = ({ userStats }) => {
   const [completedQuestsCount, setCompletedQuestsCount] = useState(0);
   const [claimableBalance, setClaimableBalance] = useState(0);
   const [isClaiming, setIsClaiming] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   // Calculate token balance and claimable balance from localStorage
   useEffect(() => {
@@ -29,7 +30,7 @@ const ProfileStats = ({ userStats }) => {
       const claimable = questApiService.getClaimableBalance(publicKey);
       setClaimableBalance(claimable);
     }
-  }, [publicKey]); // Only recalculate when publicKey changes
+  }, [publicKey, refreshTrigger]); // Recalculate when publicKey changes or refresh is triggered
 
   // Handle token claiming
   const handleClaimTokens = async () => {
@@ -49,6 +50,13 @@ const ProfileStats = ({ userStats }) => {
         // Reset claimable balance to 0
         questApiService.resetClaimableBalance(publicKey);
         setClaimableBalance(0);
+        
+        // Refresh token balance to reflect the claimed amount
+        const breakdown = getTokenBalanceBreakdown(publicKey);
+        setTokenBalance(breakdown.totalBalance);
+        
+        // Trigger refresh to update all displays
+        setRefreshTrigger(prev => prev + 1);
         
         // Show success message
         showSuccess(

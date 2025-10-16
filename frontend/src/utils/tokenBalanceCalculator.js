@@ -64,7 +64,7 @@ export const getCompletedQuestsForUser = (userAddress) => {
 };
 
 /**
- * Get token balance breakdown for a user
+ * Get token balance breakdown for a user (including claimable balance)
  * @param {string} userAddress - User's Stellar wallet address
  * @returns {Object} Token balance breakdown
  */
@@ -74,24 +74,36 @@ export const getTokenBalanceBreakdown = (userAddress) => {
       return {
         totalBalance: 0,
         completedQuests: [],
-        questCount: 0
+        questCount: 0,
+        claimableBalance: 0,
+        claimedBalance: 0
       };
     }
     
     const completedQuests = getCompletedQuestsForUser(userAddress);
-    const totalBalance = completedQuests.reduce((sum, quest) => sum + (quest.rewardAmount || 0), 0);
+    const earnedFromQuests = completedQuests.reduce((sum, quest) => sum + (quest.rewardAmount || 0), 0);
+    
+    // Get claimable balance from localStorage
+    const claimableBalance = parseFloat(localStorage.getItem(`claimableBalance_${userAddress}`) || '0');
+    
+    // Total balance = earned from quests + claimable balance
+    const totalBalance = earnedFromQuests + claimableBalance;
     
     return {
       totalBalance,
       completedQuests,
-      questCount: completedQuests.length
+      questCount: completedQuests.length,
+      claimableBalance,
+      claimedBalance: earnedFromQuests - claimableBalance // Already claimed amount
     };
   } catch (error) {
     console.error('Error getting token balance breakdown:', error);
     return {
       totalBalance: 0,
       completedQuests: [],
-      questCount: 0
+      questCount: 0,
+      claimableBalance: 0,
+      claimedBalance: 0
     };
   }
 };

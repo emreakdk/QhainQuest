@@ -275,6 +275,11 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
         // CRITICAL: Refresh user balance to show updated token amount
         await refreshUserBalance(publicKey);
         
+        // Trigger a page refresh to update all token displays
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+        
         console.log('Quest completed successfully:', result.data);
       } else {
         throw new Error(result.error || 'Quest completion failed');
