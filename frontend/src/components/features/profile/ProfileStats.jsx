@@ -40,7 +40,8 @@ const ProfileStats = ({ userStats }) => {
     },
     {
       title: 'Sertifikalar',
-      value: userStats?.certificates || 0,
+      // FIX: Handle certificates as both array and number to prevent React error #31
+      value: Array.isArray(userStats?.certificates) ? userStats.certificates.length : (userStats?.certificates || 0),
       icon: '🏆',
       color: 'from-purple-500 to-pink-500',
       bgColor: 'bg-purple-50 dark:bg-purple-900/20',
