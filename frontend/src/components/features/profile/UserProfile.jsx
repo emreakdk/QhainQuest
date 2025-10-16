@@ -172,27 +172,38 @@ const UserProfile = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {completedQuests.length > 0 ? completedQuests.map(quest => (
-                <div key={quest.id} className="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl p-6 border border-purple-200 dark:border-purple-700">
-                  <div className="text-center">
-                    <div className="text-4xl mb-4">🏆</div>
-                    <h4 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
-                      Sertifika: {quest.name}
-                    </h4>
-                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-                      {quest.description}
-                    </p>
-                    <div className="flex items-center justify-center space-x-4 text-sm">
-                      <Badge variant="success">
-                        +{quest.rewardAmount} Token
-                      </Badge>
-                      <Badge variant="primary">
-                        {quest.difficulty}
-                      </Badge>
+              {completedQuests.length > 0 ? completedQuests.map(quest => {
+                // FIX: Added null check to prevent React error #31 when quest object is undefined
+                if (!quest || !quest.name) {
+                  return null;
+                }
+                
+                return (
+                  <div key={quest.id} className="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl p-6 border border-purple-200 dark:border-purple-700">
+                    <div className="text-center">
+                      <div className="text-4xl mb-4">🏆</div>
+                      <h4 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
+                        {/* FIX: Rendered quest.name instead of the entire quest object to prevent React error #31 */}
+                        Sertifika: {quest.name}
+                      </h4>
+                      <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+                        {/* FIX: Rendered quest.description instead of the entire quest object */}
+                        {quest.description || 'Açıklama bulunamadı'}
+                      </p>
+                      <div className="flex items-center justify-center space-x-4 text-sm">
+                        <Badge variant="success">
+                          {/* FIX: Rendered quest.rewardAmount instead of the entire quest object */}
+                          +{quest.rewardAmount || 0} Token
+                        </Badge>
+                        <Badge variant="primary">
+                          {/* FIX: Rendered quest.difficulty string instead of the entire quest object */}
+                          {quest.difficulty || 'beginner'}
+                        </Badge>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )) : (
+                );
+              }) : (
                 <div className="col-span-full text-center py-8 text-slate-500 dark:text-slate-400">
                   Henüz sertifika kazanmadınız. Quest'leri tamamlayarak sertifika kazanın!
                 </div>
