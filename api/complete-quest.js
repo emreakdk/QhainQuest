@@ -9,56 +9,167 @@ const StellarSdk = require('stellar-sdk');
 // Using Horizon instead of Server (Stellar SDK v11+ change)
 const server = new StellarSdk.default.Horizon.Server('https://horizon-testnet.stellar.org');
 
-// Quest validation data (should match frontend questData.js)
+// Quest validation data - imported from frontend questData.js
+// This ensures backend and frontend use the same quest definitions
 const QUEST_DATA = {
   'stellar-fundamentals': {
+    id: 'stellar-fundamentals',
+    name: 'Stellar Temelleri',
     rewardAmount: 100,
     lessons: [
-      { id: 'stellar-1', correctAnswer: 'Stellar Consensus Protocol (SCP)' },
-      { id: 'stellar-2', correctAnswer: 'XLM (Stellar Lumens)' },
-      { id: 'stellar-3', correctAnswer: 'Geleneksel finansal sistem ile köprü kuran kuruluşlar' },
-      { id: 'stellar-4', correctAnswer: '2 XLM' },
-      { id: 'stellar-5', correctAnswer: 'Python, JavaScript, Go, Java, C++' }
+      { 
+        id: 'stellar-1', 
+        correctAnswer: 'Stellar Consensus Protocol (SCP)',
+        question: 'Stellar ağında işlemler hangi konsensüs algoritması ile doğrulanır?'
+      },
+      { 
+        id: 'stellar-2', 
+        correctAnswer: 'XLM (Stellar Lumens)',
+        question: 'Stellar ağının yerel tokenı nedir?'
+      },
+      { 
+        id: 'stellar-3', 
+        correctAnswer: 'Geleneksel finansal sistem ile köprü kuran kuruluşlar',
+        question: 'Stellar\'da "Anchors" nedir?'
+      },
+      { 
+        id: 'stellar-4', 
+        correctAnswer: '2 XLM',
+        question: 'Stellar\'da minimum hesap bakiyesi nedir?'
+      },
+      { 
+        id: 'stellar-5', 
+        correctAnswer: 'Python, JavaScript, Go, Java, C++',
+        question: 'Stellar geliştiricileri için ana SDK hangi dillerde mevcuttur?'
+      }
     ]
   },
   'soroban-smart-contracts': {
+    id: 'soroban-smart-contracts',
+    name: 'Soroban Smart Contracts',
     rewardAmount: 250,
     lessons: [
-      { id: 'soroban-1', correctAnswer: 'Stellar üzerinde bir akıllı kontrat platformu' },
-      { id: 'soroban-2', correctAnswer: 'Rust' },
-      { id: 'soroban-3', correctAnswer: 'Smart contract\'ların Stellar ağı ile etkileşim kurmasını sağlayan fonksiyonlar' },
-      { id: 'soroban-4', correctAnswer: 'Contract bazlı izole storage' },
-      { id: 'soroban-5', correctAnswer: 'Gas fee olarak XLM kullanılır' }
+      { 
+        id: 'soroban-1', 
+        correctAnswer: 'Stellar üzerinde bir akıllı kontrat platformu',
+        question: 'Soroban nedir?'
+      },
+      { 
+        id: 'soroban-2', 
+        correctAnswer: 'Rust',
+        question: 'Soroban akıllı kontratları hangi dilde yazılır?'
+      },
+      { 
+        id: 'soroban-3', 
+        correctAnswer: 'Smart contract\'ların Stellar ağı ile etkileşim kurmasını sağlayan fonksiyonlar',
+        question: 'Soroban\'da "host functions" nedir?'
+      },
+      { 
+        id: 'soroban-4', 
+        correctAnswer: 'Contract bazlı izole storage',
+        question: 'Soroban\'da "storage" nasıl çalışır?'
+      },
+      { 
+        id: 'soroban-5', 
+        correctAnswer: 'Gas fee olarak XLM kullanılır',
+        question: 'Soroban\'da transaction fee olarak ne kullanılır?'
+      }
     ]
   },
   'defi-protocols': {
+    id: 'defi-protocols',
+    name: 'DeFi Protokolleri',
     rewardAmount: 300,
     lessons: [
-      { id: 'defi-1', correctAnswer: 'Blockchain tabanlı finansal hizmetler' },
-      { id: 'defi-2', correctAnswer: 'StellarSwap' },
-      { id: 'defi-3', correctAnswer: 'Likidite sağlayarak token ödülleri kazanma' },
-      { id: 'defi-4', correctAnswer: 'Likidite sağlarken token fiyat değişimlerinden kaynaklanan kayıp' },
-      { id: 'defi-5', correctAnswer: 'AMM (Automated Market Maker) protokolü' }
+      { 
+        id: 'defi-1', 
+        correctAnswer: 'Blockchain tabanlı finansal hizmetler',
+        question: 'Merkeziyetsiz finans (DeFi) ne anlama gelir?'
+      },
+      { 
+        id: 'defi-2', 
+        correctAnswer: 'StellarSwap',
+        question: 'Stellar\'da en popüler AMM protokolü nedir?'
+      },
+      { 
+        id: 'defi-3', 
+        correctAnswer: 'Likidite sağlayarak token ödülleri kazanma',
+        question: 'DeFi\'de "yield farming" nedir?'
+      },
+      { 
+        id: 'defi-4', 
+        correctAnswer: 'Likidite sağlarken token fiyat değişimlerinden kaynaklanan kayıp',
+        question: 'DeFi\'de "impermanent loss" nedir?'
+      },
+      { 
+        id: 'defi-5', 
+        correctAnswer: 'AMM (Automated Market Maker) protokolü',
+        question: 'AMM protokolü ne anlama gelir?'
+      }
     ]
   },
   'nft-ecosystem': {
+    id: 'nft-ecosystem',
+    name: 'NFT Ekosistemi',
     rewardAmount: 200,
     lessons: [
-      { id: 'nft-1', correctAnswer: 'Non-Fungible Token' },
-      { id: 'nft-2', correctAnswer: 'SEP-005' },
-      { id: 'nft-3', correctAnswer: 'IPFS\'de' },
-      { id: 'nft-4', correctAnswer: 'Metadata hash ile' },
-      { id: 'nft-5', correctAnswer: 'Stellar\'ın yerel NFT standardı' }
+      { 
+        id: 'nft-1', 
+        correctAnswer: 'Non-Fungible Token',
+        question: 'NFT\'nin açılımı nedir?'
+      },
+      { 
+        id: 'nft-2', 
+        correctAnswer: 'SEP-005',
+        question: 'Stellar\'da NFT\'ler hangi standarda göre oluşturulur?'
+      },
+      { 
+        id: 'nft-3', 
+        correctAnswer: 'IPFS\'de',
+        question: 'NFT\'lerin "metadata"\'sı nerede saklanır?'
+      },
+      { 
+        id: 'nft-4', 
+        correctAnswer: 'Metadata hash ile',
+        question: 'NFT\'lerin benzersizliği nasıl sağlanır?'
+      },
+      { 
+        id: 'nft-5', 
+        correctAnswer: 'Stellar\'ın yerel NFT standardı',
+        question: 'SEP-005 nedir?'
+      }
     ]
   },
   'advanced-stellar': {
+    id: 'advanced-stellar',
+    name: 'İleri Seviye Stellar',
     rewardAmount: 500,
     lessons: [
-      { id: 'advanced-1', correctAnswer: 'Çoklu imza gerektiren işlemler' },
-      { id: 'advanced-2', correctAnswer: 'Farklı asset\'ler arasında otomatik dönüşüm yapan ödeme' },
-      { id: 'advanced-3', correctAnswer: 'Transaction birden fazla operation içerebilir' },
-      { id: 'advanced-4', correctAnswer: 'Path payment ile otomatik dönüşüm' },
-      { id: 'advanced-5', correctAnswer: 'Multi-signature hesap güvenliği' }
+      { 
+        id: 'advanced-1', 
+        correctAnswer: 'Çoklu imza gerektiren işlemler',
+        question: 'Stellar\'da "multi-signature" nedir?'
+      },
+      { 
+        id: 'advanced-2', 
+        correctAnswer: 'Farklı asset\'ler arasında otomatik dönüşüm yapan ödeme',
+        question: 'Stellar\'da "path payment" nedir?'
+      },
+      { 
+        id: 'advanced-3', 
+        correctAnswer: 'Transaction birden fazla operation içerebilir',
+        question: 'Stellar\'da "operation" ve "transaction" arasındaki fark nedir?'
+      },
+      { 
+        id: 'advanced-4', 
+        correctAnswer: 'Path payment ile otomatik dönüşüm',
+        question: 'Path payment\'in avantajı nedir?'
+      },
+      { 
+        id: 'advanced-5', 
+        correctAnswer: 'Multi-signature hesap güvenliği',
+        question: 'Multi-signature hesabın güvenlik avantajı nedir?'
+      }
     ]
   }
 };
@@ -136,14 +247,22 @@ export default async function handler(req, res) {
       });
     }
 
-    // Check if quest exists
+    // Find the quest in our data - this is the key fix!
     const quest = QUEST_DATA[questId];
     if (!quest) {
+      console.log('Quest not found in QUEST_DATA:', questId);
+      console.log('Available quests:', Object.keys(QUEST_DATA));
       return res.status(404).json({
         success: false,
-        error: 'Quest not found.'
+        error: `Quest with ID '${questId}' does not exist.`
       });
     }
+
+    console.log('--- QUEST FOUND ---');
+    console.log('Quest ID:', quest.id);
+    console.log('Quest Name:', quest.name);
+    console.log('Expected answers count:', quest.lessons.length);
+    console.log('Received answers count:', answers.length);
 
     // Check if user has already completed this quest
     const completionKey = `${userAddress}-${questId}`;
