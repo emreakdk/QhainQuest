@@ -127,11 +127,12 @@ export default async function handler(req, res) {
       });
     }
 
-    // Validate Stellar address format
-    if (!userAddress.match(/^[G-Z]{56}$/)) {
+    // Validate Stellar address format (Stellar public keys start with 'G' and are 56 chars)
+    if (!userAddress.match(/^G[A-Z2-7]{55}$/)) {
+      console.log('Stellar address validation failed for:', userAddress);
       return res.status(400).json({
         success: false,
-        error: 'Invalid Stellar address format.'
+        error: 'Invalid Stellar address format. Must start with G and be 56 characters long.'
       });
     }
 
