@@ -4,8 +4,28 @@
 // Import stellar-sdk for CommonJS environment
 const StellarSdk = require('stellar-sdk');
 
-// Initialize Stellar server for testnet
-const server = new StellarSdk.default.Horizon.Server('https://horizon-testnet.stellar.org');
+// Safe SDK initialization with error handling
+let server, Network, Keypair, Asset, Operation, TransactionBuilder;
+
+try {
+  // Handle different Stellar SDK import structures
+  const SDK = StellarSdk.default || StellarSdk;
+  
+  // Initialize Stellar server for testnet
+  server = new SDK.Horizon.Server('https://horizon-testnet.stellar.org');
+  
+  // Extract SDK components safely
+  Network = SDK.Network;
+  Keypair = SDK.Keypair;
+  Asset = SDK.Asset;
+  Operation = SDK.Operation;
+  TransactionBuilder = SDK.TransactionBuilder;
+  
+  console.log('Stellar SDK initialized successfully');
+} catch (error) {
+  console.error('Stellar SDK initialization failed:', error);
+  throw new Error('Failed to initialize Stellar SDK');
+}
 
 // --- Configuration ---
 const TOKEN_CODE = process.env.TOKEN_CODE || 'CQT';
@@ -13,8 +33,18 @@ const TOKEN_ISSUER = process.env.TOKEN_ISSUER_PUBLIC_KEY;
 const DISTRIBUTOR_SECRET_KEY = process.env.DISTRIBUTOR_SECRET_KEY;
 const NETWORK_PASSPHRASE = 'Test SDF Network ; September 2015';
 
-// Initialize Stellar SDK Network
-StellarSdk.default.Network.use(new StellarSdk.default.Network(NETWORK_PASSPHRASE));
+// Initialize Stellar SDK Network safely
+try {
+  if (Network && typeof Network.use === 'function') {
+    Network.use(new Network(NETWORK_PASSPHRASE));
+    console.log('Stellar Network initialized successfully');
+  } else {
+    console.warn('Network.use not available, using default network configuration');
+  }
+} catch (error) {
+  console.error('Network initialization failed:', error);
+  // Continue without network initialization - will use default
+}
 
 export default async function handler(req, res) {
   // Set CORS headers for all responses
@@ -113,11 +143,16 @@ async function performTokenPayment(userAddress, amount) {
     console.log('Token Code:', TOKEN_CODE);
     console.log('Token Issuer:', TOKEN_ISSUER);
 
+    // Validate SDK components are available
+    if (!Asset || !Keypair || !Operation || !TransactionBuilder) {
+      throw new Error('Stellar SDK components not properly initialized');
+    }
+
     // Create the custom asset
-    const customAsset = new StellarSdk.default.Asset(TOKEN_CODE, TOKEN_ISSUER);
+    const customAsset = new Asset(TOKEN_CODE, TOKEN_ISSUER);
 
     // Load the distributor account
-    const distributorKeypair = StellarSdk.default.Keypair.fromSecret(DISTRIBUTOR_SECRET_KEY);
+    const distributorKeypair = Keypair.fromSecret(DISTRIBUTOR_SECRET_KEY);
     const distributorPublicKey = distributorKeypair.publicKey();
     const distributorAccount = await server.loadAccount(distributorPublicKey);
 
@@ -125,16 +160,16 @@ async function performTokenPayment(userAddress, amount) {
     console.log('User Destination:', userAddress);
 
     // Create the payment operation
-    const paymentOperation = StellarSdk.default.Operation.payment({
+    const paymentOperation = Operation.payment({
       destination: userAddress,
       asset: customAsset,
       amount: amount.toString()
     });
 
     // Build the transaction
-    const transaction = new StellarSdk.default.TransactionBuilder(distributorAccount, {
+    const transaction = new TransactionBuilder(distributorAccount, {
       fee: '100', // Base fee
-      networkPassphrase: StellarSdk.default.Networks.TESTNET
+      networkPassphrase: NETWORK_PASSPHRASE
     })
       .addOperation(paymentOperation)
       .setTimeout(30) // 30 seconds timeout
