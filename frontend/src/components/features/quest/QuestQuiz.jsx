@@ -6,6 +6,7 @@ import { useQuest } from '../../../context/QuestContext';
 import { useNotification } from '../../../context/NotificationContext';
 import useSound from '../../../hooks/useSound';
 import { questApiService } from '../../../services/questApi';
+import { questDatabase } from '../../../data/questData';
 import { Card, CardContent, CardHeader } from '../../ui/Card';
 import Button from '../../ui/Button';
 import Badge from '../../ui/Badge';
@@ -137,52 +138,38 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
     // Quest verilerini yükle
     const loadQuest = async () => {
       try {
-        // Mock quest verisi oluştur
-        const mockQuest = {
-          id: questId,
-          name: "Stellar Blockchain Temelleri",
-          description: "Stellar blockchain'in temel kavramlarını öğrenin",
-          lessons: [
-            {
-              id: 0,
-              question: "Stellar blockchain'de işlem onay süresi ne kadardır?",
-              correctAnswer: "3-5 saniye"
-            },
-            {
-              id: 1,
-              question: "Stellar'da kullanılan consensus algoritması nedir?",
-              correctAnswer: "Stellar Consensus Protocol"
-            },
-            {
-              id: 2,
-              question: "Stellar'da akıllı kontratlar hangi dilde yazılır?",
-              correctAnswer: "Rust"
-            }
-          ],
-          rewardAmount: 100,
-          certificateNftUrl: "https://ipfs.io/ipfs/QmStellarBasics"
-        };
+        // questDatabase'den gerçek quest verilerini al
+        const realQuest = questDatabase.find(q => q.id === questId);
+        
+        if (!realQuest) {
+          console.error('Quest bulunamadı:', questId);
+          showError('Quest Bulunamadı', 'Bu quest mevcut değil.');
+          return;
+        }
 
         // Her ders için multiple choice oluştur
-        const lessonsWithChoices = mockQuest.lessons.map(lesson => 
+        const lessonsWithChoices = realQuest.lessons.map(lesson => 
           generateMultipleChoice(lesson.question, lesson.correctAnswer)
         );
 
         setQuest({
-          ...mockQuest,
+          ...realQuest,
           lessons: lessonsWithChoices
         });
         
         // Kullanıcının mevcut ilerlemesini al
-        const progress = getQuestProgress(mockQuest);
+        const progress = getQuestProgress(realQuest);
         setCurrentLessonIndex(progress.currentStep);
+        
+        console.log(`Quest yüklendi: ${realQuest.name}, Soru sayısı: ${realQuest.lessons.length}`);
       } catch (error) {
         console.error('Quest yükleme hatası:', error);
+        showError('Hata', 'Quest yüklenirken bir hata oluştu.');
       }
     };
 
     loadQuest();
-  }, [questId, getQuestProgress, generateMultipleChoice]);
+  }, [questId, getQuestProgress, generateMultipleChoice, showError]);
 
   const currentLesson = quest?.lessons[currentLessonIndex];
   const difficulty = quest ? getDifficultyLevel(quest.name) : { level: 'easy', color: 'green', label: 'Kolay' };
