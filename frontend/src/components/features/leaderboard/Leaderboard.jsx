@@ -69,8 +69,8 @@ const Leaderboard = () => {
       address: publicKey || "GQRS...XYZ6", // Current user
       username: "You",
       totalTokens: userStats?.totalTokens || 1250,
-      certificates: userStats?.certificates || 3,
-      completedQuests: userStats?.completedQuests || 8,
+      certificates: Array.isArray(userStats?.certificates) ? userStats.certificates.length : (userStats?.certificates || 3),
+      completedQuests: Array.isArray(userStats?.completedQuests) ? userStats.completedQuests.length : (userStats?.completedQuests || 8),
       level: userStats?.level || 5,
       isCurrentUser: true
     }
@@ -173,7 +173,8 @@ const Leaderboard = () => {
                 <div className="flex justify-between">
                   <span className="text-slate-600 dark:text-slate-400">Sertifika:</span>
                   <span className="font-medium text-slate-900 dark:text-white">
-                    {user.certificates}
+                    {/* FIX: Rendered certificates count instead of the entire certificates object to prevent React error #31 */}
+                    {Array.isArray(user.certificates) ? user.certificates.length : user.certificates}
                   </span>
                 </div>
                 <div className="flex justify-between">
@@ -249,7 +250,8 @@ const Leaderboard = () => {
                   </div>
                   <div className="text-center">
                     <div className="font-medium text-slate-900 dark:text-white">
-                      {user.certificates}
+                      {/* FIX: Rendered certificates count instead of the entire certificates object to prevent React error #31 */}
+                      {Array.isArray(user.certificates) ? user.certificates.length : user.certificates}
                     </div>
                     <div className="text-slate-500 dark:text-slate-400">Sertifika</div>
                   </div>
