@@ -3,6 +3,7 @@ import { useContext } from 'react';
 import { WalletContext } from '../../../context/WalletContext';
 import { useLanguage } from '../../../context/LanguageContext';
 import { useQuest } from '../../../context/QuestContext';
+import { useToken } from '../../../context/TokenContext';
 import { useNotification } from '../../../context/NotificationContext';
 import useSound from '../../../hooks/useSound';
 import { questApiService } from '../../../services/questApi';
@@ -17,6 +18,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
   const { t } = useLanguage();
   const { showSuccess, showError } = useNotification();
   const { submitAnswer, getQuestProgress, refreshUserBalance } = useQuest();
+  const { addToClaimableBalance, refreshTokenData } = useToken();
   const { playSuccessSound, playErrorSound, playClickSound } = useSound();
   
   const [quest, setQuest] = useState(null);
@@ -256,8 +258,8 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
         questApiService.markQuestCompleted(publicKey, questId);
         setQuestCompleted(true);
         
-        // Add reward to claimable balance instead of immediate transfer
-        questApiService.addToClaimableBalance(publicKey, result.data.rewardAmount);
+        // Add reward to claimable balance using centralized context
+        addToClaimableBalance(publicKey, result.data.rewardAmount);
         
         // CRITICAL: Set loading to false immediately on success
         setIsSubmitting(false);
@@ -275,10 +277,8 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
         // CRITICAL: Refresh user balance to show updated token amount
         await refreshUserBalance(publicKey);
         
-        // Trigger a page refresh to update all token displays
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
+        // Refresh centralized token data (no more page reload needed!)
+        refreshTokenData();
         
         console.log('Quest completed successfully:', result.data);
       } else {

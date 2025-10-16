@@ -1,5 +1,6 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { WalletContext } from './context/WalletContext';
+import { TokenProvider, useToken } from './context/TokenContext';
 import Header from './components/layout/Header';
 import HeroSection from './components/layout/HeroSection';
 import QuestGrid from './components/features/quest/QuestGrid';
@@ -7,11 +8,16 @@ import UserProfile from './components/features/profile/UserProfile';
 import Leaderboard from './components/features/leaderboard/Leaderboard';
 
 function App() {
-  return <AppContent />;
+  return (
+    <TokenProvider>
+      <AppContent />
+    </TokenProvider>
+  );
 }
 
 function AppContent() {
   const { publicKey } = useContext(WalletContext);
+  const { loadTokenData } = useToken();
   const [currentPage, setCurrentPage] = useState(() => {
     // Önce localStorage'dan al
     const savedPage = localStorage.getItem('chainquest-current-page');
@@ -36,6 +42,11 @@ function AppContent() {
     url.searchParams.set('page', page);
     window.history.pushState({}, '', url);
   };
+
+  // Load token data when user changes
+  useEffect(() => {
+    loadTokenData(publicKey);
+  }, [publicKey, loadTokenData]);
 
   const renderPage = () => {
     switch (currentPage) {

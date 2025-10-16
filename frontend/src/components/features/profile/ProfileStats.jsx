@@ -2,9 +2,8 @@ import { useState, useEffect, memo } from 'react';
 import { useContext } from 'react';
 import { useLanguage } from '../../../context/LanguageContext';
 import { WalletContext } from '../../../context/WalletContext';
+import { useToken } from '../../../context/TokenContext';
 import { useNotification } from '../../../context/NotificationContext';
-import { calculateTotalTokenBalance, getTokenBalanceBreakdown } from '../../../utils/tokenBalanceCalculator';
-import { questApiService } from '../../../services/questApi';
 import { Card, CardContent } from '../../ui/Card';
 import Badge from '../../ui/Badge';
 import Button from '../../ui/Button';
@@ -13,55 +12,28 @@ const ProfileStats = ({ userStats }) => {
   const { t } = useLanguage();
   const { publicKey } = useContext(WalletContext);
   const { showSuccess, showError } = useNotification();
-  const [tokenBalance, setTokenBalance] = useState(0);
-  const [completedQuestsCount, setCompletedQuestsCount] = useState(0);
-  const [claimableBalance, setClaimableBalance] = useState(0);
+  const { tokenData, isLoading, claimTokens } = useToken();
   const [isClaiming, setIsClaiming] = useState(false);
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-  // Calculate token balance and claimable balance from localStorage
-  useEffect(() => {
-    if (publicKey) {
-      const breakdown = getTokenBalanceBreakdown(publicKey);
-      setTokenBalance(breakdown.totalBalance);
-      setCompletedQuestsCount(breakdown.questCount);
-      
-      // Load claimable balance
-      const claimable = questApiService.getClaimableBalance(publicKey);
-      setClaimableBalance(claimable);
-    }
-  }, [publicKey, refreshTrigger]); // Recalculate when publicKey changes or refresh is triggered
-
-  // Handle token claiming
+  // Handle token claiming using centralized context
   const handleClaimTokens = async () => {
-    if (!publicKey || claimableBalance <= 0) {
+    if (!publicKey || tokenData.claimableBalance <= 0) {
       return;
     }
 
     setIsClaiming(true);
     
     try {
-      console.log(`Claiming ${claimableBalance} tokens for user ${publicKey}`);
+      console.log(`Claiming ${tokenData.claimableBalance} tokens for user ${publicKey}`);
       
-      // Call the claim-tokens API
-      const result = await questApiService.claimTokens(publicKey, claimableBalance);
+      // Use centralized token context
+      const result = await claimTokens(publicKey, tokenData.claimableBalance);
       
       if (result.success) {
-        // Reset claimable balance to 0
-        questApiService.resetClaimableBalance(publicKey);
-        setClaimableBalance(0);
-        
-        // Refresh token balance to reflect the claimed amount
-        const breakdown = getTokenBalanceBreakdown(publicKey);
-        setTokenBalance(breakdown.totalBalance);
-        
-        // Trigger refresh to update all displays
-        setRefreshTrigger(prev => prev + 1);
-        
         // Show success message
         showSuccess(
           'Token\'lar Başarıyla Aktarıldı!',
-          `${claimableBalance} token Stellar cüzdanınıza aktarıldı. Transaction Hash: ${result.data.transactionHash}`
+          `${tokenData.claimableBalance} token Stellar cüzdanınıza aktarıldı. Transaction Hash: ${result.data.transactionHash}`
         );
         
         console.log('Tokens claimed successfully:', result.data);
@@ -78,8 +50,8 @@ const ProfileStats = ({ userStats }) => {
 
   const stats = [
     {
-      title: 'Toplam Token',
-      value: tokenBalance,
+      title: 'Toplam Kazanılan',
+      value: tokenData.totalEarned,
       icon: '💰',
       color: 'from-yellow-500 to-orange-500',
       bgColor: 'bg-yellow-50 dark:bg-yellow-900/20',
@@ -87,7 +59,7 @@ const ProfileStats = ({ userStats }) => {
     },
     {
       title: 'Claimable Balance',
-      value: claimableBalance,
+      value: tokenData.claimableBalance,
       icon: '⏳',
       color: 'from-blue-500 to-cyan-500',
       bgColor: 'bg-blue-50 dark:bg-blue-900/20',
@@ -95,7 +67,7 @@ const ProfileStats = ({ userStats }) => {
     },
     {
       title: 'Tamamlanan Quest',
-      value: completedQuestsCount,
+      value: tokenData.completedQuests,
       icon: '✅',
       color: 'from-green-500 to-teal-500',
       bgColor: 'bg-green-50 dark:bg-green-900/20',
@@ -138,7 +110,7 @@ const ProfileStats = ({ userStats }) => {
       </div>
 
       {/* Claim Button */}
-      {claimableBalance > 0 && (
+      {tokenData.claimableBalance > 0 && (
         <Card className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-700">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -147,7 +119,7 @@ const ProfileStats = ({ userStats }) => {
                   Token'larınızı Hesabınıza Aktarın
                 </h3>
                 <p className="text-sm text-slate-600 dark:text-slate-400">
-                  {claimableBalance} token'ı Stellar cüzdanınıza aktarabilirsiniz.
+                  {tokenData.claimableBalance} token'ı Stellar cüzdanınıza aktarabilirsiniz.
                 </p>
               </div>
               <Button

@@ -126,8 +126,14 @@ const QuestGrid = () => {
           onComplete={() => {
             setSelectedQuest(null);
             refreshData();
+            // Quest completion sonrası tasks page'inde kal (homepage'e gitme)
+            console.log('Quest completed, staying on tasks page');
           }} 
-          onClose={() => setSelectedQuest(null)}
+          onClose={() => {
+            setSelectedQuest(null);
+            // Close button'a tıklandığında da tasks page'inde kal
+            console.log('Quest closed, staying on tasks page');
+          }}
         />
       </Suspense>
     );
