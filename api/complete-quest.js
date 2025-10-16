@@ -372,12 +372,34 @@ async function performTokenPayment(userAddress, amount) {
       throw new Error('Token configuration missing. Please set TOKEN_ISSUER_PUBLIC_KEY and DISTRIBUTOR_SECRET_KEY environment variables.');
     }
 
+    // --- START CRITICAL DIAGNOSTIC LOGS ---
+    console.log('--- RUNTIME KEY DIAGNOSTICS ---');
+
+    // 1. Log the Issuer Public Key from environment variables
+    const issuerPublicKey = process.env.TOKEN_ISSUER_PUBLIC_KEY;
+    console.log(`[DIAGNOSTIC] Issuer Public Key from env: ${issuerPublicKey}`);
+
+    // 2. Derive and log the Distributor Public Key from the secret key
+    const distributorSecretKey = process.env.DISTRIBUTOR_SECRET_KEY;
+    const distributorKeypair = StellarSdk.default.Keypair.fromSecret(distributorSecretKey);
+    const distributorPublicKey = distributorKeypair.publicKey();
+    console.log(`[DIAGNOSTIC] Distributor Public Key derived from secret: ${distributorPublicKey}`);
+
+    // 3. Log the User Public Key from the request body
+    const userPublicKey = req.body.userAddress;
+    console.log(`[DIAGNOSTIC] User Public Key from request: ${userPublicKey}`);
+
+    // 4. Log Token Code
+    console.log(`[DIAGNOSTIC] Token Code: ${TOKEN_CODE}`);
+    
+    console.log('--- END DIAGNOSTIC LOGS ---');
+    // --- DIAGNOSTIC CODE ENDS HERE ---
+
     // Create the custom asset
     const customAsset = new StellarSdk.default.Asset(TOKEN_CODE, TOKEN_ISSUER);
 
     // Load the distributor account
-    const distributorKeypair = StellarSdk.default.Keypair.fromSecret(DISTRIBUTOR_SECRET_KEY);
-    const distributorAccount = await server.loadAccount(distributorKeypair.publicKey());
+    const distributorAccount = await server.loadAccount(distributorPublicKey);
 
     // Create the payment operation
     const paymentOperation = StellarSdk.default.Operation.payment({
