@@ -13,6 +13,7 @@ import { questDatabase, questCategories, difficultyLevels, mockUserStats, mockUs
 const QuestQuiz = lazy(() => import('./QuestQuiz'));
 
 const QuestGrid = () => {
+  // Moved all Hook calls to the top level to comply with the Rules of Hooks
   const { t } = useLanguage();
   const { publicKey } = useContext(WalletContext);
   const { quests, loading, error, userStats, userProgress, getQuestStatus, getQuestProgress, refreshData } = useQuest();
@@ -22,7 +23,22 @@ const QuestGrid = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
 
-  // Gerçek quest verilerini kullan
+  useEffect(() => {
+    if (publicKey) {
+      refreshData();
+    }
+  }, [publicKey, refreshData]);
+
+  // Helper functions moved after all Hooks
+  const getQuestCategory = (quest) => {
+    return quest.category || 'blockchain';
+  };
+
+  const getQuestDifficulty = (quest) => {
+    return quest.difficulty || 'beginner';
+  };
+
+  // Data processing moved after all Hooks
   const realQuests = quests.length > 0 ? quests : questDatabase;
   const realUserStats = userStats || { 
     level: 1, 
@@ -32,20 +48,6 @@ const QuestGrid = () => {
     perfectScores: 0,
     dailyStreak: 0,
     certificates: []
-  };
-
-  useEffect(() => {
-    if (publicKey) {
-      refreshData();
-    }
-  }, [publicKey, refreshData]);
-
-  const getQuestCategory = (quest) => {
-    return quest.category || 'blockchain';
-  };
-
-  const getQuestDifficulty = (quest) => {
-    return quest.difficulty || 'beginner';
   };
 
   const filteredQuests = realQuests.filter(quest => {
@@ -76,7 +78,7 @@ const QuestGrid = () => {
     setSelectedQuest(quest);
   };
 
-  // Loading state
+  // Conditional rendering moved after all Hooks
   if (loading) {
     return (
       <div className="space-y-8">
@@ -99,7 +101,6 @@ const QuestGrid = () => {
     );
   }
 
-  // Error state
   if (error) {
     return (
       <div className="text-center py-12">
