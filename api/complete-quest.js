@@ -284,7 +284,7 @@ export default async function handler(req, res) {
     }
 
     // Perform Stellar token payment
-    const paymentResult = await performTokenPayment(userAddress, quest.rewardAmount);
+    const paymentResult = await performTokenPayment(userAddress, quest.rewardAmount, req);
 
     if (!paymentResult.success) {
       return res.status(500).json({
@@ -361,7 +361,7 @@ function validateAnswers(quest, userAnswers) {
 }
 
 // Perform the actual Stellar token payment
-async function performTokenPayment(userAddress, amount) {
+async function performTokenPayment(userAddress, amount, req) {
   try {
     // TODO: Replace with actual token configuration
     const TOKEN_CODE = process.env.TOKEN_CODE || 'CQT'; // Will be provided by user
