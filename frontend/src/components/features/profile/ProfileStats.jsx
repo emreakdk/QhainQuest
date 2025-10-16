@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { useContext } from 'react';
 import { useLanguage } from '../../../context/LanguageContext';
 import { WalletContext } from '../../../context/WalletContext';
@@ -12,14 +12,14 @@ const ProfileStats = ({ userStats }) => {
   const [tokenBalance, setTokenBalance] = useState(0);
   const [completedQuestsCount, setCompletedQuestsCount] = useState(0);
 
-  // Calculate token balance from localStorage
+  // Calculate token balance from localStorage - Fixed: Removed userStats from dependencies to prevent infinite loop
   useEffect(() => {
     if (publicKey) {
       const breakdown = getTokenBalanceBreakdown(publicKey);
       setTokenBalance(breakdown.totalBalance);
       setCompletedQuestsCount(breakdown.questCount);
     }
-  }, [publicKey, userStats]); // Recalculate when userStats changes
+  }, [publicKey]); // Only recalculate when publicKey changes
 
   const stats = [
     {
@@ -81,4 +81,5 @@ const ProfileStats = ({ userStats }) => {
   );
 };
 
-export default ProfileStats;
+// Memoized component to prevent unnecessary re-renders
+export default memo(ProfileStats);

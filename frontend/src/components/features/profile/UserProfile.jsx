@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useContext } from 'react';
 import { WalletContext } from '../../../context/WalletContext';
 import { useLanguage } from '../../../context/LanguageContext';
@@ -18,26 +18,55 @@ const UserProfile = () => {
   const [completedQuests, setCompletedQuests] = useState([]);
   const [completedQuestsCount, setCompletedQuestsCount] = useState(0);
 
-  // Kullanıcı verilerini yükle
+  // Kullanıcı verilerini yükle - Fixed: Removed userStats from dependencies to prevent infinite loop
   useEffect(() => {
     if (publicKey) {
       loadUserProgress(publicKey);
-      
-      // Load completed quests from localStorage
+    }
+  }, [publicKey, loadUserProgress]);
+
+  // Load completed quests from localStorage - Fixed: Separate useEffect for completed quests
+  useEffect(() => {
+    if (publicKey) {
       const breakdown = getTokenBalanceBreakdown(publicKey);
       setCompletedQuests(breakdown.completedQuests);
       setCompletedQuestsCount(breakdown.questCount);
     }
-  }, [publicKey, loadUserProgress, userStats]); // Recalculate when userStats changes
+  }, [publicKey, userStats]); // Only recalculate when userStats changes (for completed quests)
 
-  const tabs = [
+  // Memoized tabs array to prevent unnecessary re-renders
+  const tabs = useMemo(() => [
     { id: 'dashboard', label: 'Dashboard', icon: '📊' },
     { id: 'overview', label: t('profile.overview'), icon: '👤' },
     { id: 'certificates', label: t('profile.certificates'), icon: '🏆' },
     { id: 'achievements', label: t('profile.achievements'), icon: '🎯' }
-  ];
+  ], [t]);
 
-  const truncateKey = (key) => `${key.slice(0, 6)}...${key.slice(-6)}`;
+  // Memoized function to prevent recreation on every render
+  const truncateKey = useCallback((key) => `${key.slice(0, 6)}...${key.slice(-6)}`, []);
+
+  // Memoized tab change handler to prevent recreation on every render
+  const handleTabChange = useCallback((tabId) => {
+    setActiveTab(tabId);
+  }, []);
+
+  // Memoized achievements array to prevent unnecessary re-renders
+  const achievements = useMemo(() => [
+    { title: "İlk Adım", description: "İlk görevinizi tamamladınız", icon: "🚀", unlocked: true },
+    { title: "Token Toplayıcı", description: "1000+ token kazandınız", icon: "💰", unlocked: true },
+    { title: "Sertifika Avcısı", description: "3+ sertifika aldınız", icon: "🏆", unlocked: true },
+    { title: "Uzman", description: "10+ görev tamamladınız", icon: "⭐", unlocked: false },
+    { title: "Hız Makinesi", description: "1 saatte 5 görev tamamlayın", icon: "⚡", unlocked: false },
+    { title: "Efsane", description: "Tüm görevleri tamamlayın", icon: "👑", unlocked: false }
+  ], []);
+
+  // Memoized activities array to prevent unnecessary re-renders
+  const activities = useMemo(() => [
+    { action: "Stellar Temelleri görevini tamamladı", time: "2 saat önce", type: "quest" },
+    { action: "150 Token ödülü kazandı", time: "2 saat önce", type: "reward" },
+    { action: "Yeni sertifika aldı", time: "1 gün önce", type: "certificate" },
+    { action: "DeFi Protokolleri görevine başladı", time: "3 gün önce", type: "quest" }
+  ], []);
 
   return (
     <div className="space-y-8">
@@ -68,7 +97,7 @@ const UserProfile = () => {
           {tabs.map(tab => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabChange(tab.id)}
               className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                 activeTab === tab.id
                   ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
@@ -97,12 +126,7 @@ const UserProfile = () => {
                   Son Aktiviteler
                 </h3>
                 <div className="space-y-3">
-                  {[
-                    { action: "Stellar Temelleri görevini tamamladı", time: "2 saat önce", type: "quest" },
-                    { action: "150 Token ödülü kazandı", time: "2 saat önce", type: "reward" },
-                    { action: "Yeni sertifika aldı", time: "1 gün önce", type: "certificate" },
-                    { action: "DeFi Protokolleri görevine başladı", time: "3 gün önce", type: "quest" }
-                  ].map((activity, index) => (
+                  {activities.map((activity, index) => (
                     <div key={index} className="flex items-center space-x-3 p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
                       <div className={`w-2 h-2 rounded-full ${
                         activity.type === 'quest' ? 'bg-blue-500' :
@@ -184,14 +208,7 @@ const UserProfile = () => {
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                { title: "İlk Adım", description: "İlk görevinizi tamamladınız", icon: "🚀", unlocked: true },
-                { title: "Token Toplayıcı", description: "1000+ token kazandınız", icon: "💰", unlocked: true },
-                { title: "Sertifika Avcısı", description: "3+ sertifika aldınız", icon: "🏆", unlocked: true },
-                { title: "Uzman", description: "10+ görev tamamladınız", icon: "⭐", unlocked: false },
-                { title: "Hız Makinesi", description: "1 saatte 5 görev tamamlayın", icon: "⚡", unlocked: false },
-                { title: "Efsane", description: "Tüm görevleri tamamlayın", icon: "👑", unlocked: false }
-              ].map((achievement, index) => (
+              {achievements.map((achievement, index) => (
                 <div key={index} className={`p-6 rounded-xl border-2 ${
                   achievement.unlocked 
                     ? 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 dark:from-green-900/20 dark:to-emerald-900/20 dark:border-green-700' 

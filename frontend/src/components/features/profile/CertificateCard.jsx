@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { useLanguage } from '../../../context/LanguageContext';
 import { Card, CardContent } from '../../ui/Card';
 import Badge from '../../ui/Badge';
@@ -76,4 +77,5 @@ const CertificateCard = ({ certificate }) => {
   );
 };
 
-export default CertificateCard;
+// Memoized component to prevent unnecessary re-renders
+export default memo(CertificateCard);

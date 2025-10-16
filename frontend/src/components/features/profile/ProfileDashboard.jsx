@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, memo } from 'react';
 import { useLanguage } from '../../../context/LanguageContext';
 import { WalletContext } from '../../../context/WalletContext';
 import { useDataManager } from '../../../systems/dataManager.js';
@@ -329,4 +329,5 @@ const ProfileDashboard = () => {
   );
 };
 
-export default ProfileDashboard;
+// Memoized component to prevent unnecessary re-renders
+export default memo(ProfileDashboard);
