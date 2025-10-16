@@ -17,20 +17,23 @@ import { createContext, useContext, useState, useEffect, useCallback } from 'rea
 const BalanceContext = createContext();
 
 export const BalanceProvider = ({ children }) => {
-  // Global claimable balance state
+  // Global claimable balance state (amount ready to claim)
   const [claimableBalance, setClaimableBalance] = useState(0);
+  // Global total earned state (lifetime earnings - never resets)
+  const [totalEarned, setTotalEarned] = useState(0);
   const [currentUser, setCurrentUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(null);
 
   /**
-   * Initialize claimable balance from localStorage
+   * Initialize balances from localStorage
    * This runs once on application startup
    */
   useEffect(() => {
-    // Initialize with 0 balance
-    // Real balance will be loaded when user connects
+    // Initialize with 0 balances
+    // Real balances will be loaded when user connects
     setClaimableBalance(0);
+    setTotalEarned(0);
     setCurrentUser(null);
     setLastUpdated(null);
   }, []);
@@ -43,28 +46,38 @@ export const BalanceProvider = ({ children }) => {
     if (!userAddress) {
       setCurrentUser(null);
       setClaimableBalance(0);
+      setTotalEarned(0);
       setLastUpdated(null);
       return;
     }
 
     try {
       setCurrentUser(userAddress);
-      const key = `claimableBalance_${userAddress}`;
-      const storedBalance = localStorage.getItem(key);
-      const balance = storedBalance ? parseFloat(storedBalance) : 0;
       
-      setClaimableBalance(balance);
+      // Load claimable balance
+      const claimableKey = `claimableBalance_${userAddress}`;
+      const storedClaimableBalance = localStorage.getItem(claimableKey);
+      const claimableBalance = storedClaimableBalance ? parseFloat(storedClaimableBalance) : 0;
+      
+      // Load total earned
+      const totalEarnedKey = `totalEarned_${userAddress}`;
+      const storedTotalEarned = localStorage.getItem(totalEarnedKey);
+      const totalEarned = storedTotalEarned ? parseFloat(storedTotalEarned) : 0;
+      
+      setClaimableBalance(claimableBalance);
+      setTotalEarned(totalEarned);
       setLastUpdated(new Date().toISOString());
       
-      console.log(`[BalanceContext] Loaded balance for ${userAddress}: ${balance}`);
+      console.log(`[BalanceContext] Loaded balances for ${userAddress}: claimable=${claimableBalance}, totalEarned=${totalEarned}`);
     } catch (error) {
-      console.error('[BalanceContext] Error loading balance:', error);
+      console.error('[BalanceContext] Error loading balances:', error);
       setClaimableBalance(0);
+      setTotalEarned(0);
     }
   }, []);
 
   /**
-   * Update claimable balance (add amount)
+   * Update claimable balance and total earned (add amount)
    * @param {string} userAddress - User's wallet address
    * @param {number} amount - Amount to add to balance
    */
@@ -75,25 +88,32 @@ export const BalanceProvider = ({ children }) => {
     }
 
     try {
-      const key = `claimableBalance_${userAddress}`;
-      const currentBalance = claimableBalance;
-      const newBalance = currentBalance + amount;
+      const claimableKey = `claimableBalance_${userAddress}`;
+      const totalEarnedKey = `totalEarned_${userAddress}`;
+      
+      const currentClaimableBalance = claimableBalance;
+      const currentTotalEarned = totalEarned;
+      
+      const newClaimableBalance = currentClaimableBalance + amount;
+      const newTotalEarned = currentTotalEarned + amount;
       
       // Update React state
-      setClaimableBalance(newBalance);
+      setClaimableBalance(newClaimableBalance);
+      setTotalEarned(newTotalEarned);
       setLastUpdated(new Date().toISOString());
       
       // Update localStorage
-      localStorage.setItem(key, newBalance.toString());
+      localStorage.setItem(claimableKey, newClaimableBalance.toString());
+      localStorage.setItem(totalEarnedKey, newTotalEarned.toString());
       
-      console.log(`[BalanceContext] Added ${amount} to balance. New balance: ${newBalance}`);
+      console.log(`[BalanceContext] Added ${amount} to balances. New claimable: ${newClaimableBalance}, new totalEarned: ${newTotalEarned}`);
     } catch (error) {
-      console.error('[BalanceContext] Error adding to claimable balance:', error);
+      console.error('[BalanceContext] Error adding to balances:', error);
     }
-  }, [claimableBalance]);
+  }, [claimableBalance, totalEarned]);
 
   /**
-   * Reset claimable balance to 0 and add to claimed balance
+   * Reset claimable balance to 0 (CRITICAL: totalEarned remains unchanged)
    * @param {string} userAddress - User's wallet address
    */
   const resetClaimableBalance = useCallback((userAddress) => {
@@ -104,25 +124,19 @@ export const BalanceProvider = ({ children }) => {
 
     try {
       const claimableKey = `claimableBalance_${userAddress}`;
-      const claimedKey = `claimedBalance_${userAddress}`;
       
-      // Get current values
-      const currentClaimable = claimableBalance;
-      const currentClaimed = parseFloat(localStorage.getItem(claimedKey) || '0');
-      
-      // Update React state
+      // CRITICAL FIX: Only reset claimable balance, totalEarned stays the same
       setClaimableBalance(0);
       setLastUpdated(new Date().toISOString());
       
-      // Update localStorage
+      // Update localStorage - only claimable balance
       localStorage.setItem(claimableKey, '0');
-      localStorage.setItem(claimedKey, (currentClaimed + currentClaimable).toString());
       
-      console.log(`[BalanceContext] Reset claimable balance to 0 and added ${currentClaimable} to claimed balance for ${userAddress}`);
+      console.log(`[BalanceContext] Reset claimable balance to 0 for ${userAddress}. Total earned remains: ${totalEarned}`);
     } catch (error) {
       console.error('[BalanceContext] Error resetting claimable balance:', error);
     }
-  }, [claimableBalance]);
+  }, [totalEarned]);
 
   /**
    * Set claimable balance to a specific value
@@ -181,6 +195,7 @@ export const BalanceProvider = ({ children }) => {
   const value = {
     // State
     claimableBalance,
+    totalEarned,
     currentUser,
     isLoading,
     lastUpdated,

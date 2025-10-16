@@ -50,7 +50,7 @@ const ProfileDashboard = () => {
   const { t } = useLanguage();
   const { publicKey } = useContext(WalletContext);
   const { tokenData } = useToken(); // Use centralized token data
-  const { claimableBalance } = useBalance(); // Use global claimable balance
+  const { claimableBalance, totalEarned } = useBalance(); // Use global balances
   const { getDashboardData, getPerformanceData, getUserStats } = useDataManager(publicKey);
   
   const [dashboardData, setDashboardData] = useState(null);
@@ -146,11 +146,11 @@ const ProfileDashboard = () => {
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-3xl font-bold">
-                  <AnimatedCounter value={tokenData.totalEarned} duration={1500} />
+                  <AnimatedCounter value={totalEarned} duration={1500} />
                 </div>
                 <div className="text-yellow-100 text-sm">Token Bakiyesi</div>
                 <div className="text-xs text-yellow-200 mt-1">
-                  Toplam kazanılan: {tokenData.totalEarned}
+                  Toplam kazanılan: {totalEarned}
                   {claimableBalance > 0 && (
                     <span className="ml-2">(+{claimableBalance} claimable)</span>
                   )}
@@ -241,7 +241,7 @@ const ProfileDashboard = () => {
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="text-slate-600 dark:text-slate-400">Toplam Kazanılan</span>
-                    <span className="font-semibold text-green-600">{tokenData.totalEarned} CQT</span>
+                    <span className="font-semibold text-green-600">{totalEarned} CQT</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-slate-600 dark:text-slate-400">Claimable Balance</span>

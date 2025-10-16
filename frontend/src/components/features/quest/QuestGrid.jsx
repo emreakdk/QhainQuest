@@ -2,6 +2,7 @@ import { useState, useEffect, useContext, lazy, Suspense } from 'react';
 import { useLanguage } from '../../../context/LanguageContext';
 import { useQuest } from '../../../context/QuestContext';
 import { useToken } from '../../../context/TokenContext';
+import { useBalance } from '../../../context/BalanceContext';
 import { WalletContext } from '../../../context/WalletContext';
 import { SkeletonCard, SkeletonStats } from '../../ui/Skeleton';
 import AnimatedCounter from '../../ui/AnimatedCounter';
@@ -19,6 +20,7 @@ const QuestGrid = () => {
   const { publicKey } = useContext(WalletContext);
   const { quests, loading, error, userStats, userProgress, getQuestStatus, getQuestProgress, refreshData } = useQuest();
   const { tokenData } = useToken(); // Use centralized token data
+  const { totalEarned } = useBalance(); // Use global total earned
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedDifficulty, setSelectedDifficulty] = useState('all');
   const [selectedQuest, setSelectedQuest] = useState(null);
@@ -50,7 +52,7 @@ const QuestGrid = () => {
   const realUserStats = {
     level: 1, 
     totalXP: 0, 
-    totalTokens: tokenData.totalEarned,  // Use centralized token data
+    totalTokens: totalEarned,  // Use global total earned
     completedQuests: tokenData.completedQuests,  // Use centralized quest count
     perfectScores: 0,
     dailyStreak: 0,
@@ -217,7 +219,7 @@ const QuestGrid = () => {
           <div className="flex items-center justify-between">
             <div>
               <div className="text-3xl font-bold">
-                <AnimatedCounter value={tokenData.totalEarned || 0} duration={1500} />
+                <AnimatedCounter value={totalEarned || 0} duration={1500} />
               </div>
               <div className="text-yellow-100 text-sm">{t('stats.earnedTokens')}</div>
             </div>

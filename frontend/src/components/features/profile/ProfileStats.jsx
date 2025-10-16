@@ -14,7 +14,7 @@ const ProfileStats = ({ userStats }) => {
   const { publicKey } = useContext(WalletContext);
   const { showSuccess, showError } = useNotification();
   const { tokenData, isLoading, claimTokens } = useToken();
-  const { claimableBalance, resetClaimableBalance } = useBalance(); // Use global balance context
+  const { claimableBalance, totalEarned, resetClaimableBalance } = useBalance(); // Use global balance context
   const [isClaiming, setIsClaiming] = useState(false);
 
   // Handle token claiming using global balance context
@@ -56,7 +56,7 @@ const ProfileStats = ({ userStats }) => {
   const stats = [
     {
       title: 'Toplam Kazanılan',
-      value: tokenData.totalEarned,
+      value: totalEarned, // CRITICAL FIX: Use global totalEarned from BalanceContext
       icon: '💰',
       color: 'from-yellow-500 to-orange-500',
       bgColor: 'bg-yellow-50 dark:bg-yellow-900/20',
