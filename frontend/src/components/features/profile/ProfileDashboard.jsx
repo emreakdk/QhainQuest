@@ -3,6 +3,7 @@ import { useLanguage } from '../../../context/LanguageContext';
 import { WalletContext } from '../../../context/WalletContext';
 import { useToken } from '../../../context/TokenContext';
 import { useBalance } from '../../../context/BalanceContext';
+import { useNotification } from '../../../context/NotificationContext';
 import { useDataManager } from '../../../systems/dataManager.js';
 import { Card, CardContent, CardHeader } from '../../ui/Card';
 import AnimatedCounter from '../../ui/AnimatedCounter';
@@ -49,14 +50,16 @@ const SimpleChart = ({ data, type = 'line', height = 200 }) => {
 const ProfileDashboard = () => {
   const { t } = useLanguage();
   const { publicKey } = useContext(WalletContext);
-  const { tokenData } = useToken(); // Use centralized token data
-  const { claimableBalance, totalEarned } = useBalance(); // Use global balances
+  const { tokenData, claimTokens } = useToken(); // Use centralized token data
+  const { claimableBalance, totalEarned, resetClaimableBalance } = useBalance(); // Use global balances
+  const { showSuccess, showError } = useNotification();
   const { getDashboardData, getPerformanceData, getUserStats } = useDataManager(publicKey);
   
   const [dashboardData, setDashboardData] = useState(null);
   const [performanceData, setPerformanceData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
+  const [isClaiming, setIsClaiming] = useState(false);
 
   useEffect(() => {
     if (publicKey) {
@@ -81,25 +84,39 @@ const ProfileDashboard = () => {
     }
   };
 
-  const handleWithdrawTokens = async () => {
-    if (!dashboardData?.tokenStats?.currentBalance) return;
+  // CRITICAL FIX: Real claim function (same as ProfileStats)
+  const handleClaimTokens = async () => {
+    if (!publicKey || claimableBalance <= 0) {
+      return;
+    }
+
+    setIsClaiming(true);
     
     try {
-      const { TokenManager } = await import('../../../systems/tokenSystem.js');
-      const tokenManager = new TokenManager(publicKey);
+      console.log(`[ProfileDashboard] Claiming ${claimableBalance} tokens for user ${publicKey}`);
       
-      const result = await tokenManager.withdrawToWallet(dashboardData.tokenStats.currentBalance);
+      // Use centralized token context for API call
+      const result = await claimTokens(publicKey, claimableBalance);
       
       if (result.success) {
-        alert(`✅ ${result.amount} CQT cüzdanınıza aktarıldı!`);
-        // Dashboard'u yenile
-        loadDashboardData();
+        // Reset global claimable balance to 0
+        resetClaimableBalance(publicKey);
+        
+        // Show success message
+        showSuccess(
+          'Token\'lar Başarıyla Aktarıldı!',
+          `${claimableBalance} token Stellar cüzdanınıza aktarıldı. Transaction Hash: ${result.data.transactionHash}`
+        );
+        
+        console.log('[ProfileDashboard] Tokens claimed successfully:', result.data);
       } else {
-        alert(`❌ Hata: ${result.error}`);
+        throw new Error(result.error || 'Token claim failed');
       }
     } catch (error) {
-      console.error('Token çekme hatası:', error);
-      alert('❌ Token çekme işlemi başarısız oldu');
+      console.error('[ProfileDashboard] Token claim error:', error);
+      showError('Token Aktarım Hatası', error.message);
+    } finally {
+      setIsClaiming(false);
     }
   };
 
@@ -257,10 +274,18 @@ const ProfileDashboard = () => {
                   {claimableBalance > 0 && (
                     <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-600">
                       <Button 
-                        onClick={handleWithdrawTokens}
+                        onClick={handleClaimTokens}
+                        disabled={isClaiming}
                         className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white"
                       >
-                        💰 {claimableBalance} CQT Çek
+                        {isClaiming ? (
+                          <div className="flex items-center space-x-2">
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            <span>Aktarılıyor...</span>
+                          </div>
+                        ) : (
+                          `💰 ${claimableBalance} CQT Çek`
+                        )}
                       </Button>
                     </div>
                   )}
