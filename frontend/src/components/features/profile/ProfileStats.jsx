@@ -1,21 +1,45 @@
+import { useState, useEffect } from 'react';
+import { useContext } from 'react';
 import { useLanguage } from '../../../context/LanguageContext';
+import { WalletContext } from '../../../context/WalletContext';
+import { calculateTotalTokenBalance, getTokenBalanceBreakdown } from '../../../utils/tokenBalanceCalculator';
 import { Card, CardContent } from '../../ui/Card';
 import Badge from '../../ui/Badge';
 
 const ProfileStats = ({ userStats }) => {
   const { t } = useLanguage();
+  const { publicKey } = useContext(WalletContext);
+  const [tokenBalance, setTokenBalance] = useState(0);
+  const [completedQuestsCount, setCompletedQuestsCount] = useState(0);
+
+  // Calculate token balance from localStorage
+  useEffect(() => {
+    if (publicKey) {
+      const breakdown = getTokenBalanceBreakdown(publicKey);
+      setTokenBalance(breakdown.totalBalance);
+      setCompletedQuestsCount(breakdown.questCount);
+    }
+  }, [publicKey, userStats]); // Recalculate when userStats changes
 
   const stats = [
     {
-      title: t('profile.totalTokens'),
-      value: userStats?.totalTokens || 0,
+      title: 'Toplam Token',
+      value: tokenBalance,
       icon: '💰',
       color: 'from-yellow-500 to-orange-500',
       bgColor: 'bg-yellow-50 dark:bg-yellow-900/20',
       textColor: 'text-yellow-600 dark:text-yellow-400'
     },
     {
-      title: t('profile.certificates'),
+      title: 'Tamamlanan Quest',
+      value: completedQuestsCount,
+      icon: '✅',
+      color: 'from-green-500 to-teal-500',
+      bgColor: 'bg-green-50 dark:bg-green-900/20',
+      textColor: 'text-green-600 dark:text-green-400'
+    },
+    {
+      title: 'Sertifikalar',
       value: userStats?.certificates || 0,
       icon: '🏆',
       color: 'from-purple-500 to-pink-500',
@@ -23,17 +47,9 @@ const ProfileStats = ({ userStats }) => {
       textColor: 'text-purple-600 dark:text-purple-400'
     },
     {
-      title: t('profile.completedQuests'),
-      value: userStats?.completedQuests || 0,
-      icon: '✅',
-      color: 'from-green-500 to-teal-500',
-      bgColor: 'bg-green-50 dark:bg-green-900/20',
-      textColor: 'text-green-600 dark:text-green-400'
-    },
-    {
-      title: t('profile.level'),
-      value: userStats?.level || 1,
-      icon: '⭐',
+      title: 'Toplam Quest',
+      value: 5, // Total available quests
+      icon: '🎯',
       color: 'from-indigo-500 to-blue-500',
       bgColor: 'bg-indigo-50 dark:bg-indigo-900/20',
       textColor: 'text-indigo-600 dark:text-indigo-400'

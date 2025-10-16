@@ -237,6 +237,17 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
         throw new Error(`Quest tamamlanamadı: ${answers.length}/${quest.lessons.length} soru cevaplandı. Tüm soruları cevaplamalısınız.`);
       }
       
+      // Check if quest is already completed
+      const isAlreadyCompleted = await questApiService.isQuestCompleted(publicKey, questId);
+      
+      if (isAlreadyCompleted) {
+        // Quest already completed - show message and don't transfer tokens
+        setQuestCompleted(true);
+        setIsSubmitting(false);
+        showError('Quest Zaten Tamamlandı', 'Bu testi zaten tamamlamıştınız.');
+        return;
+      }
+      
       // Call the secure API
       const result = await questApiService.completeQuest(publicKey, questId, answers);
       
@@ -251,8 +262,8 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
         // Show celebration
         setShowCelebration(true);
         showSuccess(
-          t('celebration.questCompleted'), 
-          `${t('celebration.congratulations')} ${result.data.rewardAmount} token kazandınız!`
+          'Tebrikler! Görevi tamamladınız.', 
+          `${result.data.rewardAmount} token kazandınız!`
         );
         
         // Update user stats in context

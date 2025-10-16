@@ -3,6 +3,7 @@ import { useContext } from 'react';
 import { WalletContext } from '../../../context/WalletContext';
 import { useLanguage } from '../../../context/LanguageContext';
 import { useQuest } from '../../../context/QuestContext';
+import { getCompletedQuestsForUser, getTokenBalanceBreakdown } from '../../../utils/tokenBalanceCalculator';
 import ProfileStats from './ProfileStats';
 import CertificateCard from './CertificateCard';
 import ProfileDashboard from './ProfileDashboard';
@@ -14,13 +15,20 @@ const UserProfile = () => {
   const { t } = useLanguage();
   const { userStats, userCertificates, loadUserProgress } = useQuest();
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [completedQuests, setCompletedQuests] = useState([]);
+  const [completedQuestsCount, setCompletedQuestsCount] = useState(0);
 
   // Kullanıcı verilerini yükle
   useEffect(() => {
     if (publicKey) {
       loadUserProgress(publicKey);
+      
+      // Load completed quests from localStorage
+      const breakdown = getTokenBalanceBreakdown(publicKey);
+      setCompletedQuests(breakdown.completedQuests);
+      setCompletedQuestsCount(breakdown.questCount);
     }
-  }, [publicKey, loadUserProgress]);
+  }, [publicKey, loadUserProgress, userStats]); // Recalculate when userStats changes
 
   const tabs = [
     { id: 'dashboard', label: 'Dashboard', icon: '📊' },
@@ -46,7 +54,7 @@ const UserProfile = () => {
             {truncateKey(publicKey)}
           </Badge>
           <Badge variant="success">
-            {t('profile.level')} {userStats?.level || 1}
+            {completedQuestsCount} Quest Tamamlandı
           </Badge>
         </div>
       </div>
@@ -132,31 +140,35 @@ const UserProfile = () => {
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
-                {t('profile.nftCertificates')}
+                Sertifikalarınız
               </h3>
               <Badge variant="primary">
-                {userCertificates ? userCertificates.length : 0} {t('profile.certificates')}
+                {completedQuestsCount} Sertifika
               </Badge>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {userCertificates && userCertificates.length > 0 ? userCertificates.map(certificate => {
-                // Sertifika objesini güvenli hale getir
-                const safeCertificate = {
-                  id: certificate?.id || 'unknown',
-                  questId: certificate?.questId || 'unknown',
-                  questName: certificate?.questName || 'Unknown Quest',
-                  title: certificate?.title || certificate?.questName || 'Sertifika',
-                  description: certificate?.description || `${certificate?.questName || 'Quest'} başarıyla tamamlandı`,
-                  category: certificate?.category || 'Blockchain',
-                  rarity: certificate?.rarity || 'Common',
-                  completedAt: certificate?.completedAt || null,
-                  earnedAt: certificate?.earnedAt || new Date().toISOString(),
-                  nftUrl: certificate?.nftUrl || null,
-                  transactionHash: certificate?.transactionHash || null
-                };
-                return <CertificateCard key={safeCertificate.id} certificate={safeCertificate} />;
-              }) : (
+              {completedQuests.length > 0 ? completedQuests.map(quest => (
+                <div key={quest.id} className="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl p-6 border border-purple-200 dark:border-purple-700">
+                  <div className="text-center">
+                    <div className="text-4xl mb-4">🏆</div>
+                    <h4 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
+                      Sertifika: {quest.name}
+                    </h4>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+                      {quest.description}
+                    </p>
+                    <div className="flex items-center justify-center space-x-4 text-sm">
+                      <Badge variant="success">
+                        +{quest.rewardAmount} Token
+                      </Badge>
+                      <Badge variant="primary">
+                        {quest.difficulty}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+              )) : (
                 <div className="col-span-full text-center py-8 text-slate-500 dark:text-slate-400">
                   Henüz sertifika kazanmadınız. Quest'leri tamamlayarak sertifika kazanın!
                 </div>

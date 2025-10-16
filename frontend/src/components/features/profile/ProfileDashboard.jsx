@@ -124,47 +124,18 @@ const ProfileDashboard = () => {
     );
   }
 
-  const { stats, tokenStats, recentActivity, achievements, levelProgress, streakInfo } = dashboardData;
+  // Safe destructuring with fallbacks
+  const stats = dashboardData?.stats || { level: 1, totalXP: 0, completedQuests: [], perfectScores: 0, levelData: { name: 'Başlangıç', icon: '🌱' } };
+  const tokenStats = dashboardData?.tokenStats || { currentBalance: 0, totalEarned: 0, totalTransferred: 0, totalWithdrawn: 0, transactionCount: 0 };
+  const recentActivity = dashboardData?.recentActivity || [];
+  const achievements = dashboardData?.achievements || [];
+  const levelProgress = dashboardData?.levelProgress || { levelProgress: 0, currentXP: 0, xpToNextLevel: 100 };
+  const streakInfo = dashboardData?.streakInfo || { dailyStreak: 0, bestStreak: 0, lastActiveDate: null };
 
   return (
     <div className="space-y-6">
       {/* Ana İstatistikler */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="bg-gradient-to-br from-blue-500 to-blue-600 text-white">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-3xl font-bold">
-                  <AnimatedCounter value={stats.level} duration={1500} />
-                </div>
-                <div className="text-blue-100 text-sm">Seviye</div>
-                <div className="text-xs text-blue-200 mt-1">
-                  {stats.levelData?.name || 'Başlangıç'}
-                </div>
-              </div>
-              <div className="text-4xl opacity-80">
-                {stats.levelData?.icon || '🌱'}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-gradient-to-br from-green-500 to-green-600 text-white">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="text-3xl font-bold">
-                  <AnimatedCounter value={stats.totalXP} duration={1500} />
-                </div>
-                <div className="text-green-100 text-sm">Toplam XP</div>
-                <div className="text-xs text-green-200 mt-1">
-                  Sonraki seviye: {levelProgress.xpToNextLevel} XP
-                </div>
-              </div>
-              <div className="text-4xl opacity-80">⚡</div>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
         <Card className="bg-gradient-to-br from-yellow-500 to-orange-500 text-white">
           <CardContent className="p-6">
@@ -188,7 +159,7 @@ const ProfileDashboard = () => {
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-3xl font-bold">
-                  <AnimatedCounter value={stats.completedQuests.length} duration={1500} />
+                  <AnimatedCounter value={Array.isArray(stats.completedQuests) ? stats.completedQuests.length : 0} duration={1500} />
                 </div>
                 <div className="text-purple-100 text-sm">Tamamlanan Quest</div>
                 <div className="text-xs text-purple-200 mt-1">
@@ -201,39 +172,11 @@ const ProfileDashboard = () => {
         </Card>
       </div>
 
-      {/* Seviye İlerlemesi */}
-      <Card>
-        <CardHeader>
-          <h3 className="text-xl font-bold text-slate-900 dark:text-white">Seviye İlerlemesi</h3>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center justify-center space-x-8">
-            <ProgressRing 
-              progress={levelProgress.levelProgress} 
-              size={120} 
-              strokeWidth={8}
-              color="#8b5cf6"
-            />
-            <div className="text-center">
-              <div className="text-2xl font-bold text-slate-900 dark:text-white">
-                Seviye {stats.level}
-              </div>
-              <div className="text-sm text-slate-600 dark:text-slate-400">
-                {levelProgress.currentXP} / {levelProgress.currentXP + levelProgress.xpToNextLevel} XP
-              </div>
-              <div className="text-xs text-slate-500 dark:text-slate-500 mt-2">
-                Sonraki seviye için {levelProgress.xpToNextLevel} XP gerekli
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
 
       {/* Tab Navigation */}
       <div className="flex space-x-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
         {[
           { id: 'overview', label: 'Genel Bakış', icon: '📊' },
-          { id: 'performance', label: 'Performans', icon: '📈' },
           { id: 'achievements', label: 'Başarılar', icon: '🏆' },
           { id: 'activity', label: 'Aktivite', icon: '🕒' }
         ].map(tab => (
@@ -323,39 +266,6 @@ const ProfileDashboard = () => {
           </>
         )}
 
-        {activeTab === 'performance' && performanceData && (
-          <>
-            <Card>
-              <CardHeader>
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Günlük İlerleme</h3>
-              </CardHeader>
-              <CardContent>
-                <SimpleChart 
-                  data={performanceData.dailyProgress.map(day => ({
-                    label: new Date(day.date).toLocaleDateString('tr-TR', { month: 'short', day: 'numeric' }),
-                    value: day.xp
-                  }))}
-                  type="line"
-                />
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Kategori Performansı</h3>
-              </CardHeader>
-              <CardContent>
-                <SimpleChart 
-                  data={Object.entries(performanceData.categoryStats).map(([category, data]) => ({
-                    label: category,
-                    value: data.completed
-                  }))}
-                  type="bar"
-                />
-              </CardContent>
-            </Card>
-          </>
-        )}
 
         {activeTab === 'achievements' && (
           <Card className="lg:col-span-2">
@@ -364,7 +274,7 @@ const ProfileDashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {achievements.length > 0 ? achievements.map((achievement, index) => (
+                {Array.isArray(achievements) && achievements.length > 0 ? achievements.map((achievement, index) => (
                   <div key={index} className="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg p-4 text-white">
                     <div className="flex items-center space-x-2 mb-2">
                       <span className="text-2xl">🏆</span>
@@ -372,7 +282,7 @@ const ProfileDashboard = () => {
                     </div>
                     <p className="text-sm text-yellow-100">{achievement.message || 'Başarı kazanıldı!'}</p>
                     <div className="text-xs text-yellow-200 mt-2">
-                      +{achievement.reward?.xp || 0} XP, +{achievement.reward?.tokens || 0} Token
+                      +{achievement.reward?.tokens || 0} Token
                     </div>
                   </div>
                 )) : (
@@ -392,7 +302,7 @@ const ProfileDashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {recentActivity.length > 0 ? recentActivity.map((activity, index) => (
+                {Array.isArray(recentActivity) && recentActivity.length > 0 ? recentActivity.map((activity, index) => (
                   <div key={index} className="flex items-center space-x-4 p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
                     <div className="text-2xl">
                       {activity.type === 'quest' ? '🎯' : '💰'}
