@@ -146,14 +146,11 @@ const ProfileDashboard = () => {
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-3xl font-bold">
-                  <AnimatedCounter value={totalEarned} duration={1500} />
+                  <AnimatedCounter value={claimableBalance} duration={1500} />
                 </div>
-                <div className="text-yellow-100 text-sm">Token Bakiyesi</div>
+                <div className="text-yellow-100 text-sm">Claimable Balance</div>
                 <div className="text-xs text-yellow-200 mt-1">
-                  Toplam kazanılan: {totalEarned}
-                  {claimableBalance > 0 && (
-                    <span className="ml-2">(+{claimableBalance} claimable)</span>
-                  )}
+                  Tokens ready to claim
                 </div>
               </div>
               <div className="text-4xl opacity-80">💰</div>

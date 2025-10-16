@@ -95,18 +95,13 @@ const Header = ({ currentPage, onPageChange }) => {
             </button>
           )}
 
-          {/* Token Balance Display */}
-          {publicKey && totalEarned > 0 && (
+          {/* Token Balance Display - CRITICAL FIX: Show only claimable balance */}
+          {publicKey && claimableBalance > 0 && (
             <div className="hidden md:flex items-center space-x-2 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 px-3 py-1.5 rounded-lg border border-yellow-200 dark:border-yellow-700">
               <span className="text-yellow-600 dark:text-yellow-400">💰</span>
               <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                {totalEarned} CQT
+                {claimableBalance} CQT
               </span>
-              {claimableBalance > 0 && (
-                <span className="text-xs text-blue-600 dark:text-blue-400">
-                  (+{claimableBalance})
-                </span>
-              )}
             </div>
           )}
 
