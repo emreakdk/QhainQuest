@@ -2,6 +2,7 @@ import { useState, useEffect, useContext, memo } from 'react';
 import { useLanguage } from '../../../context/LanguageContext';
 import { WalletContext } from '../../../context/WalletContext';
 import { useToken } from '../../../context/TokenContext';
+import { useBalance } from '../../../context/BalanceContext';
 import { useDataManager } from '../../../systems/dataManager.js';
 import { Card, CardContent, CardHeader } from '../../ui/Card';
 import AnimatedCounter from '../../ui/AnimatedCounter';
@@ -49,6 +50,7 @@ const ProfileDashboard = () => {
   const { t } = useLanguage();
   const { publicKey } = useContext(WalletContext);
   const { tokenData } = useToken(); // Use centralized token data
+  const { claimableBalance } = useBalance(); // Use global claimable balance
   const { getDashboardData, getPerformanceData, getUserStats } = useDataManager(publicKey);
   
   const [dashboardData, setDashboardData] = useState(null);
@@ -149,8 +151,8 @@ const ProfileDashboard = () => {
                 <div className="text-yellow-100 text-sm">Token Bakiyesi</div>
                 <div className="text-xs text-yellow-200 mt-1">
                   Toplam kazanılan: {tokenData.totalEarned}
-                  {tokenData.claimableBalance > 0 && (
-                    <span className="ml-2">(+{tokenData.claimableBalance} claimable)</span>
+                  {claimableBalance > 0 && (
+                    <span className="ml-2">(+{claimableBalance} claimable)</span>
                   )}
                 </div>
               </div>
@@ -243,7 +245,7 @@ const ProfileDashboard = () => {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-slate-600 dark:text-slate-400">Claimable Balance</span>
-                    <span className="font-semibold text-blue-600">{tokenData.claimableBalance} CQT</span>
+                    <span className="font-semibold text-blue-600">{claimableBalance} CQT</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-slate-600 dark:text-slate-400">Cüzdana Çekilen</span>
@@ -255,13 +257,13 @@ const ProfileDashboard = () => {
                   </div>
                   
                   {/* Token Çekme Butonu */}
-                  {tokenData.claimableBalance > 0 && (
+                  {claimableBalance > 0 && (
                     <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-600">
                       <Button 
                         onClick={handleWithdrawTokens}
                         className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white"
                       >
-                        💰 {tokenData.claimableBalance} CQT Çek
+                        💰 {claimableBalance} CQT Çek
                       </Button>
                     </div>
                   )}

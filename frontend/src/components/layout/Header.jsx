@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 import { WalletContext } from '../../context/WalletContext';
 import { useToken } from '../../context/TokenContext';
+import { useBalance } from '../../context/BalanceContext';
 import { useTheme } from '../../context/ThemeContext';
 import { useLanguage } from '../../context/LanguageContext';
 import Button from '../ui/Button';
@@ -9,6 +10,7 @@ import FreighterConnect from '../features/wallet/FreighterConnect';
 const Header = ({ currentPage, onPageChange }) => {
   const { publicKey, setPublicKey } = useContext(WalletContext);
   const { tokenData } = useToken(); // Get centralized token data
+  const { claimableBalance } = useBalance(); // Get global claimable balance
   const { theme, toggleTheme } = useTheme();
   const { t, toggleLanguage, language } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -100,9 +102,9 @@ const Header = ({ currentPage, onPageChange }) => {
               <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
                 {tokenData.totalEarned} CQT
               </span>
-              {tokenData.claimableBalance > 0 && (
+              {claimableBalance > 0 && (
                 <span className="text-xs text-blue-600 dark:text-blue-400">
-                  (+{tokenData.claimableBalance})
+                  (+{claimableBalance})
                 </span>
               )}
             </div>

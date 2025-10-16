@@ -3,6 +3,7 @@ import { useContext } from 'react';
 import { useLanguage } from '../../../context/LanguageContext';
 import { WalletContext } from '../../../context/WalletContext';
 import { useToken } from '../../../context/TokenContext';
+import { useBalance } from '../../../context/BalanceContext';
 import { useNotification } from '../../../context/NotificationContext';
 import { Card, CardContent } from '../../ui/Card';
 import Badge from '../../ui/Badge';
@@ -13,35 +14,39 @@ const ProfileStats = ({ userStats }) => {
   const { publicKey } = useContext(WalletContext);
   const { showSuccess, showError } = useNotification();
   const { tokenData, isLoading, claimTokens } = useToken();
+  const { claimableBalance, resetClaimableBalance } = useBalance(); // Use global balance context
   const [isClaiming, setIsClaiming] = useState(false);
 
-  // Handle token claiming using centralized context
+  // Handle token claiming using global balance context
   const handleClaimTokens = async () => {
-    if (!publicKey || tokenData.claimableBalance <= 0) {
+    if (!publicKey || claimableBalance <= 0) {
       return;
     }
 
     setIsClaiming(true);
     
     try {
-      console.log(`Claiming ${tokenData.claimableBalance} tokens for user ${publicKey}`);
+      console.log(`[ProfileStats] Claiming ${claimableBalance} tokens for user ${publicKey}`);
       
-      // Use centralized token context
-      const result = await claimTokens(publicKey, tokenData.claimableBalance);
+      // Use centralized token context for API call
+      const result = await claimTokens(publicKey, claimableBalance);
       
       if (result.success) {
+        // Reset global claimable balance to 0
+        resetClaimableBalance(publicKey);
+        
         // Show success message
         showSuccess(
           'Token\'lar Başarıyla Aktarıldı!',
-          `${tokenData.claimableBalance} token Stellar cüzdanınıza aktarıldı. Transaction Hash: ${result.data.transactionHash}`
+          `${claimableBalance} token Stellar cüzdanınıza aktarıldı. Transaction Hash: ${result.data.transactionHash}`
         );
         
-        console.log('Tokens claimed successfully:', result.data);
+        console.log('[ProfileStats] Tokens claimed successfully:', result.data);
       } else {
         throw new Error(result.error || 'Token claim failed');
       }
     } catch (error) {
-      console.error('Token claim error:', error);
+      console.error('[ProfileStats] Token claim error:', error);
       showError('Token Aktarım Hatası', error.message);
     } finally {
       setIsClaiming(false);
@@ -59,7 +64,7 @@ const ProfileStats = ({ userStats }) => {
     },
     {
       title: 'Claimable Balance',
-      value: tokenData.claimableBalance,
+      value: claimableBalance, // Use global balance context
       icon: '⏳',
       color: 'from-blue-500 to-cyan-500',
       bgColor: 'bg-blue-50 dark:bg-blue-900/20',
@@ -110,7 +115,7 @@ const ProfileStats = ({ userStats }) => {
       </div>
 
       {/* Claim Button */}
-      {tokenData.claimableBalance > 0 && (
+      {claimableBalance > 0 && (
         <Card className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-700">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
@@ -119,7 +124,7 @@ const ProfileStats = ({ userStats }) => {
                   Token'larınızı Hesabınıza Aktarın
                 </h3>
                 <p className="text-sm text-slate-600 dark:text-slate-400">
-                  {tokenData.claimableBalance} token'ı Stellar cüzdanınıza aktarabilirsiniz.
+                  {claimableBalance} token'ı Stellar cüzdanınıza aktarabilirsiniz.
                 </p>
               </div>
               <Button

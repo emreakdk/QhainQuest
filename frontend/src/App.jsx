@@ -1,6 +1,7 @@
 import { useContext, useState, useEffect } from 'react';
 import { WalletContext } from './context/WalletContext';
 import { TokenProvider, useToken } from './context/TokenContext';
+import { BalanceProvider, useBalance } from './context/BalanceContext';
 import Header from './components/layout/Header';
 import HeroSection from './components/layout/HeroSection';
 import QuestGrid from './components/features/quest/QuestGrid';
@@ -10,7 +11,9 @@ import Leaderboard from './components/features/leaderboard/Leaderboard';
 function App() {
   return (
     <TokenProvider>
-      <AppContent />
+      <BalanceProvider>
+        <AppContent />
+      </BalanceProvider>
     </TokenProvider>
   );
 }
@@ -18,6 +21,7 @@ function App() {
 function AppContent() {
   const { publicKey } = useContext(WalletContext);
   const { loadTokenData } = useToken();
+  const { loadBalanceForUser } = useBalance();
   const [currentPage, setCurrentPage] = useState(() => {
     // Önce localStorage'dan al
     const savedPage = localStorage.getItem('chainquest-current-page');
@@ -43,10 +47,11 @@ function AppContent() {
     window.history.pushState({}, '', url);
   };
 
-  // Load token data when user changes
+  // Load token data and balance when user changes
   useEffect(() => {
     loadTokenData(publicKey);
-  }, [publicKey, loadTokenData]);
+    loadBalanceForUser(publicKey);
+  }, [publicKey, loadTokenData, loadBalanceForUser]);
 
   const renderPage = () => {
     switch (currentPage) {

@@ -4,6 +4,7 @@ import { WalletContext } from '../../../context/WalletContext';
 import { useLanguage } from '../../../context/LanguageContext';
 import { useQuest } from '../../../context/QuestContext';
 import { useToken } from '../../../context/TokenContext';
+import { useBalance } from '../../../context/BalanceContext';
 import { useNotification } from '../../../context/NotificationContext';
 import useSound from '../../../hooks/useSound';
 import { questApiService } from '../../../services/questApi';
@@ -18,7 +19,8 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
   const { t } = useLanguage();
   const { showSuccess, showError } = useNotification();
   const { submitAnswer, getQuestProgress, refreshUserBalance } = useQuest();
-  const { addToClaimableBalance, refreshTokenData } = useToken();
+  const { refreshTokenData } = useToken();
+  const { addToClaimableBalance } = useBalance(); // Use global balance context
   const { playSuccessSound, playErrorSound, playClickSound } = useSound();
   
   const [quest, setQuest] = useState(null);
@@ -258,7 +260,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
         questApiService.markQuestCompleted(publicKey, questId);
         setQuestCompleted(true);
         
-        // Add reward to claimable balance using centralized context
+        // Add reward to claimable balance using global balance context
         addToClaimableBalance(publicKey, result.data.rewardAmount);
         
         // CRITICAL: Set loading to false immediately on success

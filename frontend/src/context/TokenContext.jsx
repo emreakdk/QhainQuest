@@ -41,6 +41,7 @@ export const TokenProvider = ({ children }) => {
       
       // Get comprehensive breakdown
       const breakdown = getTokenBalanceBreakdown(userAddress);
+      // Get claimable balance from localStorage directly (BalanceContext will sync this)
       const claimableBalance = questApiService.getClaimableBalance(userAddress);
       
       // Get quest database for total quest count
