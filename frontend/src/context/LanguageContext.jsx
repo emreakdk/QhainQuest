@@ -8,7 +8,7 @@ const translations = {
     'nav.connectWallet': 'Cüzdanı Bağla',
     'nav.profile': 'Profil',
     'nav.quests': 'Görevler',
-    'nav.leaderboard': 'Liderlik Tablosu',
+    'nav.leaderboard': 'Başarılar',
     
     // Home Page
     'home.title': 'Bilgini Kanıtla, Geleceği Kazan.',
@@ -123,7 +123,7 @@ const translations = {
     'nav.connectWallet': 'Connect Wallet',
     'nav.profile': 'Profile',
     'nav.quests': 'Quests',
-    'nav.leaderboard': 'Leaderboard',
+    'nav.leaderboard': 'Achievements',
     
     // Home Page
     'home.title': 'Prove Your Knowledge, Win the Future.',
