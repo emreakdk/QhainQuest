@@ -75,7 +75,7 @@ function AppContent() {
             {renderPage()}
           </div>
         ) : (
-          <HeroSection />
+          <HeroSection onPageChange={handlePageChange} />
         )}
       </main>
     </div>

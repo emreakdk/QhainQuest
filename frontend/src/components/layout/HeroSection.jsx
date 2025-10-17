@@ -5,7 +5,7 @@ import { useBalance } from '../../context/BalanceContext';
 import Button from '../ui/Button';
 import FreighterConnect from '../features/wallet/FreighterConnect';
 
-const HeroSection = () => {
+const HeroSection = ({ onPageChange }) => {
   const { publicKey, setPublicKey, isDemoMode, enterDemoMode, isConnected } = useContext(WalletContext);
   const { loadBalanceForUser } = useBalance();
   const { t } = useLanguage();
@@ -13,6 +13,10 @@ const HeroSection = () => {
   const handleDemoMode = () => {
     enterDemoMode();
     loadBalanceForUser('demo');
+  };
+
+  const handleGoToQuests = () => {
+    onPageChange('quests');
   };
 
   return (
@@ -79,6 +83,7 @@ const HeroSection = () => {
                 variant="primary" 
                 size="lg"
                 className="animate-bounce cursor-pointer"
+                onClick={handleGoToQuests}
               >
                 {t('nav.quests')}
               </Button>
