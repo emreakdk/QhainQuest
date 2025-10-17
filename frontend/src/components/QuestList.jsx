@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { Contract } from "soroban-client";
+import { useLanguage } from "../context/LanguageContext";
 
 const QuestList = () => {
   const [quests, setQuests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const fetchQuests = async () => {
@@ -28,8 +30,8 @@ const QuestList = () => {
         // setQuests([questData]);
 
       } catch (err) {
-        console.error("Görevleri çekerken hata:", err);
-        setError("Görevler yüklenemedi. Kontratta henüz görev olmayabilir.");
+        console.error(t('questList.fetchError'), err);
+        setError(t('questList.error'));
       } finally {
         setLoading(false);
       }
@@ -39,7 +41,7 @@ const QuestList = () => {
   }, []);
 
   if (loading) {
-    return <p className="text-gray-400">Görevler yükleniyor...</p>;
+    return <p className="text-gray-400">{t('questList.loading')}</p>;
   }
 
   if (error) {
@@ -48,7 +50,7 @@ const QuestList = () => {
 
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-4">Mevcut Görevler</h2>
+      <h2 className="text-2xl font-semibold mb-4">{t('questList.availableQuests')}</h2>
       {/* Görevler buraya listelenecek */}
     </div>
   );

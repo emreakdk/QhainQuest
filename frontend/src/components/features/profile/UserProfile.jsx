@@ -53,21 +53,21 @@ const UserProfile = () => {
 
   // Memoized achievements array to prevent unnecessary re-renders
   const achievements = useMemo(() => [
-    { title: "İlk Adım", description: "İlk görevinizi tamamladınız", icon: "🚀", unlocked: true },
-    { title: "Token Toplayıcı", description: "1000+ token kazandınız", icon: "💰", unlocked: true },
-    { title: "Sertifika Avcısı", description: "3+ sertifika aldınız", icon: "🏆", unlocked: true },
-    { title: "Uzman", description: "10+ görev tamamladınız", icon: "⭐", unlocked: false },
-    { title: "Hız Makinesi", description: "1 saatte 5 görev tamamlayın", icon: "⚡", unlocked: false },
-    { title: "Efsane", description: "Tüm görevleri tamamlayın", icon: "👑", unlocked: false }
-  ], []);
+    { title: t('achievements.firstStep'), description: t('achievements.firstStepDesc'), icon: "🚀", unlocked: true },
+    { title: t('achievements.tokenCollector'), description: t('achievements.tokenCollectorDesc'), icon: "💰", unlocked: true },
+    { title: t('achievements.certificateHunter'), description: t('achievements.certificateHunterDesc'), icon: "🏆", unlocked: true },
+    { title: t('achievements.expert'), description: t('achievements.expertDesc'), icon: "⭐", unlocked: false },
+    { title: t('achievements.speedMachine'), description: t('achievements.speedMachineDesc'), icon: "⚡", unlocked: false },
+    { title: t('achievements.legend'), description: t('achievements.legendDesc'), icon: "👑", unlocked: false }
+  ], [t]);
 
   // Memoized activities array to prevent unnecessary re-renders
   const activities = useMemo(() => [
-    { action: "Stellar Temelleri görevini tamamladı", time: "2 saat önce", type: "quest" },
-    { action: "150 Token ödülü kazandı", time: "2 saat önce", type: "reward" },
-    { action: "Yeni sertifika aldı", time: "1 gün önce", type: "certificate" },
-    { action: "DeFi Protokolleri görevine başladı", time: "3 gün önce", type: "quest" }
-  ], []);
+    { action: t('activity.stellarBasicsCompleted'), time: `2 ${t('activity.hoursAgo')}`, type: "quest" },
+    { action: t('activity.tokenRewardEarned'), time: `2 ${t('activity.hoursAgo')}`, type: "reward" },
+    { action: t('activity.newCertificateEarned'), time: `1 ${t('activity.daysAgo')}`, type: "certificate" },
+    { action: t('activity.defiQuestStarted'), time: `3 ${t('activity.daysAgo')}`, type: "quest" }
+  ], [t]);
 
   return (
     <div className="space-y-8">

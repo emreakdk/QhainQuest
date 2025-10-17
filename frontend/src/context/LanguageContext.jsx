@@ -117,6 +117,45 @@ const translations = {
     'celebration.completed': 'Tamamlandı',
     'celebration.close': 'Kapat',
     'celebration.continue': 'Devam Et',
+
+    // Wallet
+    'wallet.connect': 'Cüzdanı Bağla',
+    'wallet.disconnect': 'Bağlantıyı Kes',
+    'wallet.extensionNotInstalled': 'Freighter uzantısı kurulu değil veya çalışmıyor.',
+    'wallet.connectionError': 'Bağlantı sırasında hata',
+    'wallet.freighterFound': 'Freighter bulundu, bağlantı isteniyor...',
+    'wallet.addressReceived': 'Adres geldi',
+
+    // Search
+    'search.placeholder': 'Görev ara...',
+
+    // Achievements
+    'achievements.firstStep': 'İlk Adım',
+    'achievements.firstStepDesc': 'İlk görevinizi tamamladınız',
+    'achievements.tokenCollector': 'Token Toplayıcı',
+    'achievements.tokenCollectorDesc': '1000+ token kazandınız',
+    'achievements.certificateHunter': 'Sertifika Avcısı',
+    'achievements.certificateHunterDesc': '3+ sertifika aldınız',
+    'achievements.expert': 'Uzman',
+    'achievements.expertDesc': '10+ görev tamamladınız',
+    'achievements.speedMachine': 'Hız Makinesi',
+    'achievements.speedMachineDesc': '1 saatte 5 görev tamamlayın',
+    'achievements.legend': 'Efsane',
+    'achievements.legendDesc': 'Tüm görevleri tamamlayın',
+
+    // Activity Feed
+    'activity.stellarBasicsCompleted': 'Stellar Temelleri görevini tamamladı',
+    'activity.tokenRewardEarned': '150 Token ödülü kazandı',
+    'activity.newCertificateEarned': 'Yeni sertifika aldı',
+    'activity.defiQuestStarted': 'DeFi Protokolleri görevine başladı',
+    'activity.hoursAgo': 'saat önce',
+    'activity.daysAgo': 'gün önce',
+
+    // Quest List
+    'questList.loading': 'Görevler yükleniyor...',
+    'questList.error': 'Görevler yüklenemedi. Kontratta henüz görev olmayabilir.',
+    'questList.availableQuests': 'Mevcut Görevler',
+    'questList.fetchError': 'Görevleri çekerken hata',
   },
   en: {
     // Navigation
@@ -232,6 +271,45 @@ const translations = {
     'celebration.completed': 'Completed',
     'celebration.close': 'Close',
     'celebration.continue': 'Continue',
+
+    // Wallet
+    'wallet.connect': 'Connect Wallet',
+    'wallet.disconnect': 'Disconnect',
+    'wallet.extensionNotInstalled': 'Freighter extension is not installed or not working.',
+    'wallet.connectionError': 'Error during connection',
+    'wallet.freighterFound': 'Freighter found, requesting connection...',
+    'wallet.addressReceived': 'Address received',
+
+    // Search
+    'search.placeholder': 'Search quests...',
+
+    // Achievements
+    'achievements.firstStep': 'First Step',
+    'achievements.firstStepDesc': 'You completed your first quest',
+    'achievements.tokenCollector': 'Token Collector',
+    'achievements.tokenCollectorDesc': 'You earned 1000+ tokens',
+    'achievements.certificateHunter': 'Certificate Hunter',
+    'achievements.certificateHunterDesc': 'You earned 3+ certificates',
+    'achievements.expert': 'Expert',
+    'achievements.expertDesc': 'You completed 10+ quests',
+    'achievements.speedMachine': 'Speed Machine',
+    'achievements.speedMachineDesc': 'Complete 5 quests in 1 hour',
+    'achievements.legend': 'Legend',
+    'achievements.legendDesc': 'Complete all quests',
+
+    // Activity Feed
+    'activity.stellarBasicsCompleted': 'Completed Stellar Basics quest',
+    'activity.tokenRewardEarned': 'Earned 150 Token reward',
+    'activity.newCertificateEarned': 'Earned new certificate',
+    'activity.defiQuestStarted': 'Started DeFi Protocols quest',
+    'activity.hoursAgo': 'hours ago',
+    'activity.daysAgo': 'days ago',
+
+    // Quest List
+    'questList.loading': 'Loading quests...',
+    'questList.error': 'Quests could not be loaded. There may be no quests in the contract yet.',
+    'questList.availableQuests': 'Available Quests',
+    'questList.fetchError': 'Error fetching quests',
   }
 };
 

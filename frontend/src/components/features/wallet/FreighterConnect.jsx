@@ -18,21 +18,21 @@ const FreighterConnect = ({ onConnect }) => {
       
       const installed = await isConnected();
       if (!installed?.isConnected) {
-        setError("Freighter uzantısı kurulu değil veya çalışmıyor.");
+        setError(t('wallet.extensionNotInstalled'));
         return;
       }
 
-      console.log("Freighter bulundu, bağlantı isteniyor...");
+      console.log(t('wallet.freighterFound'));
       await requestAccess();
       const address = await getAddress();
-      console.log("Adres geldi:", address);
+      console.log(t('wallet.addressReceived'), address);
       const key = address.address || address;
       setPublicKey(key);
       onConnect(key);
 
     } catch (err) {
       console.error("HATA:", err);
-      setError("Bağlantı sırasında hata: " + err.message);
+      setError(t('wallet.connectionError') + ": " + err.message);
     } finally {
       setLoading(false);
     }
