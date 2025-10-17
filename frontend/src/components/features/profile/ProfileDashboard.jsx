@@ -114,7 +114,7 @@ const ProfileDashboard = () => {
       }
     } catch (error) {
       console.error('[ProfileDashboard] Token claim error:', error);
-      showError('Token Aktarım Hatası', error.message);
+      showError(t('token.transferError'), error.message);
     } finally {
       setIsClaiming(false);
     }
@@ -165,7 +165,7 @@ const ProfileDashboard = () => {
                 <div className="text-3xl font-bold">
                   <AnimatedCounter value={claimableBalance} duration={1500} />
                 </div>
-                <div className="text-yellow-100 text-sm">Claimable Balance</div>
+                <div className="text-yellow-100 text-sm">{t('profile.claimableBalance')}</div>
                 <div className="text-xs text-yellow-200 mt-1">
                   Tokens ready to claim
                 </div>
@@ -182,7 +182,7 @@ const ProfileDashboard = () => {
                 <div className="text-3xl font-bold">
                   <AnimatedCounter value={Array.isArray(stats.completedQuests) ? stats.completedQuests.length : 0} duration={1500} />
                 </div>
-                <div className="text-purple-100 text-sm">Tamamlanan Quest</div>
+                <div className="text-purple-100 text-sm">{t('profile.completedQuests')}</div>
                 <div className="text-xs text-purple-200 mt-1">
                   Perfect skor: {stats.perfectScores}
                 </div>
@@ -197,8 +197,8 @@ const ProfileDashboard = () => {
       {/* Tab Navigation */}
       <div className="flex space-x-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
         {[
-          { id: 'overview', label: 'Genel Bakış', icon: '📊' },
-          { id: 'achievements', label: 'Başarılar', icon: '🏆' },
+          { id: 'overview', label: t('profile.overview'), icon: '📊' },
+          { id: 'achievements', label: t('profile.achievements'), icon: '🏆' },
           { id: 'activity', label: 'Aktivite', icon: '🕒' }
         ].map(tab => (
           <button
@@ -254,11 +254,11 @@ const ProfileDashboard = () => {
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-600 dark:text-slate-400">Toplam Kazanılan</span>
+                    <span className="text-slate-600 dark:text-slate-400">{t('profile.totalEarned')}</span>
                     <span className="font-semibold text-green-600">{totalEarned} CQT</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-600 dark:text-slate-400">Claimable Balance</span>
+                    <span className="text-slate-600 dark:text-slate-400">{t('profile.claimableBalance')}</span>
                     <span className="font-semibold text-blue-600">{claimableBalance} CQT</span>
                   </div>
                   <div className="flex justify-between items-center">
@@ -266,7 +266,7 @@ const ProfileDashboard = () => {
                     <span className="font-semibold text-purple-600">{tokenData.claimedBalance} CQT</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-600 dark:text-slate-400">Tamamlanan Quest</span>
+                    <span className="text-slate-600 dark:text-slate-400">{t('profile.completedQuests')}</span>
                     <span className="font-semibold">{tokenData.completedQuests}</span>
                   </div>
                   
@@ -299,7 +299,7 @@ const ProfileDashboard = () => {
         {activeTab === 'achievements' && (
           <Card className="lg:col-span-2">
             <CardHeader>
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Son Başarılar</h3>
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{t('profile.recentAchievements')}</h3>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

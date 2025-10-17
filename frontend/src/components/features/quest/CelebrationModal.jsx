@@ -48,7 +48,7 @@ const CelebrationModal = ({ quest, onClose, onComplete }) => {
             {/* Quest Bilgileri */}
             <div className="text-center">
               <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
-                {quest?.name || 'Quest Tamamlandı'}
+                {t(quest?.nameKey || quest?.name) || t('profile.questCompleted')}
               </h3>
               <Badge 
                 variant="success" 

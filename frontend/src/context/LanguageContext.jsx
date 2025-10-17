@@ -188,6 +188,27 @@ const translations = {
     'difficulty.beginner.description': 'Temel kavramlar ve basit uygulamalar',
     'difficulty.intermediate.description': 'Orta seviye teknik bilgi gerektirir',
     'difficulty.advanced.description': 'Gelişmiş teknik bilgi ve deneyim gerektirir',
+
+    // Profile Page
+    'profile.totalEarned': 'Toplam Kazanılan',
+    'profile.claimableBalance': 'Claimable Balance',
+    'profile.completedQuests': 'Tamamlanan Quest',
+    'profile.certificates': 'Sertifikalar',
+    'profile.claimButton': 'Hesaba Aktar',
+    'profile.overview': 'Genel Bakış',
+    'profile.achievements': 'Başarılar',
+    'profile.progressChart': 'İlerleme Grafiği',
+    'profile.chartPlaceholder': 'Grafik burada görünecek',
+    'profile.yourCertificates': 'Sertifikalarınız',
+    'profile.certificatePrefix': 'Sertifika:',
+    'profile.yourAchievements': 'Başarılarınız',
+    'profile.questCompleted': 'Quest Tamamlandı',
+    'profile.recentAchievements': 'Son Başarılar',
+    'profile.connectWalletForAchievements': 'Başarılarınızı görüntülemek için cüzdanınızı bağlayın.',
+
+    // Token Messages
+    'token.successfullyTransferred': 'Token\'lar Başarıyla Aktarıldı!',
+    'token.transferError': 'Token Aktarım Hatası',
   },
   en: {
     // Navigation
@@ -374,6 +395,27 @@ const translations = {
     'difficulty.beginner.description': 'Basic concepts and simple applications',
     'difficulty.intermediate.description': 'Requires intermediate technical knowledge',
     'difficulty.advanced.description': 'Requires advanced technical knowledge and experience',
+
+    // Profile Page
+    'profile.totalEarned': 'Total Earned',
+    'profile.claimableBalance': 'Claimable Balance',
+    'profile.completedQuests': 'Completed Quests',
+    'profile.certificates': 'Certificates',
+    'profile.claimButton': 'Transfer to Account',
+    'profile.overview': 'Overview',
+    'profile.achievements': 'Achievements',
+    'profile.progressChart': 'Progress Chart',
+    'profile.chartPlaceholder': 'Chart will appear here',
+    'profile.yourCertificates': 'Your Certificates',
+    'profile.certificatePrefix': 'Certificate:',
+    'profile.yourAchievements': 'Your Achievements',
+    'profile.questCompleted': 'Quest Completed',
+    'profile.recentAchievements': 'Recent Achievements',
+    'profile.connectWalletForAchievements': 'Connect your wallet to view your achievements.',
+
+    // Token Messages
+    'token.successfullyTransferred': 'Tokens Successfully Transferred!',
+    'token.transferError': 'Token Transfer Error',
   }
 };
 

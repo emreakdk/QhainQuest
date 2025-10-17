@@ -47,7 +47,7 @@ const ProfileStats = ({ userStats }) => {
       }
     } catch (error) {
       console.error('[ProfileStats] Token claim error:', error);
-      showError('Token Aktarım Hatası', error.message);
+        showError(t('token.transferError'), error.message);
     } finally {
       setIsClaiming(false);
     }
@@ -55,7 +55,7 @@ const ProfileStats = ({ userStats }) => {
 
   const stats = [
     {
-      title: 'Toplam Kazanılan',
+      title: t('profile.totalEarned'),
       value: totalEarned, // CRITICAL FIX: Use global totalEarned from BalanceContext
       icon: '💰',
       color: 'from-yellow-500 to-orange-500',
@@ -63,7 +63,7 @@ const ProfileStats = ({ userStats }) => {
       textColor: 'text-yellow-600 dark:text-yellow-400'
     },
     {
-      title: 'Claimable Balance',
+      title: t('profile.claimableBalance'),
       value: claimableBalance, // Use global balance context
       icon: '⏳',
       color: 'from-blue-500 to-cyan-500',
@@ -71,7 +71,7 @@ const ProfileStats = ({ userStats }) => {
       textColor: 'text-blue-600 dark:text-blue-400'
     },
     {
-      title: 'Tamamlanan Quest',
+      title: t('profile.completedQuests'),
       value: tokenData.completedQuests,
       icon: '✅',
       color: 'from-green-500 to-teal-500',
@@ -79,7 +79,7 @@ const ProfileStats = ({ userStats }) => {
       textColor: 'text-green-600 dark:text-green-400'
     },
     {
-      title: 'Sertifikalar',
+      title: t('profile.certificates'),
       // FIX: Handle certificates as both array and number to prevent React error #31
       value: Array.isArray(userStats?.certificates) ? userStats.certificates.length : (userStats?.certificates || 0),
       icon: '🏆',
@@ -138,7 +138,7 @@ const ProfileStats = ({ userStats }) => {
                     <span>Aktarılıyor...</span>
                   </div>
                 ) : (
-                  'Hesaba Aktar'
+                  t('profile.claimButton')
                 )}
               </Button>
             </div>

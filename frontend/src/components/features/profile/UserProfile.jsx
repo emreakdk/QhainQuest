@@ -84,7 +84,7 @@ const UserProfile = () => {
             {truncateKey(publicKey)}
           </Badge>
           <Badge variant="success">
-            {tokenData.completedQuests} Quest Tamamlandı
+            {tokenData.completedQuests} {t('profile.questCompleted')}
           </Badge>
         </div>
       </div>
@@ -149,11 +149,11 @@ const UserProfile = () => {
               {/* Progress Chart Placeholder */}
               <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg">
                 <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
-                  İlerleme Grafiği
+                  {t('profile.progressChart')}
                 </h3>
                 <div className="h-48 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center">
                   <p className="text-slate-500 dark:text-slate-400">
-                    Grafik burada görünecek
+                    {t('profile.chartPlaceholder')}
                   </p>
                 </div>
               </div>
@@ -165,7 +165,7 @@ const UserProfile = () => {
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
-                Sertifikalarınız
+                {t('profile.yourCertificates')}
               </h3>
               <Badge variant="primary">
                 {tokenData.completedQuests} Sertifika
@@ -185,7 +185,7 @@ const UserProfile = () => {
                       <div className="text-4xl mb-4">🏆</div>
                       <h4 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
                         {/* FIX: Rendered quest.name instead of the entire quest object to prevent React error #31 */}
-                        Sertifika: {quest.name}
+                        {t('profile.certificatePrefix')} {t(quest.nameKey || quest.name)}
                       </h4>
                       <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
                         {/* FIX: Rendered quest.description instead of the entire quest object */}
@@ -216,7 +216,7 @@ const UserProfile = () => {
         {activeTab === 'achievements' && (
           <div className="space-y-6">
             <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
-              Başarılarınız
+              {t('profile.yourAchievements')}
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

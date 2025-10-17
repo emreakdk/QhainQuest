@@ -46,7 +46,7 @@ const Leaderboard = () => {
               Cüzdan Bağlantısı Gerekli
             </h3>
             <p className="text-slate-600 dark:text-slate-400">
-              Başarılarınızı görüntülemek için cüzdanınızı bağlayın.
+              {t('profile.connectWalletForAchievements')}
             </p>
           </Card>
         </div>
@@ -119,13 +119,13 @@ const Leaderboard = () => {
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-600 dark:text-slate-400">Sertifika:</span>
+                <span className="text-slate-600 dark:text-slate-400">{t('profile.certificatePrefix')}</span>
                 <span className="font-medium text-slate-900 dark:text-white">
                   {currentUser.certificates}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-600 dark:text-slate-400">Tamamlanan Quest:</span>
+                <span className="text-slate-600 dark:text-slate-400">{t('profile.completedQuests')}:</span>
                 <span className="font-medium text-slate-900 dark:text-white">
                   {currentUser.completedQuests}
                 </span>
@@ -183,7 +183,7 @@ const Leaderboard = () => {
                   <div className="font-medium text-slate-900 dark:text-white text-2xl">
                     {currentUser.completedQuests}
                   </div>
-                  <div className="text-slate-500 dark:text-slate-400">Tamamlanan Quest</div>
+                  <div className="text-slate-500 dark:text-slate-400">{t('profile.completedQuests')}</div>
                 </div>
               </div>
 

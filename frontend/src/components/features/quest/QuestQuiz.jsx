@@ -412,7 +412,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
             <div className="text-center">
               <div className="text-6xl mb-4">✅</div>
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
-                Quest Tamamlandı!
+                {t('profile.questCompleted')}!
               </h2>
               <p className="text-slate-700 dark:text-slate-300 mb-6">
                 Bu quest'i zaten başarıyla tamamladınız. Yeni quest'leri keşfetmek için ana sayfaya dönün.
