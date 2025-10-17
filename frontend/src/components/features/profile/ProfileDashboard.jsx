@@ -338,15 +338,15 @@ const ProfileDashboard = () => {
                     </div>
                     <div className="flex-1">
                       <div className="font-medium text-slate-900 dark:text-white">{activity.title || t('profile.dashboard.activity')}</div>
-                      <div className="text-sm text-slate-600 dark:text-slate-400">{activity.description || 'Açıklama yok'}</div>
+                      <div className="text-sm text-slate-600 dark:text-slate-400">{activity.description || t('emptyState.noDescription')}</div>
                     </div>
                     <div className="text-sm text-slate-500 dark:text-slate-500">
-                      {activity.timestamp ? new Date(activity.timestamp).toLocaleDateString('tr-TR') : 'Tarih yok'}
+                      {activity.timestamp ? new Date(activity.timestamp).toLocaleDateString('tr-TR') : t('emptyState.noDate')}
                     </div>
                   </div>
                 )) : (
                   <div className="text-center py-8 text-slate-500 dark:text-slate-400">
-                    Henüz aktivite bulunmuyor.
+                    {t('emptyState.activity')}
                   </div>
                 )}
               </div>

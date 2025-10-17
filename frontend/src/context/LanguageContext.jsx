@@ -250,6 +250,12 @@ const translations = {
     'profile.claim.description': 'token\'ı Stellar cüzdanınıza aktarabilirsiniz.',
     'profile.claim.transferring': 'Aktarılıyor...',
     'profile.claim.button': 'Çek',
+
+    // Empty States
+    'emptyState.certificates': 'Henüz sertifika kazanmadınız. Quest\'leri tamamlayarak sertifika kazanın!',
+    'emptyState.activity': 'Henüz aktivite bulunmuyor.',
+    'emptyState.noDescription': 'Açıklama yok',
+    'emptyState.noDate': 'Tarih yok',
   },
   en: {
     // Navigation
@@ -498,6 +504,12 @@ const translations = {
     'profile.claim.description': 'tokens can be transferred to your Stellar wallet.',
     'profile.claim.transferring': 'Transferring...',
     'profile.claim.button': 'Claim',
+
+    // Empty States
+    'emptyState.certificates': 'You haven\'t earned any certificates yet. Complete quests to earn certificates!',
+    'emptyState.activity': 'No activity yet.',
+    'emptyState.noDescription': 'No description',
+    'emptyState.noDate': 'No date',
   }
 };
 

@@ -206,7 +206,7 @@ const UserProfile = () => {
                 );
               }) : (
                 <div className="col-span-full text-center py-8 text-slate-500 dark:text-slate-400">
-                  Henüz sertifika kazanmadınız. Quest'leri tamamlayarak sertifika kazanın!
+                  {t('emptyState.certificates')}
                 </div>
               )}
             </div>
