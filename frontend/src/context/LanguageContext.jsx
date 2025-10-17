@@ -191,7 +191,7 @@ const translations = {
 
     // Profile Page
     'profile.totalEarned': 'Toplam Kazanılan',
-    'profile.claimableBalance': 'Claimable Balance',
+    'profile.claimableBalance': 'Çekilebilir Bakiye',
     'profile.completedQuests': 'Tamamlanan Quest',
     'profile.certificates': 'Sertifikalar',
     'profile.claimButton': 'Hesaba Aktar',
@@ -213,7 +213,7 @@ const translations = {
     'token.claimSuccess': 'Token\'lar Başarıyla Aktarıldı!',
 
     // Profile Tabs
-    'profile.tabs.dashboard': 'Dashboard',
+    'profile.tabs.dashboard': 'Kontrol Paneli',
     'profile.tabs.activity': 'Aktivite',
 
     // Profile Dashboard
@@ -244,6 +244,12 @@ const translations = {
     // Common
     'common.unknown': 'Bilinmiyor',
     'common.dayUnit': 'gün',
+
+    // Profile Claim Section
+    'profile.claim.title': 'Token\'larınızı Hesabınıza Aktarın',
+    'profile.claim.description': 'token\'ı Stellar cüzdanınıza aktarabilirsiniz.',
+    'profile.claim.transferring': 'Aktarılıyor...',
+    'profile.claim.button': 'Çek',
   },
   en: {
     // Navigation
@@ -486,6 +492,12 @@ const translations = {
     // Common
     'common.unknown': 'Unknown',
     'common.dayUnit': 'day',
+
+    // Profile Claim Section
+    'profile.claim.title': 'Transfer Your Tokens to Your Account',
+    'profile.claim.description': 'tokens can be transferred to your Stellar wallet.',
+    'profile.claim.transferring': 'Transferring...',
+    'profile.claim.button': 'Claim',
   }
 };
 

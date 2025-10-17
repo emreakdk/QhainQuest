@@ -281,10 +281,10 @@ const ProfileDashboard = () => {
                         {isClaiming ? (
                           <div className="flex items-center space-x-2">
                             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                            <span>Aktarılıyor...</span>
+                            <span>{t('profile.claim.transferring')}</span>
                           </div>
                         ) : (
-                          `💰 ${claimableBalance} CQT Çek`
+                          `💰 ${claimableBalance} CQT ${t('profile.claim.button')}`
                         )}
                       </Button>
                     </div>

@@ -121,10 +121,10 @@ const ProfileStats = ({ userStats }) => {
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
-                  Token'larınızı Hesabınıza Aktarın
+                  {t('profile.claim.title')}
                 </h3>
                 <p className="text-sm text-slate-600 dark:text-slate-400">
-                  {claimableBalance} token'ı Stellar cüzdanınıza aktarabilirsiniz.
+                  {claimableBalance} {t('profile.claim.description')}
                 </p>
               </div>
               <Button
@@ -135,7 +135,7 @@ const ProfileStats = ({ userStats }) => {
                 {isClaiming ? (
                   <div className="flex items-center space-x-2">
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <span>Aktarılıyor...</span>
+                    <span>{t('profile.claim.transferring')}</span>
                   </div>
                 ) : (
                   t('profile.claimButton')
