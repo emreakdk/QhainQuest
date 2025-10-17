@@ -2,8 +2,8 @@
 export const questDatabase = [
   {
     id: 'stellar-fundamentals',
-    name: 'Stellar Temelleri',
-    description: 'Stellar blockchain\'in temel kavramlarını öğrenin ve ilk işlemlerinizi gerçekleştirin. Bu quest ile Stellar ekosisteminin temellerini keşfedin.',
+    nameKey: 'quests.stellar_fundamentals.title',
+    descriptionKey: 'quests.stellar_fundamentals.description',
     category: 'blockchain',
     difficulty: 'beginner',
     rewardAmount: 100,
@@ -68,8 +68,8 @@ export const questDatabase = [
   },
   {
     id: 'soroban-smart-contracts',
-    name: 'Soroban Smart Contracts',
-    description: 'Soroban platformunda akıllı kontrat geliştirme temellerini öğrenin. Rust ile Stellar\'da smart contract yazma becerilerini geliştirin.',
+    nameKey: 'quests.soroban_smart_contracts.title',
+    descriptionKey: 'quests.soroban_smart_contracts.description',
     category: 'smart-contracts',
     difficulty: 'intermediate',
     rewardAmount: 250,
@@ -139,8 +139,8 @@ export const questDatabase = [
   },
   {
     id: 'defi-protocols',
-    name: 'DeFi Protokolleri',
-    description: 'Stellar ekosistemindeki DeFi protokollerini keşfedin ve kullanın. AMM, lending ve yield farming konularını öğrenin.',
+    nameKey: 'quests.defi_protocols.title',
+    descriptionKey: 'quests.defi_protocols.description',
     category: 'defi',
     difficulty: 'intermediate',
     rewardAmount: 300,
@@ -210,8 +210,8 @@ export const questDatabase = [
   },
   {
     id: 'nft-ecosystem',
-    name: 'NFT Ekosistemi',
-    description: 'Stellar üzerinde NFT\'lerin nasıl oluşturulduğunu, satıldığını ve kullanıldığını öğrenin. NFT marketplace\'lerini keşfedin.',
+    nameKey: 'quests.nft_ecosystem.title',
+    descriptionKey: 'quests.nft_ecosystem.description',
     category: 'nft',
     difficulty: 'intermediate',
     rewardAmount: 200,
@@ -281,8 +281,8 @@ export const questDatabase = [
   },
   {
     id: 'advanced-stellar',
-    name: 'İleri Seviye Stellar',
-    description: 'Stellar\'ın gelişmiş özelliklerini öğrenin. Multi-sig, path payments ve complex transactions konularını keşfedin.',
+    nameKey: 'quests.advanced_stellar.title',
+    descriptionKey: 'quests.advanced_stellar.description',
     category: 'blockchain',
     difficulty: 'advanced',
     rewardAmount: 500,
@@ -359,32 +359,32 @@ export const questDatabase = [
 
 // Quest kategorileri
 export const questCategories = [
-  { id: 'all', name: 'Tümü', icon: '📚', color: 'slate' },
-  { id: 'blockchain', name: 'Blockchain', icon: '⛓️', color: 'blue' },
-  { id: 'smart-contracts', name: 'Smart Contracts', icon: '🤖', color: 'purple' },
-  { id: 'defi', name: 'DeFi', icon: '💰', color: 'green' },
-  { id: 'nft', name: 'NFT', icon: '🎨', color: 'pink' }
+  { id: 'all', nameKey: 'category.all', icon: '📚', color: 'slate' },
+  { id: 'blockchain', nameKey: 'category.blockchain', icon: '⛓️', color: 'blue' },
+  { id: 'smart-contracts', nameKey: 'category.smartContracts', icon: '🤖', color: 'purple' },
+  { id: 'defi', nameKey: 'category.defi', icon: '💰', color: 'green' },
+  { id: 'nft', nameKey: 'category.nft', icon: '🎨', color: 'pink' }
 ];
 
 // Zorluk seviyeleri
 export const difficultyLevels = {
   beginner: { 
-    name: 'Başlangıç', 
+    nameKey: 'category.beginner', 
     color: 'green', 
     icon: '🟢',
-    description: 'Temel kavramlar ve basit uygulamalar'
+    descriptionKey: 'difficulty.beginner.description'
   },
   intermediate: { 
-    name: 'Orta', 
+    nameKey: 'category.intermediate', 
     color: 'yellow', 
     icon: '🟡',
-    description: 'Orta seviye teknik bilgi gerektirir'
+    descriptionKey: 'difficulty.intermediate.description'
   },
   advanced: { 
-    name: 'İleri', 
+    nameKey: 'category.advanced', 
     color: 'red', 
     icon: '🔴',
-    description: 'Gelişmiş teknik bilgi ve deneyim gerektirir'
+    descriptionKey: 'difficulty.advanced.description'
   }
 };
 

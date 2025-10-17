@@ -156,6 +156,38 @@ const translations = {
     'questList.error': 'Görevler yüklenemedi. Kontratta henüz görev olmayabilir.',
     'questList.availableQuests': 'Mevcut Görevler',
     'questList.fetchError': 'Görevleri çekerken hata',
+
+    // Filters
+    'filters.title': 'Filtreler',
+    'filters.difficulty': 'Zorluk',
+    'filters.clear': 'Filtreleri Temizle',
+
+    // Testnet Info
+    'testnet.environmentInfo': 'Ortam Bilgileri',
+    'testnet.environment': 'Ortam',
+
+    // Certificate
+    'certificate.blockchainStored': 'Bu sertifika blockchain\'de kalıcı olarak saklanmaktadır',
+
+    // Level System
+    'level.beginner': 'Başlangıç',
+
+    // Quest Titles and Descriptions
+    'quests.stellar_fundamentals.title': 'Stellar Temelleri',
+    'quests.stellar_fundamentals.description': 'Stellar blockchain\'in temel kavramlarını öğrenin ve ilk işlemlerinizi gerçekleştirin. Bu quest ile Stellar ekosisteminin temellerini keşfedin.',
+    'quests.soroban_smart_contracts.title': 'Soroban Smart Contracts',
+    'quests.soroban_smart_contracts.description': 'Soroban platformunda akıllı kontrat geliştirme temellerini öğrenin. Rust ile Stellar\'da smart contract yazma becerilerini geliştirin.',
+    'quests.defi_protocols.title': 'DeFi Protokolleri',
+    'quests.defi_protocols.description': 'Stellar ekosistemindeki DeFi protokollerini keşfedin ve kullanın. AMM, lending ve yield farming konularını öğrenin.',
+    'quests.nft_ecosystem.title': 'NFT Ekosistemi',
+    'quests.nft_ecosystem.description': 'Stellar üzerinde NFT\'lerin nasıl oluşturulduğunu, satıldığını ve kullanıldığını öğrenin. NFT marketplace\'lerini keşfedin.',
+    'quests.advanced_stellar.title': 'İleri Seviye Stellar',
+    'quests.advanced_stellar.description': 'Stellar\'ın gelişmiş özelliklerini öğrenin. Multi-sig, path payments ve complex transactions konularını keşfedin.',
+
+    // Difficulty Descriptions
+    'difficulty.beginner.description': 'Temel kavramlar ve basit uygulamalar',
+    'difficulty.intermediate.description': 'Orta seviye teknik bilgi gerektirir',
+    'difficulty.advanced.description': 'Gelişmiş teknik bilgi ve deneyim gerektirir',
   },
   en: {
     // Navigation
@@ -310,6 +342,38 @@ const translations = {
     'questList.error': 'Quests could not be loaded. There may be no quests in the contract yet.',
     'questList.availableQuests': 'Available Quests',
     'questList.fetchError': 'Error fetching quests',
+
+    // Filters
+    'filters.title': 'Filters',
+    'filters.difficulty': 'Difficulty',
+    'filters.clear': 'Clear Filters',
+
+    // Testnet Info
+    'testnet.environmentInfo': 'Environment Information',
+    'testnet.environment': 'Environment',
+
+    // Certificate
+    'certificate.blockchainStored': 'This certificate is permanently stored on the blockchain',
+
+    // Level System
+    'level.beginner': 'Beginner',
+
+    // Quest Titles and Descriptions
+    'quests.stellar_fundamentals.title': 'Stellar Fundamentals',
+    'quests.stellar_fundamentals.description': 'Learn the basic concepts of Stellar blockchain and perform your first transactions. Discover the fundamentals of the Stellar ecosystem with this quest.',
+    'quests.soroban_smart_contracts.title': 'Soroban Smart Contracts',
+    'quests.soroban_smart_contracts.description': 'Learn the basics of smart contract development on the Soroban platform. Develop your skills in writing smart contracts on Stellar with Rust.',
+    'quests.defi_protocols.title': 'DeFi Protocols',
+    'quests.defi_protocols.description': 'Explore and use DeFi protocols in the Stellar ecosystem. Learn about AMM, lending and yield farming topics.',
+    'quests.nft_ecosystem.title': 'NFT Ecosystem',
+    'quests.nft_ecosystem.description': 'Learn how NFTs are created, sold and used on Stellar. Explore NFT marketplaces.',
+    'quests.advanced_stellar.title': 'Advanced Stellar',
+    'quests.advanced_stellar.description': 'Learn advanced features of Stellar. Explore multi-sig, path payments and complex transactions topics.',
+
+    // Difficulty Descriptions
+    'difficulty.beginner.description': 'Basic concepts and simple applications',
+    'difficulty.intermediate.description': 'Requires intermediate technical knowledge',
+    'difficulty.advanced.description': 'Requires advanced technical knowledge and experience',
   }
 };
 

@@ -61,13 +61,13 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
   // Zorluk seviyeleri için quest kategorileri
   const getDifficultyLevel = (questName) => {
     if (questName.toLowerCase().includes('temel') || questName.toLowerCase().includes('başlangıç')) {
-      return { level: 'easy', color: 'green', label: 'Kolay' };
+      return { level: 'easy', color: 'green', label: t('category.beginner') };
     } else if (questName.toLowerCase().includes('orta')) {
-      return { level: 'medium', color: 'yellow', label: 'Orta' };
+      return { level: 'medium', color: 'yellow', label: t('category.intermediate') };
     } else if (questName.toLowerCase().includes('ileri') || questName.toLowerCase().includes('gelişmiş')) {
-      return { level: 'hard', color: 'red', label: 'Zor' };
+      return { level: 'hard', color: 'red', label: t('category.advanced') };
     }
-    return { level: 'easy', color: 'green', label: 'Kolay' };
+    return { level: 'easy', color: 'green', label: t('category.beginner') };
   };
 
   // 4 şıklı soru oluştur

@@ -61,13 +61,15 @@ const QuestGrid = () => {
 
   const filteredQuests = realQuests.filter(quest => {
     // Fixed: Add null checks for quest object properties
-    if (!quest || !quest.name || !quest.description) {
+    if (!quest || (!quest.name && !quest.nameKey) || (!quest.description && !quest.descriptionKey)) {
       return false;
     }
     const matchesCategory = selectedCategory === 'all' || getQuestCategory(quest) === selectedCategory;
     const matchesDifficulty = selectedDifficulty === 'all' || getQuestDifficulty(quest) === selectedDifficulty;
-    const matchesSearch = quest.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         quest.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const questName = t(quest.nameKey || quest.name);
+    const questDescription = t(quest.descriptionKey || quest.description);
+    const matchesSearch = questName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         questDescription.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesDifficulty && matchesSearch;
   });
 
@@ -243,7 +245,7 @@ const QuestGrid = () => {
                 }`}
               >
                 <span>{category.icon}</span>
-                <span>{category.name}</span>
+                <span>{t(category.nameKey || category.name)}</span>
                 <Badge 
                   variant={selectedCategory === category.id ? 'default' : 'outline'}
                   className="ml-1"
@@ -265,7 +267,7 @@ const QuestGrid = () => {
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.707A1 1 0 013 7V4z" />
             </svg>
-            Filtreler
+            {t('filters.title')}
           </button>
         </div>
 
@@ -273,7 +275,7 @@ const QuestGrid = () => {
         {showFilters && (
           <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
             <div className="flex flex-wrap gap-2">
-              <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">Zorluk:</span>
+              <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">{t('filters.difficulty')}:</span>
               {Object.entries(difficultyLevels).map(([key, level]) => (
                 <button
                   key={key}
@@ -285,7 +287,7 @@ const QuestGrid = () => {
                   }`}
                 >
                   <span>{level.icon}</span>
-                  <span>{level.name}</span>
+                  <span>{t(level.nameKey || level.name)}</span>
                 </button>
               ))}
             </div>
@@ -322,7 +324,7 @@ const QuestGrid = () => {
             setSelectedCategory('all');
             setSelectedDifficulty('all');
           }}>
-            Filtreleri Temizle
+            {t('filters.clear')}
           </Button>
         </div>
       )}

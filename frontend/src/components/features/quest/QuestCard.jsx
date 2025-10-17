@@ -103,16 +103,16 @@ const QuestCard = ({ quest, userProgress, onStart, onContinue, userAddress }) =>
                 variant={difficulty.color} 
                 className={`bg-${difficulty.color}-100 text-${difficulty.color}-800 border-${difficulty.color}-300 dark:bg-${difficulty.color}-900 dark:text-${difficulty.color}-200`}
               >
-                {difficulty.icon} {difficulty.name}
+                {difficulty.icon} {t(difficulty.nameKey || difficulty.name)}
               </Badge>
             </div>
             
             <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-              {quest.name}
+              {t(quest.nameKey || quest.name)}
             </h3>
             
             <p className="text-sm text-slate-600 dark:text-slate-300 line-clamp-2">
-              {quest.description}
+              {t(quest.descriptionKey || quest.description)}
             </p>
           </div>
           

@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { testTestnetConnection, getTestnetSummary } from '../utils/testnetConnection.js';
+import { useLanguage } from '../context/LanguageContext';
 
 const TestnetInfo = () => {
   const [connectionStatus, setConnectionStatus] = useState(null);
   const [testnetSummary, setTestnetSummary] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const checkTestnetConnection = async () => {
@@ -72,11 +74,11 @@ const TestnetInfo = () => {
 
       {/* Environment Info */}
       <div className="mb-4">
-        <h4 className="text-md font-medium text-gray-300 mb-2">Ortam Bilgileri</h4>
+        <h4 className="text-md font-medium text-gray-300 mb-2">{t('testnet.environmentInfo')}</h4>
         <div className="bg-gray-700 rounded p-3">
           <div className="grid grid-cols-2 gap-2 text-sm">
             <div>
-              <span className="text-gray-400">Ortam:</span>
+              <span className="text-gray-400">{t('testnet.environment')}:</span>
               <span className="text-white ml-2">{testnetSummary?.environment}</span>
             </div>
             <div>
