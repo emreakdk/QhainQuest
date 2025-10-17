@@ -12,8 +12,8 @@ import Button from '../../ui/Button';
 import Badge from '../../ui/Badge';
 
 // Basit grafik komponenti (Chart.js olmadan)
-const SimpleChart = ({ data, type = 'line', height = 200 }) => {
-  if (!data || data.length === 0) return <div className="h-48 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center">Veri yok</div>;
+const SimpleChart = ({ data, type = 'line', height = 200, t }) => {
+  if (!data || data.length === 0) return <div className="h-48 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center">{t('common.noData')}</div>;
 
   const maxValue = Math.max(...data.map(d => d.value));
   const minValue = Math.min(...data.map(d => d.value));
@@ -104,7 +104,7 @@ const ProfileDashboard = () => {
         
         // Show success message
         showSuccess(
-          'Token\'lar Başarıyla Aktarıldı!',
+          t('profile.stats.claimSuccess'),
           `${claimableBalance} ${t('token.transferredToWallet')} ${result.data.transactionHash}`
         );
         
@@ -167,7 +167,7 @@ const ProfileDashboard = () => {
                 </div>
                 <div className="text-yellow-100 text-sm">{t('profile.claimableBalance')}</div>
                 <div className="text-xs text-yellow-200 mt-1">
-                  Tokens ready to claim
+                  {t('profile.claim.readyToClaim')}
                 </div>
               </div>
               <div className="text-4xl opacity-80">💰</div>
@@ -184,7 +184,7 @@ const ProfileDashboard = () => {
                 </div>
                 <div className="text-purple-100 text-sm">{t('profile.completedQuests')}</div>
                 <div className="text-xs text-purple-200 mt-1">
-                  Perfect skor: {stats.perfectScores}
+                  {t('profile.stats.perfectScore')}: {stats.perfectScores}
                 </div>
               </div>
               <div className="text-4xl opacity-80">🎯</div>
@@ -307,16 +307,16 @@ const ProfileDashboard = () => {
                   <div key={index} className="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg p-4 text-white">
                     <div className="flex items-center space-x-2 mb-2">
                       <span className="text-2xl">🏆</span>
-                      <span className="font-semibold">{achievement.type || 'Başarı'}</span>
+                      <span className="font-semibold">{achievement.type || t('achievements.achievement')}</span>
                     </div>
-                    <p className="text-sm text-yellow-100">{achievement.message || 'Başarı kazanıldı!'}</p>
+                    <p className="text-sm text-yellow-100">{achievement.message || t('achievements.achievementEarned')}</p>
                     <div className="text-xs text-yellow-200 mt-2">
                       +{achievement.reward?.tokens || 0} Token
                     </div>
                   </div>
                 )) : (
                   <div className="col-span-full text-center py-8 text-slate-500 dark:text-slate-400">
-                    Henüz başarı kazanmadınız. Quest'leri tamamlayarak başarılar kazanın!
+                    {t('achievements.emptyState')}
                   </div>
                 )}
               </div>

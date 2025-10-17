@@ -257,6 +257,19 @@ const translations = {
     'emptyState.noDescription': 'Açıklama yok',
     'emptyState.noDate': 'Tarih yok',
     'achievements.emptyState': 'Henüz başarı kazanmadınız. Quest\'leri tamamlayarak başarılar kazanın!',
+
+    // Common
+    'common.noData': 'Veri yok',
+
+    // Profile Claim
+    'profile.claim.readyToClaim': 'Çekilebilir tokenlar',
+
+    // Profile Stats
+    'profile.stats.perfectScore': 'Mükemmel skor',
+
+    // Achievements
+    'achievements.achievement': 'Başarı',
+    'achievements.achievementEarned': 'Başarı kazanıldı!',
   },
   en: {
     // Navigation
@@ -512,6 +525,19 @@ const translations = {
     'emptyState.noDescription': 'No description',
     'emptyState.noDate': 'No date',
     'achievements.emptyState': 'You haven\'t earned any achievements yet. Complete quests to earn achievements!',
+
+    // Common
+    'common.noData': 'No data',
+
+    // Profile Claim
+    'profile.claim.readyToClaim': 'Tokens ready to claim',
+
+    // Profile Stats
+    'profile.stats.perfectScore': 'Perfect score',
+
+    // Achievements
+    'achievements.achievement': 'Achievement',
+    'achievements.achievementEarned': 'Achievement earned!',
   }
 };
 
