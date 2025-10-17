@@ -15,7 +15,7 @@ import Badge from '../../ui/Badge';
 import CelebrationModal from './CelebrationModal';
 
 const QuestQuiz = ({ questId, onComplete, onClose }) => {
-  const { publicKey } = useContext(WalletContext);
+  const { publicKey, isDemoMode } = useContext(WalletContext);
   const { t } = useLanguage();
   const { showSuccess, showError } = useNotification();
   const { submitAnswer, getQuestProgress, refreshUserBalance } = useQuest();
@@ -173,27 +173,34 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
         throw new Error(`Quest tamamlanamadı: ${answers.length}/${quest.lessons.length} soru cevaplandı. Tüm soruları cevaplamalısınız.`);
       }
       
-      // Check if quest is already completed
-      const isAlreadyCompleted = await questApiService.isQuestCompleted(publicKey, questId);
+      // Determine user identifier (wallet address or demo mode)
+      const userIdentifier = isDemoMode ? 'demo' : publicKey;
       
-      if (isAlreadyCompleted) {
-        // Quest already completed - show message and don't transfer tokens
-        setQuestCompleted(true);
-        setIsSubmitting(false);
-        showError('Quest Zaten Tamamlandı', 'Bu testi zaten tamamlamıştınız.');
-        return;
+      // Check if quest is already completed (skip for demo mode)
+      if (!isDemoMode) {
+        const isAlreadyCompleted = await questApiService.isQuestCompleted(publicKey, questId);
+        
+        if (isAlreadyCompleted) {
+          // Quest already completed - show message and don't transfer tokens
+          setQuestCompleted(true);
+          setIsSubmitting(false);
+          showError('Quest Zaten Tamamlandı', 'Bu testi zaten tamamlamıştınız.');
+          return;
+        }
       }
       
-      // Call the secure API
-      const result = await questApiService.completeQuest(publicKey, questId, answers);
+      // Call the secure API (with demo mode support)
+      const result = await questApiService.completeQuest(userIdentifier, questId, answers, isDemoMode);
       
       if (result.success) {
-        // Mark quest as completed locally
-        questApiService.markQuestCompleted(publicKey, questId);
+        // Mark quest as completed locally (skip for demo mode)
+        if (!isDemoMode) {
+          questApiService.markQuestCompleted(publicKey, questId);
+        }
         setQuestCompleted(true);
         
         // Add reward to claimable balance using global balance context
-        addToClaimableBalance(publicKey, result.data.rewardAmount);
+        addToClaimableBalance(userIdentifier, result.data.rewardAmount);
         
         // CRITICAL: Set loading to false immediately on success
         setIsSubmitting(false);
@@ -205,14 +212,16 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
           `${result.data.rewardAmount} token claimable balance'a eklendi!`
         );
         
-        // Update user stats in context
-        await submitAnswer(publicKey, questId, currentLessonIndex, answers[answers.length - 1]);
-        
-        // CRITICAL: Refresh user balance to show updated token amount
-        await refreshUserBalance(publicKey);
-        
-        // Refresh centralized token data (no more page reload needed!)
-        refreshTokenData();
+        // Update user stats in context (skip for demo mode)
+        if (!isDemoMode) {
+          await submitAnswer(publicKey, questId, currentLessonIndex, answers[answers.length - 1]);
+          
+          // CRITICAL: Refresh user balance to show updated token amount
+          await refreshUserBalance(publicKey);
+          
+          // Refresh centralized token data (no more page reload needed!)
+          refreshTokenData();
+        }
         
         console.log('Quest completed successfully:', result.data);
       } else {

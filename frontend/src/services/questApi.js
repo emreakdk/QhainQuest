@@ -11,12 +11,13 @@ class QuestApiService {
 
   /**
    * Complete a quest by submitting answers to the secure backend
-   * @param {string} userAddress - User's Stellar wallet address
+   * @param {string} userAddress - User's Stellar wallet address or 'demo' for demo mode
    * @param {string} questId - ID of the quest being completed
    * @param {Array} answers - Array of user's answers
+   * @param {boolean} isDemoMode - Whether this is a demo mode request
    * @returns {Promise<Object>} API response
    */
-  async completeQuest(userAddress, questId, answers) {
+  async completeQuest(userAddress, questId, answers, isDemoMode = false) {
     try {
       const response = await fetch(`${this.baseUrl}/complete-quest`, {
         method: 'POST',
@@ -24,9 +25,10 @@ class QuestApiService {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userAddress,
+          userAddress: isDemoMode ? null : userAddress,
           questId,
-          answers
+          answers,
+          isDemoMode
         }),
         signal: AbortSignal.timeout(this.timeout)
       });

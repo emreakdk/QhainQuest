@@ -199,25 +199,40 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { userAddress, questId, answers } = req.body;
+    const { userAddress, questId, answers, isDemoMode } = req.body;
 
     // Enhanced validation with detailed logging
     console.log('--- VALIDATION DIAGNOSTIC ---');
     console.log('userAddress:', userAddress, 'Type:', typeof userAddress);
     console.log('questId:', questId, 'Type:', typeof questId);
     console.log('answers:', answers, 'Type:', typeof answers);
+    console.log('isDemoMode:', isDemoMode, 'Type:', typeof isDemoMode);
     console.log('answers is Array:', Array.isArray(answers));
     
-    // Validate required fields
-    if (!userAddress || !questId || !answers) {
+    // Validate required fields (userAddress is optional for demo mode)
+    if (!questId || !answers) {
       console.log('Validation failed: Missing required fields');
       return res.status(400).json({
         success: false,
-        error: 'Missing required fields: userAddress, questId, and answers are required.',
+        error: 'Missing required fields: questId and answers are required.',
         details: {
           userAddress: userAddress || 'MISSING',
           questId: questId || 'MISSING', 
-          answers: answers || 'MISSING'
+          answers: answers || 'MISSING',
+          isDemoMode: isDemoMode || false
+        }
+      });
+    }
+
+    // For non-demo mode, userAddress is required
+    if (!isDemoMode && !userAddress) {
+      console.log('Validation failed: userAddress required for non-demo mode');
+      return res.status(400).json({
+        success: false,
+        error: 'userAddress is required for non-demo mode.',
+        details: {
+          userAddress: userAddress || 'MISSING',
+          isDemoMode: isDemoMode || false
         }
       });
     }
@@ -231,8 +246,8 @@ export default async function handler(req, res) {
       });
     }
 
-    // Validate Stellar address format (Stellar public keys start with 'G' and are 56 chars)
-    if (!userAddress.match(/^G[A-Z2-7]{55}$/)) {
+    // Validate Stellar address format (only for non-demo mode)
+    if (!isDemoMode && userAddress && !userAddress.match(/^G[A-Z2-7]{55}$/)) {
       console.log('Stellar address validation failed for:', userAddress);
       return res.status(400).json({
         success: false,
@@ -257,13 +272,15 @@ export default async function handler(req, res) {
     console.log('Expected answers count:', quest.lessons.length);
     console.log('Received answers count:', answers.length);
 
-    // Check if user has already completed this quest
-    const completionKey = `${userAddress}-${questId}`;
-    if (completedQuests.has(completionKey)) {
-      return res.status(409).json({
-        success: false,
-        error: 'Quest already completed by this user.'
-      });
+    // Check if user has already completed this quest (skip for demo mode)
+    if (!isDemoMode && userAddress) {
+      const completionKey = `${userAddress}-${questId}`;
+      if (completedQuests.has(completionKey)) {
+        return res.status(409).json({
+          success: false,
+          error: 'Quest already completed by this user.'
+        });
+      }
     }
 
     // Validate answers
@@ -276,8 +293,11 @@ export default async function handler(req, res) {
       });
     }
 
-    // Record quest completion (no token payment - handled by claim-tokens endpoint)
-    completedQuests.add(completionKey);
+    // Record quest completion (only for non-demo mode)
+    if (!isDemoMode && userAddress) {
+      const completionKey = `${userAddress}-${questId}`;
+      completedQuests.add(completionKey);
+    }
 
     // Return success response with reward amount for frontend to add to claimable balance
     return res.status(200).json({

@@ -8,7 +8,7 @@ import Button from '../ui/Button';
 import FreighterConnect from '../features/wallet/FreighterConnect';
 
 const Header = ({ currentPage, onPageChange }) => {
-  const { publicKey, setPublicKey } = useContext(WalletContext);
+  const { publicKey, setPublicKey, isDemoMode, exitDemoMode } = useContext(WalletContext);
   const { tokenData } = useToken(); // Get centralized token data
   const { claimableBalance, totalEarned } = useBalance(); // Get global balances
   const { theme, toggleTheme } = useTheme();
@@ -123,14 +123,24 @@ const Header = ({ currentPage, onPageChange }) => {
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  onClick={() => setPublicKey('')}
+                  onClick={() => {
+                    setPublicKey('');
+                    if (isDemoMode) {
+                      exitDemoMode();
+                    }
+                  }}
                   className="hidden sm:block"
                 >
                   {t('wallet.disconnect')}
                 </Button>
               </div>
             ) : (
-              <FreighterConnect onConnect={setPublicKey} />
+              <FreighterConnect onConnect={(address) => {
+                setPublicKey(address);
+                if (isDemoMode) {
+                  exitDemoMode(address);
+                }
+              }} />
             )}
           </div>
         </div>

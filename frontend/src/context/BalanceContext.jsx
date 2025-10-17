@@ -39,8 +39,8 @@ export const BalanceProvider = ({ children }) => {
   }, []);
 
   /**
-   * Load claimable balance for a specific user
-   * @param {string} userAddress - User's wallet address
+   * Load claimable balance for a specific user or demo mode
+   * @param {string} userAddress - User's wallet address or 'demo' for demo mode
    */
   const loadBalanceForUser = useCallback((userAddress) => {
     if (!userAddress) {
@@ -48,6 +48,28 @@ export const BalanceProvider = ({ children }) => {
       setClaimableBalance(0);
       setTotalEarned(0);
       setLastUpdated(null);
+      return;
+    }
+
+    // Handle demo mode
+    if (userAddress === 'demo') {
+      setCurrentUser('demo');
+      
+      // Load demo mode balances
+      const claimableKey = 'claimableBalance_demo';
+      const totalEarnedKey = 'totalEarned_demo';
+      
+      const storedClaimableBalance = localStorage.getItem(claimableKey);
+      const storedTotalEarned = localStorage.getItem(totalEarnedKey);
+      
+      const claimableBalance = storedClaimableBalance ? parseFloat(storedClaimableBalance) : 0;
+      const totalEarned = storedTotalEarned ? parseFloat(storedTotalEarned) : 0;
+      
+      setClaimableBalance(claimableBalance);
+      setTotalEarned(totalEarned);
+      setLastUpdated(new Date().toISOString());
+      
+      console.log(`[BalanceContext] Loaded demo balances: claimable=${claimableBalance}, totalEarned=${totalEarned}`);
       return;
     }
 
@@ -78,7 +100,7 @@ export const BalanceProvider = ({ children }) => {
 
   /**
    * Update claimable balance and total earned (add amount)
-   * @param {string} userAddress - User's wallet address
+   * @param {string} userAddress - User's wallet address or 'demo' for demo mode
    * @param {number} amount - Amount to add to balance
    */
   const addToClaimableBalance = useCallback((userAddress, amount) => {
@@ -88,8 +110,8 @@ export const BalanceProvider = ({ children }) => {
     }
 
     try {
-      const claimableKey = `claimableBalance_${userAddress}`;
-      const totalEarnedKey = `totalEarned_${userAddress}`;
+      const claimableKey = userAddress === 'demo' ? 'claimableBalance_demo' : `claimableBalance_${userAddress}`;
+      const totalEarnedKey = userAddress === 'demo' ? 'totalEarned_demo' : `totalEarned_${userAddress}`;
       
       const currentClaimableBalance = claimableBalance;
       const currentTotalEarned = totalEarned;

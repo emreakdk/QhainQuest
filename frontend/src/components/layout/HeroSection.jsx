@@ -1,12 +1,19 @@
 import { useContext } from 'react';
 import { WalletContext } from '../../context/WalletContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { useBalance } from '../../context/BalanceContext';
 import Button from '../ui/Button';
 import FreighterConnect from '../features/wallet/FreighterConnect';
 
 const HeroSection = () => {
-  const { publicKey, setPublicKey } = useContext(WalletContext);
+  const { publicKey, setPublicKey, isDemoMode, enterDemoMode, isConnected } = useContext(WalletContext);
+  const { loadBalanceForUser } = useBalance();
   const { t } = useLanguage();
+
+  const handleDemoMode = () => {
+    enterDemoMode();
+    loadBalanceForUser('demo');
+  };
 
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 dark:from-slate-800 dark:via-purple-800 dark:to-slate-800">
@@ -43,15 +50,30 @@ const HeroSection = () => {
 
         {/* CTA Section */}
         <div className="space-y-6">
-          {!publicKey ? (
-            <div className="flex flex-col items-center justify-center">
+          {!isConnected() ? (
+            <div className="flex flex-col items-center justify-center space-y-4">
               <FreighterConnect onConnect={setPublicKey} />
+              <div className="flex items-center space-x-4">
+                <div className="h-px bg-slate-400 w-16"></div>
+                <span className="text-slate-400 text-sm">{t('common.or')}</span>
+                <div className="h-px bg-slate-400 w-16"></div>
+              </div>
+              <Button
+                onClick={handleDemoMode}
+                variant="secondary"
+                size="lg"
+                className="bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 cursor-pointer"
+              >
+                {t('home.useWithoutWallet')}
+              </Button>
             </div>
           ) : (
             <div className="space-y-4">
               <div className="flex items-center justify-center space-x-2 text-green-400">
                 <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-lg font-medium">{t('home.connected')}</span>
+                <span className="text-lg font-medium">
+                  {isDemoMode ? t('home.demoMode') : t('home.connected')}
+                </span>
               </div>
               <Button 
                 variant="primary" 

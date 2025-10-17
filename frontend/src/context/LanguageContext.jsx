@@ -15,6 +15,8 @@ const translations = {
     'home.subtitle': 'ChainQuest ile Stellar blok zincirinde benzersiz görevleri tamamla, değerli token ödülleri kazan ve devredilemez Soulbound Token sertifikalarıyla yeteneklerini ölümsüzleştir.',
     'home.startAdventure': 'Macerana Başla!',
     'home.connected': 'Bağlandı',
+    'home.useWithoutWallet': 'Cüzdansız Kullan',
+    'home.demoMode': 'Demo Modu',
     
     // Features Section
     'features.quests': 'Etkileşimli Görevler',
@@ -244,6 +246,15 @@ const translations = {
     // Common
     'common.unknown': 'Bilinmiyor',
     'common.dayUnit': 'gün',
+    'common.or': 'veya',
+
+    // Demo Mode
+    'demo.claimError.title': 'Cüzdan Bağlantısı Gerekli',
+    'demo.claimError.message': 'Tokenlarınızı cüzdanınıza aktarmak için lütfen bir cüzdan bağlayın.',
+
+    // Wallet Connection Required
+    'wallet.connectionRequired.title': 'Cüzdan Bağlantısı Gerekli',
+    'wallet.connectionRequired.message': 'Token claim işlemi için cüzdan bağlantısı gereklidir.',
 
     // Profile Claim Section
     'profile.claim.title': 'Token\'larınızı Hesabınıza Aktarın',
@@ -476,6 +487,8 @@ const translations = {
     'home.subtitle': 'Complete unique quests on the Stellar blockchain with ChainQuest, earn valuable token rewards and immortalize your skills with non-transferable Soulbound Token certificates.',
     'home.startAdventure': 'Start Your Adventure!',
     'home.connected': 'Connected',
+    'home.useWithoutWallet': 'Use Without Wallet',
+    'home.demoMode': 'Demo Mode',
     
     // Features Section
     'features.quests': 'Interactive Quests',
@@ -705,6 +718,15 @@ const translations = {
     // Common
     'common.unknown': 'Unknown',
     'common.dayUnit': 'day',
+    'common.or': 'or',
+
+    // Demo Mode
+    'demo.claimError.title': 'Wallet Connection Required',
+    'demo.claimError.message': 'Please connect a wallet to transfer your tokens.',
+
+    // Wallet Connection Required
+    'wallet.connectionRequired.title': 'Wallet Connection Required',
+    'wallet.connectionRequired.message': 'Wallet connection is required for token claim operation.',
 
     // Profile Claim Section
     'profile.claim.title': 'Transfer Your Tokens to Your Account',

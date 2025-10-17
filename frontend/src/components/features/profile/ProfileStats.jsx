@@ -11,7 +11,7 @@ import Button from '../../ui/Button';
 
 const ProfileStats = ({ userStats }) => {
   const { t } = useLanguage();
-  const { publicKey } = useContext(WalletContext);
+  const { publicKey, isDemoMode } = useContext(WalletContext);
   const { showSuccess, showError } = useNotification();
   const { tokenData, isLoading, claimTokens } = useToken();
   const { claimableBalance, totalEarned, resetClaimableBalance } = useBalance(); // Use global balance context
@@ -19,7 +19,25 @@ const ProfileStats = ({ userStats }) => {
 
   // Handle token claiming using global balance context
   const handleClaimTokens = async () => {
-    if (!publicKey || claimableBalance <= 0) {
+    if (claimableBalance <= 0) {
+      return;
+    }
+
+    // Check if in demo mode
+    if (isDemoMode) {
+      showError(
+        t('demo.claimError.title'),
+        t('demo.claimError.message')
+      );
+      return;
+    }
+
+    // Check if wallet is connected
+    if (!publicKey) {
+      showError(
+        t('wallet.connectionRequired.title'),
+        t('wallet.connectionRequired.message')
+      );
       return;
     }
 
