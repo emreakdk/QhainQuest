@@ -155,7 +155,7 @@ const QuestGrid = () => {
           <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-6">
             {t('quest.title')}
           </h1>
-          <p className="text-slate-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed" style={{ fontSize: 'clamp(1rem, 2.5vw, 1.25rem)' }}>
+          <p className="text-slate-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed" style={{ fontSize: 'calc(1.125rem - 2px)' }}>
             {t('quest.description')}
           </p>
           
