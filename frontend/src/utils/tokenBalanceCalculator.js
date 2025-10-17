@@ -10,7 +10,8 @@ import { questDatabase } from '../data/questData';
  */
 export const calculateTotalTokenBalance = (userAddress) => {
   try {
-    if (!userAddress) return 0;
+    // CRITICAL FIX: Remove blocking condition - allow demo mode ('demo') to work
+    if (!userAddress || userAddress === '') return 0;
     
     // Get completed quests from localStorage
     const completedQuests = JSON.parse(localStorage.getItem('completedQuests') || '[]');
@@ -43,7 +44,8 @@ export const calculateTotalTokenBalance = (userAddress) => {
  */
 export const getCompletedQuestsForUser = (userAddress) => {
   try {
-    if (!userAddress) return [];
+    // CRITICAL FIX: Remove blocking condition - allow demo mode ('demo') to work
+    if (!userAddress || userAddress === '') return [];
     
     // Get completed quests from localStorage
     const completedQuests = JSON.parse(localStorage.getItem('completedQuests') || '[]');
@@ -56,6 +58,7 @@ export const getCompletedQuestsForUser = (userAddress) => {
       .map(questId => questDatabase.find(q => q.id === questId))
       .filter(quest => quest !== undefined);
     
+    console.log(`[getCompletedQuestsForUser] Found ${completedQuestObjects.length} completed quests for ${userAddress}`);
     return completedQuestObjects;
   } catch (error) {
     console.error('Error getting completed quests:', error);
@@ -70,7 +73,8 @@ export const getCompletedQuestsForUser = (userAddress) => {
  */
 export const getTokenBalanceBreakdown = (userAddress) => {
   try {
-    if (!userAddress) {
+    // CRITICAL FIX: Remove blocking condition - allow demo mode ('demo') to work
+    if (!userAddress || userAddress === '') {
       return {
         totalBalance: 0,
         completedQuests: [],
@@ -90,6 +94,8 @@ export const getTokenBalanceBreakdown = (userAddress) => {
     
     // Total earned = claimable + claimed (all tokens ever earned)
     const totalBalance = claimableBalance + claimedBalance;
+    
+    console.log(`[getTokenBalanceBreakdown] ${userAddress}: questCount=${completedQuests.length}, claimable=${claimableBalance}, claimed=${claimedBalance}, total=${totalBalance}`);
     
     return {
       totalBalance,
