@@ -2,26 +2,8 @@
 // This function ONLY validates quest answers - NO token distribution
 // Token distribution is now handled by /api/claim-tokens endpoint
 
-// Import quest data from frontend to ensure consistency
-// This ensures backend and frontend use the same quest definitions
-import { questDatabase } from '../frontend/src/data/questData.js';
-
-// Convert questDatabase array to object for easier lookup
-const QUEST_DATA = {};
-questDatabase.forEach(quest => {
-  QUEST_DATA[quest.id] = {
-    id: quest.id,
-    name: quest.nameKey,
-    rewardAmount: quest.rewardAmount,
-    lessons: quest.lessons.map(lesson => ({
-      id: lesson.id,
-      correctAnswerKey: lesson.correctAnswerKey,
-      questionKey: lesson.questionKey
-    }))
-  };
-});
-
-console.log('Loaded quest data:', Object.keys(QUEST_DATA));
+// Quest data will be loaded dynamically to avoid ESM compatibility issues
+let QUEST_DATA = null;
 
 // Simple in-memory database for quest completion tracking
 // In production, use a proper database like Vercel KV, Supabase, or Firebase
@@ -36,6 +18,39 @@ export default async function handler(req, res) {
   // Handle preflight requests (OPTIONS)
   if (req.method === 'OPTIONS') {
     return res.status(204).end(); // 204 No Content for preflight
+  }
+
+  // Load quest data dynamically to avoid ESM compatibility issues
+  if (!QUEST_DATA) {
+    try {
+      console.log('Loading quest data dynamically...');
+      const questDataModule = await import('../frontend/src/data/questData.js');
+      const questDatabase = questDataModule.questDatabase;
+      
+      // Convert questDatabase array to object for easier lookup
+      QUEST_DATA = {};
+      questDatabase.forEach(quest => {
+        QUEST_DATA[quest.id] = {
+          id: quest.id,
+          name: quest.nameKey,
+          rewardAmount: quest.rewardAmount,
+          lessons: quest.lessons.map(lesson => ({
+            id: lesson.id,
+            correctAnswerKey: lesson.correctAnswerKey,
+            questionKey: lesson.questionKey
+          }))
+        };
+      });
+      
+      console.log('Loaded quest data:', Object.keys(QUEST_DATA));
+    } catch (error) {
+      console.error('Error loading quest data:', error);
+      return res.status(500).json({
+        success: false,
+        error: 'Failed to load quest data.',
+        details: error.message
+      });
+    }
   }
 
   // --- INCOMING REQUEST DIAGNOSTIC ---
