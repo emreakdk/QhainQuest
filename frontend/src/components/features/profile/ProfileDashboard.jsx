@@ -49,7 +49,7 @@ const SimpleChart = ({ data, type = 'line', height = 200, t }) => {
 
 const ProfileDashboard = () => {
   const { t } = useLanguage();
-  const { publicKey } = useContext(WalletContext);
+  const { publicKey, isDemoMode } = useContext(WalletContext);
   const { tokenData, claimTokens } = useToken(); // Use centralized token data
   const { claimableBalance, totalEarned, resetClaimableBalance } = useBalance(); // Use global balances
   const { showSuccess, showError } = useNotification();
@@ -58,14 +58,15 @@ const ProfileDashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [performanceData, setPerformanceData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('overview');
   const [isClaiming, setIsClaiming] = useState(false);
 
   useEffect(() => {
-    if (publicKey) {
+    if (publicKey && !isDemoMode) {
       loadDashboardData();
+    } else if (isDemoMode) {
+      setLoading(false);
     }
-  }, [publicKey]);
+  }, [publicKey, isDemoMode]);
 
   const loadDashboardData = async () => {
     setLoading(true);
@@ -119,6 +120,32 @@ const ProfileDashboard = () => {
       setIsClaiming(false);
     }
   };
+
+  // Demo mode placeholder
+  if (isDemoMode) {
+    return (
+      <div className="space-y-6">
+        {/* Demo Mode Stats Placeholder */}
+        <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-700">
+          <CardContent className="p-8 text-center">
+            <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl">
+              🔒
+            </div>
+            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
+              {t('demo.statsLocked.title')}
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400 mb-4">
+              {t('demo.statsLocked.message')}
+            </p>
+            <div className="flex items-center justify-center space-x-2 text-sm text-slate-500 dark:text-slate-400">
+              <span>💰</span>
+              <span>{claimableBalance} CQT {t('demo.earnedInDemo')}</span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -180,7 +207,7 @@ const ProfileDashboard = () => {
             <div className="flex items-center justify-between">
               <div>
                 <div className="text-3xl font-bold">
-                  <AnimatedCounter value={Array.isArray(stats.completedQuests) ? stats.completedQuests.length : 0} duration={1500} />
+                  <AnimatedCounter value={tokenData.completedQuests || 0} duration={1500} />
                 </div>
                 <div className="text-purple-100 text-sm">{t('profile.completedQuests')}</div>
                 <div className="text-xs text-purple-200 mt-1">
@@ -194,165 +221,80 @@ const ProfileDashboard = () => {
       </div>
 
 
-      {/* Tab Navigation */}
-      <div className="flex space-x-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
-        {[
-          { id: 'overview', label: t('profile.overview'), icon: '📊' },
-          { id: 'achievements', label: t('profile.achievements'), icon: '🏆' },
-          { id: 'activity', label: t('profile.tabs.activity'), icon: '🕒' }
-        ].map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-all cursor-pointer ${
-              activeTab === tab.id
-                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <span>{tab.icon}</span>
-            <span>{tab.label}</span>
-          </button>
-        ))}
-      </div>
-
-      {/* Tab Content */}
+      {/* Overview Content */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {activeTab === 'overview' && (
-          <>
-            <Card>
-              <CardHeader>
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{t('profile.streak.title')}</h3>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-slate-600 dark:text-slate-400">{t('profile.streak.daily')}</span>
-                    <Badge variant="success">{streakInfo.dailyStreak} {t('profile.streak.dayUnit')}</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-slate-600 dark:text-slate-400">{t('profile.streak.best')}</span>
-                    <Badge variant="primary">{streakInfo.bestStreak} {t('profile.streak.dayUnit')}</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-slate-600 dark:text-slate-400">{t('profile.streak.lastActive')}</span>
-                    <span className="text-sm text-slate-500 dark:text-slate-500">
-                      {streakInfo.lastActiveDate ? 
-                        new Date(streakInfo.lastActiveDate).toLocaleDateString('tr-TR') : 
-                        t('profile.streak.unknown')
-                      }
-                    </span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+        <Card>
+          <CardHeader>
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{t('profile.streak.title')}</h3>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-slate-600 dark:text-slate-400">{t('profile.streak.daily')}</span>
+                <Badge variant="success">{streakInfo.dailyStreak} {t('profile.streak.dayUnit')}</Badge>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-slate-600 dark:text-slate-400">{t('profile.streak.best')}</span>
+                <Badge variant="primary">{streakInfo.bestStreak} {t('profile.streak.dayUnit')}</Badge>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-slate-600 dark:text-slate-400">{t('profile.streak.lastActive')}</span>
+                <span className="text-sm text-slate-500 dark:text-slate-500">
+                  {streakInfo.lastActiveDate ? 
+                    new Date(streakInfo.lastActiveDate).toLocaleDateString('tr-TR') : 
+                    t('profile.streak.unknown')
+                  }
+                </span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-            <Card>
-              <CardHeader>
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{t('profile.tokenStats.title')}</h3>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-slate-600 dark:text-slate-400">{t('profile.totalEarned')}</span>
-                    <span className="font-semibold text-green-600">{totalEarned} CQT</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-slate-600 dark:text-slate-400">{t('profile.claimableBalance')}</span>
-                    <span className="font-semibold text-blue-600">{claimableBalance} CQT</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-slate-600 dark:text-slate-400">{t('profile.tokenStats.withdrawn')}</span>
-                    <span className="font-semibold text-purple-600">{tokenData.claimedBalance} CQT</span>
-                  </div>
+        <Card>
+          <CardHeader>
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{t('profile.tokenStats.title')}</h3>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-slate-600 dark:text-slate-400">{t('profile.totalEarned')}</span>
+                <span className="font-semibold text-green-600">{totalEarned} CQT</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-slate-600 dark:text-slate-400">{t('profile.claimableBalance')}</span>
+                <span className="font-semibold text-blue-600">{claimableBalance} CQT</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-slate-600 dark:text-slate-400">{t('profile.tokenStats.withdrawn')}</span>
+                <span className="font-semibold text-purple-600">{tokenData.claimedBalance} CQT</span>
+              </div>
                   <div className="flex justify-between items-center">
                     <span className="text-slate-600 dark:text-slate-400">{t('profile.completedQuests')}</span>
-                    <span className="font-semibold">{tokenData.completedQuests}</span>
+                    <span className="font-semibold">{tokenData.completedQuests || 0}</span>
                   </div>
-                  
-                  {/* Token Çekme Butonu */}
-                  {claimableBalance > 0 && (
-                    <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-600">
-                      <Button 
-                        onClick={handleClaimTokens}
-                        disabled={isClaiming}
-                        className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white"
-                      >
-                        {isClaiming ? (
-                          <div className="flex items-center space-x-2">
-                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                            <span>{t('profile.claim.transferring')}</span>
-                          </div>
-                        ) : (
-                          `💰 ${claimableBalance} CQT ${t('profile.claim.button')}`
-                        )}
-                      </Button>
-                    </div>
-                  )}
+              
+              {/* Token Çekme Butonu */}
+              {claimableBalance > 0 && (
+                <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-600">
+                  <Button 
+                    onClick={handleClaimTokens}
+                    disabled={isClaiming}
+                    className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white"
+                  >
+                    {isClaiming ? (
+                      <div className="flex items-center space-x-2">
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        <span>{t('profile.claim.transferring')}</span>
+                      </div>
+                    ) : (
+                      `💰 ${claimableBalance} CQT ${t('profile.claim.button')}`
+                    )}
+                  </Button>
                 </div>
-              </CardContent>
-            </Card>
-          </>
-        )}
-
-
-        {activeTab === 'achievements' && (
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{t('profile.recentAchievements')}</h3>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {Array.isArray(achievements) && achievements.length > 0 ? achievements.map((achievement, index) => (
-                  <div key={index} className="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg p-4 text-white">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <span className="text-2xl">🏆</span>
-                      <span className="font-semibold">{achievement.type || t('achievements.achievement')}</span>
-                    </div>
-                    <p className="text-sm text-yellow-100">{achievement.message || t('achievements.achievementEarned')}</p>
-                    <div className="text-xs text-yellow-200 mt-2">
-                      +{achievement.reward?.tokens || 0} Token
-                    </div>
-                  </div>
-                )) : (
-                  <div className="col-span-full text-center py-8 text-slate-500 dark:text-slate-400">
-                    {t('achievements.emptyState')}
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {activeTab === 'activity' && (
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{t('profile.dashboard.recentActivities')}</h3>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {Array.isArray(recentActivity) && recentActivity.length > 0 ? recentActivity.map((activity, index) => (
-                  <div key={index} className="flex items-center space-x-4 p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
-                    <div className="text-2xl">
-                      {activity.type === 'quest' ? '🎯' : '💰'}
-                    </div>
-                    <div className="flex-1">
-                      <div className="font-medium text-slate-900 dark:text-white">{activity.title || t('profile.dashboard.activity')}</div>
-                      <div className="text-sm text-slate-600 dark:text-slate-400">{activity.description || t('emptyState.noDescription')}</div>
-                    </div>
-                    <div className="text-sm text-slate-500 dark:text-slate-500">
-                      {activity.timestamp ? new Date(activity.timestamp).toLocaleDateString('tr-TR') : t('emptyState.noDate')}
-                    </div>
-                  </div>
-                )) : (
-                  <div className="text-center py-8 text-slate-500 dark:text-slate-400">
-                    {t('emptyState.activity')}
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        )}
+              )}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

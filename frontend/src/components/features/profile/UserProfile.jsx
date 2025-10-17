@@ -12,11 +12,11 @@ import Button from '../../ui/Button';
 import Badge from '../../ui/Badge';
 
 const UserProfile = () => {
-  const { publicKey } = useContext(WalletContext);
+  const { publicKey, isDemoMode } = useContext(WalletContext);
   const { t } = useLanguage();
   const { userStats, userCertificates, loadUserProgress } = useQuest();
   const { tokenData } = useToken(); // Use centralized token data
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('overview');
   const [completedQuests, setCompletedQuests] = useState([]);
   // Remove completedQuestsCount state - use tokenData.completedQuests instead
 
@@ -29,18 +29,19 @@ const UserProfile = () => {
 
   // Load completed quests from localStorage - Fixed: Separate useEffect for completed quests
   useEffect(() => {
-    if (publicKey) {
-      const completedQuestsData = getCompletedQuestsForUser(publicKey);
+    const userIdentifier = isDemoMode ? 'demo' : publicKey;
+    if (userIdentifier) {
+      const completedQuestsData = getCompletedQuestsForUser(userIdentifier);
       setCompletedQuests(completedQuestsData);
     }
-  }, [publicKey, tokenData.completedQuests]); // Use tokenData.completedQuests for updates
+  }, [publicKey, isDemoMode, tokenData.completedQuests]); // Use tokenData.completedQuests for updates
 
   // Memoized tabs array to prevent unnecessary re-renders
   const tabs = useMemo(() => [
-    { id: 'dashboard', label: t('profile.tabs.dashboard'), icon: '📊' },
-    { id: 'overview', label: t('profile.overview'), icon: '👤' },
+    { id: 'overview', label: t('profile.overview'), icon: '📊' },
     { id: 'certificates', label: t('profile.certificates'), icon: '🏆' },
-    { id: 'achievements', label: t('profile.achievements'), icon: '🎯' }
+    { id: 'achievements', label: t('profile.achievements'), icon: '🎯' },
+    { id: 'activity', label: t('profile.tabs.activity'), icon: '🕒' }
   ], [t]);
 
   // Memoized function to prevent recreation on every render
@@ -84,7 +85,7 @@ const UserProfile = () => {
             {truncateKey(publicKey)}
           </Badge>
           <Badge variant="success">
-            {tokenData.completedQuests} {t('profile.questCompleted')}
+            {tokenData.completedQuests || 0} {t('profile.questCompleted')}
           </Badge>
         </div>
       </div>
@@ -114,51 +115,8 @@ const UserProfile = () => {
 
       {/* Tab Content */}
       <div className="min-h-[400px]">
-        {activeTab === 'dashboard' && (
-          <ProfileDashboard />
-        )}
-
         {activeTab === 'overview' && (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Recent Activity */}
-              <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg">
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
-                  {t('profile.dashboard.recentActivities')}
-                </h3>
-                <div className="space-y-3">
-                  {activities.map((activity, index) => (
-                    <div key={index} className="flex items-center space-x-3 p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
-                      <div className={`w-2 h-2 rounded-full ${
-                        activity.type === 'quest' ? 'bg-blue-500' :
-                        activity.type === 'reward' ? 'bg-yellow-500' : 'bg-purple-500'
-                      }`}></div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-slate-900 dark:text-white">
-                          {activity.action}
-                        </p>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">
-                          {activity.time}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Progress Chart Placeholder */}
-              <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg">
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
-                  {t('profile.progressChart')}
-                </h3>
-                <div className="h-48 bg-slate-100 dark:bg-slate-700 rounded-lg flex items-center justify-center">
-                  <p className="text-slate-500 dark:text-slate-400">
-                    {t('profile.chartPlaceholder')}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+          <ProfileDashboard />
         )}
 
         {activeTab === 'certificates' && (
@@ -168,7 +126,7 @@ const UserProfile = () => {
                 {t('profile.yourCertificates')}
               </h3>
               <Badge variant="primary">
-                {tokenData.completedQuests} {t('profile.certificates')}
+                {tokenData.completedQuests || 0} {t('profile.certificates')}
               </Badge>
             </div>
             
@@ -251,6 +209,32 @@ const UserProfile = () => {
                 {t('achievements.emptyState')}
               </div>
             )}
+          </div>
+        )}
+
+        {activeTab === 'activity' && (
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+              {t('profile.dashboard.recentActivities')}
+            </h3>
+            <div className="space-y-3">
+              {activities.map((activity, index) => (
+                <div key={index} className="flex items-center space-x-3 p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                  <div className={`w-2 h-2 rounded-full ${
+                    activity.type === 'quest' ? 'bg-blue-500' :
+                    activity.type === 'reward' ? 'bg-yellow-500' : 'bg-purple-500'
+                  }`}></div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-slate-900 dark:text-white">
+                      {activity.action}
+                    </p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                      {activity.time}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
