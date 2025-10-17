@@ -107,6 +107,32 @@ const ProfileStats = ({ userStats }) => {
     }
   ];
 
+  // Demo mode conditional rendering
+  if (isDemoMode) {
+    return (
+      <div className="space-y-6">
+        {/* Demo Mode Stats Placeholder */}
+        <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-700">
+          <CardContent className="p-8 text-center">
+            <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl">
+              🔒
+            </div>
+            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
+              {t('demo.statsLocked.title')}
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400 mb-4">
+              {t('demo.statsLocked.message')}
+            </p>
+            <div className="flex items-center justify-center space-x-2 text-sm text-slate-500 dark:text-slate-400">
+              <span>💰</span>
+              <span>{claimableBalance} CQT {t('demo.earnedInDemo')}</span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Stats Grid */}

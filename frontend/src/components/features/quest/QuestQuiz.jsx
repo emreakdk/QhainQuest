@@ -176,27 +176,23 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
       // Determine user identifier (wallet address or demo mode)
       const userIdentifier = isDemoMode ? 'demo' : publicKey;
       
-      // Check if quest is already completed (skip for demo mode)
-      if (!isDemoMode) {
-        const isAlreadyCompleted = await questApiService.isQuestCompleted(publicKey, questId);
-        
-        if (isAlreadyCompleted) {
-          // Quest already completed - show message and don't transfer tokens
-          setQuestCompleted(true);
-          setIsSubmitting(false);
-          showError('Quest Zaten Tamamlandı', 'Bu testi zaten tamamlamıştınız.');
-          return;
-        }
+      // Check if quest is already completed (ALWAYS check, including demo mode)
+      const isAlreadyCompleted = await questApiService.isQuestCompleted(userIdentifier, questId);
+      
+      if (isAlreadyCompleted) {
+        // Quest already completed - show message and don't transfer tokens
+        setQuestCompleted(true);
+        setIsSubmitting(false);
+        showError('Quest Zaten Tamamlandı', 'Bu testi zaten tamamlamıştınız.');
+        return;
       }
       
       // Call the secure API (with demo mode support)
       const result = await questApiService.completeQuest(userIdentifier, questId, answers, isDemoMode);
       
       if (result.success) {
-        // Mark quest as completed locally (skip for demo mode)
-        if (!isDemoMode) {
-          questApiService.markQuestCompleted(publicKey, questId);
-        }
+        // Mark quest as completed locally (ALWAYS save, including demo mode)
+        questApiService.markQuestCompleted(userIdentifier, questId);
         setQuestCompleted(true);
         
         // Add reward to claimable balance using global balance context

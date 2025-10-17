@@ -248,9 +248,12 @@ const translations = {
     'common.dayUnit': 'gün',
     'common.or': 'veya',
 
-    // Demo Mode
-    'demo.claimError.title': 'Cüzdan Bağlantısı Gerekli',
-    'demo.claimError.message': 'Tokenlarınızı cüzdanınıza aktarmak için lütfen bir cüzdan bağlayın.',
+      // Demo Mode
+      'demo.claimError.title': 'Cüzdan Bağlantısı Gerekli',
+      'demo.claimError.message': 'Tokenlarınızı cüzdanınıza aktarmak için lütfen bir cüzdan bağlayın.',
+      'demo.statsLocked.title': 'İstatistikler Kilitli',
+      'demo.statsLocked.message': 'Detaylı istatistiklerinizi görmek için lütfen cüzdanınızı bağlayın.',
+      'demo.earnedInDemo': 'Demo modunda kazanıldı',
 
     // Wallet Connection Required
     'wallet.connectionRequired.title': 'Cüzdan Bağlantısı Gerekli',
@@ -720,9 +723,12 @@ const translations = {
     'common.dayUnit': 'day',
     'common.or': 'or',
 
-    // Demo Mode
-    'demo.claimError.title': 'Wallet Connection Required',
-    'demo.claimError.message': 'Please connect a wallet to transfer your tokens.',
+      // Demo Mode
+      'demo.claimError.title': 'Wallet Connection Required',
+      'demo.claimError.message': 'Please connect a wallet to transfer your tokens.',
+      'demo.statsLocked.title': 'Statistics Locked',
+      'demo.statsLocked.message': 'Please connect your wallet to view detailed statistics.',
+      'demo.earnedInDemo': 'earned in demo mode',
 
     // Wallet Connection Required
     'wallet.connectionRequired.title': 'Wallet Connection Required',
