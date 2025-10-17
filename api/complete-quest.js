@@ -2,170 +2,26 @@
 // This function ONLY validates quest answers - NO token distribution
 // Token distribution is now handled by /api/claim-tokens endpoint
 
-// Quest validation data - updated to use i18n keys for validation
+// Import quest data from frontend to ensure consistency
 // This ensures backend and frontend use the same quest definitions
-const QUEST_DATA = {
-  'stellar-fundamentals': {
-    id: 'stellar-fundamentals',
-    name: 'Stellar Temelleri',
-    rewardAmount: 100,
-    lessons: [
-      { 
-        id: 'stellar-1', 
-        correctAnswerKey: 'quests.stellar_fundamentals.q1.option2',
-        questionKey: 'quests.stellar_fundamentals.q1.question'
-      },
-      { 
-        id: 'stellar-2', 
-        correctAnswerKey: 'quests.stellar_fundamentals.q2.option3',
-        questionKey: 'quests.stellar_fundamentals.q2.question'
-      },
-      { 
-        id: 'stellar-3', 
-        correctAnswerKey: 'quests.stellar_fundamentals.q3.option2',
-        questionKey: 'quests.stellar_fundamentals.q3.question'
-      },
-      { 
-        id: 'stellar-4', 
-        correctAnswerKey: 'quests.stellar_fundamentals.q4.option3',
-        questionKey: 'quests.stellar_fundamentals.q4.question'
-      },
-      { 
-        id: 'stellar-5', 
-        correctAnswerKey: 'quests.stellar_fundamentals.q5.option4',
-        questionKey: 'quests.stellar_fundamentals.q5.question'
-      }
-    ]
-  },
-  'soroban-smart-contracts': {
-    id: 'soroban-smart-contracts',
-    name: 'Soroban Smart Contracts',
-    rewardAmount: 250,
-    lessons: [
-      { 
-        id: 'soroban-1', 
-        correctAnswerKey: 'quests.soroban_smart_contracts.q1.option2',
-        questionKey: 'quests.soroban_smart_contracts.q1.question'
-      },
-      { 
-        id: 'soroban-2', 
-        correctAnswerKey: 'quests.soroban_smart_contracts.q2.option1',
-        questionKey: 'quests.soroban_smart_contracts.q2.question'
-      },
-      { 
-        id: 'soroban-3', 
-        correctAnswerKey: 'quests.soroban_smart_contracts.q3.option2',
-        questionKey: 'quests.soroban_smart_contracts.q3.question'
-      },
-      { 
-        id: 'soroban-4', 
-        correctAnswerKey: 'quests.soroban_smart_contracts.q4.option1',
-        questionKey: 'quests.soroban_smart_contracts.q4.question'
-      },
-      { 
-        id: 'soroban-5', 
-        correctAnswerKey: 'quests.soroban_smart_contracts.q5.option3',
-        questionKey: 'quests.soroban_smart_contracts.q5.question'
-      }
-    ]
-  },
-  'defi-protocols': {
-    id: 'defi-protocols',
-    name: 'DeFi Protokolleri',
-    rewardAmount: 300,
-    lessons: [
-      { 
-        id: 'defi-1', 
-        correctAnswerKey: 'quests.defi_protocols.q1.option2',
-        questionKey: 'quests.defi_protocols.q1.question'
-      },
-      { 
-        id: 'defi-2', 
-        correctAnswerKey: 'quests.defi_protocols.q2.option1',
-        questionKey: 'quests.defi_protocols.q2.question'
-      },
-      { 
-        id: 'defi-3', 
-        correctAnswerKey: 'quests.defi_protocols.q3.option2',
-        questionKey: 'quests.defi_protocols.q3.question'
-      },
-      { 
-        id: 'defi-4', 
-        correctAnswerKey: 'quests.defi_protocols.q4.option3',
-        questionKey: 'quests.defi_protocols.q4.question'
-      },
-      { 
-        id: 'defi-5', 
-        correctAnswerKey: 'quests.defi_protocols.q5.option1',
-        questionKey: 'quests.defi_protocols.q5.question'
-      }
-    ]
-  },
-  'nft-ecosystem': {
-    id: 'nft-ecosystem',
-    name: 'NFT Ekosistemi',
-    rewardAmount: 200,
-    lessons: [
-      { 
-        id: 'nft-1', 
-        correctAnswerKey: 'quests.nft_ecosystem.q1.option1',
-        questionKey: 'quests.nft_ecosystem.q1.question'
-      },
-      { 
-        id: 'nft-2', 
-        correctAnswerKey: 'quests.nft_ecosystem.q2.option2',
-        questionKey: 'quests.nft_ecosystem.q2.question'
-      },
-      { 
-        id: 'nft-3', 
-        correctAnswerKey: 'quests.nft_ecosystem.q3.option3',
-        questionKey: 'quests.nft_ecosystem.q3.question'
-      },
-      { 
-        id: 'nft-4', 
-        correctAnswerKey: 'quests.nft_ecosystem.q4.option2',
-        questionKey: 'quests.nft_ecosystem.q4.question'
-      },
-      { 
-        id: 'nft-5', 
-        correctAnswerKey: 'quests.nft_ecosystem.q5.option1',
-        questionKey: 'quests.nft_ecosystem.q5.question'
-      }
-    ]
-  },
-  'advanced-stellar': {
-    id: 'advanced-stellar',
-    name: 'İleri Seviye Stellar',
-    rewardAmount: 500,
-    lessons: [
-      { 
-        id: 'advanced-1', 
-        correctAnswerKey: 'quests.advanced_stellar.q1.option2',
-        questionKey: 'quests.advanced_stellar.q1.question'
-      },
-      { 
-        id: 'advanced-2', 
-        correctAnswerKey: 'quests.advanced_stellar.q2.option1',
-        questionKey: 'quests.advanced_stellar.q2.question'
-      },
-      { 
-        id: 'advanced-3', 
-        correctAnswerKey: 'quests.advanced_stellar.q3.option3',
-        questionKey: 'quests.advanced_stellar.q3.question'
-      },
-      { 
-        id: 'advanced-4', 
-        correctAnswerKey: 'quests.advanced_stellar.q4.option2',
-        questionKey: 'quests.advanced_stellar.q4.question'
-      },
-      { 
-        id: 'advanced-5', 
-        correctAnswerKey: 'quests.advanced_stellar.q5.option1',
-        questionKey: 'quests.advanced_stellar.q5.question'
-      }
-    ]
-  }
-};
+import { questDatabase } from '../frontend/src/data/questData.js';
+
+// Convert questDatabase array to object for easier lookup
+const QUEST_DATA = {};
+questDatabase.forEach(quest => {
+  QUEST_DATA[quest.id] = {
+    id: quest.id,
+    name: quest.nameKey,
+    rewardAmount: quest.rewardAmount,
+    lessons: quest.lessons.map(lesson => ({
+      id: lesson.id,
+      correctAnswerKey: lesson.correctAnswerKey,
+      questionKey: lesson.questionKey
+    }))
+  };
+});
+
+console.log('Loaded quest data:', Object.keys(QUEST_DATA));
 
 // Simple in-memory database for quest completion tracking
 // In production, use a proper database like Vercel KV, Supabase, or Firebase
@@ -271,6 +127,8 @@ export default async function handler(req, res) {
     console.log('Quest Name:', quest.name);
     console.log('Expected answers count:', quest.lessons.length);
     console.log('Received answers count:', answers.length);
+    console.log('Quest lessons:', quest.lessons.map(l => ({ id: l.id, correctAnswerKey: l.correctAnswerKey })));
+    console.log('User answers:', answers);
 
     // Check if user has already completed this quest (skip for demo mode)
     if (!isDemoMode && userAddress) {
@@ -329,7 +187,7 @@ function validateAnswers(quest, userAnswers) {
   console.log('Quest ID:', quest.id || 'unknown');
   console.log('Expected answers count:', quest.lessons.length);
   console.log('Received answers count:', userAnswers.length);
-  console.log('Quest lessons:', quest.lessons.map(l => l.id || 'no-id'));
+  console.log('Quest lessons:', quest.lessons.map(l => ({ id: l.id, correctAnswerKey: l.correctAnswerKey })));
   console.log('User answers:', userAnswers);
   
   // Check if all required lessons are answered
@@ -340,23 +198,40 @@ function validateAnswers(quest, userAnswers) {
     return { isValid: false, errors };
   }
 
-  // Validate each answer
+  // Validate each answer with detailed logging
   for (let i = 0; i < quest.lessons.length; i++) {
     const lesson = quest.lessons[i];
     const userAnswer = userAnswers[i];
     
+    console.log(`--- VALIDATING LESSON ${i + 1}/${quest.lessons.length} ---`);
+    console.log('Lesson ID:', lesson.id);
+    console.log('Expected answer key:', lesson.correctAnswerKey);
+    console.log('Received answer key:', userAnswer);
+    console.log('Answer match:', userAnswer === lesson.correctAnswerKey);
+    
     if (!userAnswer || typeof userAnswer !== 'string') {
-      errors.push(`Invalid answer format for lesson ${lesson.id}`);
+      const errorMsg = `Invalid answer format for lesson ${lesson.id}: expected string, got ${typeof userAnswer}`;
+      console.log('Validation failed:', errorMsg);
+      errors.push(errorMsg);
       continue;
     }
 
     if (userAnswer.trim() !== lesson.correctAnswerKey.trim()) {
-      errors.push(`Incorrect answer for lesson ${lesson.id}: expected "${lesson.correctAnswerKey}", got "${userAnswer}"`);
+      const errorMsg = `Incorrect answer for lesson ${lesson.id}: expected "${lesson.correctAnswerKey}", got "${userAnswer}"`;
+      console.log('Validation failed:', errorMsg);
+      errors.push(errorMsg);
+    } else {
+      console.log('✅ Lesson', lesson.id, 'answer is correct');
     }
   }
 
+  const isValid = errors.length === 0;
+  console.log('--- VALIDATION RESULT ---');
+  console.log('Is valid:', isValid);
+  console.log('Errors:', errors);
+
   return {
-    isValid: errors.length === 0,
+    isValid,
     errors
   };
 }
