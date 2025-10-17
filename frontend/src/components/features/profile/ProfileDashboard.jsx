@@ -222,24 +222,24 @@ const ProfileDashboard = () => {
           <>
             <Card>
               <CardHeader>
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Streak Bilgileri</h3>
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{t('profile.streak.title')}</h3>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-600 dark:text-slate-400">Günlük Streak</span>
-                    <Badge variant="success">{streakInfo.dailyStreak} gün</Badge>
+                    <span className="text-slate-600 dark:text-slate-400">{t('profile.streak.daily')}</span>
+                    <Badge variant="success">{streakInfo.dailyStreak} {t('profile.streak.dayUnit')}</Badge>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-600 dark:text-slate-400">En İyi Streak</span>
-                    <Badge variant="primary">{streakInfo.bestStreak} gün</Badge>
+                    <span className="text-slate-600 dark:text-slate-400">{t('profile.streak.best')}</span>
+                    <Badge variant="primary">{streakInfo.bestStreak} {t('profile.streak.dayUnit')}</Badge>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-600 dark:text-slate-400">Son Aktiflik</span>
+                    <span className="text-slate-600 dark:text-slate-400">{t('profile.streak.lastActive')}</span>
                     <span className="text-sm text-slate-500 dark:text-slate-500">
                       {streakInfo.lastActiveDate ? 
                         new Date(streakInfo.lastActiveDate).toLocaleDateString('tr-TR') : 
-                        'Bilinmiyor'
+                        t('profile.streak.unknown')
                       }
                     </span>
                   </div>
@@ -249,7 +249,7 @@ const ProfileDashboard = () => {
 
             <Card>
               <CardHeader>
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Token İstatistikleri</h3>
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{t('profile.tokenStats.title')}</h3>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -262,7 +262,7 @@ const ProfileDashboard = () => {
                     <span className="font-semibold text-blue-600">{claimableBalance} CQT</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-600 dark:text-slate-400">Cüzdana Çekilen</span>
+                    <span className="text-slate-600 dark:text-slate-400">{t('profile.tokenStats.withdrawn')}</span>
                     <span className="font-semibold text-purple-600">{tokenData.claimedBalance} CQT</span>
                   </div>
                   <div className="flex justify-between items-center">

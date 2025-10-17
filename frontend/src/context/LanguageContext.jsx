@@ -228,6 +228,22 @@ const translations = {
     // Quest Messages
     'quest.alreadyCompleted': 'Bu quest\'i zaten başarıyla tamamladınız. Yeni quest\'leri keşfetmek için ana sayfaya dönün.',
     'quest.dashboardDataError': 'Dashboard veri yükleme hatası:',
+
+    // Profile Streak Information
+    'profile.streak.title': 'Streak Bilgileri',
+    'profile.streak.daily': 'Günlük Streak',
+    'profile.streak.best': 'En İyi Streak',
+    'profile.streak.lastActive': 'Son Aktiflik',
+    'profile.streak.unknown': 'Bilinmiyor',
+    'profile.streak.dayUnit': 'gün',
+
+    // Profile Token Statistics
+    'profile.tokenStats.title': 'Token İstatistikleri',
+    'profile.tokenStats.withdrawn': 'Cüzdana Çekilen',
+
+    // Common
+    'common.unknown': 'Bilinmiyor',
+    'common.dayUnit': 'gün',
   },
   en: {
     // Navigation
@@ -454,6 +470,22 @@ const translations = {
     // Quest Messages
     'quest.alreadyCompleted': 'You have already successfully completed this quest. Return to the main page to discover new quests.',
     'quest.dashboardDataError': 'Dashboard data loading error:',
+
+    // Profile Streak Information
+    'profile.streak.title': 'Streak Information',
+    'profile.streak.daily': 'Daily Streak',
+    'profile.streak.best': 'Best Streak',
+    'profile.streak.lastActive': 'Last Active',
+    'profile.streak.unknown': 'Unknown',
+    'profile.streak.dayUnit': 'day',
+
+    // Profile Token Statistics
+    'profile.tokenStats.title': 'Token Statistics',
+    'profile.tokenStats.withdrawn': 'Withdrawn to Wallet',
+
+    // Common
+    'common.unknown': 'Unknown',
+    'common.dayUnit': 'day',
   }
 };
 

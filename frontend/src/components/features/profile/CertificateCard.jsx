@@ -46,7 +46,7 @@ const CertificateCard = ({ certificate }) => {
             <span className="font-medium text-slate-900 dark:text-white">
               {certificate.completedAt ? new Date(certificate.completedAt).toLocaleDateString('tr-TR') : 
                certificate.earnedAt ? new Date(certificate.earnedAt).toLocaleDateString('tr-TR') : 
-               'Bilinmiyor'}
+               t('common.unknown')}
             </span>
           </div>
         </div>
