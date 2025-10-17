@@ -181,7 +181,7 @@ const QuestGrid = () => {
 
       {/* Enhanced Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white transform hover:scale-105 transition-all duration-300 shadow-lg">
+        <div className="bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-2xl p-6 text-white transform hover:scale-105 transition-all duration-300 shadow-lg">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-3xl font-bold">
@@ -193,7 +193,7 @@ const QuestGrid = () => {
           </div>
         </div>
         
-        <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-6 text-white transform hover:scale-105 transition-all duration-300 shadow-lg">
+        <div className="bg-gradient-to-br from-green-500 to-green-600 dark:from-green-600 dark:to-green-700 rounded-2xl p-6 text-white transform hover:scale-105 transition-all duration-300 shadow-lg">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-3xl font-bold">
@@ -205,7 +205,7 @@ const QuestGrid = () => {
           </div>
         </div>
         
-        <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 text-white transform hover:scale-105 transition-all duration-300 shadow-lg">
+        <div className="bg-gradient-to-br from-purple-500 to-purple-600 dark:from-purple-600 dark:to-purple-700 rounded-2xl p-6 text-white transform hover:scale-105 transition-all duration-300 shadow-lg">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-3xl font-bold">
@@ -217,7 +217,7 @@ const QuestGrid = () => {
           </div>
         </div>
         
-        <div className="bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl p-6 text-white transform hover:scale-105 transition-all duration-300 shadow-lg">
+        <div className="bg-gradient-to-br from-yellow-500 to-orange-500 dark:from-yellow-600 dark:to-orange-600 rounded-2xl p-6 text-white transform hover:scale-105 transition-all duration-300 shadow-lg">
           <div className="flex items-center justify-between">
             <div>
               <div className="text-3xl font-bold">
