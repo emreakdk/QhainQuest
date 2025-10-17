@@ -415,7 +415,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
                 {t('profile.questCompleted')}!
               </h2>
               <p className="text-slate-700 dark:text-slate-300 mb-6">
-                Bu quest'i zaten başarıyla tamamladınız. Yeni quest'leri keşfetmek için ana sayfaya dönün.
+                {t('quest.alreadyCompleted')}
               </p>
               <Button
                 onClick={onClose}

@@ -37,7 +37,7 @@ const UserProfile = () => {
 
   // Memoized tabs array to prevent unnecessary re-renders
   const tabs = useMemo(() => [
-    { id: 'dashboard', label: 'Dashboard', icon: '📊' },
+    { id: 'dashboard', label: t('profile.tabs.dashboard'), icon: '📊' },
     { id: 'overview', label: t('profile.overview'), icon: '👤' },
     { id: 'certificates', label: t('profile.certificates'), icon: '🏆' },
     { id: 'achievements', label: t('profile.achievements'), icon: '🎯' }
@@ -124,7 +124,7 @@ const UserProfile = () => {
               {/* Recent Activity */}
               <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg">
                 <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
-                  Son Aktiviteler
+                  {t('profile.dashboard.recentActivities')}
                 </h3>
                 <div className="space-y-3">
                   {activities.map((activity, index) => (
@@ -168,7 +168,7 @@ const UserProfile = () => {
                 {t('profile.yourCertificates')}
               </h3>
               <Badge variant="primary">
-                {tokenData.completedQuests} Sertifika
+                {tokenData.completedQuests} {t('profile.certificates')}
               </Badge>
             </div>
             

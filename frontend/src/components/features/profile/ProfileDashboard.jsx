@@ -78,7 +78,7 @@ const ProfileDashboard = () => {
       setDashboardData(dashboard);
       setPerformanceData(performance);
     } catch (error) {
-      console.error('Dashboard veri yükleme hatası:', error);
+      console.error(t('quest.dashboardDataError'), error);
     } finally {
       setLoading(false);
     }
@@ -105,7 +105,7 @@ const ProfileDashboard = () => {
         // Show success message
         showSuccess(
           'Token\'lar Başarıyla Aktarıldı!',
-          `${claimableBalance} token Stellar cüzdanınıza aktarıldı. Transaction Hash: ${result.data.transactionHash}`
+          `${claimableBalance} ${t('token.transferredToWallet')} ${result.data.transactionHash}`
         );
         
         console.log('[ProfileDashboard] Tokens claimed successfully:', result.data);
@@ -139,8 +139,8 @@ const ProfileDashboard = () => {
   if (!dashboardData) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500 dark:text-gray-400">Dashboard verileri yüklenemedi</p>
-        <Button onClick={loadDashboardData} className="mt-4">Tekrar Dene</Button>
+        <p className="text-gray-500 dark:text-gray-400">{t('profile.dashboard.loadingError')}</p>
+        <Button onClick={loadDashboardData} className="mt-4">{t('profile.dashboard.retry')}</Button>
       </div>
     );
   }
@@ -199,7 +199,7 @@ const ProfileDashboard = () => {
         {[
           { id: 'overview', label: t('profile.overview'), icon: '📊' },
           { id: 'achievements', label: t('profile.achievements'), icon: '🏆' },
-          { id: 'activity', label: 'Aktivite', icon: '🕒' }
+          { id: 'activity', label: t('profile.tabs.activity'), icon: '🕒' }
         ].map(tab => (
           <button
             key={tab.id}
@@ -327,7 +327,7 @@ const ProfileDashboard = () => {
         {activeTab === 'activity' && (
           <Card className="lg:col-span-2">
             <CardHeader>
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Son Aktiviteler</h3>
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{t('profile.dashboard.recentActivities')}</h3>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -337,7 +337,7 @@ const ProfileDashboard = () => {
                       {activity.type === 'quest' ? '🎯' : '💰'}
                     </div>
                     <div className="flex-1">
-                      <div className="font-medium text-slate-900 dark:text-white">{activity.title || 'Aktivite'}</div>
+                      <div className="font-medium text-slate-900 dark:text-white">{activity.title || t('profile.dashboard.activity')}</div>
                       <div className="text-sm text-slate-600 dark:text-slate-400">{activity.description || 'Açıklama yok'}</div>
                     </div>
                     <div className="text-sm text-slate-500 dark:text-slate-500">

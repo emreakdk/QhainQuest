@@ -37,8 +37,8 @@ const ProfileStats = ({ userStats }) => {
         
         // Show success message
         showSuccess(
-          'Token\'lar Başarıyla Aktarıldı!',
-          `${claimableBalance} token Stellar cüzdanınıza aktarıldı. Transaction Hash: ${result.data.transactionHash}`
+          t('profile.stats.claimSuccess'),
+          `${claimableBalance} ${t('token.transferredToWallet')} ${result.data.transactionHash}`
         );
         
         console.log('[ProfileStats] Tokens claimed successfully:', result.data);

@@ -209,6 +209,25 @@ const translations = {
     // Token Messages
     'token.successfullyTransferred': 'Token\'lar Başarıyla Aktarıldı!',
     'token.transferError': 'Token Aktarım Hatası',
+    'token.transferredToWallet': 'token Stellar cüzdanınıza aktarıldı. Transaction Hash:',
+    'token.claimSuccess': 'Token\'lar Başarıyla Aktarıldı!',
+
+    // Profile Tabs
+    'profile.tabs.dashboard': 'Dashboard',
+    'profile.tabs.activity': 'Aktivite',
+
+    // Profile Dashboard
+    'profile.dashboard.loadingError': 'Dashboard verileri yüklenemedi',
+    'profile.dashboard.retry': 'Tekrar Dene',
+    'profile.dashboard.recentActivities': 'Son Aktiviteler',
+    'profile.dashboard.activity': 'Aktivite',
+
+    // Profile Stats
+    'profile.stats.claimSuccess': 'Token\'lar Başarıyla Aktarıldı!',
+
+    // Quest Messages
+    'quest.alreadyCompleted': 'Bu quest\'i zaten başarıyla tamamladınız. Yeni quest\'leri keşfetmek için ana sayfaya dönün.',
+    'quest.dashboardDataError': 'Dashboard veri yükleme hatası:',
   },
   en: {
     // Navigation
@@ -416,6 +435,25 @@ const translations = {
     // Token Messages
     'token.successfullyTransferred': 'Tokens Successfully Transferred!',
     'token.transferError': 'Token Transfer Error',
+    'token.transferredToWallet': 'tokens transferred to your Stellar wallet. Transaction Hash:',
+    'token.claimSuccess': 'Tokens Successfully Transferred!',
+
+    // Profile Tabs
+    'profile.tabs.dashboard': 'Dashboard',
+    'profile.tabs.activity': 'Activity',
+
+    // Profile Dashboard
+    'profile.dashboard.loadingError': 'Dashboard data could not be loaded',
+    'profile.dashboard.retry': 'Try Again',
+    'profile.dashboard.recentActivities': 'Recent Activities',
+    'profile.dashboard.activity': 'Activity',
+
+    // Profile Stats
+    'profile.stats.claimSuccess': 'Tokens Successfully Transferred!',
+
+    // Quest Messages
+    'quest.alreadyCompleted': 'You have already successfully completed this quest. Return to the main page to discover new quests.',
+    'quest.dashboardDataError': 'Dashboard data loading error:',
   }
 };
 
