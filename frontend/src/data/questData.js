@@ -12,53 +12,63 @@ export const questDatabase = [
     lessons: [
       {
         id: 'stellar-1',
-        question: 'Stellar ağında işlemler hangi konsensüs algoritması ile doğrulanır?',
+        questionKey: 'quests.stellar_fundamentals.q1.question',
         choices: [
-          'Proof of Work (PoW)',
-          'Stellar Consensus Protocol (SCP)',
-          'Proof of Stake (PoS)',
-          'Delegated Proof of Stake (DPoS)'
+          'quests.stellar_fundamentals.q1.option1',
+          'quests.stellar_fundamentals.q1.option2',
+          'quests.stellar_fundamentals.q1.option3',
+          'quests.stellar_fundamentals.q1.option4'
         ],
-        correctAnswer: 'Stellar Consensus Protocol (SCP)',
-        explanation: 'SCP, Stellar\'ın benzersiz federated Byzantine agreement algoritmasıdır.'
+        correctAnswerKey: 'quests.stellar_fundamentals.q1.option2',
+        explanationKey: 'quests.stellar_fundamentals.q1.explanation'
       },
       {
         id: 'stellar-2',
-        question: 'Stellar ağının yerel tokenı nedir?',
-        choices: ['Ether', 'Bitcoin', 'XLM (Stellar Lumens)', 'Ripple'],
-        correctAnswer: 'XLM (Stellar Lumens)',
-        explanation: 'XLM, Stellar ağının yerel kripto para birimidir.'
+        questionKey: 'quests.stellar_fundamentals.q2.question',
+        choices: [
+          'quests.stellar_fundamentals.q2.option1',
+          'quests.stellar_fundamentals.q2.option2',
+          'quests.stellar_fundamentals.q2.option3',
+          'quests.stellar_fundamentals.q2.option4'
+        ],
+        correctAnswerKey: 'quests.stellar_fundamentals.q2.option3',
+        explanationKey: 'quests.stellar_fundamentals.q2.explanation'
       },
       {
         id: 'stellar-3',
-        question: 'Stellar\'da "Anchors" nedir?',
+        questionKey: 'quests.stellar_fundamentals.q3.question',
         choices: [
-          'Konsensüs düğümleri',
-          'Geleneksel finansal sistem ile köprü kuran kuruluşlar',
-          'Mining pool\'ları',
-          'Smart contract\'lar'
+          'quests.stellar_fundamentals.q3.option1',
+          'quests.stellar_fundamentals.q3.option2',
+          'quests.stellar_fundamentals.q3.option3',
+          'quests.stellar_fundamentals.q3.option4'
         ],
-        correctAnswer: 'Geleneksel finansal sistem ile köprü kuran kuruluşlar',
-        explanation: 'Anchors, geleneksel para birimlerini Stellar ağına bağlayan güvenilir kuruluşlardır.'
+        correctAnswerKey: 'quests.stellar_fundamentals.q3.option2',
+        explanationKey: 'quests.stellar_fundamentals.q3.explanation'
       },
       {
         id: 'stellar-4',
-        question: 'Stellar\'da minimum hesap bakiyesi nedir?',
-        choices: ['0.5 XLM', '1 XLM', '2 XLM', '5 XLM'],
-        correctAnswer: '2 XLM',
-        explanation: 'Her Stellar hesabında en az 2 XLM bulunmalıdır (base reserve).'
+        questionKey: 'quests.stellar_fundamentals.q4.question',
+        choices: [
+          'quests.stellar_fundamentals.q4.option1',
+          'quests.stellar_fundamentals.q4.option2',
+          'quests.stellar_fundamentals.q4.option3',
+          'quests.stellar_fundamentals.q4.option4'
+        ],
+        correctAnswerKey: 'quests.stellar_fundamentals.q4.option3',
+        explanationKey: 'quests.stellar_fundamentals.q4.explanation'
       },
       {
         id: 'stellar-5',
-        question: 'Stellar geliştiricileri için ana SDK hangi dillerde mevcuttur?',
+        questionKey: 'quests.stellar_fundamentals.q5.question',
         choices: [
-          'Python, Java',
-          'Go, JavaScript',
-          'Rust, C++',
-          'Python, JavaScript, Go, Java, C++'
+          'quests.stellar_fundamentals.q5.option1',
+          'quests.stellar_fundamentals.q5.option2',
+          'quests.stellar_fundamentals.q5.option3',
+          'quests.stellar_fundamentals.q5.option4'
         ],
-        correctAnswer: 'Python, JavaScript, Go, Java, C++',
-        explanation: 'Stellar, çoklu dil desteği ile geniş geliştirici topluluğuna hizmet verir.'
+        correctAnswerKey: 'quests.stellar_fundamentals.q5.option4',
+        explanationKey: 'quests.stellar_fundamentals.q5.explanation'
       }
     ],
     prerequisites: [],
@@ -78,58 +88,63 @@ export const questDatabase = [
     lessons: [
       {
         id: 'soroban-1',
-        question: 'Soroban nedir?',
+        questionKey: 'quests.soroban_smart_contracts.q1.question',
         choices: [
-          'Bir Stellar cüzdanı',
-          'Stellar üzerinde bir akıllı kontrat platformu',
-          'Bir kripto para birimi',
-          'Bir konsensüs algoritması'
+          'quests.soroban_smart_contracts.q1.option1',
+          'quests.soroban_smart_contracts.q1.option2',
+          'quests.soroban_smart_contracts.q1.option3',
+          'quests.soroban_smart_contracts.q1.option4'
         ],
-        correctAnswer: 'Stellar üzerinde bir akıllı kontrat platformu',
-        explanation: 'Soroban, Stellar ağı üzerinde çalışan Turing-complete smart contract platformudur.'
+        correctAnswerKey: 'quests.soroban_smart_contracts.q1.option2',
+        explanationKey: 'quests.soroban_smart_contracts.q1.explanation'
       },
       {
         id: 'soroban-2',
-        question: 'Soroban akıllı kontratları hangi dilde yazılır?',
-        choices: ['Solidity', 'Vyper', 'Rust', 'JavaScript'],
-        correctAnswer: 'Rust',
-        explanation: 'Soroban smart contract\'ları Rust programlama dili ile yazılır.'
+        questionKey: 'quests.soroban_smart_contracts.q2.question',
+        choices: [
+          'quests.soroban_smart_contracts.q2.option1',
+          'quests.soroban_smart_contracts.q2.option2',
+          'quests.soroban_smart_contracts.q2.option3',
+          'quests.soroban_smart_contracts.q2.option4'
+        ],
+        correctAnswerKey: 'quests.soroban_smart_contracts.q2.option3',
+        explanationKey: 'quests.soroban_smart_contracts.q2.explanation'
       },
       {
         id: 'soroban-3',
-        question: 'Soroban\'da "host functions" nedir?',
+        questionKey: 'quests.soroban_smart_contracts.q3.question',
         choices: [
-          'Ana konsensüs fonksiyonları',
-          'Smart contract\'ların Stellar ağı ile etkileşim kurmasını sağlayan fonksiyonlar',
-          'Mining fonksiyonları',
-          'Wallet bağlantı fonksiyonları'
+          'quests.soroban_smart_contracts.q3.option1',
+          'quests.soroban_smart_contracts.q3.option2',
+          'quests.soroban_smart_contracts.q3.option3',
+          'quests.soroban_smart_contracts.q3.option4'
         ],
-        correctAnswer: 'Smart contract\'ların Stellar ağı ile etkileşim kurmasını sağlayan fonksiyonlar',
-        explanation: 'Host functions, smart contract\'ların Stellar ledger\'ı ile güvenli etkileşim kurmasını sağlar.'
+        correctAnswerKey: 'quests.soroban_smart_contracts.q3.option2',
+        explanationKey: 'quests.soroban_smart_contracts.q3.explanation'
       },
       {
         id: 'soroban-4',
-        question: 'Soroban\'da "storage" nasıl çalışır?',
+        questionKey: 'quests.soroban_smart_contracts.q4.question',
         choices: [
-          'Global state olarak',
-          'Contract bazlı izole storage',
-          'Shared storage',
-          'Memory-only storage'
+          'quests.soroban_smart_contracts.q4.option1',
+          'quests.soroban_smart_contracts.q4.option2',
+          'quests.soroban_smart_contracts.q4.option3',
+          'quests.soroban_smart_contracts.q4.option4'
         ],
-        correctAnswer: 'Contract bazlı izole storage',
-        explanation: 'Her contract kendi storage alanına sahiptir ve diğer contract\'lardan izole edilmiştir.'
+        correctAnswerKey: 'quests.soroban_smart_contracts.q4.option2',
+        explanationKey: 'quests.soroban_smart_contracts.q4.explanation'
       },
       {
         id: 'soroban-5',
-        question: 'Soroban\'da transaction fee olarak ne kullanılır?',
+        questionKey: 'quests.soroban_smart_contracts.q5.question',
         choices: [
-          'ETH',
-          'BTC',
-          'Gas fee olarak XLM kullanılır',
-          'Sabit ücret'
+          'quests.soroban_smart_contracts.q5.option1',
+          'quests.soroban_smart_contracts.q5.option2',
+          'quests.soroban_smart_contracts.q5.option3',
+          'quests.soroban_smart_contracts.q5.option4'
         ],
-        correctAnswer: 'Gas fee olarak XLM kullanılır',
-        explanation: 'Soroban\'da smart contract işlemleri için XLM (Stellar Lumens) gas fee olarak kullanılır.'
+        correctAnswerKey: 'quests.soroban_smart_contracts.q5.option3',
+        explanationKey: 'quests.soroban_smart_contracts.q5.explanation'
       }
     ],
     prerequisites: ['stellar-fundamentals'],
@@ -149,58 +164,63 @@ export const questDatabase = [
     lessons: [
       {
         id: 'defi-1',
-        question: 'Merkeziyetsiz finans (DeFi) ne anlama gelir?',
+        questionKey: 'quests.defi_protocols.q1.question',
         choices: [
-          'Geleneksel bankacılık',
-          'Blockchain tabanlı finansal hizmetler',
-          'Merkezi borsalar',
-          'Devlet destekli para birimleri'
+          'quests.defi_protocols.q1.option1',
+          'quests.defi_protocols.q1.option2',
+          'quests.defi_protocols.q1.option3',
+          'quests.defi_protocols.q1.option4'
         ],
-        correctAnswer: 'Blockchain tabanlı finansal hizmetler',
-        explanation: 'DeFi, merkezi kurumlara ihtiyaç duymadan blockchain üzerinde çalışan finansal hizmetlerdir.'
+        correctAnswerKey: 'quests.defi_protocols.q1.option2',
+        explanationKey: 'quests.defi_protocols.q1.explanation'
       },
       {
         id: 'defi-2',
-        question: 'Stellar\'da en popüler AMM protokolü nedir?',
-        choices: ['Uniswap', 'StellarSwap', 'PancakeSwap', 'SushiSwap'],
-        correctAnswer: 'StellarSwap',
-        explanation: 'StellarSwap, Stellar ekosisteminin ana AMM protokolüdür.'
+        questionKey: 'quests.defi_protocols.q2.question',
+        choices: [
+          'quests.defi_protocols.q2.option1',
+          'quests.defi_protocols.q2.option2',
+          'quests.defi_protocols.q2.option3',
+          'quests.defi_protocols.q2.option4'
+        ],
+        correctAnswerKey: 'quests.defi_protocols.q2.option2',
+        explanationKey: 'quests.defi_protocols.q2.explanation'
       },
       {
         id: 'defi-3',
-        question: 'DeFi\'de "yield farming" nedir?',
+        questionKey: 'quests.defi_protocols.q3.question',
         choices: [
-          'Tarım arazisi yönetimi',
-          'Likidite sağlayarak token ödülleri kazanma',
-          'Kripto madenciliği',
-          'Staking işlemi'
+          'quests.defi_protocols.q3.option1',
+          'quests.defi_protocols.q3.option2',
+          'quests.defi_protocols.q3.option3',
+          'quests.defi_protocols.q3.option4'
         ],
-        correctAnswer: 'Likidite sağlayarak token ödülleri kazanma',
-        explanation: 'Yield farming, likidite pool\'larına fon sağlayarak ödül token\'ları kazanma stratejisidir.'
+        correctAnswerKey: 'quests.defi_protocols.q3.option2',
+        explanationKey: 'quests.defi_protocols.q3.explanation'
       },
       {
         id: 'defi-4',
-        question: 'DeFi\'de "impermanent loss" nedir?',
+        questionKey: 'quests.defi_protocols.q4.question',
         choices: [
-          'Kalıcı fon kaybı',
-          'Likidite sağlarken token fiyat değişimlerinden kaynaklanan kayıp',
-          'Hack kaybı',
-          'Gas fee kaybı'
+          'quests.defi_protocols.q4.option1',
+          'quests.defi_protocols.q4.option2',
+          'quests.defi_protocols.q4.option3',
+          'quests.defi_protocols.q4.option4'
         ],
-        correctAnswer: 'Likidite sağlarken token fiyat değişimlerinden kaynaklanan kayıp',
-        explanation: 'Impermanent loss, AMM pool\'larında likidite sağlarken token fiyat değişimlerinden kaynaklanan geçici kayıptır.'
+        correctAnswerKey: 'quests.defi_protocols.q4.option2',
+        explanationKey: 'quests.defi_protocols.q4.explanation'
       },
       {
         id: 'defi-5',
-        question: 'AMM protokolü ne anlama gelir?',
+        questionKey: 'quests.defi_protocols.q5.question',
         choices: [
-          'Automated Market Maker protokolü',
-          'Asset Management Module',
-          'Advanced Money Market',
-          'Automated Mining Machine'
+          'quests.defi_protocols.q5.option1',
+          'quests.defi_protocols.q5.option2',
+          'quests.defi_protocols.q5.option3',
+          'quests.defi_protocols.q5.option4'
         ],
-        correctAnswer: 'AMM (Automated Market Maker) protokolü',
-        explanation: 'AMM, merkeziyetsiz borsalarda likidite sağlayarak otomatik fiyat belirleme yapan protokoldür.'
+        correctAnswerKey: 'quests.defi_protocols.q5.option1',
+        explanationKey: 'quests.defi_protocols.q5.explanation'
       }
     ],
     prerequisites: ['stellar-fundamentals'],
@@ -220,58 +240,63 @@ export const questDatabase = [
     lessons: [
       {
         id: 'nft-1',
-        question: 'NFT\'nin açılımı nedir?',
+        questionKey: 'quests.nft_ecosystem.q1.question',
         choices: [
-          'Non-Fungible Token',
-          'New Financial Technology',
-          'Network File Transfer',
-          'Next Future Technology'
+          'quests.nft_ecosystem.q1.option1',
+          'quests.nft_ecosystem.q1.option2',
+          'quests.nft_ecosystem.q1.option3',
+          'quests.nft_ecosystem.q1.option4'
         ],
-        correctAnswer: 'Non-Fungible Token',
-        explanation: 'NFT, benzersiz ve değiştirilemez dijital varlıkları temsil eden token\'lardır.'
+        correctAnswerKey: 'quests.nft_ecosystem.q1.option1',
+        explanationKey: 'quests.nft_ecosystem.q1.explanation'
       },
       {
         id: 'nft-2',
-        question: 'Stellar\'da NFT\'ler hangi standarda göre oluşturulur?',
-        choices: ['ERC-721', 'ERC-1155', 'SEP-005', 'Stellar NFT Standard'],
-        correctAnswer: 'SEP-005',
-        explanation: 'SEP-005, Stellar\'ın NFT standardıdır.'
+        questionKey: 'quests.nft_ecosystem.q2.question',
+        choices: [
+          'quests.nft_ecosystem.q2.option1',
+          'quests.nft_ecosystem.q2.option2',
+          'quests.nft_ecosystem.q2.option3',
+          'quests.nft_ecosystem.q2.option4'
+        ],
+        correctAnswerKey: 'quests.nft_ecosystem.q2.option3',
+        explanationKey: 'quests.nft_ecosystem.q2.explanation'
       },
       {
         id: 'nft-3',
-        question: 'NFT\'lerin "metadata"\'sı nerede saklanır?',
+        questionKey: 'quests.nft_ecosystem.q3.question',
         choices: [
-          'Blockchain\'de',
-          'IPFS\'de',
-          'Merkezi sunucularda',
-          'Local storage\'da'
+          'quests.nft_ecosystem.q3.option1',
+          'quests.nft_ecosystem.q3.option2',
+          'quests.nft_ecosystem.q3.option3',
+          'quests.nft_ecosystem.q3.option4'
         ],
-        correctAnswer: 'IPFS\'de',
-        explanation: 'NFT metadata\'ları genellikle merkeziyetsiz IPFS ağında saklanır.'
+        correctAnswerKey: 'quests.nft_ecosystem.q3.option2',
+        explanationKey: 'quests.nft_ecosystem.q3.explanation'
       },
       {
         id: 'nft-4',
-        question: 'NFT\'lerin benzersizliği nasıl sağlanır?',
+        questionKey: 'quests.nft_ecosystem.q4.question',
         choices: [
-          'Metadata hash ile',
-          'Sıralı numara ile',
-          'Renk kodu ile',
-          'Boyut ile'
+          'quests.nft_ecosystem.q4.option1',
+          'quests.nft_ecosystem.q4.option2',
+          'quests.nft_ecosystem.q4.option3',
+          'quests.nft_ecosystem.q4.option4'
         ],
-        correctAnswer: 'Metadata hash ile',
-        explanation: 'NFT\'lerin benzersizliği metadata\'nın hash değeri ile sağlanır.'
+        correctAnswerKey: 'quests.nft_ecosystem.q4.option1',
+        explanationKey: 'quests.nft_ecosystem.q4.explanation'
       },
       {
         id: 'nft-5',
-        question: 'SEP-005 nedir?',
+        questionKey: 'quests.nft_ecosystem.q5.question',
         choices: [
-          'Stellar\'ın yerel NFT standardı',
-          'Bir token standardı',
-          'Bir consensus algoritması',
-          'Bir cüzdan protokolü'
+          'quests.nft_ecosystem.q5.option1',
+          'quests.nft_ecosystem.q5.option2',
+          'quests.nft_ecosystem.q5.option3',
+          'quests.nft_ecosystem.q5.option4'
         ],
-        correctAnswer: 'Stellar\'ın yerel NFT standardı',
-        explanation: 'SEP-005, Stellar ağında NFT\'lerin oluşturulması ve yönetimi için standart protokoldür.'
+        correctAnswerKey: 'quests.nft_ecosystem.q5.option1',
+        explanationKey: 'quests.nft_ecosystem.q5.explanation'
       }
     ],
     prerequisites: ['stellar-fundamentals'],
@@ -291,63 +316,63 @@ export const questDatabase = [
     lessons: [
       {
         id: 'advanced-1',
-        question: 'Stellar\'da "multi-signature" nedir?',
+        questionKey: 'quests.advanced_stellar.q1.question',
         choices: [
-          'Çoklu imza gerektiren işlemler',
-          'Çoklu token transferi',
-          'Çoklu hesap yönetimi',
-          'Çoklu network bağlantısı'
+          'quests.advanced_stellar.q1.option1',
+          'quests.advanced_stellar.q1.option2',
+          'quests.advanced_stellar.q1.option3',
+          'quests.advanced_stellar.q1.option4'
         ],
-        correctAnswer: 'Çoklu imza gerektiren işlemler',
-        explanation: 'Multi-sig, bir işlemin onaylanması için birden fazla imza gerektiren güvenlik mekanizmasıdır.'
+        correctAnswerKey: 'quests.advanced_stellar.q1.option1',
+        explanationKey: 'quests.advanced_stellar.q1.explanation'
       },
       {
         id: 'advanced-2',
-        question: 'Stellar\'da "path payment" nedir?',
+        questionKey: 'quests.advanced_stellar.q2.question',
         choices: [
-          'Direkt ödeme',
-          'Farklı asset\'ler arasında otomatik dönüşüm yapan ödeme',
-          'Batch ödeme',
-          'Scheduled ödeme'
+          'quests.advanced_stellar.q2.option1',
+          'quests.advanced_stellar.q2.option2',
+          'quests.advanced_stellar.q2.option3',
+          'quests.advanced_stellar.q2.option4'
         ],
-        correctAnswer: 'Farklı asset\'ler arasında otomatik dönüşüm yapan ödeme',
-        explanation: 'Path payment, alıcının istediği asset\'i, göndericinin sahip olduğu asset\'ten otomatik olarak dönüştürerek gönderir.'
+        correctAnswerKey: 'quests.advanced_stellar.q2.option2',
+        explanationKey: 'quests.advanced_stellar.q2.explanation'
       },
       {
         id: 'advanced-3',
-        question: 'Stellar\'da "operation" ve "transaction" arasındaki fark nedir?',
+        questionKey: 'quests.advanced_stellar.q3.question',
         choices: [
-          'Aynı şeyler',
-          'Transaction birden fazla operation içerebilir',
-          'Operation birden fazla transaction içerebilir',
-          'Farklı network\'lerde çalışırlar'
+          'quests.advanced_stellar.q3.option1',
+          'quests.advanced_stellar.q3.option2',
+          'quests.advanced_stellar.q3.option3',
+          'quests.advanced_stellar.q3.option4'
         ],
-        correctAnswer: 'Transaction birden fazla operation içerebilir',
-        explanation: 'Bir transaction içinde birden fazla operation bulunabilir ve hepsi atomik olarak işlenir.'
+        correctAnswerKey: 'quests.advanced_stellar.q3.option2',
+        explanationKey: 'quests.advanced_stellar.q3.explanation'
       },
       {
         id: 'advanced-4',
-        question: 'Path payment\'in avantajı nedir?',
+        questionKey: 'quests.advanced_stellar.q4.question',
         choices: [
-          'Path payment ile otomatik dönüşüm',
-          'Daha hızlı işlem',
-          'Daha az fee',
-          'Daha güvenli'
+          'quests.advanced_stellar.q4.option1',
+          'quests.advanced_stellar.q4.option2',
+          'quests.advanced_stellar.q4.option3',
+          'quests.advanced_stellar.q4.option4'
         ],
-        correctAnswer: 'Path payment ile otomatik dönüşüm',
-        explanation: 'Path payment, farklı asset\'ler arasında otomatik dönüşüm yaparak kullanıcı deneyimini kolaylaştırır.'
+        correctAnswerKey: 'quests.advanced_stellar.q4.option1',
+        explanationKey: 'quests.advanced_stellar.q4.explanation'
       },
       {
         id: 'advanced-5',
-        question: 'Multi-signature hesabın güvenlik avantajı nedir?',
+        questionKey: 'quests.advanced_stellar.q5.question',
         choices: [
-          'Multi-signature hesap güvenliği',
-          'Daha hızlı işlem',
-          'Daha az fee',
-          'Daha fazla token'
+          'quests.advanced_stellar.q5.option1',
+          'quests.advanced_stellar.q5.option2',
+          'quests.advanced_stellar.q5.option3',
+          'quests.advanced_stellar.q5.option4'
         ],
-        correctAnswer: 'Multi-signature hesap güvenliği',
-        explanation: 'Multi-sig hesaplar, tek bir private key\'in tehlikeye girmesi durumunda bile fonların güvende kalmasını sağlar.'
+        correctAnswerKey: 'quests.advanced_stellar.q5.option1',
+        explanationKey: 'quests.advanced_stellar.q5.explanation'
       }
     ],
     prerequisites: ['stellar-fundamentals', 'soroban-smart-contracts'],

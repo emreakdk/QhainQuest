@@ -188,12 +188,13 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
 
     setIsSubmitting(true);
     try {
-      const isAnswerCorrect = currentLesson.choices[selectedAnswer] === currentLesson.correctAnswer;
+      const selectedChoiceKey = currentLesson.choices[selectedAnswer];
+      const isAnswerCorrect = selectedChoiceKey === currentLesson.correctAnswerKey;
       setIsCorrect(isAnswerCorrect);
       setShowResult(true);
 
       // Store the user's answer
-      const newAnswers = [...userAnswers, currentLesson.choices[selectedAnswer]];
+      const newAnswers = [...userAnswers, selectedChoiceKey];
       setUserAnswers(newAnswers);
 
       if (isAnswerCorrect) {
@@ -217,7 +218,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
         setWrongAnswers(prev => [...prev, {
           lesson: currentLesson,
           wrongAnswer: selectedAnswer,
-          correctAnswer: currentLesson.correctAnswer
+          correctAnswer: currentLesson.correctAnswerKey
         }]);
         showError(t('quiz.incorrect'), t('quiz.tryAgain'));
         playErrorSound();
@@ -337,16 +338,16 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
             <div className="space-y-6">
               <div className="p-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg">
                 <h3 className="text-lg font-semibold text-red-800 dark:text-red-200 mb-4">
-                  {wrongLesson.lesson.question}
+                  {t(wrongLesson.lesson.questionKey)}
                 </h3>
                 <div className="space-y-3">
-                  {wrongLesson.lesson.choices.map((choice, index) => (
+                  {wrongLesson.lesson.choices.map((choiceKey, index) => (
                     <div
                       key={index}
                       className={`p-3 rounded-lg border-2 ${
                         index === wrongLesson.wrongAnswer
                           ? 'border-red-500 bg-red-100 dark:bg-red-800/30'
-                          : index === wrongLesson.lesson.choices.indexOf(wrongLesson.correctAnswer)
+                          : choiceKey === wrongLesson.correctAnswer
                           ? 'border-green-500 bg-green-100 dark:bg-green-800/30'
                           : 'border-slate-200 dark:border-slate-600'
                       }`}
@@ -355,18 +356,18 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
                         <div className={`w-6 h-6 rounded-full border-2 mr-3 ${
                           index === wrongLesson.wrongAnswer
                             ? 'border-red-500 bg-red-500'
-                            : index === wrongLesson.lesson.choices.indexOf(wrongLesson.correctAnswer)
+                            : choiceKey === wrongLesson.correctAnswer
                             ? 'border-green-500 bg-green-500'
                             : 'border-slate-300 dark:border-slate-600'
                         }`}>
                           {index === wrongLesson.wrongAnswer && (
                             <div className="w-full h-full rounded-full bg-white scale-50">❌</div>
                           )}
-                          {index === wrongLesson.lesson.choices.indexOf(wrongLesson.correctAnswer) && (
+                          {choiceKey === wrongLesson.correctAnswer && (
                             <div className="w-full h-full rounded-full bg-white scale-50">✅</div>
                           )}
                         </div>
-                        <span className="text-slate-900 dark:text-white">{choice}</span>
+                        <span className="text-slate-900 dark:text-white">{t(choiceKey)}</span>
                       </div>
                     </div>
                   ))}
@@ -548,12 +549,12 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
           <div className="space-y-6">
             <div className="p-6 bg-slate-50 dark:bg-slate-800 rounded-lg">
               <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">
-                {currentLesson.question}
+                {t(currentLesson.questionKey)}
               </h3>
               
               {!showResult ? (
                 <div className="space-y-3">
-                  {currentLesson.choices.map((choice, index) => (
+                  {currentLesson.choices.map((choiceKey, index) => (
                     <button
                       key={index}
                       onClick={() => handleAnswerSelect(index)}
@@ -573,7 +574,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
                             <div className="w-full h-full rounded-full bg-white scale-50"></div>
                           )}
                         </div>
-                        <span className="text-slate-900 dark:text-white">{choice}</span>
+                        <span className="text-slate-900 dark:text-white">{t(choiceKey)}</span>
                       </div>
                     </button>
                   ))}
@@ -614,7 +615,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
                           {t('quiz.correctAnswer')}:
                         </p>
                         <p className="font-medium text-slate-900 dark:text-white">
-                          {currentLesson.correctAnswer}
+                          {t(currentLesson.correctAnswerKey)}
                         </p>
                       </div>
                     )}
