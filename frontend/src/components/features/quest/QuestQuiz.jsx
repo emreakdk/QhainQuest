@@ -165,7 +165,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
         const progress = getQuestProgress(realQuest);
         setCurrentLessonIndex(progress.currentStep);
         
-        console.log(`Quest yüklendi: ${realQuest.name}, Soru sayısı: ${realQuest.lessons.length}`);
+        console.log(`Quest yüklendi: ${t(realQuest.nameKey)}, Soru sayısı: ${realQuest.lessons.length}`);
       } catch (error) {
         console.error('Quest yükleme hatası:', error);
         showError('Hata', 'Quest yüklenirken bir hata oluştu.');
@@ -176,7 +176,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
   }, [questId, getQuestProgress, generateMultipleChoice, showError]);
 
   const currentLesson = quest?.lessons[currentLessonIndex];
-  const difficulty = quest ? getDifficultyLevel(quest.name) : { level: 'easy', color: 'green', label: 'Kolay' };
+  const difficulty = quest ? getDifficultyLevel(t(quest.nameKey)) : { level: 'easy', color: 'green', label: 'Kolay' };
 
   const handleAnswerSelect = (answerIndex) => {
     if (showResult) return;
@@ -499,7 +499,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
             <div>
               <div className="flex items-center gap-3 mb-2">
                 <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
-                  {quest.name}
+                  {t(quest.nameKey)}
                 </h2>
                 <Badge 
                   variant="outline" 
@@ -509,7 +509,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
                 </Badge>
               </div>
               <p className="text-slate-700 dark:text-slate-300">
-                {quest.description}
+                {t(quest.descriptionKey)}
               </p>
             </div>
             <Button
