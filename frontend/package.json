@@ -17,7 +17,8 @@
     "@stellar/wallet-sdk": "^0.11.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "soroban-client": "^1.0.1"
+    "soroban-client": "^1.0.1",
+    "usehooks-ts": "^3.1.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
