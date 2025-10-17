@@ -19,7 +19,7 @@ function App() {
 }
 
 function AppContent() {
-  const { publicKey, isDemoMode } = useContext(WalletContext);
+  const { publicKey, isDemoMode, isInitialized } = useContext(WalletContext);
   const { loadTokenData } = useToken();
   const { loadBalanceForUser } = useBalance();
   const [currentPage, setCurrentPage] = useState(() => {
@@ -67,7 +67,19 @@ function AppContent() {
   };
 
   // Debug logging
-  console.log('🔍 [DEBUG] App render - publicKey:', publicKey, 'isDemoMode:', isDemoMode, 'currentPage:', currentPage);
+  console.log('🔍 [DEBUG] App render - publicKey:', publicKey, 'isDemoMode:', isDemoMode, 'isInitialized:', isInitialized, 'currentPage:', currentPage);
+  
+  // Show loading spinner while wallet state is being initialized
+  if (!isInitialized) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-lg font-medium">Yükleniyor...</p>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className={`min-h-screen transition-colors duration-300 ${(publicKey || isDemoMode) ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white' : 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white'}`}>

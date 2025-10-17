@@ -13,12 +13,13 @@ const QuestCard = ({ quest, userProgress, onStart, onContinue, userAddress }) =>
   const { getQuestStatus, getQuestProgress, hasCertificate } = useQuest();
   const [isApiCompleted, setIsApiCompleted] = useState(false);
 
-  // Check API completion status
+  // Check API completion status (works for both wallet and demo mode)
   useEffect(() => {
     const checkApiCompletion = async () => {
       if (userAddress && quest.id) {
         const completed = await questApiService.isQuestCompleted(userAddress, quest.id);
         setIsApiCompleted(completed);
+        console.log(`[QuestCard] Quest ${quest.id} completion status for ${userAddress}:`, completed);
       }
     };
     

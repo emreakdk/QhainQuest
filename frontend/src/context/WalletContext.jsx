@@ -5,14 +5,59 @@ export const WalletContext = createContext(null);
 export const WalletProvider = ({ children }) => {
   const [publicKey, setPublicKey] = useState('');
   const [isDemoMode, setIsDemoMode] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  // Load demo mode state from localStorage on mount
+  // Load wallet and demo mode state from localStorage on mount
   useEffect(() => {
-    const savedDemoMode = localStorage.getItem('isDemoMode');
-    if (savedDemoMode === 'true') {
-      setIsDemoMode(true);
-    }
+    const initializeWalletState = async () => {
+      try {
+        // Load demo mode state
+        const savedDemoMode = localStorage.getItem('isDemoMode');
+        if (savedDemoMode === 'true') {
+          setIsDemoMode(true);
+          setIsInitialized(true);
+          return;
+        }
+
+        // Load wallet connection state
+        const savedPublicKey = localStorage.getItem('chainquest-publicKey');
+        if (savedPublicKey) {
+          // Verify wallet is still connected
+          try {
+            const { isConnected } = await import('@stellar/freighter-api');
+            const connected = await isConnected();
+            if (connected?.isConnected) {
+              setPublicKey(savedPublicKey);
+              console.log('🔗 [WalletContext] Restored wallet connection:', savedPublicKey);
+            } else {
+              // Wallet disconnected, clear saved state
+              localStorage.removeItem('chainquest-publicKey');
+              console.log('🔗 [WalletContext] Wallet disconnected, cleared saved state');
+            }
+          } catch (error) {
+            console.log('🔗 [WalletContext] Freighter not available, using saved state');
+            setPublicKey(savedPublicKey);
+          }
+        }
+
+        setIsInitialized(true);
+      } catch (error) {
+        console.error('🔗 [WalletContext] Error initializing wallet state:', error);
+        setIsInitialized(true);
+      }
+    };
+
+    initializeWalletState();
   }, []);
+
+  // Save publicKey to localStorage when it changes
+  useEffect(() => {
+    if (publicKey) {
+      localStorage.setItem('chainquest-publicKey', publicKey);
+    } else {
+      localStorage.removeItem('chainquest-publicKey');
+    }
+  }, [publicKey]);
 
   // Save demo mode state to localStorage when it changes
   useEffect(() => {
@@ -96,6 +141,7 @@ export const WalletProvider = ({ children }) => {
       setPublicKey, 
       isDemoMode, 
       setIsDemoMode,
+      isInitialized,
       enterDemoMode,
       exitDemoMode,
       isConnected

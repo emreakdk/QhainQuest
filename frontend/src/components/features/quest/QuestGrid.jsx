@@ -17,7 +17,7 @@ const QuestQuiz = lazy(() => import('./QuestQuiz'));
 const QuestGrid = () => {
   // Moved all Hook calls to the top level to comply with the Rules of Hooks
   const { t } = useLanguage();
-  const { publicKey } = useContext(WalletContext);
+  const { publicKey, isDemoMode } = useContext(WalletContext);
   const { quests, loading, error, userStats, userProgress, getQuestStatus, getQuestProgress, refreshData } = useQuest();
   const { tokenData } = useToken(); // Use centralized token data
   const { totalEarned } = useBalance(); // Use global total earned
@@ -48,6 +48,10 @@ const QuestGrid = () => {
 
   // Data processing moved after all Hooks
   const realQuests = quests.length > 0 ? quests : questDatabase;
+  
+  // Determine user identifier (wallet address or demo mode)
+  const userIdentifier = isDemoMode ? 'demo' : publicKey;
+  
   // Use centralized token data instead of userStats
   const realUserStats = {
     level: 1, 
@@ -302,7 +306,7 @@ const QuestGrid = () => {
             key={quest.id}
             quest={quest}
             userProgress={userProgress.get(quest.id)}
-            userAddress={publicKey}
+            userAddress={userIdentifier}
             onStart={handleStartQuest}
             onContinue={handleContinueQuest}
           />
