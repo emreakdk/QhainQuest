@@ -6,7 +6,7 @@ import Header from './components/layout/Header';
 import HeroSection from './components/layout/HeroSection';
 import QuestGrid from './components/features/quest/QuestGrid';
 import UserProfile from './components/features/profile/UserProfile';
-import Leaderboard from './components/features/leaderboard/Leaderboard';
+import Achievements from './components/features/achievements/Achievements';
 
 function App() {
   return (
@@ -60,7 +60,7 @@ function AppContent() {
       case 'profile':
         return <UserProfile />;
       case 'leaderboard':
-        return <Leaderboard />;
+        return <Achievements />;
       default:
         return <QuestGrid />;
     }

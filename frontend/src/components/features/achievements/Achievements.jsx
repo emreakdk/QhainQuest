@@ -8,7 +8,7 @@ import { Card, CardContent } from '../../ui/Card';
 import Badge from '../../ui/Badge';
 import Button from '../../ui/Button';
 
-const Leaderboard = () => {
+const Achievements = () => {
   const { t } = useLanguage();
   const { publicKey } = useContext(WalletContext);
   const { userStats } = useQuest();
@@ -211,4 +211,4 @@ const Leaderboard = () => {
   );
 };
 
-export default Leaderboard;
+export default Achievements;
