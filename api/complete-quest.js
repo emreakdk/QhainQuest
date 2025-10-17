@@ -2,7 +2,7 @@
 // This function ONLY validates quest answers - NO token distribution
 // Token distribution is now handled by /api/claim-tokens endpoint
 
-// Quest validation data - imported from frontend questData.js
+// Quest validation data - updated to use i18n keys for validation
 // This ensures backend and frontend use the same quest definitions
 const QUEST_DATA = {
   'stellar-fundamentals': {
@@ -12,28 +12,28 @@ const QUEST_DATA = {
     lessons: [
       { 
         id: 'stellar-1', 
-        correctAnswer: 'Stellar Consensus Protocol (SCP)',
-        question: 'Stellar ağında işlemler hangi konsensüs algoritması ile doğrulanır?'
+        correctAnswerKey: 'quests.stellar_fundamentals.q1.option2',
+        questionKey: 'quests.stellar_fundamentals.q1.question'
       },
       { 
         id: 'stellar-2', 
-        correctAnswer: 'XLM (Stellar Lumens)',
-        question: 'Stellar ağının yerel tokenı nedir?'
+        correctAnswerKey: 'quests.stellar_fundamentals.q2.option3',
+        questionKey: 'quests.stellar_fundamentals.q2.question'
       },
       { 
         id: 'stellar-3', 
-        correctAnswer: 'Geleneksel finansal sistem ile köprü kuran kuruluşlar',
-        question: 'Stellar\'da "Anchors" nedir?'
+        correctAnswerKey: 'quests.stellar_fundamentals.q3.option2',
+        questionKey: 'quests.stellar_fundamentals.q3.question'
       },
       { 
         id: 'stellar-4', 
-        correctAnswer: '2 XLM',
-        question: 'Stellar\'da minimum hesap bakiyesi nedir?'
+        correctAnswerKey: 'quests.stellar_fundamentals.q4.option3',
+        questionKey: 'quests.stellar_fundamentals.q4.question'
       },
       { 
         id: 'stellar-5', 
-        correctAnswer: 'Python, JavaScript, Go, Java, C++',
-        question: 'Stellar geliştiricileri için ana SDK hangi dillerde mevcuttur?'
+        correctAnswerKey: 'quests.stellar_fundamentals.q5.option4',
+        questionKey: 'quests.stellar_fundamentals.q5.question'
       }
     ]
   },
@@ -44,28 +44,28 @@ const QUEST_DATA = {
     lessons: [
       { 
         id: 'soroban-1', 
-        correctAnswer: 'Stellar üzerinde bir akıllı kontrat platformu',
-        question: 'Soroban nedir?'
+        correctAnswerKey: 'quests.soroban_smart_contracts.q1.option2',
+        questionKey: 'quests.soroban_smart_contracts.q1.question'
       },
       { 
         id: 'soroban-2', 
-        correctAnswer: 'Rust',
-        question: 'Soroban akıllı kontratları hangi dilde yazılır?'
+        correctAnswerKey: 'quests.soroban_smart_contracts.q2.option1',
+        questionKey: 'quests.soroban_smart_contracts.q2.question'
       },
       { 
         id: 'soroban-3', 
-        correctAnswer: 'Smart contract\'ların Stellar ağı ile etkileşim kurmasını sağlayan fonksiyonlar',
-        question: 'Soroban\'da "host functions" nedir?'
+        correctAnswerKey: 'quests.soroban_smart_contracts.q3.option2',
+        questionKey: 'quests.soroban_smart_contracts.q3.question'
       },
       { 
         id: 'soroban-4', 
-        correctAnswer: 'Contract bazlı izole storage',
-        question: 'Soroban\'da "storage" nasıl çalışır?'
+        correctAnswerKey: 'quests.soroban_smart_contracts.q4.option1',
+        questionKey: 'quests.soroban_smart_contracts.q4.question'
       },
       { 
         id: 'soroban-5', 
-        correctAnswer: 'Gas fee olarak XLM kullanılır',
-        question: 'Soroban\'da transaction fee olarak ne kullanılır?'
+        correctAnswerKey: 'quests.soroban_smart_contracts.q5.option3',
+        questionKey: 'quests.soroban_smart_contracts.q5.question'
       }
     ]
   },
@@ -76,28 +76,28 @@ const QUEST_DATA = {
     lessons: [
       { 
         id: 'defi-1', 
-        correctAnswer: 'Blockchain tabanlı finansal hizmetler',
-        question: 'Merkeziyetsiz finans (DeFi) ne anlama gelir?'
+        correctAnswerKey: 'quests.defi_protocols.q1.option2',
+        questionKey: 'quests.defi_protocols.q1.question'
       },
       { 
         id: 'defi-2', 
-        correctAnswer: 'StellarSwap',
-        question: 'Stellar\'da en popüler AMM protokolü nedir?'
+        correctAnswerKey: 'quests.defi_protocols.q2.option1',
+        questionKey: 'quests.defi_protocols.q2.question'
       },
       { 
         id: 'defi-3', 
-        correctAnswer: 'Likidite sağlayarak token ödülleri kazanma',
-        question: 'DeFi\'de "yield farming" nedir?'
+        correctAnswerKey: 'quests.defi_protocols.q3.option2',
+        questionKey: 'quests.defi_protocols.q3.question'
       },
       { 
         id: 'defi-4', 
-        correctAnswer: 'Likidite sağlarken token fiyat değişimlerinden kaynaklanan kayıp',
-        question: 'DeFi\'de "impermanent loss" nedir?'
+        correctAnswerKey: 'quests.defi_protocols.q4.option3',
+        questionKey: 'quests.defi_protocols.q4.question'
       },
       { 
         id: 'defi-5', 
-        correctAnswer: 'AMM (Automated Market Maker) protokolü',
-        question: 'AMM protokolü ne anlama gelir?'
+        correctAnswerKey: 'quests.defi_protocols.q5.option1',
+        questionKey: 'quests.defi_protocols.q5.question'
       }
     ]
   },
@@ -108,28 +108,28 @@ const QUEST_DATA = {
     lessons: [
       { 
         id: 'nft-1', 
-        correctAnswer: 'Non-Fungible Token',
-        question: 'NFT\'nin açılımı nedir?'
+        correctAnswerKey: 'quests.nft_ecosystem.q1.option1',
+        questionKey: 'quests.nft_ecosystem.q1.question'
       },
       { 
         id: 'nft-2', 
-        correctAnswer: 'SEP-005',
-        question: 'Stellar\'da NFT\'ler hangi standarda göre oluşturulur?'
+        correctAnswerKey: 'quests.nft_ecosystem.q2.option2',
+        questionKey: 'quests.nft_ecosystem.q2.question'
       },
       { 
         id: 'nft-3', 
-        correctAnswer: 'IPFS\'de',
-        question: 'NFT\'lerin "metadata"\'sı nerede saklanır?'
+        correctAnswerKey: 'quests.nft_ecosystem.q3.option3',
+        questionKey: 'quests.nft_ecosystem.q3.question'
       },
       { 
         id: 'nft-4', 
-        correctAnswer: 'Metadata hash ile',
-        question: 'NFT\'lerin benzersizliği nasıl sağlanır?'
+        correctAnswerKey: 'quests.nft_ecosystem.q4.option2',
+        questionKey: 'quests.nft_ecosystem.q4.question'
       },
       { 
         id: 'nft-5', 
-        correctAnswer: 'Stellar\'ın yerel NFT standardı',
-        question: 'SEP-005 nedir?'
+        correctAnswerKey: 'quests.nft_ecosystem.q5.option1',
+        questionKey: 'quests.nft_ecosystem.q5.question'
       }
     ]
   },
@@ -140,28 +140,28 @@ const QUEST_DATA = {
     lessons: [
       { 
         id: 'advanced-1', 
-        correctAnswer: 'Çoklu imza gerektiren işlemler',
-        question: 'Stellar\'da "multi-signature" nedir?'
+        correctAnswerKey: 'quests.advanced_stellar.q1.option2',
+        questionKey: 'quests.advanced_stellar.q1.question'
       },
       { 
         id: 'advanced-2', 
-        correctAnswer: 'Farklı asset\'ler arasında otomatik dönüşüm yapan ödeme',
-        question: 'Stellar\'da "path payment" nedir?'
+        correctAnswerKey: 'quests.advanced_stellar.q2.option1',
+        questionKey: 'quests.advanced_stellar.q2.question'
       },
       { 
         id: 'advanced-3', 
-        correctAnswer: 'Transaction birden fazla operation içerebilir',
-        question: 'Stellar\'da "operation" ve "transaction" arasındaki fark nedir?'
+        correctAnswerKey: 'quests.advanced_stellar.q3.option3',
+        questionKey: 'quests.advanced_stellar.q3.question'
       },
       { 
         id: 'advanced-4', 
-        correctAnswer: 'Path payment ile otomatik dönüşüm',
-        question: 'Path payment\'in avantajı nedir?'
+        correctAnswerKey: 'quests.advanced_stellar.q4.option2',
+        questionKey: 'quests.advanced_stellar.q4.question'
       },
       { 
         id: 'advanced-5', 
-        correctAnswer: 'Multi-signature hesap güvenliği',
-        question: 'Multi-signature hesabın güvenlik avantajı nedir?'
+        correctAnswerKey: 'quests.advanced_stellar.q5.option1',
+        questionKey: 'quests.advanced_stellar.q5.question'
       }
     ]
   }
@@ -330,8 +330,8 @@ function validateAnswers(quest, userAnswers) {
       continue;
     }
 
-    if (userAnswer.trim() !== lesson.correctAnswer.trim()) {
-      errors.push(`Incorrect answer for lesson ${lesson.id}: expected "${lesson.correctAnswer}", got "${userAnswer}"`);
+    if (userAnswer.trim() !== lesson.correctAnswerKey.trim()) {
+      errors.push(`Incorrect answer for lesson ${lesson.id}: expected "${lesson.correctAnswerKey}", got "${userAnswer}"`);
     }
   }
 
