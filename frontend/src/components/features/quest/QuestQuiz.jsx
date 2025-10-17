@@ -406,6 +406,29 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
     );
   }
 
+  // Additional guard clause: Prevent crash if questId is invalid or quest is not found
+  if (!questId) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="text-6xl mb-4">❌</div>
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+            Quest Bulunamadı
+          </h2>
+          <p className="text-slate-700 dark:text-slate-300 mb-6">
+            Geçersiz quest ID. Lütfen ana sayfaya dönün ve tekrar deneyin.
+          </p>
+          <Button
+            onClick={onClose}
+            className="cursor-pointer"
+          >
+            Ana Sayfaya Dön
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   // Show completed quest message
   if (questCompleted) {
     return (
