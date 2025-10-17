@@ -395,7 +395,10 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
     );
   }
 
-  if (!quest || !currentLesson) {
+  // Guard clause: Prevent crash if quest data is not loaded yet or quest is not found
+  // This must be checked BEFORE accessing any quest properties
+  // Skip this check if showing celebration or completed state (quest data should already be loaded)
+  if (!showCelebration && !questCompleted && (!quest || !currentLesson)) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
