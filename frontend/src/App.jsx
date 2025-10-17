@@ -19,7 +19,7 @@ function App() {
 }
 
 function AppContent() {
-  const { publicKey } = useContext(WalletContext);
+  const { publicKey, isDemoMode } = useContext(WalletContext);
   const { loadTokenData } = useToken();
   const { loadBalanceForUser } = useBalance();
   const [currentPage, setCurrentPage] = useState(() => {
@@ -66,11 +66,14 @@ function AppContent() {
     }
   };
 
+  // Debug logging
+  console.log('🔍 [DEBUG] App render - publicKey:', publicKey, 'isDemoMode:', isDemoMode, 'currentPage:', currentPage);
+  
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${publicKey ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white' : 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white'}`}>
+    <div className={`min-h-screen transition-colors duration-300 ${(publicKey || isDemoMode) ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white' : 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white'}`}>
       <Header currentPage={currentPage} onPageChange={handlePageChange} />
       <main> 
-        {publicKey ? (
+        {(publicKey || isDemoMode) ? (
           <div className="container mx-auto p-4 pt-24">
             {renderPage()}
           </div>

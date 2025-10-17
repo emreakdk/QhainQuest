@@ -11,12 +11,18 @@ const HeroSection = ({ onPageChange }) => {
   const { t } = useLanguage();
 
   const handleDemoMode = () => {
+    console.log('🎮 [DEBUG] Entering demo mode...');
     enterDemoMode();
     loadBalanceForUser('demo');
+    console.log('🎮 [DEBUG] Demo mode entered, isDemoMode should be true');
   };
 
   const handleGoToQuests = () => {
+    console.log('🎯 [DEBUG] Görevler button clicked!');
+    console.log('🎯 [DEBUG] onPageChange function:', onPageChange);
+    console.log('🎯 [DEBUG] Current isDemoMode:', isDemoMode);
     onPageChange('quests');
+    console.log('🎯 [DEBUG] Navigation call completed');
   };
 
   return (
