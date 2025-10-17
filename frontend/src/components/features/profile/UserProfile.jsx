@@ -219,32 +219,38 @@ const UserProfile = () => {
               {t('profile.yourAchievements')}
             </h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {achievements.map((achievement, index) => (
-                <div key={index} className={`p-6 rounded-xl border-2 ${
-                  achievement.unlocked 
-                    ? 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 dark:from-green-900/20 dark:to-emerald-900/20 dark:border-green-700' 
-                    : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 opacity-60'
-                }`}>
-                  <div className="flex items-center space-x-4">
-                    <div className={`text-3xl ${achievement.unlocked ? '' : 'grayscale'}`}>
-                      {achievement.icon}
+            {achievements.filter(a => a.unlocked).length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {achievements.map((achievement, index) => (
+                  <div key={index} className={`p-6 rounded-xl border-2 ${
+                    achievement.unlocked 
+                      ? 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 dark:from-green-900/20 dark:to-emerald-900/20 dark:border-green-700' 
+                      : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 opacity-60'
+                  }`}>
+                    <div className="flex items-center space-x-4">
+                      <div className={`text-3xl ${achievement.unlocked ? '' : 'grayscale'}`}>
+                        {achievement.icon}
+                      </div>
+                      <div className="flex-1">
+                        <h4 className={`font-semibold ${achievement.unlocked ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400'}`}>
+                          {achievement.title}
+                        </h4>
+                        <p className={`text-sm ${achievement.unlocked ? 'text-slate-600 dark:text-slate-300' : 'text-slate-400 dark:text-slate-500'}`}>
+                          {achievement.description}
+                        </p>
+                      </div>
+                      {achievement.unlocked && (
+                        <Badge variant="success">✓</Badge>
+                      )}
                     </div>
-                    <div className="flex-1">
-                      <h4 className={`font-semibold ${achievement.unlocked ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400'}`}>
-                        {achievement.title}
-                      </h4>
-                      <p className={`text-sm ${achievement.unlocked ? 'text-slate-600 dark:text-slate-300' : 'text-slate-400 dark:text-slate-500'}`}>
-                        {achievement.description}
-                      </p>
-                    </div>
-                    {achievement.unlocked && (
-                      <Badge variant="success">✓</Badge>
-                    )}
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-slate-500 dark:text-slate-400">
+                {t('achievements.emptyState')}
+              </div>
+            )}
           </div>
         )}
       </div>

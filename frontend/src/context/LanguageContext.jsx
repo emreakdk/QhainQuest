@@ -256,6 +256,7 @@ const translations = {
     'emptyState.activity': 'Henüz aktivite bulunmuyor.',
     'emptyState.noDescription': 'Açıklama yok',
     'emptyState.noDate': 'Tarih yok',
+    'achievements.emptyState': 'Henüz başarı kazanmadınız. Quest\'leri tamamlayarak başarılar kazanın!',
   },
   en: {
     // Navigation
@@ -510,6 +511,7 @@ const translations = {
     'emptyState.activity': 'No activity yet.',
     'emptyState.noDescription': 'No description',
     'emptyState.noDate': 'No date',
+    'achievements.emptyState': 'You haven\'t earned any achievements yet. Complete quests to earn achievements!',
   }
 };
 
