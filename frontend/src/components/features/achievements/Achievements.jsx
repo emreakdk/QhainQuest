@@ -20,7 +20,7 @@ const Achievements = () => {
   const currentUser = {
     rank: 1, // Always #1 for personal dashboard
     address: publicKey || "Not Connected",
-    username: "Sen", // "You" in Turkish
+    username: t('achievements.you'), // "You" in Turkish
     totalTokens: totalEarned || 0, // Live token balance
     certificates: tokenData.completedQuests || 0, // Live completed quests count
     completedQuests: tokenData.completedQuests || 0, // Live completed quests count
@@ -33,17 +33,17 @@ const Achievements = () => {
       <div className="space-y-8">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">
-            🏆 Başarı Panosu
+            🏆 {t('achievements.pageTitle')}
           </h1>
           <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-            Kişisel başarılarınızı ve ilerlemenizi takip edin.
+            {t('achievements.pageSubtitle')}
           </p>
         </div>
         <div className="max-w-md mx-auto">
           <Card className="text-center p-8">
             <div className="text-6xl mb-4">🔐</div>
             <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
-              Cüzdan Bağlantısı Gerekli
+              {t('achievements.walletRequired')}
             </h3>
             <p className="text-slate-600 dark:text-slate-400">
               {t('profile.connectWalletForAchievements')}
@@ -55,9 +55,9 @@ const Achievements = () => {
   }
 
   const periods = [
-    { id: 'all-time', label: 'Tüm Zamanlar' },
-    { id: 'monthly', label: 'Bu Ay' },
-    { id: 'weekly', label: 'Bu Hafta' }
+    { id: 'all-time', label: t('achievements.filter.allTime') },
+    { id: 'monthly', label: t('achievements.filter.thisMonth') },
+    { id: 'weekly', label: t('achievements.filter.thisWeek') }
   ];
 
   // Helper functions removed - no longer needed for single user display
@@ -67,10 +67,10 @@ const Achievements = () => {
       {/* Header */}
       <div className="text-center">
         <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">
-          🏆 Başarı Panosu
+          🏆 {t('achievements.pageTitle')}
         </h1>
         <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-          Kişisel başarılarınızı ve ilerlemenizi takip edin.
+          {t('achievements.pageSubtitle')}
         </p>
       </div>
 
@@ -113,7 +113,7 @@ const Achievements = () => {
             {/* Stats - CRITICAL FIX: Remove Seviye (Level) system */}
             <div className="space-y-3 text-sm">
               <div className="flex justify-between">
-                <span className="text-slate-600 dark:text-slate-400">Token:</span>
+                <span className="text-slate-600 dark:text-slate-400">{t('achievements.token')}:</span>
                 <span className="font-medium text-slate-900 dark:text-white">
                   {currentUser.totalTokens.toLocaleString()}
                 </span>
@@ -135,7 +135,7 @@ const Achievements = () => {
             {/* Achievement Badge */}
             <div className="mt-6">
               <Badge variant="primary" className="text-lg px-4 py-2">
-                Başarılı Öğrenci
+                {t('achievements.successfulStudent')}
               </Badge>
             </div>
           </CardContent>
@@ -146,7 +146,7 @@ const Achievements = () => {
       <Card>
         <CardContent className="p-6">
           <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-6 text-center">
-            Detaylı İstatistikler
+            {t('achievements.detailedStats')}
           </h3>
           <div className="space-y-4">
             <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 border-2 border-indigo-200 dark:border-indigo-700 rounded-lg p-6">
@@ -171,13 +171,13 @@ const Achievements = () => {
                   <div className="font-medium text-slate-900 dark:text-white text-2xl">
                     {currentUser.totalTokens.toLocaleString()}
                   </div>
-                  <div className="text-slate-500 dark:text-slate-400">Token</div>
+                  <div className="text-slate-500 dark:text-slate-400">{t('achievements.token')}</div>
                 </div>
                 <div className="text-center">
                   <div className="font-medium text-slate-900 dark:text-white text-2xl">
                     {currentUser.certificates}
                   </div>
-                  <div className="text-slate-500 dark:text-slate-400">Sertifika</div>
+                  <div className="text-slate-500 dark:text-slate-400">{t('achievements.certificate')}</div>
                 </div>
                 <div className="text-center">
                   <div className="font-medium text-slate-900 dark:text-white text-2xl">
@@ -190,7 +190,7 @@ const Achievements = () => {
               {/* Achievement Badge */}
               <div className="mt-4 text-center">
                 <Badge variant="primary" className="text-lg px-4 py-2">
-                  Başarılı Öğrenci
+                  {t('achievements.successfulStudent')}
                 </Badge>
               </div>
             </div>
@@ -201,10 +201,10 @@ const Achievements = () => {
       {/* Call to Action */}
       <div className="text-center py-8">
         <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-4">
-          Daha fazla görev tamamlayarak başarılarınızı artırın!
+          {t('achievements.cta.title')}
         </h3>
         <Button variant="primary" size="lg">
-          Görevleri Keşfet
+          {t('achievements.cta.button')}
         </Button>
       </div>
     </div>

@@ -270,6 +270,19 @@ const translations = {
     // Achievements
     'achievements.achievement': 'Başarı',
     'achievements.achievementEarned': 'Başarı kazanıldı!',
+    'achievements.pageTitle': 'Başarı Panosu',
+    'achievements.pageSubtitle': 'Kişisel başarılarınızı ve ilerlemenizi takip edin.',
+    'achievements.walletRequired': 'Cüzdan Bağlantısı Gerekli',
+    'achievements.filter.allTime': 'Tüm Zamanlar',
+    'achievements.filter.thisMonth': 'Bu Ay',
+    'achievements.filter.thisWeek': 'Bu Hafta',
+    'achievements.you': 'Sen',
+    'achievements.token': 'Token',
+    'achievements.certificate': 'Sertifika',
+    'achievements.successfulStudent': 'Başarılı Öğrenci',
+    'achievements.detailedStats': 'Detaylı İstatistikler',
+    'achievements.cta.title': 'Daha fazla görev tamamlayarak başarılarınızı artırın!',
+    'achievements.cta.button': 'Görevleri Keşfet',
   },
   en: {
     // Navigation
@@ -538,6 +551,19 @@ const translations = {
     // Achievements
     'achievements.achievement': 'Achievement',
     'achievements.achievementEarned': 'Achievement earned!',
+    'achievements.pageTitle': 'Achievements Dashboard',
+    'achievements.pageSubtitle': 'Track your personal achievements and progress.',
+    'achievements.walletRequired': 'Wallet Connection Required',
+    'achievements.filter.allTime': 'All Time',
+    'achievements.filter.thisMonth': 'This Month',
+    'achievements.filter.thisWeek': 'This Week',
+    'achievements.you': 'You',
+    'achievements.token': 'Token',
+    'achievements.certificate': 'Certificate',
+    'achievements.successfulStudent': 'Successful Student',
+    'achievements.detailedStats': 'Detailed Statistics',
+    'achievements.cta.title': 'Increase your achievements by completing more quests!',
+    'achievements.cta.button': 'Explore Quests',
   }
 };
 
