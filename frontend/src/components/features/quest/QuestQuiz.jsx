@@ -59,84 +59,22 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
   }, [publicKey, questId]);
 
   // Zorluk seviyeleri için quest kategorileri
-  const getDifficultyLevel = (questName) => {
-    if (questName.toLowerCase().includes('temel') || questName.toLowerCase().includes('başlangıç')) {
-      return { level: 'easy', color: 'green', label: t('category.beginner') };
-    } else if (questName.toLowerCase().includes('orta')) {
-      return { level: 'medium', color: 'yellow', label: t('category.intermediate') };
-    } else if (questName.toLowerCase().includes('ileri') || questName.toLowerCase().includes('gelişmiş')) {
-      return { level: 'hard', color: 'red', label: t('category.advanced') };
-    }
-    return { level: 'easy', color: 'green', label: t('category.beginner') };
-  };
-
-  // 4 şıklı soru oluştur
-  const generateMultipleChoice = useCallback((question, correctAnswer) => {
-    const incorrectAnswers = generateIncorrectAnswers(correctAnswer);
-    const allAnswers = [correctAnswer, ...incorrectAnswers].sort(() => Math.random() - 0.5);
-    
-    return {
-      question,
-      correctAnswer,
-      choices: allAnswers,
-      correctIndex: allAnswers.indexOf(correctAnswer)
-    };
-  }, []);
-
-  // Yanlış cevaplar oluştur
-  const generateIncorrectAnswers = (correctAnswer) => {
-    const answerType = detectAnswerType(correctAnswer);
-    let incorrectAnswers = [];
-
-    switch (answerType) {
-      case 'protocol':
-        incorrectAnswers = [
-          'Proof of Work',
-          'Proof of Stake', 
-          'Delegated Proof of Stake'
-        ];
-        break;
-      case 'time':
-        incorrectAnswers = [
-          '5 saniye',
-          '30 saniye',
-          '2 dakika'
-        ];
-        break;
-      case 'token':
-        incorrectAnswers = [
-          'Bitcoin',
-          'Ethereum',
-          'Litecoin'
-        ];
-        break;
-      case 'language':
-        incorrectAnswers = [
-          'JavaScript',
-          'Python',
-          'Go'
-        ];
-        break;
+  const getDifficultyLevel = (quest) => {
+    // Quest object'inden difficulty property'sini kullan
+    switch (quest.difficulty) {
+      case 'beginner':
+        return { level: 'easy', color: 'green', label: t('category.beginner') };
+      case 'intermediate':
+        return { level: 'medium', color: 'yellow', label: t('category.intermediate') };
+      case 'advanced':
+        return { level: 'hard', color: 'red', label: t('category.advanced') };
       default:
-        incorrectAnswers = [
-          'Seçenek A', 
-          'Seçenek B', 
-          'Seçenek C'
-        ];
+        return { level: 'easy', color: 'green', label: t('category.beginner') };
     }
-
-    return incorrectAnswers.slice(0, 3);
   };
 
-  // Cevap tipini tespit et
-  const detectAnswerType = (answer) => {
-    const lowerAnswer = answer.toLowerCase();
-    if (lowerAnswer.includes('protocol') || lowerAnswer.includes('consensus')) return 'protocol';
-    if (lowerAnswer.includes('saniye') || lowerAnswer.includes('dakika') || lowerAnswer.includes('saat')) return 'time';
-    if (lowerAnswer.includes('token') || lowerAnswer.includes('coin') || lowerAnswer.includes('xlm')) return 'token';
-    if (lowerAnswer.includes('rust') || lowerAnswer.includes('javascript') || lowerAnswer.includes('python')) return 'language';
-    return 'concept';
-  };
+  // generateMultipleChoice ve ilgili fonksiyonlar artık gereksiz
+  // Quest data zaten i18n key'leri ile hazır geliyor
 
   useEffect(() => {
     // Quest verilerini yükle
@@ -151,15 +89,8 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
           return;
         }
 
-        // Her ders için multiple choice oluştur
-        const lessonsWithChoices = realQuest.lessons.map(lesson => 
-          generateMultipleChoice(lesson.question, lesson.correctAnswer)
-        );
-
-        setQuest({
-          ...realQuest,
-          lessons: lessonsWithChoices
-        });
+        // Quest data zaten i18n key'leri ile hazır, direkt kullan
+        setQuest(realQuest);
         
         // Kullanıcının mevcut ilerlemesini al
         const progress = getQuestProgress(realQuest);
@@ -173,10 +104,10 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
     };
 
     loadQuest();
-  }, [questId, getQuestProgress, generateMultipleChoice, showError]);
+  }, [questId, getQuestProgress, showError]);
 
   const currentLesson = quest?.lessons[currentLessonIndex];
-  const difficulty = quest ? getDifficultyLevel(t(quest.nameKey)) : { level: 'easy', color: 'green', label: 'Kolay' };
+  const difficulty = quest ? getDifficultyLevel(quest) : { level: 'easy', color: 'green', label: 'Kolay' };
 
   const handleAnswerSelect = (answerIndex) => {
     if (showResult) return;
