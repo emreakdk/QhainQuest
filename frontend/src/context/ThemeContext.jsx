@@ -26,8 +26,14 @@ export const ThemeProvider = ({ children }) => {
       html.classList.remove('dark');
     }
     
+    // Force a re-render by triggering a style recalculation
+    html.style.colorScheme = isDarkMode ? 'dark' : 'light';
+    
     console.log(`[ThemeProvider] Applied theme: ${isDarkMode ? 'dark' : 'light'} (isDarkMode: ${isDarkMode})`);
     console.log(`[ThemeProvider] HTML classes:`, html.classList.toString());
+    console.log(`[ThemeProvider] HTML element:`, html);
+    console.log(`[ThemeProvider] Has dark class:`, html.classList.contains('dark'));
+    console.log(`[ThemeProvider] Color scheme:`, html.style.colorScheme);
   }, [isDarkMode]);
 
   // CRITICAL FIX: Sync with localStorage when theme changes
