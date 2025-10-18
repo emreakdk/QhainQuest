@@ -85,6 +85,8 @@ export const getTokenBalanceBreakdown = (userAddress) => {
     }
     
     const completedQuests = getCompletedQuestsForUser(userAddress);
+    console.log(`[getTokenBalanceBreakdown] ${userAddress}: completedQuests array:`, completedQuests);
+    console.log(`[getTokenBalanceBreakdown] ${userAddress}: completedQuests.length:`, completedQuests.length);
     
     // Get claimable balance from localStorage (amount ready to claim)
     const claimableBalance = parseFloat(localStorage.getItem(`claimableBalance_${userAddress}`) || '0');

@@ -71,6 +71,10 @@ const ProfileStats = ({ userStats }) => {
     }
   };
 
+  // Debug logging for counter values
+  console.log(`[ProfileStats] tokenData.completedQuests:`, tokenData.completedQuests);
+  console.log(`[ProfileStats] tokenData:`, tokenData);
+
   const stats = [
     {
       title: t('profile.totalEarned'),

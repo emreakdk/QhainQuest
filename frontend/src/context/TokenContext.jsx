@@ -64,6 +64,10 @@ export const TokenProvider = ({ children }) => {
         lastUpdated: new Date().toISOString()
       };
       
+      console.log(`[TokenContext] ${userAddress}: breakdown.questCount:`, breakdown.questCount);
+      console.log(`[TokenContext] ${userAddress}: breakdown.completedQuests:`, breakdown.completedQuests);
+      console.log(`[TokenContext] ${userAddress}: tokenData.completedQuests:`, tokenData.completedQuests);
+      
       setTokenData(tokenData);
       console.log('Token data loaded:', tokenData);
       
