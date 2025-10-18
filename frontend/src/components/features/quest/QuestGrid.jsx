@@ -340,7 +340,7 @@ const QuestGrid = () => {
                     className={`flex items-center gap-2 px-3 py-1 rounded-lg text-sm font-medium transition-all cursor-pointer ${
                       selectedDifficulty === key
                         ? getActiveClasses(key)
-                        : 'bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
+                        : 'bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-300 hover:bg-slate-200 hover:text-white dark:hover:bg-slate-600 dark:hover:text-slate-300'
                     }`}
                   >
                     <span>{level.icon}</span>
