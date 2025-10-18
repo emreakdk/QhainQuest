@@ -63,8 +63,8 @@ const Header = ({ currentPage, onPageChange }) => {
             onClick={toggleLanguage}
             className={`w-10 h-10 rounded-lg transition-colors flex items-center justify-center cursor-pointer ${
               (publicKey || isDemoMode) 
-                ? 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
-                : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
+                ? 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
+                : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
             }`}
             title={language === 'tr' ? 'Switch to English' : 'Türkçeye Geç'}
           >
@@ -98,8 +98,8 @@ const Header = ({ currentPage, onPageChange }) => {
             onClick={toggleTheme}
             className={`w-10 h-10 rounded-lg transition-colors flex items-center justify-center cursor-pointer ${
               (publicKey || isDemoMode) 
-                ? 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
-                : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
+                ? 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
+                : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
             }`}
             title={isDarkMode ? t('theme.switchToLight') : t('theme.switchToDark')}
           >
