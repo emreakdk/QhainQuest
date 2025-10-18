@@ -16,9 +16,9 @@ const MobileWarning = ({ className = "", variant = "dark" }) => {
   const lightTitleClasses = "text-yellow-900";
   const lightTextClasses = "text-yellow-700";
 
-  // Entry variant - for entry page with transparent white background
-  const entryClasses = "bg-white bg-opacity-15 border border-white border-opacity-30 text-white";
-  const entryIconClasses = "text-yellow-300";
+  // Entry variant - for entry page with dark semi-transparent background
+  const entryClasses = "bg-gray-800 bg-opacity-60 border border-gray-700 border-opacity-50 text-white px-4 py-3 rounded-lg";
+  const entryIconClasses = "text-white";
   const entryTitleClasses = "text-white";
   const entryTextClasses = "text-white text-opacity-90";
 
