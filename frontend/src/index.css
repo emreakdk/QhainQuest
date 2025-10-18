@@ -15,6 +15,73 @@
   }
 }
 
+/* CRITICAL FIX: Dark Mode Class Selectors for Components */
+@layer utilities {
+  /* Background colors */
+  .dark .bg-white {
+    background-color: #0f172a; /* slate-900 */
+  }
+
+  .dark .bg-slate-100 {
+    background-color: #1e293b; /* slate-800 */
+  }
+
+  .dark .bg-slate-200 {
+    background-color: #334155; /* slate-700 */
+  }
+
+  .dark .bg-slate-800 {
+    background-color: #1e293b; /* slate-800 */
+  }
+
+  /* Text colors */
+  .dark .text-slate-900 {
+    color: #f8fafc; /* slate-50 */
+  }
+
+  .dark .text-slate-600 {
+    color: #94a3b8; /* slate-400 */
+  }
+
+  .dark .text-slate-400 {
+    color: #94a3b8; /* slate-400 */
+  }
+
+  .dark .text-white {
+    color: #f8fafc; /* slate-50 */
+  }
+
+  /* Border colors */
+  .dark .border-slate-200 {
+    border-color: #334155; /* slate-700 */
+  }
+
+  .dark .border-slate-700 {
+    border-color: #334155; /* slate-700 */
+  }
+
+  /* Hover states - using proper CSS syntax */
+  .dark .hover\\:bg-slate-200:hover {
+    background-color: #334155 !important; /* slate-700 */
+  }
+
+  .dark .hover\\:bg-slate-700:hover {
+    background-color: #334155 !important; /* slate-700 */
+  }
+
+  .dark .hover\\:bg-slate-800:hover {
+    background-color: #334155 !important; /* slate-700 */
+  }
+
+  .dark .hover\\:text-white:hover {
+    color: #f8fafc !important; /* slate-50 */
+  }
+
+  .dark .hover\\:text-slate-400:hover {
+    color: #94a3b8 !important; /* slate-400 */
+  }
+}
+
 /* Custom Theme Colors - TailwindCSS Compatible */
 
 @keyframes gradient-shift {
