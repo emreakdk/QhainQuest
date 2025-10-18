@@ -1,30 +1,51 @@
-import { createContext, useContext, useEffect } from 'react';
-import { useDarkMode } from 'usehooks-ts';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  const { isDarkMode, toggle } = useDarkMode();
+  // CRITICAL FIX: Custom theme state management with proper localStorage sync
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    // Read from localStorage on initialization
+    const stored = localStorage.getItem('usehooks-ts-dark-mode');
+    if (stored !== null) {
+      return JSON.parse(stored);
+    }
+    // Default to system preference if no stored value
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
 
+  // CRITICAL FIX: Apply theme to DOM immediately on mount and when state changes
   useEffect(() => {
-    // HTML elementine tema class'ını ekle
     const html = document.documentElement;
-    html.classList.remove('light', 'dark');
-    html.classList.add(isDarkMode ? 'dark' : 'light');
+    const body = document.body;
     
-    // Body'ye de tema class'ını ekle
-    document.body.classList.remove('light', 'dark');
-    document.body.classList.add(isDarkMode ? 'dark' : 'light');
+    // Remove existing theme classes
+    html.classList.remove('light', 'dark');
+    body.classList.remove('light', 'dark');
+    
+    // Add current theme class
+    const themeClass = isDarkMode ? 'dark' : 'light';
+    html.classList.add(themeClass);
+    body.classList.add(themeClass);
+    
+    console.log(`[ThemeProvider] Applied theme: ${themeClass} (isDarkMode: ${isDarkMode})`);
+  }, [isDarkMode]);
+
+  // CRITICAL FIX: Sync with localStorage when theme changes
+  useEffect(() => {
+    localStorage.setItem('usehooks-ts-dark-mode', JSON.stringify(isDarkMode));
+    console.log(`[ThemeProvider] Saved to localStorage: ${isDarkMode}`);
   }, [isDarkMode]);
 
   const theme = isDarkMode ? 'dark' : 'light';
   const toggleTheme = () => {
-    console.log('Tema değiştiriliyor:', theme, '->', isDarkMode ? 'light' : 'dark');
-    toggle();
+    const newTheme = !isDarkMode;
+    console.log(`[ThemeProvider] Toggling theme: ${theme} -> ${newTheme ? 'dark' : 'light'}`);
+    setIsDarkMode(newTheme);
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, isDarkMode }}>
       {children}
     </ThemeContext.Provider>
   );
