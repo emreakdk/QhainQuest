@@ -61,7 +61,7 @@ const Header = ({ currentPage, onPageChange }) => {
           {/* Language Toggle */}
           <button
             onClick={toggleLanguage}
-            className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg transition-colors flex items-center justify-center cursor-pointer ${
+            className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg transition-colors flex items-center justify-center cursor-pointer order-1 ${
               (publicKey || isDemoMode) 
                 ? 'bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
                 : 'bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
@@ -72,19 +72,6 @@ const Header = ({ currentPage, onPageChange }) => {
               {language === 'tr' ? 'EN' : 'TR'}
             </span>
           </button>
-
-          {/* Mobile Menu Button */}
-          {(publicKey || isDemoMode) && (
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer border border-slate-200 dark:border-slate-600"
-              title="Menü"
-            >
-              <svg className="w-6 h-6 text-slate-700 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-          )}
 
           {/* Token Balance Display - CRITICAL FIX: Show only claimable balance */}
           {(publicKey || isDemoMode) && claimableBalance > 0 && (
@@ -99,7 +86,7 @@ const Header = ({ currentPage, onPageChange }) => {
           {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
-            className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg transition-colors flex items-center justify-center cursor-pointer ${
+            className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg transition-colors flex items-center justify-center cursor-pointer order-2 ${
               (publicKey || isDemoMode) 
                 ? 'bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
                 : 'bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
@@ -116,6 +103,19 @@ const Header = ({ currentPage, onPageChange }) => {
               </svg>
             )}
           </button>
+
+          {/* Mobile Menu Button */}
+          {(publicKey || isDemoMode) && (
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer border border-slate-200 dark:border-slate-600 order-3"
+              title="Menü"
+            >
+              <svg className="w-6 h-6 text-slate-700 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          )}
 
           {/* Wallet Connection */}
           <div className="hidden sm:block">
