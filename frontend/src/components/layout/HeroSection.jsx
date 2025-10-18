@@ -98,7 +98,7 @@ const HeroSection = ({ onPageChange }) => {
         </div>
 
         {/* Learn -> Earn -> Certify Animated Section */}
-        <div className="mt-6 sm:mt-8 md:mt-10 lg:mt-12 xl:mt-14">
+        <div className="mt-12 sm:mt-8 md:mt-10 lg:mt-12 xl:mt-14 mx-auto max-w-4xl">
           <div className="text-center mb-8 sm:mb-10 md:mb-12">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">
               {t('entrypage.process.title')}
