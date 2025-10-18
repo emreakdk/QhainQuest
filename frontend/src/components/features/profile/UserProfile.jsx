@@ -32,6 +32,7 @@ const UserProfile = () => {
     const userIdentifier = isDemoMode ? 'demo' : publicKey;
     if (userIdentifier) {
       const completedQuestsData = getCompletedQuestsForUser(userIdentifier);
+      console.log(`[UserProfile] Loaded completed quests for ${userIdentifier}:`, completedQuestsData);
       setCompletedQuests(completedQuestsData);
     }
   }, [publicKey, isDemoMode, tokenData.completedQuests]); // Use tokenData.completedQuests for updates
@@ -129,9 +130,15 @@ const UserProfile = () => {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {(() => {
+                  console.log(`[UserProfile] Certificates tab - completedQuests:`, completedQuests);
+                  console.log(`[UserProfile] Certificates tab - completedQuests.length:`, completedQuests.length);
+                  return null;
+                })()}
                 {completedQuests.length > 0 ? completedQuests.map(quest => {
-                  // FIX: Added null check to prevent React error #31 when quest object is undefined
-                  if (!quest || !quest.name) {
+                  // FIX: Check for quest object and required properties
+                  if (!quest || !quest.id) {
+                    console.warn('Invalid quest object:', quest);
                     return null;
                   }
                   
@@ -140,20 +147,20 @@ const UserProfile = () => {
                       <div className="text-center">
                         <div className="text-4xl mb-4">🏆</div>
                         <h4 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
-                          {/* FIX: Rendered quest.name instead of the entire quest object to prevent React error #31 */}
-                          {t('profile.certificatePrefix')} {t(quest.nameKey || quest.name)}
+                          {/* FIX: Use quest.nameKey for i18n translation */}
+                          {t('profile.certificatePrefix')} {t(quest.nameKey || quest.name || 'Unknown Quest')}
                         </h4>
                         <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-                          {/* FIX: Rendered quest.description instead of the entire quest object */}
-                          {quest.description || 'Açıklama bulunamadı'}
+                          {/* FIX: Use quest.descriptionKey for i18n translation */}
+                          {t(quest.descriptionKey || quest.description || 'Açıklama bulunamadı')}
                         </p>
                         <div className="flex items-center justify-center space-x-4 text-sm">
                           <Badge variant="success">
-                            {/* FIX: Rendered quest.rewardAmount instead of the entire quest object */}
+                            {/* FIX: Use quest.rewardAmount */}
                             +{quest.rewardAmount || 0} Token
                           </Badge>
                           <Badge variant="primary">
-                            {/* FIX: Rendered quest.difficulty string instead of the entire quest object */}
+                            {/* FIX: Use quest.difficulty */}
                             {quest.difficulty || 'beginner'}
                           </Badge>
                         </div>
