@@ -32,6 +32,16 @@ const translations = {
     'features.competition': 'Rekabet',
     'features.competitionDesc': 'Diğer kullanıcılarla yarışın ve liderlik tablosunda üst sıralarda yer alın',
 
+    // Entry Page Process Section
+    'entrypage.process.title': 'Nasıl Çalışır?',
+    'entrypage.process.subtitle': 'Blockchain bilginizi geliştirin, token kazanın ve benzersiz sertifikalar elde edin',
+    'entrypage.features.learn.title': 'Öğren',
+    'entrypage.features.learn.desc': 'Blockchain teknolojileri hakkında kapsamlı bilgi edinin ve uzmanlaşın',
+    'entrypage.features.earn.title': 'Kazan',
+    'entrypage.features.earn.desc': 'Görevleri tamamlayarak değerli token ödülleri kazanın',
+    'entrypage.features.certify.title': 'Sertifikala',
+    'entrypage.features.certify.desc': 'Benzersiz NFT sertifikaları ile yeteneklerinizi ölümsüzleştirin',
+
     // Profile
     'profile.title': 'Profil',
     'profile.totalTokens': 'Toplam Token',
@@ -666,6 +676,16 @@ const translations = {
     'features.tokenRewardsDesc': 'Earn valuable tokens with every correct answer',
     'features.competition': 'Competition',
     'features.competitionDesc': 'Compete with other users and climb the leaderboard',
+
+    // Entry Page Process Section
+    'entrypage.process.title': 'How It Works?',
+    'entrypage.process.subtitle': 'Develop your blockchain knowledge, earn tokens and get unique certificates',
+    'entrypage.features.learn.title': 'Learn',
+    'entrypage.features.learn.desc': 'Gain comprehensive knowledge about blockchain technologies and become an expert',
+    'entrypage.features.earn.title': 'Earn',
+    'entrypage.features.earn.desc': 'Complete quests and earn valuable token rewards',
+    'entrypage.features.certify.title': 'Certify',
+    'entrypage.features.certify.desc': 'Immortalize your skills with unique NFT certificates',
 
     // Profile
     'profile.title': 'Profile',

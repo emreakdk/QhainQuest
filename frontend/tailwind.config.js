@@ -39,6 +39,8 @@ export default {
         'fade-in-down': 'fade-in-down 0.5s ease-out',
         'fade-in-up': 'fade-in-up 0.5s ease-out',
         'scale-in': 'scale-in 0.3s ease-out',
+        'bounce-x': 'bounce-x 2s ease-in-out infinite',
+        'spin-slow': 'spin 3s linear infinite',
       },
       keyframes: {
         'gradient-x': {
@@ -93,6 +95,14 @@ export default {
           '100%': {
             opacity: '1',
             transform: 'scale(1)',
+          },
+        },
+        'bounce-x': {
+          '0%, 100%': {
+            transform: 'translateX(0)',
+          },
+          '50%': {
+            transform: 'translateX(10px)',
           },
         },
       },
