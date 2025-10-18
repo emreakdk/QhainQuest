@@ -20,6 +20,8 @@ export const TokenProvider = ({ children }) => {
 
   // Load token data for a user
   const loadTokenData = useCallback(async (userAddress) => {
+    console.log(`[TokenContext] loadTokenData called with userAddress: ${userAddress}`);
+    
     if (!userAddress) {
       setCurrentUser(null);
       setTokenData({

@@ -49,9 +49,11 @@ function AppContent() {
 
   // Load token data and balance when user changes
   useEffect(() => {
-    loadTokenData(publicKey);
-    loadBalanceForUser(publicKey);
-  }, [publicKey, loadTokenData, loadBalanceForUser]);
+    const userIdentifier = isDemoMode ? 'demo' : publicKey;
+    console.log(`[App] Loading data for userIdentifier: ${userIdentifier}, isDemoMode: ${isDemoMode}, publicKey: ${publicKey}`);
+    loadTokenData(userIdentifier);
+    loadBalanceForUser(userIdentifier);
+  }, [publicKey, isDemoMode, loadTokenData, loadBalanceForUser]);
 
   const renderPage = () => {
     switch (currentPage) {

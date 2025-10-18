@@ -28,8 +28,11 @@ const QuestGrid = () => {
       console.log('[QuestGrid DEBUG] Demo Mode - tokenData:', tokenData);
       console.log('[QuestGrid DEBUG] Demo Mode - completedQuests:', tokenData.completedQuests);
       console.log('[QuestGrid DEBUG] Demo Mode - totalQuests:', tokenData.totalQuests);
+      console.log('[QuestGrid DEBUG] Demo Mode - realQuests.length:', realQuests.length);
+      console.log('[QuestGrid DEBUG] Demo Mode - quests.length:', quests.length);
+      console.log('[QuestGrid DEBUG] Demo Mode - questDatabase.length:', questDatabase.length);
     }
-  }, [isDemoMode, tokenData]);
+  }, [isDemoMode, tokenData, realQuests.length, quests.length]);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedDifficulty, setSelectedDifficulty] = useState('all');
   const [selectedQuest, setSelectedQuest] = useState(null);
