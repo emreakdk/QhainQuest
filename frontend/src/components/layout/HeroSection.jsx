@@ -54,7 +54,7 @@ const HeroSection = ({ onPageChange }) => {
           {t('home.title')}
         </p>
         
-        <p className="text-base sm:text-sm md:text-base lg:text-lg text-slate-300 mb-4 sm:mb-6 md:mb-8 lg:mb-12 max-w-4xl mx-auto leading-relaxed px-2">
+        <p className="text-base sm:text-sm md:text-base lg:text-lg text-slate-300 mb-8 sm:mb-6 md:mb-8 lg:mb-12 max-w-4xl mx-auto leading-relaxed px-2">
           {t('home.subtitle')}
         </p>
 
@@ -72,7 +72,7 @@ const HeroSection = ({ onPageChange }) => {
                 onClick={handleDemoMode}
                 variant="secondary"
                 size="lg"
-                className="w-full bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white font-semibold px-4 sm:px-6 md:px-8 py-3 sm:py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 cursor-pointer text-sm sm:text-base"
+                className="w-full bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white font-semibold px-4 sm:px-6 md:px-8 py-3 sm:py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 cursor-pointer text-sm sm:text-base mb-8 sm:mb-6 md:mb-8"
               >
                 {t('home.useWithoutWallet')}
               </Button>
