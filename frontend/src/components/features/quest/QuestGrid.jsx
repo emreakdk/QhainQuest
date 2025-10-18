@@ -318,20 +318,36 @@ const QuestGrid = () => {
           <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
             <div className="flex flex-wrap gap-2">
               <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">{t('filters.difficulty')}:</span>
-              {Object.entries(difficultyLevels).map(([key, level]) => (
-                <button
-                  key={key}
-                  onClick={() => setSelectedDifficulty(selectedDifficulty === key ? 'all' : key)}
-                  className={`flex items-center gap-2 px-3 py-1 rounded-lg text-sm font-medium transition-all cursor-pointer ${
-                    selectedDifficulty === key
-                      ? `bg-${level.color}-600 text-white`
-                      : 'bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
-                  }`}
-                >
-                  <span>{level.icon}</span>
-                  <span>{t(level.nameKey || level.name)}</span>
-                </button>
-              ))}
+              {Object.entries(difficultyLevels).map(([key, level]) => {
+                // Define specific colors for each difficulty level when active
+                const getActiveClasses = (difficultyKey) => {
+                  switch (difficultyKey) {
+                    case 'beginner':
+                      return 'bg-green-600 text-white';
+                    case 'intermediate':
+                      return 'bg-yellow-500 text-white';
+                    case 'advanced':
+                      return 'bg-red-600 text-white';
+                    default:
+                      return 'bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-300';
+                  }
+                };
+
+                return (
+                  <button
+                    key={key}
+                    onClick={() => setSelectedDifficulty(selectedDifficulty === key ? 'all' : key)}
+                    className={`flex items-center gap-2 px-3 py-1 rounded-lg text-sm font-medium transition-all cursor-pointer ${
+                      selectedDifficulty === key
+                        ? getActiveClasses(key)
+                        : 'bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
+                    }`}
+                  >
+                    <span>{level.icon}</span>
+                    <span>{t(level.nameKey || level.name)}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         )}
