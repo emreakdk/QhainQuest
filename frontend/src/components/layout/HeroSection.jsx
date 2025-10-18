@@ -98,18 +98,19 @@ const HeroSection = ({ onPageChange }) => {
         </div>
 
         {/* Learn -> Earn -> Certify Animated Section */}
-        <div className="mt-12 sm:mt-8 md:mt-10 lg:mt-12 xl:mt-14 mx-auto max-w-4xl">
-          <div className="text-center mb-8 sm:mb-10 md:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">
-              {t('entrypage.process.title')}
-            </h2>
-            <p className="text-sm sm:text-base md:text-lg text-slate-300 max-w-2xl mx-auto">
-              {t('entrypage.process.subtitle')}
-            </p>
-          </div>
+        <div className="mt-12 sm:mt-8 md:mt-10 lg:mt-12 xl:mt-14 w-full flex justify-center">
+          <div className="w-full max-w-4xl px-4 sm:px-6">
+            <div className="text-center mb-8 sm:mb-10 md:mb-12">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">
+                {t('entrypage.process.title')}
+              </h2>
+              <p className="text-sm sm:text-base md:text-lg text-slate-300 max-w-2xl mx-auto">
+                {t('entrypage.process.subtitle')}
+              </p>
+            </div>
 
-          {/* Process Steps - Responsive Layout */}
-          <div className="flex flex-col md:flex-row items-start justify-center gap-8 sm:gap-10 md:gap-12 lg:gap-16">
+            {/* Process Steps - Responsive Layout */}
+            <div className="flex flex-col md:flex-row items-start justify-center gap-8 sm:gap-10 md:gap-12 lg:gap-16">
             {/* Step 1: Learn */}
             <div className="group text-center max-w-xs sm:max-w-sm md:max-w-none flex-1 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
               <div className="relative mb-4 sm:mb-6">
@@ -172,6 +173,7 @@ const HeroSection = ({ onPageChange }) => {
                 {t('entrypage.features.certify.desc')}
               </p>
             </div>
+          </div>
           </div>
         </div>
       </div>
