@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
-/* MODERN THEME: Vercel/Linear-inspired Design System */
+/* PROFESSIONAL LIGHT THEME: High Contrast & Accessibility */
 @layer base {
   html {
-    @apply bg-slate-50 text-slate-800 transition-colors duration-300 ease-in-out;
+    @apply bg-[#fafbfc] text-[#1a202c] transition-colors duration-300 ease-in-out;
   }
 
   html.dark {
@@ -13,25 +13,110 @@
   body {
     @apply min-h-screen transition-colors duration-300 ease-in-out;
   }
+
+  /* Professional Placeholder Styling */
+  ::placeholder {
+    color: #a0aec0 !important; /* High contrast placeholder */
+    opacity: 1;
+  }
+
+  /* Focus states for better accessibility */
+  input:focus {
+    outline: 2px solid #8b5cf6;
+    outline-offset: 2px;
+  }
+
+  /* Professional input styling */
+  input[type="text"], input[type="search"], textarea {
+    border-color: #e2e8f0;
+    transition: border-color 0.2s ease-in-out;
+  }
+
+  input[type="text"]:focus, input[type="search"]:focus, textarea:focus {
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+  }
 }
 
-/* MODERN THEME: Component-Level Dark Mode Selectors */
+/* PROFESSIONAL LIGHT THEME: Component-Level Selectors */
 @layer utilities {
-  /* Light Theme - Modern Soft Backgrounds */
+  /* Light Theme - Professional Backgrounds */
   .bg-white {
     background-color: #ffffff; /* pure white for cards */
   }
 
   .bg-slate-50 {
-    background-color: #f8fafc; /* soft neutral */
+    background-color: #f8fafc; /* subtle background */
   }
 
   .bg-slate-100 {
-    background-color: #f1f5f9; /* subtle background */
+    background-color: #f1f5f9; /* light background */
   }
 
   .bg-slate-200 {
-    background-color: #e2e8f0; /* light border */
+    background-color: #e2e8f0; /* border color */
+  }
+
+  /* Professional Text Colors - High Contrast */
+  .text-slate-900 {
+    color: #1a202c; /* primary text - high contrast */
+  }
+
+  .text-slate-800 {
+    color: #2d3748; /* secondary text - high contrast */
+  }
+
+  .text-slate-700 {
+    color: #4a5568; /* tertiary text - good contrast */
+  }
+
+  .text-slate-600 {
+    color: #718096; /* muted text - readable */
+  }
+
+  .text-slate-500 {
+    color: #a0aec0; /* subtle text - placeholder level */
+  }
+
+  .text-slate-400 {
+    color: #cbd5e0; /* disabled text */
+  }
+
+  /* Professional Border Colors */
+  .border-slate-200 {
+    border-color: #e2e8f0; /* subtle border */
+  }
+
+  .border-slate-300 {
+    border-color: #cbd5e0; /* medium border */
+  }
+
+  /* Purple Accent Colors for Brand Consistency */
+  .border-purple-500 {
+    border-color: #8b5cf6; /* brand purple */
+  }
+
+  .text-purple-600 {
+    color: #7c3aed; /* brand purple darker */
+  }
+
+  .bg-purple-500 {
+    background-color: #8b5cf6; /* brand purple */
+  }
+
+  .bg-purple-600 {
+    background-color: #7c3aed; /* brand purple darker */
+  }
+
+  /* Professional Placeholder Colors */
+  .placeholder-slate-400::placeholder {
+    color: #a0aec0 !important;
+    opacity: 1;
+  }
+
+  .placeholder-slate-500::placeholder {
+    color: #718096 !important;
+    opacity: 1;
   }
 
   /* Dark Theme - Component Backgrounds */
@@ -123,7 +208,7 @@
     border-color: #334155; /* slate-700 */
   }
 
-  /* Modern Hover States */
+  /* Professional Hover States */
   .hover\\:bg-slate-100:hover {
     background-color: #f1f5f9 !important; /* subtle hover */
   }
@@ -133,11 +218,28 @@
   }
 
   .hover\\:text-slate-900:hover {
-    color: #0f172a !important; /* strong hover text */
+    color: #1a202c !important; /* high contrast hover text */
+  }
+
+  .hover\\:text-slate-800:hover {
+    color: #2d3748 !important; /* strong hover text */
   }
 
   .hover\\:text-slate-700:hover {
-    color: #334155 !important; /* medium hover text */
+    color: #4a5568 !important; /* medium hover text */
+  }
+
+  /* Purple Brand Hover States */
+  .hover\\:bg-purple-600:hover {
+    background-color: #7c3aed !important; /* brand purple darker */
+  }
+
+  .hover\\:text-purple-600:hover {
+    color: #7c3aed !important; /* brand purple darker */
+  }
+
+  .hover\\:border-purple-500:hover {
+    border-color: #8b5cf6 !important; /* brand purple */
   }
 
   /* Dark Theme - Hover States */
@@ -200,11 +302,11 @@
   }
 }
 
-/* MODERN THEME: Enhanced Visual Design */
+/* PROFESSIONAL THEME: Enhanced Visual Design */
 @layer utilities {
-  /* Modern Gradients */
+  /* Professional Gradients */
   .bg-gradient-modern {
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    background: linear-gradient(135deg, #fafbfc 0%, #f8fafc 100%);
   }
 
   .dark .bg-gradient-modern {
@@ -212,20 +314,37 @@
   }
 
   .bg-gradient-hero {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #fafbfc 50%, #f8fafc 100%);
   }
 
   .dark .bg-gradient-hero {
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
   }
 
-  /* Modern Shadows */
+  /* Purple Brand Gradients */
+  .bg-gradient-purple {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  }
+
+  .bg-gradient-purple-light {
+    background: linear-gradient(135deg, #f3f0ff 0%, #ede9fe 100%);
+  }
+
+  /* Professional Shadows */
   .shadow-modern {
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px 3px 0 rgba(26, 32, 44, 0.1), 0 1px 2px 0 rgba(26, 32, 44, 0.06);
   }
 
   .shadow-modern-lg {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 15px -3px rgba(26, 32, 44, 0.1), 0 4px 6px -2px rgba(26, 32, 44, 0.05);
+  }
+
+  .shadow-purple {
+    box-shadow: 0 4px 14px 0 rgba(139, 92, 246, 0.15);
+  }
+
+  .shadow-purple-lg {
+    box-shadow: 0 10px 25px -3px rgba(139, 92, 246, 0.2), 0 4px 6px -2px rgba(139, 92, 246, 0.1);
   }
 
   .dark .shadow-modern {
