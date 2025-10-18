@@ -61,7 +61,7 @@ const Header = ({ currentPage, onPageChange }) => {
           {/* Language Toggle */}
           <button
             onClick={toggleLanguage}
-            className={`p-2 rounded-lg transition-colors ${
+            className={`p-2 rounded-lg transition-colors aspect-square ${
               (publicKey || isDemoMode) 
                 ? 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300'
                 : 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 hover:text-white'
