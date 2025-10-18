@@ -88,6 +88,14 @@ export const getTokenBalanceBreakdown = (userAddress) => {
     console.log(`[getTokenBalanceBreakdown] ${userAddress}: completedQuests array:`, completedQuests);
     console.log(`[getTokenBalanceBreakdown] ${userAddress}: completedQuests.length:`, completedQuests.length);
     
+    // Debug: Check localStorage for demo mode
+    if (userAddress === 'demo') {
+      const allCompletedQuests = JSON.parse(localStorage.getItem('completedQuests') || '[]');
+      console.log(`[getTokenBalanceBreakdown] Demo mode - all completedQuests in localStorage:`, allCompletedQuests);
+      const demoQuests = allCompletedQuests.filter(key => key.startsWith('demo-'));
+      console.log(`[getTokenBalanceBreakdown] Demo mode - demo quests:`, demoQuests);
+    }
+    
     // Get claimable balance from localStorage (amount ready to claim)
     const claimableBalance = parseFloat(localStorage.getItem(`claimableBalance_${userAddress}`) || '0');
     
