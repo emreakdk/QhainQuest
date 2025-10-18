@@ -635,7 +635,7 @@ export const questDatabase = [
     id: 'web3-dev-basics',
     nameKey: 'quests.web3_dev_basics.title',
     descriptionKey: 'quests.web3_dev_basics.description',
-    category: 'smart_contracts',
+    category: 'smart-contracts',
     difficulty: 'intermediate',
     rewardAmount: 400,
     timeEstimate: 30,
