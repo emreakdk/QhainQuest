@@ -21,6 +21,15 @@ const QuestGrid = () => {
   const { quests, loading, error, userStats, userProgress, getQuestStatus, getQuestProgress, refreshData } = useQuest();
   const { tokenData } = useToken(); // Use centralized token data
   const { totalEarned } = useBalance(); // Use global total earned
+  
+  // DEBUG: Log tokenData in Demo Mode
+  useEffect(() => {
+    if (isDemoMode) {
+      console.log('[QuestGrid DEBUG] Demo Mode - tokenData:', tokenData);
+      console.log('[QuestGrid DEBUG] Demo Mode - completedQuests:', tokenData.completedQuests);
+      console.log('[QuestGrid DEBUG] Demo Mode - totalQuests:', tokenData.totalQuests);
+    }
+  }, [isDemoMode, tokenData]);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedDifficulty, setSelectedDifficulty] = useState('all');
   const [selectedQuest, setSelectedQuest] = useState(null);

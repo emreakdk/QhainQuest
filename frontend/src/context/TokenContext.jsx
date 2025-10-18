@@ -58,7 +58,7 @@ export const TokenProvider = ({ children }) => {
         claimableBalance: breakdown.claimableBalance,  // Ready to claim
         claimedBalance: breakdown.claimedBalance,      // Already claimed
         totalBalance: breakdown.totalBalance,          // Total current balance
-        completedQuests: breakdown.questCount,
+        completedQuests: breakdown.questCount,        // FIXED: Use questCount from breakdown
         inProgressQuests: inProgressQuests,
         totalQuests: totalQuests,
         lastUpdated: new Date().toISOString()
@@ -67,6 +67,13 @@ export const TokenProvider = ({ children }) => {
       console.log(`[TokenContext] ${userAddress}: breakdown.questCount:`, breakdown.questCount);
       console.log(`[TokenContext] ${userAddress}: breakdown.completedQuests:`, breakdown.completedQuests);
       console.log(`[TokenContext] ${userAddress}: tokenData.completedQuests:`, tokenData.completedQuests);
+      
+      // DEBUG: Special logging for demo mode
+      if (userAddress === 'demo') {
+        console.log('[TokenContext DEBUG] Demo Mode - Full breakdown:', breakdown);
+        console.log('[TokenContext DEBUG] Demo Mode - Quest count from breakdown:', breakdown.questCount);
+        console.log('[TokenContext DEBUG] Demo Mode - Completed quests from breakdown:', breakdown.completedQuests);
+      }
       
       setTokenData(tokenData);
       console.log('Token data loaded:', tokenData);
