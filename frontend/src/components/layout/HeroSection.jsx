@@ -109,7 +109,7 @@ const HeroSection = ({ onPageChange }) => {
           </div>
 
           {/* Process Steps - Responsive Layout */}
-          <div className="flex flex-col md:flex-row items-center justify-center gap-8 sm:gap-10 md:gap-12 lg:gap-16">
+          <div className="flex flex-col md:flex-row items-start justify-center gap-8 sm:gap-10 md:gap-12 lg:gap-16">
             {/* Step 1: Learn */}
             <div className="group text-center max-w-xs sm:max-w-sm md:max-w-none flex-1 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
               <div className="relative mb-4 sm:mb-6">
