@@ -7,76 +7,61 @@ export const ThemeProvider = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(() => {
     // Read from localStorage on initialization
     const stored = localStorage.getItem('usehooks-ts-dark-mode');
+    let initialTheme;
     if (stored !== null) {
-      return JSON.parse(stored);
+      initialTheme = JSON.parse(stored);
+    } else {
+      // Default to system preference if no stored value
+      initialTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
-    // Default to system preference if no stored value
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
-  });
-
-  // CRITICAL FIX: Apply theme immediately on mount (before first render)
-  useEffect(() => {
-    const html = document.documentElement;
-    console.log(`[ThemeProvider] === INITIAL THEME APPLICATION ===`);
-    console.log(`[ThemeProvider] Initial isDarkMode:`, isDarkMode);
     
-    if (isDarkMode) {
+    // CRITICAL FIX: Apply theme immediately to prevent flash
+    const html = document.documentElement;
+    if (initialTheme) {
       html.classList.add('dark');
-      console.log(`[ThemeProvider] ✅ Initially added 'dark' class to document.documentElement`);
+      console.log(`[ThemeProvider] ✅ Immediately added 'dark' class on initialization`);
     } else {
       html.classList.remove('dark');
-      console.log(`[ThemeProvider] ❌ Initially removed 'dark' class from document.documentElement`);
+      console.log(`[ThemeProvider] ❌ Immediately removed 'dark' class on initialization`);
     }
+    html.style.colorScheme = initialTheme ? 'dark' : 'light';
     
-    html.style.colorScheme = isDarkMode ? 'dark' : 'light';
-    console.log(`[ThemeProvider] Initial HTML classes:`, html.classList.toString());
-  }, []); // Empty dependency array - only run on mount
+    return initialTheme;
+  });
 
   // CRITICAL FIX: Apply theme to DOM immediately on mount and when state changes
   useEffect(() => {
-    // Ensure DOM is ready
-    const applyTheme = () => {
-      const html = document.documentElement;
-      
-      console.log(`[ThemeProvider] === DOM INSPECTION START ===`);
-      console.log(`[ThemeProvider] Current isDarkMode:`, isDarkMode);
-      console.log(`[ThemeProvider] HTML element before:`, html);
-      console.log(`[ThemeProvider] HTML classes before:`, html.classList.toString());
-      console.log(`[ThemeProvider] HTML classList length:`, html.classList.length);
-      
-      // CRITICAL FIX: Only manage 'dark' class on document.documentElement
-      // Tailwind darkMode: 'class' only checks for 'dark' class on html element
-      if (isDarkMode) {
-        html.classList.add('dark');
-        console.log(`[ThemeProvider] ✅ Added 'dark' class to document.documentElement`);
-      } else {
-        html.classList.remove('dark');
-        console.log(`[ThemeProvider] ❌ Removed 'dark' class from document.documentElement`);
-      }
-      
-      // Force a re-render by triggering a style recalculation
-      html.style.colorScheme = isDarkMode ? 'dark' : 'light';
-      
-      console.log(`[ThemeProvider] HTML element after:`, html);
-      console.log(`[ThemeProvider] HTML classes after:`, html.classList.toString());
-      console.log(`[ThemeProvider] HTML classList length after:`, html.classList.length);
-      console.log(`[ThemeProvider] Has dark class:`, html.classList.contains('dark'));
-      console.log(`[ThemeProvider] Color scheme:`, html.style.colorScheme);
-      console.log(`[ThemeProvider] === DOM INSPECTION END ===`);
-    };
-
-    // Apply immediately
-    applyTheme();
+    const html = document.documentElement;
     
-    // Also apply on next tick to ensure DOM is fully ready
-    setTimeout(applyTheme, 0);
+    console.log(`[ThemeProvider] === THEME APPLICATION START ===`);
+    console.log(`[ThemeProvider] Current isDarkMode:`, isDarkMode);
+    console.log(`[ThemeProvider] HTML element:`, html);
+    console.log(`[ThemeProvider] HTML classes before:`, html.classList.toString());
     
-    // Additional verification
+    // CRITICAL FIX: Only manage 'dark' class on document.documentElement
+    // Tailwind darkMode: 'class' only checks for 'dark' class on html element
+    if (isDarkMode) {
+      html.classList.add('dark');
+      console.log(`[ThemeProvider] ✅ Added 'dark' class to document.documentElement`);
+    } else {
+      html.classList.remove('dark');
+      console.log(`[ThemeProvider] ❌ Removed 'dark' class from document.documentElement`);
+    }
+    
+    // Set color scheme for browser compatibility
+    html.style.colorScheme = isDarkMode ? 'dark' : 'light';
+    
+    console.log(`[ThemeProvider] HTML classes after:`, html.classList.toString());
+    console.log(`[ThemeProvider] Has dark class:`, html.classList.contains('dark'));
+    console.log(`[ThemeProvider] Color scheme:`, html.style.colorScheme);
+    console.log(`[ThemeProvider] === THEME APPLICATION END ===`);
+    
+    // Additional verification after a short delay
     setTimeout(() => {
-      console.log(`[ThemeProvider] === DELAYED VERIFICATION ===`);
-      console.log(`[ThemeProvider] HTML classes after 100ms:`, document.documentElement.classList.toString());
-      console.log(`[ThemeProvider] Has dark class after 100ms:`, document.documentElement.classList.contains('dark'));
-    }, 100);
+      console.log(`[ThemeProvider] === VERIFICATION ===`);
+      console.log(`[ThemeProvider] Final HTML classes:`, document.documentElement.classList.toString());
+      console.log(`[ThemeProvider] Final has dark class:`, document.documentElement.classList.contains('dark'));
+    }, 50);
   }, [isDarkMode]);
 
   // CRITICAL FIX: Sync with localStorage when theme changes
