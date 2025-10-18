@@ -169,6 +169,39 @@ const QuestGrid = () => {
     );
   }
 
+  // --- START QUESTS PAGE COUNTER DIAGNOSTICS ---
+  console.log('--- Quests Page Counters Diagnostics ---');
+  
+  // Log the mode status as received by this component
+  console.log(`[QuestsCounters] isDemoMode: ${isDemoMode}`);
+  
+  // Log the completedQuests data as received by this component
+  console.log('[QuestsCounters] tokenData.completedQuests:', tokenData.completedQuests);
+  console.log('[QuestsCounters] tokenData:', tokenData);
+  
+  // Log the questsData as received (if relevant for total count)
+  console.log('[QuestsCounters] realQuests.length:', realQuests.length);
+  console.log('[QuestsCounters] quests.length:', quests.length);
+  console.log('[QuestsCounters] questDatabase.length:', questDatabase.length);
+  
+  // Log the calculated values right before rendering
+  const totalQuestsValue = realQuests ? realQuests.length : 'N/A';
+  const completedQuestsValue = tokenData.completedQuests || 0;
+  console.log(`[QuestsCounters] Calculated Total: ${totalQuestsValue}`);
+  console.log(`[QuestsCounters] Calculated Completed: ${completedQuestsValue}`);
+
+  // DEBUG: Check localStorage directly for demo mode
+  if (isDemoMode) {
+    const allCompletedQuests = JSON.parse(localStorage.getItem('completedQuests') || '[]');
+    const demoQuests = allCompletedQuests.filter(key => key.startsWith('demo-'));
+    console.log('[QuestsCounters] Demo Mode - localStorage completedQuests:', allCompletedQuests);
+    console.log('[QuestsCounters] Demo Mode - demo quests:', demoQuests);
+    console.log('[QuestsCounters] Demo Mode - demo quests count:', demoQuests.length);
+  }
+
+  console.log('--- END QUESTS PAGE COUNTER DIAGNOSTICS ---');
+  // --- DIAGNOSTIC CODE ENDS HERE ---
+
   return (
     <div className="space-y-8">
       {/* Hero Header */}
