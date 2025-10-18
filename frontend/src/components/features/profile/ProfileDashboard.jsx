@@ -225,7 +225,7 @@ const ProfileDashboard = () => {
       {/* Mobile Warning */}
       {isMobile && (
         <div className="mb-6">
-          <MobileWarning />
+          <MobileWarning variant="light" />
         </div>
       )}
 
