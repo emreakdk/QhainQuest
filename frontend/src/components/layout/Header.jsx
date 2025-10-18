@@ -98,7 +98,7 @@ const Header = ({ currentPage, onPageChange }) => {
             onClick={toggleTheme}
             className={`w-10 h-10 rounded-lg transition-colors flex items-center justify-center ${
               (publicKey || isDemoMode) 
-                ? 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300'
+                ? 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
                 : 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 hover:text-white'
             }`}
             title={isDarkMode ? t('theme.switchToLight') : t('theme.switchToDark')}
