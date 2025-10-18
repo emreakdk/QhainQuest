@@ -16,10 +16,30 @@ const MobileWarning = ({ className = "", variant = "dark" }) => {
   const lightTitleClasses = "text-yellow-900";
   const lightTextClasses = "text-yellow-700";
 
-  const containerClasses = variant === "light" ? lightClasses : darkClasses;
-  const iconClasses = variant === "light" ? lightIconClasses : darkIconClasses;
-  const titleClasses = variant === "light" ? lightTitleClasses : darkTitleClasses;
-  const textClasses = variant === "light" ? lightTextClasses : darkTextClasses;
+  // Entry variant - for entry page with transparent white background
+  const entryClasses = "bg-white bg-opacity-10 border border-white border-opacity-20 text-white";
+  const entryIconClasses = "text-yellow-300";
+  const entryTitleClasses = "text-white";
+  const entryTextClasses = "text-white text-opacity-90";
+
+  let containerClasses, iconClasses, titleClasses, textClasses;
+
+  if (variant === "light") {
+    containerClasses = lightClasses;
+    iconClasses = lightIconClasses;
+    titleClasses = lightTitleClasses;
+    textClasses = lightTextClasses;
+  } else if (variant === "entry") {
+    containerClasses = entryClasses;
+    iconClasses = entryIconClasses;
+    titleClasses = entryTitleClasses;
+    textClasses = entryTextClasses;
+  } else {
+    containerClasses = darkClasses;
+    iconClasses = darkIconClasses;
+    titleClasses = darkTitleClasses;
+    textClasses = darkTextClasses;
+  }
 
   return (
     <div className={`${containerClasses} p-3 rounded-md text-sm flex items-start space-x-2 ${className}`}>
