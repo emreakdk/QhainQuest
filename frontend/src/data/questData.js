@@ -389,11 +389,13 @@ export const questDatabase = [
     category: 'blockchain',
     difficulty: 'medium',
     rewardAmount: 350,
+    timeEstimate: 35,
+    certificateNftUrl: 'https://ipfs.io/ipfs/QmBlockchainSecurityCert',
     lessons: [
       {
         id: 'security-1',
         questionKey: 'quests.blockchain_security.q1.question',
-        options: [
+        choices: [
           'quests.blockchain_security.q1.option1',
           'quests.blockchain_security.q1.option2',
           'quests.blockchain_security.q1.option3',
@@ -406,7 +408,7 @@ export const questDatabase = [
       {
         id: 'security-2',
         questionKey: 'quests.blockchain_security.q2.question',
-        options: [
+        choices: [
           'quests.blockchain_security.q2.option1',
           'quests.blockchain_security.q2.option2',
           'quests.blockchain_security.q2.option3',
@@ -419,7 +421,7 @@ export const questDatabase = [
       {
         id: 'security-3',
         questionKey: 'quests.blockchain_security.q3.question',
-        options: [
+        choices: [
           'quests.blockchain_security.q3.option1',
           'quests.blockchain_security.q3.option2',
           'quests.blockchain_security.q3.option3',
@@ -432,7 +434,7 @@ export const questDatabase = [
       {
         id: 'security-4',
         questionKey: 'quests.blockchain_security.q4.question',
-        options: [
+        choices: [
           'quests.blockchain_security.q4.option1',
           'quests.blockchain_security.q4.option2',
           'quests.blockchain_security.q4.option3',
@@ -445,7 +447,7 @@ export const questDatabase = [
       {
         id: 'security-5',
         questionKey: 'quests.blockchain_security.q5.question',
-        options: [
+        choices: [
           'quests.blockchain_security.q5.option1',
           'quests.blockchain_security.q5.option2',
           'quests.blockchain_security.q5.option3',
@@ -470,11 +472,13 @@ export const questDatabase = [
     category: 'blockchain',
     difficulty: 'advanced',
     rewardAmount: 450,
+    timeEstimate: 40,
+    certificateNftUrl: 'https://ipfs.io/ipfs/QmDIDCert',
     lessons: [
       {
         id: 'did-1',
         questionKey: 'quests.decentralized_identity.q1.question',
-        options: [
+        choices: [
           'quests.decentralized_identity.q1.option1',
           'quests.decentralized_identity.q1.option2',
           'quests.decentralized_identity.q1.option3',
@@ -487,7 +491,7 @@ export const questDatabase = [
       {
         id: 'did-2',
         questionKey: 'quests.decentralized_identity.q2.question',
-        options: [
+        choices: [
           'quests.decentralized_identity.q2.option1',
           'quests.decentralized_identity.q2.option2',
           'quests.decentralized_identity.q2.option3',
@@ -500,7 +504,7 @@ export const questDatabase = [
       {
         id: 'did-3',
         questionKey: 'quests.decentralized_identity.q3.question',
-        options: [
+        choices: [
           'quests.decentralized_identity.q3.option1',
           'quests.decentralized_identity.q3.option2',
           'quests.decentralized_identity.q3.option3',
@@ -513,7 +517,7 @@ export const questDatabase = [
       {
         id: 'did-4',
         questionKey: 'quests.decentralized_identity.q4.question',
-        options: [
+        choices: [
           'quests.decentralized_identity.q4.option1',
           'quests.decentralized_identity.q4.option2',
           'quests.decentralized_identity.q4.option3',
@@ -526,7 +530,7 @@ export const questDatabase = [
       {
         id: 'did-5',
         questionKey: 'quests.decentralized_identity.q5.question',
-        options: [
+        choices: [
           'quests.decentralized_identity.q5.option1',
           'quests.decentralized_identity.q5.option2',
           'quests.decentralized_identity.q5.option3',
@@ -551,11 +555,13 @@ export const questDatabase = [
     category: 'blockchain',
     difficulty: 'advanced',
     rewardAmount: 500,
+    timeEstimate: 45,
+    certificateNftUrl: 'https://ipfs.io/ipfs/QmLayer2Cert',
     lessons: [
       {
         id: 'l2-1',
         questionKey: 'quests.layer2_scaling.q1.question',
-        options: [
+        choices: [
           'quests.layer2_scaling.q1.option1',
           'quests.layer2_scaling.q1.option2',
           'quests.layer2_scaling.q1.option3',
@@ -568,7 +574,7 @@ export const questDatabase = [
       {
         id: 'l2-2',
         questionKey: 'quests.layer2_scaling.q2.question',
-        options: [
+        choices: [
           'quests.layer2_scaling.q2.option1',
           'quests.layer2_scaling.q2.option2',
           'quests.layer2_scaling.q2.option3',
@@ -581,7 +587,7 @@ export const questDatabase = [
       {
         id: 'l2-3',
         questionKey: 'quests.layer2_scaling.q3.question',
-        options: [
+        choices: [
           'quests.layer2_scaling.q3.option1',
           'quests.layer2_scaling.q3.option2',
           'quests.layer2_scaling.q3.option3',
@@ -594,7 +600,7 @@ export const questDatabase = [
       {
         id: 'l2-4',
         questionKey: 'quests.layer2_scaling.q4.question',
-        options: [
+        choices: [
           'quests.layer2_scaling.q4.option1',
           'quests.layer2_scaling.q4.option2',
           'quests.layer2_scaling.q4.option3',
@@ -607,7 +613,7 @@ export const questDatabase = [
       {
         id: 'l2-5',
         questionKey: 'quests.layer2_scaling.q5.question',
-        options: [
+        choices: [
           'quests.layer2_scaling.q5.option1',
           'quests.layer2_scaling.q5.option2',
           'quests.layer2_scaling.q5.option3',
@@ -632,11 +638,13 @@ export const questDatabase = [
     category: 'smart_contracts',
     difficulty: 'medium',
     rewardAmount: 400,
+    timeEstimate: 30,
+    certificateNftUrl: 'https://ipfs.io/ipfs/QmWeb3DevCert',
     lessons: [
       {
         id: 'w3d-1',
         questionKey: 'quests.web3_dev_basics.q1.question',
-        options: [
+        choices: [
           'quests.web3_dev_basics.q1.option1',
           'quests.web3_dev_basics.q1.option2',
           'quests.web3_dev_basics.q1.option3',
@@ -649,7 +657,7 @@ export const questDatabase = [
       {
         id: 'w3d-2',
         questionKey: 'quests.web3_dev_basics.q2.question',
-        options: [
+        choices: [
           'quests.web3_dev_basics.q2.option1',
           'quests.web3_dev_basics.q2.option2',
           'quests.web3_dev_basics.q2.option3',
@@ -662,7 +670,7 @@ export const questDatabase = [
       {
         id: 'w3d-3',
         questionKey: 'quests.web3_dev_basics.q3.question',
-        options: [
+        choices: [
           'quests.web3_dev_basics.q3.option1',
           'quests.web3_dev_basics.q3.option2',
           'quests.web3_dev_basics.q3.option3',
@@ -675,7 +683,7 @@ export const questDatabase = [
       {
         id: 'w3d-4',
         questionKey: 'quests.web3_dev_basics.q4.question',
-        options: [
+        choices: [
           'quests.web3_dev_basics.q4.option1',
           'quests.web3_dev_basics.q4.option2',
           'quests.web3_dev_basics.q4.option3',
@@ -688,7 +696,7 @@ export const questDatabase = [
       {
         id: 'w3d-5',
         questionKey: 'quests.web3_dev_basics.q5.question',
-        options: [
+        choices: [
           'quests.web3_dev_basics.q5.option1',
           'quests.web3_dev_basics.q5.option2',
           'quests.web3_dev_basics.q5.option3',
