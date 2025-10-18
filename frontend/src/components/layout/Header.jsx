@@ -61,7 +61,12 @@ const Header = ({ currentPage, onPageChange }) => {
           {/* Language Toggle */}
           <button
             onClick={toggleLanguage}
-            className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-sm font-medium cursor-pointer"
+            className={`p-2 rounded-lg transition-colors ${
+              (publicKey || isDemoMode) 
+                ? 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300'
+                : 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 hover:text-white'
+            }`}
+            title={language === 'tr' ? 'Switch to English' : 'Türkçeye Geç'}
           >
             {language === 'tr' ? 'EN' : 'TR'}
           </button>
