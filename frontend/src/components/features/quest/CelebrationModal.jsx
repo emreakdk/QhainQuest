@@ -33,7 +33,7 @@ const CelebrationModal = ({ quest, onClose, onComplete }) => {
       <div className={`transform transition-all duration-300 ${
         showAnimation ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
       }`}>
-        <Card className="w-full max-w-md mx-auto bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 border-purple-200 dark:border-purple-700">
+        <Card className="w-full max-w-lg mx-auto bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 border-purple-200 dark:border-purple-700">
           <CardHeader className="text-center pb-4">
             <div className="text-6xl mb-4 animate-bounce">🎉</div>
             <h2 className="text-2xl font-bold text-purple-800 dark:text-purple-200 mb-2">
@@ -44,7 +44,7 @@ const CelebrationModal = ({ quest, onClose, onComplete }) => {
             </p>
           </CardHeader>
           
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-6 px-8 py-6">
             {/* Quest Bilgileri */}
             <div className="text-center">
               <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
@@ -85,7 +85,7 @@ const CelebrationModal = ({ quest, onClose, onComplete }) => {
             </div>
 
             {/* Butonlar */}
-            <div className="flex gap-3">
+            <div className="flex gap-4 px-2">
               <Button
                 onClick={handleClose}
                 variant="outline"
