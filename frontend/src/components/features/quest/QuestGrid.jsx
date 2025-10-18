@@ -22,6 +22,9 @@ const QuestGrid = () => {
   const { tokenData } = useToken(); // Use centralized token data
   const { totalEarned } = useBalance(); // Use global total earned
   
+  // Data processing moved after all Hooks
+  const realQuests = quests.length > 0 ? quests : questDatabase;
+  
   // DEBUG: Log tokenData in Demo Mode
   useEffect(() => {
     if (isDemoMode) {
@@ -58,9 +61,6 @@ const QuestGrid = () => {
     return quest.difficulty || 'beginner';
   };
 
-  // Data processing moved after all Hooks
-  const realQuests = quests.length > 0 ? quests : questDatabase;
-  
   // Determine user identifier (wallet address or demo mode)
   const userIdentifier = isDemoMode ? 'demo' : publicKey;
   
