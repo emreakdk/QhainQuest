@@ -80,9 +80,7 @@ const HeroSection = ({ onPageChange }) => {
               </Button>
               {/* Mobile Warning */}
               {isMobile && (
-                <div className="mt-4">
-                  <MobileWarning variant="entry" />
-                </div>
+                <MobileWarning variant="entry" className="mt-4" />
               )}
             </div>
           ) : (
