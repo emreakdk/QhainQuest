@@ -16,6 +16,7 @@ const QuestQuiz = lazy(() => import('./QuestQuiz'));
 
 const QuestGrid = () => {
   // Moved all Hook calls to the top level to comply with the Rules of Hooks
+  console.log('🚀 QuestGrid component is rendering!');
   const { t } = useLanguage();
   const { publicKey, isDemoMode } = useContext(WalletContext);
   const { quests, loading, error, userStats, userProgress, getQuestStatus, getQuestProgress, refreshData } = useQuest();
