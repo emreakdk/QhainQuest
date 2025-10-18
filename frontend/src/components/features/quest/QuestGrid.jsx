@@ -16,7 +16,6 @@ const QuestQuiz = lazy(() => import('./QuestQuiz'));
 
 const QuestGrid = () => {
   // Moved all Hook calls to the top level to comply with the Rules of Hooks
-  console.log('🚀 QuestGrid component is rendering!');
   const { t } = useLanguage();
   const { publicKey, isDemoMode } = useContext(WalletContext);
   const { quests, loading, error, userStats, userProgress, getQuestStatus, getQuestProgress, refreshData } = useQuest();
@@ -26,24 +25,21 @@ const QuestGrid = () => {
   // Data processing moved after all Hooks
   const realQuests = quests.length > 0 ? quests : questDatabase;
   
-  // DEBUG: Log tokenData in Demo Mode
-  useEffect(() => {
+  // CRITICAL FIX: Direct localStorage reading for Demo Mode counters
+  const getCompletedQuestsCount = () => {
     if (isDemoMode) {
-      console.log('[QuestGrid DEBUG] Demo Mode - tokenData:', tokenData);
-      console.log('[QuestGrid DEBUG] Demo Mode - completedQuests:', tokenData.completedQuests);
-      console.log('[QuestGrid DEBUG] Demo Mode - totalQuests:', tokenData.totalQuests);
-      console.log('[QuestGrid DEBUG] Demo Mode - realQuests.length:', realQuests.length);
-      console.log('[QuestGrid DEBUG] Demo Mode - quests.length:', quests.length);
-      console.log('[QuestGrid DEBUG] Demo Mode - questDatabase.length:', questDatabase.length);
-      
-      // DEBUG: Check localStorage directly
+      // For Demo Mode, read directly from localStorage
       const allCompletedQuests = JSON.parse(localStorage.getItem('completedQuests') || '[]');
-      console.log('[QuestGrid DEBUG] Demo Mode - all completedQuests in localStorage:', allCompletedQuests);
       const demoQuests = allCompletedQuests.filter(key => key.startsWith('demo-'));
-      console.log('[QuestGrid DEBUG] Demo Mode - demo quests in localStorage:', demoQuests);
-      console.log('[QuestGrid DEBUG] Demo Mode - demo quests count:', demoQuests.length);
+      return demoQuests.length;
+    } else {
+      // For Wallet Mode, use tokenData
+      return tokenData.completedQuests || 0;
     }
-  }, [isDemoMode, tokenData, realQuests.length, quests.length]);
+  };
+  
+  const completedQuestsCount = getCompletedQuestsCount();
+  
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedDifficulty, setSelectedDifficulty] = useState('all');
   const [selectedQuest, setSelectedQuest] = useState(null);
@@ -170,39 +166,6 @@ const QuestGrid = () => {
     );
   }
 
-  // --- START QUESTS PAGE COUNTER DIAGNOSTICS ---
-  console.log('--- Quests Page Counters Diagnostics ---');
-  
-  // Log the mode status as received by this component
-  console.log(`[QuestsCounters] isDemoMode: ${isDemoMode}`);
-  
-  // Log the completedQuests data as received by this component
-  console.log('[QuestsCounters] tokenData.completedQuests:', tokenData.completedQuests);
-  console.log('[QuestsCounters] tokenData:', tokenData);
-  
-  // Log the questsData as received (if relevant for total count)
-  console.log('[QuestsCounters] realQuests.length:', realQuests.length);
-  console.log('[QuestsCounters] quests.length:', quests.length);
-  console.log('[QuestsCounters] questDatabase.length:', questDatabase.length);
-  
-  // Log the calculated values right before rendering
-  const totalQuestsValue = realQuests ? realQuests.length : 'N/A';
-  const completedQuestsValue = tokenData.completedQuests || 0;
-  console.log(`[QuestsCounters] Calculated Total: ${totalQuestsValue}`);
-  console.log(`[QuestsCounters] Calculated Completed: ${completedQuestsValue}`);
-
-  // DEBUG: Check localStorage directly for demo mode
-  if (isDemoMode) {
-    const allCompletedQuests = JSON.parse(localStorage.getItem('completedQuests') || '[]');
-    const demoQuests = allCompletedQuests.filter(key => key.startsWith('demo-'));
-    console.log('[QuestsCounters] Demo Mode - localStorage completedQuests:', allCompletedQuests);
-    console.log('[QuestsCounters] Demo Mode - demo quests:', demoQuests);
-    console.log('[QuestsCounters] Demo Mode - demo quests count:', demoQuests.length);
-  }
-
-  console.log('--- END QUESTS PAGE COUNTER DIAGNOSTICS ---');
-  // --- DIAGNOSTIC CODE ENDS HERE ---
-
   return (
     <div className="space-y-8">
       {/* Hero Header */}
@@ -254,7 +217,7 @@ const QuestGrid = () => {
           <div className="flex items-center justify-between">
             <div>
               <div className="text-2xl sm:text-3xl font-bold">
-                <AnimatedCounter value={tokenData.completedQuests || 0} duration={1500} />
+                <AnimatedCounter value={completedQuestsCount} duration={1500} />
               </div>
               <div className="text-green-100 text-xs sm:text-sm">{t('stats.completedQuests')}</div>
             </div>

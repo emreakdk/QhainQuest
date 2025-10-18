@@ -50,31 +50,23 @@ function AppContent() {
   // Load token data and balance when user changes
   useEffect(() => {
     const userIdentifier = isDemoMode ? 'demo' : publicKey;
-    console.log(`[App] Loading data for userIdentifier: ${userIdentifier}, isDemoMode: ${isDemoMode}, publicKey: ${publicKey}`);
     loadTokenData(userIdentifier);
     loadBalanceForUser(userIdentifier);
   }, [publicKey, isDemoMode, loadTokenData, loadBalanceForUser]);
 
   const renderPage = () => {
-    console.log('🎯 [App] renderPage called with currentPage:', currentPage);
     switch (currentPage) {
       case 'quests':
-        console.log('🎯 [App] Rendering QuestGrid for quests page');
         return <QuestGrid />;
       case 'profile':
-        console.log('🎯 [App] Rendering UserProfile for profile page');
         return <UserProfile />;
       case 'leaderboard':
-        console.log('🎯 [App] Rendering Achievements for leaderboard page');
         return <Achievements />;
       default:
-        console.log('🎯 [App] Rendering QuestGrid as default');
         return <QuestGrid />;
     }
   };
 
-  // Debug logging
-  console.log('🔍 [DEBUG] App render - publicKey:', publicKey, 'isDemoMode:', isDemoMode, 'isInitialized:', isInitialized, 'currentPage:', currentPage);
   
   // Show loading spinner while wallet state is being initialized
   if (!isInitialized) {
