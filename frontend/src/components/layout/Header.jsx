@@ -74,12 +74,13 @@ const Header = ({ currentPage, onPageChange }) => {
           </button>
 
           {/* Mobile Menu Button */}
-          {publicKey && (
+          {(publicKey || isDemoMode) && (
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
+              className="lg:hidden p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer border border-slate-200 dark:border-slate-600"
+              title="Menü"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 text-slate-700 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
@@ -159,8 +160,23 @@ const Header = ({ currentPage, onPageChange }) => {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (publicKey || isDemoMode) && (
-        <div className="lg:hidden bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 shadow-lg">
+        <div className="lg:hidden bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 shadow-xl">
           <div className="container mx-auto p-4 space-y-2">
+            {/* Mobile Menu Header */}
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Menü</h3>
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors cursor-pointer"
+                title="Menüyü Kapat"
+              >
+                <svg className="w-5 h-5 text-slate-600 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            {/* Navigation Items */}
             {navigationItems.map(item => (
               <button
                 key={item.id}
@@ -170,11 +186,11 @@ const Header = ({ currentPage, onPageChange }) => {
                 }}
                 className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all cursor-pointer ${
                   currentPage === item.id
-                    ? 'bg-indigo-600 text-white'
+                    ? 'bg-indigo-600 text-white shadow-lg'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700'
                 }`}
               >
-                <span className="mr-3">{item.icon}</span>
+                <span className="mr-3 text-lg">{item.icon}</span>
                 {item.label}
               </button>
             ))}
