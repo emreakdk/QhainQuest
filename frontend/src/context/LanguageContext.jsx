@@ -10,6 +10,10 @@ const translations = {
     'nav.quests': 'Görevler',
     'nav.leaderboard': 'Başarılar',
     
+    // Theme
+    'theme.switchToLight': 'Açık Temaya Geç',
+    'theme.switchToDark': 'Koyu Temaya Geç',
+    
     // Home Page
     'home.title': 'Bilgini Kanıtla, Geleceği Kazan.',
     'home.subtitle': 'ChainQuest ile Stellar blok zincirinde benzersiz görevleri tamamla, değerli token ödülleri kazan ve devredilemez Soulbound Token sertifikalarıyla yeteneklerini ölümsüzleştir.',
@@ -484,6 +488,10 @@ const translations = {
     'nav.profile': 'Profile',
     'nav.quests': 'Quests',
     'nav.leaderboard': 'Achievements',
+    
+    // Theme
+    'theme.switchToLight': 'Switch to Light Theme',
+    'theme.switchToDark': 'Switch to Dark Theme',
     
     // Home Page
     'home.title': 'Prove Your Knowledge, Win the Future.',

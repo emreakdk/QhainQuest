@@ -91,7 +91,7 @@ const QuestCard = ({ quest, userProgress, onStart, onContinue, userAddress }) =>
   };
 
   return (
-    <Card className="hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 cursor-pointer group border-0 bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900">
+    <Card className="hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 cursor-pointer group border-0 bg-white dark:bg-slate-800">
       <CardHeader className="relative overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-purple-500/5 to-pink-500/5 opacity-50"></div>
