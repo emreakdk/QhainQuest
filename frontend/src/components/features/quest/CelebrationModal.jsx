@@ -5,7 +5,7 @@ import Button from '../../ui/Button';
 import Badge from '../../ui/Badge';
 import AnimatedCounter from '../../ui/AnimatedCounter';
 
-const CelebrationModal = ({ quest, onClose, onComplete }) => {
+const CelebrationModal = ({ quest, onClose, onComplete, wasAlreadyCompleted = false }) => {
   const { t } = useLanguage();
   const [showAnimation, setShowAnimation] = useState(false);
 
@@ -40,7 +40,7 @@ const CelebrationModal = ({ quest, onClose, onComplete }) => {
               {t('celebration.questCompleted')}
             </h2>
             <p className="text-purple-600 dark:text-purple-300">
-              {t('celebration.congratulations')}
+              {wasAlreadyCompleted ? t('celebration.alreadyCompleted') : t('celebration.congratulations')}
             </p>
           </CardHeader>
           

@@ -33,6 +33,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
   const [showWrongAnswers, setShowWrongAnswers] = useState(false);
   const [currentWrongIndex, setCurrentWrongIndex] = useState(0);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [wasAlreadyCompleted, setWasAlreadyCompleted] = useState(false);
   const [userAnswers, setUserAnswers] = useState([]); // Track all user answers
   const [questCompleted, setQuestCompleted] = useState(false); // Track quest completion
 
@@ -182,6 +183,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
       if (isAlreadyCompleted) {
         // Quest already completed - show message and don't transfer tokens
         setQuestCompleted(true);
+        setWasAlreadyCompleted(true);
         setIsSubmitting(false);
         showError('Quest Zaten Tamamlandı', 'Bu testi zaten tamamlamıştınız.');
         return;
@@ -194,6 +196,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
         // Mark quest as completed locally (ALWAYS save, including demo mode)
         questApiService.markQuestCompleted(userIdentifier, questId);
         setQuestCompleted(true);
+        setWasAlreadyCompleted(false); // First time completion
         
         // Add reward to claimable balance using global balance context
         addToClaimableBalance(userIdentifier, result.data.rewardAmount);
@@ -393,40 +396,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
     );
   }
 
-  // Kutlama Modal'ı
-  if (showCelebration) {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-        <div className="bg-white dark:bg-slate-800 rounded-2xl p-8 max-w-md mx-4 text-center animate-scale-in">
-          <div className="text-6xl mb-4">🎉</div>
-          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
-            {t('celebration.title')}
-          </h2>
-          <p className="text-slate-700 dark:text-slate-300 mb-6">
-            {t('celebration.message')}
-          </p>
-          <div className="space-y-4">
-            <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-700 rounded-lg">
-              <span className="text-slate-600 dark:text-slate-300">{t('celebration.tokensEarned')}</span>
-              <span className="font-bold text-slate-900 dark:text-white">{quest.rewardAmount || 100}</span>
-            </div>
-            <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-700 rounded-lg">
-              <span className="text-slate-600 dark:text-slate-300">{t('celebration.certificate')}</span>
-              <span className="font-bold text-slate-900 dark:text-white">
-                {(quest.certificateNftUrl || quest.nftUrl) ? '✓' : '✗'}
-              </span>
-            </div>
-          </div>
-          <Button
-            onClick={onComplete}
-            className="w-full mt-6 cursor-pointer"
-          >
-            {t('celebration.continue')}
-          </Button>
-        </div>
-      </div>
-    );
-  }
+  // Celebration Modal is now handled by the CelebrationModal component below
 
   return (
     <div className="max-w-4xl mx-auto p-4 sm:p-6">
@@ -614,6 +584,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
       {showCelebration && (
         <CelebrationModal
           quest={quest}
+          wasAlreadyCompleted={wasAlreadyCompleted}
           onClose={() => {
             console.log('DEBUG: CelebrationModal closed');
             setShowCelebration(false);
