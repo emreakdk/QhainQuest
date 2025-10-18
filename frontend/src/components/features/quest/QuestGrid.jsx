@@ -184,75 +184,76 @@ const QuestGrid = () => {
       </div>
 
       {/* Enhanced Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-2xl p-6 text-white transform hover:scale-105 transition-all duration-300 shadow-lg">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
+        <div className="bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-2xl p-4 sm:p-6 text-white transform hover:scale-105 transition-all duration-300 shadow-lg">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-3xl font-bold">
+              <div className="text-2xl sm:text-3xl font-bold">
                 <AnimatedCounter value={tokenData.totalQuests || 0} duration={1500} />
               </div>
-              <div className="text-blue-100 text-sm">{t('stats.totalQuests')}</div>
+              <div className="text-blue-100 text-xs sm:text-sm">{t('stats.totalQuests')}</div>
             </div>
-            <div className="text-4xl opacity-80">📚</div>
+            <div className="text-3xl sm:text-4xl opacity-80">📚</div>
           </div>
         </div>
         
-        <div className="bg-gradient-to-br from-green-500 to-green-600 dark:from-green-600 dark:to-green-700 rounded-2xl p-6 text-white transform hover:scale-105 transition-all duration-300 shadow-lg">
+        <div className="bg-gradient-to-br from-green-500 to-green-600 dark:from-green-600 dark:to-green-700 rounded-2xl p-4 sm:p-6 text-white transform hover:scale-105 transition-all duration-300 shadow-lg">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-3xl font-bold">
+              <div className="text-2xl sm:text-3xl font-bold">
                 <AnimatedCounter value={tokenData.completedQuests || 0} duration={1500} />
               </div>
-              <div className="text-green-100 text-sm">{t('stats.completedQuests')}</div>
+              <div className="text-green-100 text-xs sm:text-sm">{t('stats.completedQuests')}</div>
             </div>
-            <div className="text-4xl opacity-80">✅</div>
+            <div className="text-3xl sm:text-4xl opacity-80">✅</div>
           </div>
         </div>
         
-        <div className="bg-gradient-to-br from-purple-500 to-purple-600 dark:from-purple-600 dark:to-purple-700 rounded-2xl p-6 text-white transform hover:scale-105 transition-all duration-300 shadow-lg">
+        <div className="bg-gradient-to-br from-purple-500 to-purple-600 dark:from-purple-600 dark:to-purple-700 rounded-2xl p-4 sm:p-6 text-white transform hover:scale-105 transition-all duration-300 shadow-lg">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-3xl font-bold">
+              <div className="text-2xl sm:text-3xl font-bold">
                 <AnimatedCounter value={tokenData.inProgressQuests || 0} duration={1500} />
               </div>
-              <div className="text-purple-100 text-sm">{t('stats.inProgress')}</div>
+              <div className="text-purple-100 text-xs sm:text-sm">{t('stats.inProgress')}</div>
             </div>
-            <div className="text-4xl opacity-80">🔄</div>
+            <div className="text-3xl sm:text-4xl opacity-80">🔄</div>
           </div>
         </div>
         
-        <div className="bg-gradient-to-br from-yellow-500 to-orange-500 dark:from-yellow-600 dark:to-orange-600 rounded-2xl p-6 text-white transform hover:scale-105 transition-all duration-300 shadow-lg">
+        <div className="bg-gradient-to-br from-yellow-500 to-orange-500 dark:from-yellow-600 dark:to-orange-600 rounded-2xl p-4 sm:p-6 text-white transform hover:scale-105 transition-all duration-300 shadow-lg">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-3xl font-bold">
+              <div className="text-2xl sm:text-3xl font-bold">
                 <AnimatedCounter value={totalEarned || 0} duration={1500} />
               </div>
-              <div className="text-yellow-100 text-sm">{t('stats.earnedTokens')}</div>
+              <div className="text-yellow-100 text-xs sm:text-sm">{t('stats.earnedTokens')}</div>
             </div>
-            <div className="text-4xl opacity-80">💰</div>
+            <div className="text-3xl sm:text-4xl opacity-80">💰</div>
           </div>
         </div>
       </div>
 
       {/* Enhanced Filters */}
-      <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 sm:p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex flex-wrap gap-2">
             {questCategories.map(category => (
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all cursor-pointer ${
+                className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 rounded-xl font-medium transition-all cursor-pointer text-sm ${
                   selectedCategory === category.id
                     ? 'bg-indigo-600 text-white shadow-lg'
                     : 'bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
                 }`}
               >
-                <span>{category.icon}</span>
-                <span>{t(category.nameKey || category.name)}</span>
+                <span className="text-sm sm:text-base">{category.icon}</span>
+                <span className="hidden sm:inline">{t(category.nameKey || category.name)}</span>
+                <span className="sm:hidden">{t(category.nameKey || category.name).slice(0, 3)}</span>
                 <Badge 
                   variant={selectedCategory === category.id ? 'default' : 'outline'}
-                  className="ml-1"
+                  className="ml-1 text-xs"
                 >
                   {realQuests.filter(q => {
                     // Fixed: Add null check for quest object
@@ -266,12 +267,13 @@ const QuestGrid = () => {
 
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-300 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors cursor-pointer"
+            className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-300 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors cursor-pointer text-sm"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.707A1 1 0 013 7V4z" />
             </svg>
-            {t('filters.title')}
+            <span className="hidden sm:inline">{t('filters.title')}</span>
+            <span className="sm:hidden">Filter</span>
           </button>
         </div>
 
@@ -300,7 +302,7 @@ const QuestGrid = () => {
       </div>
 
       {/* Quest Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
         {filteredQuests.map(quest => (
           <QuestCard
             key={quest.id}

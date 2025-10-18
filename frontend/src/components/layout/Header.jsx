@@ -57,18 +57,20 @@ const Header = ({ currentPage, onPageChange }) => {
         )}
 
         {/* Right side controls */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           {/* Language Toggle */}
           <button
             onClick={toggleLanguage}
-            className={`w-10 h-10 rounded-lg transition-colors flex items-center justify-center cursor-pointer ${
+            className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg transition-colors flex items-center justify-center cursor-pointer ${
               (publicKey || isDemoMode) 
                 ? 'bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
                 : 'bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
             }`}
             title={language === 'tr' ? 'Switch to English' : 'Türkçeye Geç'}
           >
-            {language === 'tr' ? 'EN' : 'TR'}
+            <span className="text-xs sm:text-sm font-medium">
+              {language === 'tr' ? 'EN' : 'TR'}
+            </span>
           </button>
 
           {/* Mobile Menu Button */}
@@ -85,9 +87,9 @@ const Header = ({ currentPage, onPageChange }) => {
 
           {/* Token Balance Display - CRITICAL FIX: Show only claimable balance */}
           {(publicKey || isDemoMode) && claimableBalance > 0 && (
-            <div className="hidden md:flex items-center space-x-2 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 px-3 py-1.5 rounded-lg border border-yellow-200 dark:border-yellow-700">
+            <div className="hidden sm:flex items-center space-x-2 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 px-2 sm:px-3 py-1.5 rounded-lg border border-yellow-200 dark:border-yellow-700">
               <span className="text-yellow-600 dark:text-yellow-400">💰</span>
-              <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              <span className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300">
                 {claimableBalance} CQT
               </span>
             </div>
@@ -96,7 +98,7 @@ const Header = ({ currentPage, onPageChange }) => {
           {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
-            className={`w-10 h-10 rounded-lg transition-colors flex items-center justify-center cursor-pointer ${
+            className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg transition-colors flex items-center justify-center cursor-pointer ${
               (publicKey || isDemoMode) 
                 ? 'bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
                 : 'bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
@@ -104,28 +106,28 @@ const Header = ({ currentPage, onPageChange }) => {
             title={isDarkMode ? t('theme.switchToLight') : t('theme.switchToDark')}
           >
             {isDarkMode ? (
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
               </svg>
             ) : (
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
               </svg>
             )}
           </button>
 
           {/* Wallet Connection */}
-          <div>
+          <div className="hidden sm:block">
             {publicKey ? (
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2 sm:space-x-3">
                 <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300 hidden sm:block">
+                  <span className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 hidden md:block">
                     {t('home.connected')}
                   </span>
                 </div>
-                <div className="bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg">
-                  <span className="font-mono text-sm text-slate-700 dark:text-slate-300">
+                <div className="bg-slate-100 dark:bg-slate-800 px-2 sm:px-3 py-1.5 rounded-lg">
+                  <span className="font-mono text-xs sm:text-sm text-slate-700 dark:text-slate-300">
                     {truncateKey(publicKey)}
                   </span>
                 </div>
@@ -138,7 +140,7 @@ const Header = ({ currentPage, onPageChange }) => {
                       exitDemoMode();
                     }
                   }}
-                  className="hidden sm:block"
+                  className="hidden md:block"
                 >
                   {t('wallet.disconnect')}
                 </Button>
@@ -157,7 +159,7 @@ const Header = ({ currentPage, onPageChange }) => {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (publicKey || isDemoMode) && (
-        <div className="lg:hidden bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700">
+        <div className="lg:hidden bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 shadow-lg">
           <div className="container mx-auto p-4 space-y-2">
             {navigationItems.map(item => (
               <button
@@ -176,6 +178,37 @@ const Header = ({ currentPage, onPageChange }) => {
                 {item.label}
               </button>
             ))}
+            
+            {/* Mobile Wallet Info */}
+            {publicKey && (
+              <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+                <div className="flex items-center space-x-2 mb-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                    {t('home.connected')}
+                  </span>
+                </div>
+                <div className="bg-slate-100 dark:bg-slate-700 px-3 py-2 rounded-lg mb-2">
+                  <span className="font-mono text-sm text-slate-700 dark:text-slate-300">
+                    {truncateKey(publicKey)}
+                  </span>
+                </div>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => {
+                    setPublicKey('');
+                    if (isDemoMode) {
+                      exitDemoMode();
+                    }
+                    setMobileMenuOpen(false);
+                  }}
+                  className="w-full"
+                >
+                  {t('wallet.disconnect')}
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       )}

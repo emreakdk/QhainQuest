@@ -62,22 +62,22 @@ const UserProfile = () => {
 
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Profile Header */}
       <div className="text-center">
-        <div className="w-24 h-24 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-          <span className="text-3xl">👤</span>
+        <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+          <span className="text-2xl sm:text-3xl">👤</span>
         </div>
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
+        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-2">
           {t('profile.title')}
         </h1>
-        <div className="flex items-center justify-center space-x-2">
-          <Badge variant="primary">
+        <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-2">
+          <Badge variant="primary" className="text-xs sm:text-sm">
             {truncateKey(publicKey)}
           </Badge>
           {/* UI SIMPLIFICATION: Hide quest completed badge in demo mode */}
           {!isDemoMode && (
-            <Badge variant="success">
+            <Badge variant="success" className="text-xs sm:text-sm">
               {tokenData.completedQuests || 0} {t('profile.questCompleted')}
             </Badge>
           )}
@@ -89,12 +89,12 @@ const UserProfile = () => {
 
       {/* Tabs */}
       <div className="border-b border-slate-200 dark:border-slate-700">
-        <nav className="flex space-x-8">
+        <nav className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-8">
           {tabs.map(tab => (
             <button
               key={tab.id}
               onClick={() => handleTabChange(tab.id)}
-              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+              className={`py-3 sm:py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                 activeTab === tab.id
                   ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
                   : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 dark:text-slate-400 dark:hover:text-slate-300'
