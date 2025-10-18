@@ -41,54 +41,54 @@ const HeroSection = ({ onPageChange }) => {
         }}></div>
       </div>
 
-      <div className="relative z-10 text-center px-4 max-w-6xl mx-auto">
+      <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
         {/* Main Title */}
-        <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black mb-6 sm:mb-8">
+        <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-black mb-4 sm:mb-6 md:mb-8">
           <span className="block text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-200 to-white animate-gradient-x">
             ChainQuest
           </span>
         </h1>
 
         {/* Subtitle */}
-        <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-slate-200 mb-4 font-light leading-relaxed">
+        <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-slate-200 mb-3 sm:mb-4 font-light leading-relaxed">
           {t('home.title')}
         </p>
         
-        <p className="text-base sm:text-lg md:text-xl text-slate-300 mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed">
+        <p className="text-sm sm:text-base md:text-lg lg:text-xl text-slate-300 mb-6 sm:mb-8 md:mb-12 max-w-4xl mx-auto leading-relaxed">
           {t('home.subtitle')}
         </p>
 
         {/* CTA Section */}
         <div className="space-y-4 sm:space-y-6">
           {!isConnected() ? (
-            <div className="flex flex-col items-center justify-center space-y-4">
+            <div className="flex flex-col items-center justify-center space-y-4 max-w-md mx-auto">
               <FreighterConnect onConnect={setPublicKey} />
-              <div className="flex items-center space-x-4">
-                <div className="h-px bg-slate-400 w-12 sm:w-16"></div>
-                <span className="text-slate-400 text-sm">{t('common.or')}</span>
-                <div className="h-px bg-slate-400 w-12 sm:w-16"></div>
+              <div className="flex items-center space-x-3 sm:space-x-4">
+                <div className="h-px bg-slate-400 w-8 sm:w-12 md:w-16"></div>
+                <span className="text-slate-400 text-xs sm:text-sm">{t('common.or')}</span>
+                <div className="h-px bg-slate-400 w-8 sm:w-12 md:w-16"></div>
               </div>
               <Button
                 onClick={handleDemoMode}
                 variant="secondary"
                 size="lg"
-                className="bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white font-semibold px-6 sm:px-8 py-3 sm:py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 cursor-pointer text-sm sm:text-base"
+                className="w-full sm:w-auto bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white font-semibold px-4 sm:px-6 md:px-8 py-3 sm:py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 cursor-pointer text-sm sm:text-base"
               >
                 {t('home.useWithoutWallet')}
               </Button>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-4 max-w-md mx-auto">
               <div className="flex items-center justify-center space-x-2 text-green-400">
                 <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                <span className="text-base sm:text-lg font-medium">
+                <span className="text-sm sm:text-base md:text-lg font-medium">
                   {isDemoMode ? t('home.demoMode') : t('home.connected')}
                 </span>
               </div>
               <Button 
                 variant="primary" 
                 size="lg"
-                className="animate-bounce cursor-pointer text-sm sm:text-base px-6 sm:px-8 py-3 sm:py-4"
+                className="w-full sm:w-auto animate-bounce cursor-pointer text-sm sm:text-base px-4 sm:px-6 md:px-8 py-3 sm:py-4"
                 onClick={handleGoToQuests}
               >
                 {t('nav.quests')}
@@ -97,36 +97,36 @@ const HeroSection = ({ onPageChange }) => {
           )}
         </div>
 
-        {/* Features Preview */}
-        <div className="mt-16 sm:mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          <div className="text-center group">
-            <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        {/* Features Preview - Mobile-first responsive grid */}
+        <div className="mt-8 sm:mt-12 md:mt-16 lg:mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+          <div className="text-center group p-4 sm:p-6">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl sm:rounded-2xl mx-auto mb-3 sm:mb-4 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-white mb-2">{t('features.nftCertificates')}</h3>
-            <p className="text-slate-300">{t('features.nftCertificatesDesc')}</p>
+            <h3 className="text-lg sm:text-xl font-semibold text-white mb-2 leading-tight">{t('features.nftCertificates')}</h3>
+            <p className="text-sm sm:text-base text-slate-300 leading-relaxed">{t('features.nftCertificatesDesc')}</p>
           </div>
 
-          <div className="text-center group">
-            <div className="w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-2xl mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="text-center group p-4 sm:p-6">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-yellow-500 to-orange-600 rounded-xl sm:rounded-2xl mx-auto mb-3 sm:mb-4 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-white mb-2">{t('features.tokenRewards')}</h3>
-            <p className="text-slate-300">{t('features.tokenRewardsDesc')}</p>
+            <h3 className="text-lg sm:text-xl font-semibold text-white mb-2 leading-tight">{t('features.tokenRewards')}</h3>
+            <p className="text-sm sm:text-base text-slate-300 leading-relaxed">{t('features.tokenRewardsDesc')}</p>
           </div>
 
-          <div className="text-center group">
-            <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-teal-600 rounded-2xl mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="text-center group p-4 sm:p-6">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-green-500 to-teal-600 rounded-xl sm:rounded-2xl mx-auto mb-3 sm:mb-4 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <svg className="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-white mb-2">{t('features.competition')}</h3>
-            <p className="text-slate-300">{t('features.competitionDesc')}</p>
+            <h3 className="text-lg sm:text-xl font-semibold text-white mb-2 leading-tight">{t('features.competition')}</h3>
+            <p className="text-sm sm:text-base text-slate-300 leading-relaxed">{t('features.competitionDesc')}</p>
           </div>
         </div>
       </div>
