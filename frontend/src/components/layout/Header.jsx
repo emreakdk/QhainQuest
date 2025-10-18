@@ -91,7 +91,11 @@ const Header = ({ currentPage, onPageChange }) => {
           {/* Theme Toggle Button */}
           <button
             onClick={toggleTheme}
-            className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-slate-700 dark:text-slate-300"
+            className={`p-2 rounded-lg transition-colors ${
+              (publicKey || isDemoMode) 
+                ? 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300'
+                : 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 hover:text-white'
+            }`}
             title={isDarkMode ? t('theme.switchToLight') : t('theme.switchToDark')}
           >
             {isDarkMode ? (
