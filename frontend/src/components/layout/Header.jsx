@@ -83,10 +83,10 @@ const Header = ({ currentPage, onPageChange }) => {
             </div>
           )}
 
-          {/* Theme Toggle Button */}
+          {/* Theme Toggle Button - Hidden on mobile */}
           <button
             onClick={toggleTheme}
-            className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg transition-colors flex items-center justify-center cursor-pointer order-2 ${
+            className={`hidden md:flex w-8 h-8 sm:w-10 sm:h-10 rounded-lg transition-colors items-center justify-center cursor-pointer order-2 ${
               (publicKey || isDemoMode) 
                 ? 'bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
                 : 'bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'

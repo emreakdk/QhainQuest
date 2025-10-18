@@ -33,23 +33,34 @@ export const ThemeProvider = ({ children }) => {
   useEffect(() => {
     const html = document.documentElement;
     
+    // Check if user is on mobile (screen width < 768px)
+    const isMobile = window.matchMedia('(max-width: 767px)').matches;
+    
     console.log(`[ThemeProvider] === THEME APPLICATION START ===`);
     console.log(`[ThemeProvider] Current isDarkMode:`, isDarkMode);
+    console.log(`[ThemeProvider] Is Mobile:`, isMobile);
     console.log(`[ThemeProvider] HTML element:`, html);
     console.log(`[ThemeProvider] HTML classes before:`, html.classList.toString());
     
-    // CRITICAL FIX: Only manage 'dark' class on document.documentElement
-    // Tailwind darkMode: 'class' only checks for 'dark' class on html element
-    if (isDarkMode) {
-      html.classList.add('dark');
-      console.log(`[ThemeProvider] ✅ Added 'dark' class to document.documentElement`);
-    } else {
+    // CRITICAL FIX: Disable dark mode on mobile devices
+    if (isMobile) {
+      // Force light mode on mobile regardless of theme state
       html.classList.remove('dark');
-      console.log(`[ThemeProvider] ❌ Removed 'dark' class from document.documentElement`);
+      html.style.colorScheme = 'light';
+      console.log(`[ThemeProvider] 📱 Mobile detected - Forcing light mode`);
+    } else {
+      // Apply normal theme logic on desktop
+      if (isDarkMode) {
+        html.classList.add('dark');
+        console.log(`[ThemeProvider] ✅ Added 'dark' class to document.documentElement`);
+      } else {
+        html.classList.remove('dark');
+        console.log(`[ThemeProvider] ❌ Removed 'dark' class from document.documentElement`);
+      }
+      
+      // Set color scheme for browser compatibility
+      html.style.colorScheme = isDarkMode ? 'dark' : 'light';
     }
-    
-    // Set color scheme for browser compatibility
-    html.style.colorScheme = isDarkMode ? 'dark' : 'light';
     
     console.log(`[ThemeProvider] HTML classes after:`, html.classList.toString());
     console.log(`[ThemeProvider] Has dark class:`, html.classList.contains('dark'));
@@ -68,6 +79,41 @@ export const ThemeProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem('usehooks-ts-dark-mode', JSON.stringify(isDarkMode));
     console.log(`[ThemeProvider] Saved to localStorage: ${isDarkMode}`);
+  }, [isDarkMode]);
+
+  // Handle window resize to reapply theme logic when switching between mobile/desktop
+  useEffect(() => {
+    const handleResize = () => {
+      const html = document.documentElement;
+      const isMobile = window.matchMedia('(max-width: 767px)').matches;
+      
+      console.log(`[ThemeProvider] 📱 Resize detected - Mobile: ${isMobile}`);
+      
+      if (isMobile) {
+        // Force light mode on mobile
+        html.classList.remove('dark');
+        html.style.colorScheme = 'light';
+        console.log(`[ThemeProvider] 📱 Resize - Forcing light mode on mobile`);
+      } else {
+        // Apply normal theme logic on desktop
+        if (isDarkMode) {
+          html.classList.add('dark');
+          html.style.colorScheme = 'dark';
+        } else {
+          html.classList.remove('dark');
+          html.style.colorScheme = 'light';
+        }
+        console.log(`[ThemeProvider] 🖥️ Resize - Applied theme on desktop: ${isDarkMode ? 'dark' : 'light'}`);
+      }
+    };
+
+    // Add resize listener
+    window.addEventListener('resize', handleResize);
+    
+    // Cleanup
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, [isDarkMode]);
 
   const theme = isDarkMode ? 'dark' : 'light';
