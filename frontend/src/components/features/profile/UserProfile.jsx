@@ -5,11 +5,13 @@ import { useLanguage } from '../../../context/LanguageContext';
 import { useQuest } from '../../../context/QuestContext';
 import { useToken } from '../../../context/TokenContext';
 import { getCompletedQuestsForUser } from '../../../utils/tokenBalanceCalculator';
+import { isMobile } from 'react-device-detect';
 import ProfileStats from './ProfileStats';
 import CertificateCard from './CertificateCard';
 import ProfileDashboard from './ProfileDashboard';
 import Button from '../../ui/Button';
 import Badge from '../../ui/Badge';
+import MobileWarning from '../../ui/MobileWarning';
 
 const UserProfile = () => {
   const { publicKey, isDemoMode } = useContext(WalletContext);
@@ -86,6 +88,13 @@ const UserProfile = () => {
 
       {/* Profile Stats */}
       <ProfileStats userStats={userStats} />
+
+      {/* Mobile Warning */}
+      {isMobile && (
+        <div className="mb-6">
+          <MobileWarning variant="light" />
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="border-b border-slate-200 dark:border-slate-700">
