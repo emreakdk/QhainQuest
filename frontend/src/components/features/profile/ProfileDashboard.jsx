@@ -5,11 +5,13 @@ import { useToken } from '../../../context/TokenContext';
 import { useBalance } from '../../../context/BalanceContext';
 import { useNotification } from '../../../context/NotificationContext';
 import { useDataManager } from '../../../systems/dataManager.js';
+import { isMobile } from 'react-device-detect';
 import { Card, CardContent, CardHeader } from '../../ui/Card';
 import AnimatedCounter from '../../ui/AnimatedCounter';
 import ProgressRing from '../../ui/ProgressRing';
 import Button from '../../ui/Button';
 import Badge from '../../ui/Badge';
+import MobileWarning from '../../ui/MobileWarning';
 
 // Basit grafik komponenti (Chart.js olmadan)
 const SimpleChart = ({ data, type = 'line', height = 200, t }) => {
@@ -220,6 +222,12 @@ const ProfileDashboard = () => {
         </Card>
       </div>
 
+      {/* Mobile Warning */}
+      {isMobile && (
+        <div className="mb-6">
+          <MobileWarning />
+        </div>
+      )}
 
       {/* Overview Content */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

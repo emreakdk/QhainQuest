@@ -42,6 +42,10 @@ const translations = {
     'entrypage.features.certify.title': 'Sertifikala',
     'entrypage.features.certify.desc': 'Benzersiz NFT sertifikaları ile yeteneklerinizi ölümsüzleştirin',
 
+    // Mobile Warnings
+    'warnings.mobileTitle': 'Mobil Uyarı',
+    'warnings.mobileClaim': 'Tokenlarınızı cüzdanınıza aktarmak için lütfen masaüstü tarayıcıdan giriş yapın.',
+
     // Profile
     'profile.title': 'Profil',
     'profile.totalTokens': 'Toplam Token',
@@ -686,6 +690,10 @@ const translations = {
     'entrypage.features.earn.desc': 'Complete quests and earn valuable token rewards',
     'entrypage.features.certify.title': 'Certify',
     'entrypage.features.certify.desc': 'Immortalize your skills with unique NFT certificates',
+
+    // Mobile Warnings
+    'warnings.mobileTitle': 'Mobile Notice',
+    'warnings.mobileClaim': 'Please log in from a desktop browser to transfer your tokens to your wallet.',
 
     // Profile
     'profile.title': 'Profile',

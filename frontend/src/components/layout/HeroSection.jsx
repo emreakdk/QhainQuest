@@ -2,7 +2,9 @@ import { useContext } from 'react';
 import { WalletContext } from '../../context/WalletContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useBalance } from '../../context/BalanceContext';
+import { isMobile } from 'react-device-detect';
 import Button from '../ui/Button';
+import MobileWarning from '../ui/MobileWarning';
 import FreighterConnect from '../features/wallet/FreighterConnect';
 
 const HeroSection = ({ onPageChange }) => {
@@ -76,6 +78,12 @@ const HeroSection = ({ onPageChange }) => {
               >
                 {t('home.useWithoutWallet')}
               </Button>
+              {/* Mobile Warning */}
+              {isMobile && (
+                <div className="mt-4">
+                  <MobileWarning />
+                </div>
+              )}
             </div>
           ) : (
             <div className="space-y-3 sm:space-y-4 max-w-sm sm:max-w-md mx-auto">

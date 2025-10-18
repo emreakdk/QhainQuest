@@ -4,11 +4,13 @@ import { useQuest } from '../../../context/QuestContext';
 import { useToken } from '../../../context/TokenContext';
 import { useBalance } from '../../../context/BalanceContext';
 import { WalletContext } from '../../../context/WalletContext';
+import { isMobile } from 'react-device-detect';
 import { SkeletonCard, SkeletonStats } from '../../ui/Skeleton';
 import AnimatedCounter from '../../ui/AnimatedCounter';
 import QuestCard from './QuestCard';
 import Button from '../../ui/Button';
 import Badge from '../../ui/Badge';
+import MobileWarning from '../../ui/MobileWarning';
 import { questDatabase, questCategories, difficultyLevels, mockUserStats, mockUserProgress } from '../../../data/questData';
 
 // Lazy load QuestQuiz
@@ -249,6 +251,13 @@ const QuestGrid = () => {
           </div>
         </div>
       </div>
+
+      {/* Mobile Warning */}
+      {isMobile && (
+        <div className="mb-6">
+          <MobileWarning />
+        </div>
+      )}
 
       {/* Enhanced Filters */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 sm:p-6 shadow-lg border border-slate-200 dark:border-slate-700">
