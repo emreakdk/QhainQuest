@@ -39,9 +39,7 @@ const UserProfile = () => {
   // Memoized tabs array to prevent unnecessary re-renders
   const tabs = useMemo(() => [
     { id: 'overview', label: t('profile.overview'), icon: '📊' },
-    { id: 'certificates', label: t('profile.certificates'), icon: '🏆' },
-    { id: 'achievements', label: t('profile.achievements'), icon: '🎯' },
-    { id: 'activity', label: t('profile.tabs.activity'), icon: '🕒' }
+    { id: 'certificates', label: t('profile.certificates'), icon: '🏆' }
   ], [t]);
 
   // Memoized function to prevent recreation on every render
@@ -52,23 +50,6 @@ const UserProfile = () => {
     setActiveTab(tabId);
   }, []);
 
-  // Memoized achievements array to prevent unnecessary re-renders
-  const achievements = useMemo(() => [
-    { title: t('achievements.firstStep'), description: t('achievements.firstStepDesc'), icon: "🚀", unlocked: true },
-    { title: t('achievements.tokenCollector'), description: t('achievements.tokenCollectorDesc'), icon: "💰", unlocked: true },
-    { title: t('achievements.certificateHunter'), description: t('achievements.certificateHunterDesc'), icon: "🏆", unlocked: true },
-    { title: t('achievements.expert'), description: t('achievements.expertDesc'), icon: "⭐", unlocked: false },
-    { title: t('achievements.speedMachine'), description: t('achievements.speedMachineDesc'), icon: "⚡", unlocked: false },
-    { title: t('achievements.legend'), description: t('achievements.legendDesc'), icon: "👑", unlocked: false }
-  ], [t]);
-
-  // Memoized activities array to prevent unnecessary re-renders
-  const activities = useMemo(() => [
-    { action: t('activity.stellarBasicsCompleted'), time: `2 ${t('activity.hoursAgo')}`, type: "quest" },
-    { action: t('activity.tokenRewardEarned'), time: `2 ${t('activity.hoursAgo')}`, type: "reward" },
-    { action: t('activity.newCertificateEarned'), time: `1 ${t('activity.daysAgo')}`, type: "certificate" },
-    { action: t('activity.defiQuestStarted'), time: `3 ${t('activity.daysAgo')}`, type: "quest" }
-  ], [t]);
 
   return (
     <div className="space-y-8">
@@ -130,113 +111,65 @@ const UserProfile = () => {
               </Badge>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {completedQuests.length > 0 ? completedQuests.map(quest => {
-                // FIX: Added null check to prevent React error #31 when quest object is undefined
-                if (!quest || !quest.name) {
-                  return null;
-                }
-                
-                return (
-                  <div key={quest.id} className="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl p-6 border border-purple-200 dark:border-purple-700">
-                    <div className="text-center">
-                      <div className="text-4xl mb-4">🏆</div>
-                      <h4 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
-                        {/* FIX: Rendered quest.name instead of the entire quest object to prevent React error #31 */}
-                        {t('profile.certificatePrefix')} {t(quest.nameKey || quest.name)}
-                      </h4>
-                      <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-                        {/* FIX: Rendered quest.description instead of the entire quest object */}
-                        {quest.description || 'Açıklama bulunamadı'}
-                      </p>
-                      <div className="flex items-center justify-center space-x-4 text-sm">
-                        <Badge variant="success">
-                          {/* FIX: Rendered quest.rewardAmount instead of the entire quest object */}
-                          +{quest.rewardAmount || 0} Token
-                        </Badge>
-                        <Badge variant="primary">
-                          {/* FIX: Rendered quest.difficulty string instead of the entire quest object */}
-                          {quest.difficulty || 'beginner'}
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
-                );
-              }) : (
-                <div className="col-span-full text-center py-8 text-slate-500 dark:text-slate-400">
-                  {t('emptyState.certificates')}
+            {isDemoMode ? (
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-8 text-center">
+                <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl">
+                  🔒
                 </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'achievements' && (
-          <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
-              {t('profile.yourAchievements')}
-            </h3>
-            
-            {achievements.filter(a => a.unlocked).length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {achievements.map((achievement, index) => (
-                  <div key={index} className={`p-6 rounded-xl border-2 ${
-                    achievement.unlocked 
-                      ? 'bg-gradient-to-br from-green-50 to-emerald-50 border-green-200 dark:from-green-900/20 dark:to-emerald-900/20 dark:border-green-700' 
-                      : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 opacity-60'
-                  }`}>
-                    <div className="flex items-center space-x-4">
-                      <div className={`text-3xl ${achievement.unlocked ? '' : 'grayscale'}`}>
-                        {achievement.icon}
-                      </div>
-                      <div className="flex-1">
-                        <h4 className={`font-semibold ${achievement.unlocked ? 'text-slate-900 dark:text-white' : 'text-slate-500 dark:text-slate-400'}`}>
-                          {achievement.title}
-                        </h4>
-                        <p className={`text-sm ${achievement.unlocked ? 'text-slate-600 dark:text-slate-300' : 'text-slate-400 dark:text-slate-500'}`}>
-                          {achievement.description}
-                        </p>
-                      </div>
-                      {achievement.unlocked && (
-                        <Badge variant="success">✓</Badge>
-                      )}
-                    </div>
-                  </div>
-                ))}
+                <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
+                  {t('demo.statsLocked.title')}
+                </h3>
+                <p className="text-slate-600 dark:text-slate-400 mb-4">
+                  {t('demo.statsLocked.message')}
+                </p>
+                <div className="flex items-center justify-center space-x-2 text-sm text-slate-500 dark:text-slate-400">
+                  <span>🏆</span>
+                  <span>{tokenData.completedQuests || 0} {t('profile.certificates')} {t('demo.earnedInDemo')}</span>
+                </div>
               </div>
             ) : (
-              <div className="text-center py-8 text-slate-500 dark:text-slate-400">
-                {t('achievements.emptyState')}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {completedQuests.length > 0 ? completedQuests.map(quest => {
+                  // FIX: Added null check to prevent React error #31 when quest object is undefined
+                  if (!quest || !quest.name) {
+                    return null;
+                  }
+                  
+                  return (
+                    <div key={quest.id} className="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl p-6 border border-purple-200 dark:border-purple-700">
+                      <div className="text-center">
+                        <div className="text-4xl mb-4">🏆</div>
+                        <h4 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
+                          {/* FIX: Rendered quest.name instead of the entire quest object to prevent React error #31 */}
+                          {t('profile.certificatePrefix')} {t(quest.nameKey || quest.name)}
+                        </h4>
+                        <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+                          {/* FIX: Rendered quest.description instead of the entire quest object */}
+                          {quest.description || 'Açıklama bulunamadı'}
+                        </p>
+                        <div className="flex items-center justify-center space-x-4 text-sm">
+                          <Badge variant="success">
+                            {/* FIX: Rendered quest.rewardAmount instead of the entire quest object */}
+                            +{quest.rewardAmount || 0} Token
+                          </Badge>
+                          <Badge variant="primary">
+                            {/* FIX: Rendered quest.difficulty string instead of the entire quest object */}
+                            {quest.difficulty || 'beginner'}
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }) : (
+                  <div className="col-span-full text-center py-8 text-slate-500 dark:text-slate-400">
+                    {t('emptyState.certificates')}
+                  </div>
+                )}
               </div>
             )}
           </div>
         )}
 
-        {activeTab === 'activity' && (
-          <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
-              {t('profile.dashboard.recentActivities')}
-            </h3>
-            <div className="space-y-3">
-              {activities.map((activity, index) => (
-                <div key={index} className="flex items-center space-x-3 p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
-                  <div className={`w-2 h-2 rounded-full ${
-                    activity.type === 'quest' ? 'bg-blue-500' :
-                    activity.type === 'reward' ? 'bg-yellow-500' : 'bg-purple-500'
-                  }`}></div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-slate-900 dark:text-white">
-                      {activity.action}
-                    </p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
-                      {activity.time}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

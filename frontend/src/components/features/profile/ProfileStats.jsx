@@ -98,8 +98,8 @@ const ProfileStats = ({ userStats }) => {
     },
     {
       title: t('profile.certificates'),
-      // FIX: Handle certificates as both array and number to prevent React error #31
-      value: Array.isArray(userStats?.certificates) ? userStats.certificates.length : (userStats?.certificates || 0),
+      // FIX: Use completedQuests count from tokenData for consistency
+      value: tokenData.completedQuests || 0,
       icon: '🏆',
       color: 'from-purple-500 to-pink-500',
       bgColor: 'bg-purple-50 dark:bg-purple-900/20',
@@ -107,28 +107,40 @@ const ProfileStats = ({ userStats }) => {
     }
   ];
 
-  // Demo mode conditional rendering
+  // Demo mode: Show regular stats with demo mode indicator
   if (isDemoMode) {
     return (
       <div className="space-y-6">
-        {/* Demo Mode Stats Placeholder */}
-        <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-700">
-          <CardContent className="p-8 text-center">
-            <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl">
-              🔒
-            </div>
-            <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
-              {t('demo.statsLocked.title')}
-            </h3>
-            <p className="text-slate-600 dark:text-slate-400 mb-4">
-              {t('demo.statsLocked.message')}
-            </p>
-            <div className="flex items-center justify-center space-x-2 text-sm text-slate-500 dark:text-slate-400">
-              <span>💰</span>
-              <span>{claimableBalance} CQT {t('demo.earnedInDemo')}</span>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Demo Mode Indicator */}
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4 text-center">
+          <div className="flex items-center justify-center space-x-2 text-blue-600 dark:text-blue-400">
+            <span>🔒</span>
+            <span className="text-sm font-medium">{t('demo.statsLocked.title')}</span>
+          </div>
+        </div>
+        
+        {/* Stats Grid - Show in demo mode but with limited functionality */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {stats.map((stat, index) => (
+            <Card key={index} className="overflow-hidden opacity-75">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">
+                      {stat.title}
+                    </p>
+                    <p className="text-3xl font-bold text-slate-900 dark:text-white">
+                      {stat.value}
+                    </p>
+                  </div>
+                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center text-2xl`}>
+                    {stat.icon}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     );
   }
