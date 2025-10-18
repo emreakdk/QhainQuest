@@ -189,7 +189,7 @@ const QuestGrid = () => {
           <div className="flex items-center justify-between">
             <div>
               <div className="text-2xl sm:text-3xl font-bold">
-                <AnimatedCounter value={tokenData.totalQuests || 0} duration={1500} />
+                <AnimatedCounter value={realQuests.length} duration={1500} />
               </div>
               <div className="text-blue-100 text-xs sm:text-sm">{t('stats.totalQuests')}</div>
             </div>
