@@ -149,6 +149,38 @@ const ProfileStats = ({ userStats }) => {
             </Card>
           ))}
         </div>
+
+        {/* Claim Button - CRITICAL FIX: Show in demo mode to prompt wallet connection */}
+        {claimableBalance > 0 && (
+          <Card className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-200 dark:border-green-700">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
+                    {t('profile.claim.title')}
+                  </h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                    {claimableBalance} {t('profile.claim.description')}
+                  </p>
+                </div>
+                <Button
+                  onClick={handleClaimTokens}
+                  disabled={isClaiming}
+                  className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-6 py-3"
+                >
+                  {isClaiming ? (
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>{t('profile.claim.transferring')}</span>
+                    </div>
+                  ) : (
+                    t('profile.claim.button')
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
     );
   }

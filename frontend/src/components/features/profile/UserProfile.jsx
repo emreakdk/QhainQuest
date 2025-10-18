@@ -38,10 +38,19 @@ const UserProfile = () => {
   }, [publicKey, isDemoMode, tokenData.completedQuests]); // Use tokenData.completedQuests for updates
 
   // Memoized tabs array to prevent unnecessary re-renders
-  const tabs = useMemo(() => [
-    { id: 'overview', label: t('profile.overview'), icon: '📊' },
-    { id: 'certificates', label: t('profile.certificates'), icon: '🏆' }
-  ], [t]);
+  // UI SIMPLIFICATION: Hide certificates tab in demo mode
+  const tabs = useMemo(() => {
+    const baseTabs = [
+      { id: 'overview', label: t('profile.overview'), icon: '📊' }
+    ];
+    
+    // Only add certificates tab when NOT in demo mode
+    if (!isDemoMode) {
+      baseTabs.push({ id: 'certificates', label: t('profile.certificates'), icon: '🏆' });
+    }
+    
+    return baseTabs;
+  }, [t, isDemoMode]);
 
   // Memoized function to prevent recreation on every render
   const truncateKey = useCallback((key) => `${key.slice(0, 6)}...${key.slice(-6)}`, []);
