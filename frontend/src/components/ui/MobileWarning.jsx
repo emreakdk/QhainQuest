@@ -17,7 +17,7 @@ const MobileWarning = ({ className = "", variant = "dark" }) => {
   const lightTextClasses = "text-yellow-700";
 
   // Entry variant - for entry page with transparent white background
-  const entryClasses = "bg-white/15 border border-white/30 text-white rounded-lg";
+  const entryClasses = "bg-white/15 border border-white/30 text-white rounded-lg flex items-center gap-2";
   const entryIconClasses = "text-white";
   const entryTitleClasses = "text-white";
   const entryTextClasses = "text-white text-opacity-90";
