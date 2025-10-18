@@ -34,6 +34,13 @@ const QuestGrid = () => {
       console.log('[QuestGrid DEBUG] Demo Mode - realQuests.length:', realQuests.length);
       console.log('[QuestGrid DEBUG] Demo Mode - quests.length:', quests.length);
       console.log('[QuestGrid DEBUG] Demo Mode - questDatabase.length:', questDatabase.length);
+      
+      // DEBUG: Check localStorage directly
+      const allCompletedQuests = JSON.parse(localStorage.getItem('completedQuests') || '[]');
+      console.log('[QuestGrid DEBUG] Demo Mode - all completedQuests in localStorage:', allCompletedQuests);
+      const demoQuests = allCompletedQuests.filter(key => key.startsWith('demo-'));
+      console.log('[QuestGrid DEBUG] Demo Mode - demo quests in localStorage:', demoQuests);
+      console.log('[QuestGrid DEBUG] Demo Mode - demo quests count:', demoQuests.length);
     }
   }, [isDemoMode, tokenData, realQuests.length, quests.length]);
   const [selectedCategory, setSelectedCategory] = useState('all');
