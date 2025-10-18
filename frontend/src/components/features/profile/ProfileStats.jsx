@@ -75,6 +75,7 @@ const ProfileStats = ({ userStats }) => {
   console.log(`[ProfileStats] tokenData.completedQuests:`, tokenData.completedQuests);
   console.log(`[ProfileStats] tokenData:`, tokenData);
 
+  // UI SIMPLIFICATION: Hide quest/certificate counters in demo mode
   const stats = [
     {
       title: t('profile.totalEarned'),
@@ -92,23 +93,26 @@ const ProfileStats = ({ userStats }) => {
       bgColor: 'bg-blue-50 dark:bg-blue-900/20',
       textColor: 'text-blue-600 dark:text-blue-400'
     },
-    {
-      title: t('profile.completedQuests'),
-      value: tokenData.completedQuests,
-      icon: '✅',
-      color: 'from-green-500 to-teal-500',
-      bgColor: 'bg-green-50 dark:bg-green-900/20',
-      textColor: 'text-green-600 dark:text-green-400'
-    },
-    {
-      title: t('profile.certificates'),
-      // FIX: Use completedQuests count from tokenData for consistency
-      value: tokenData.completedQuests || 0,
-      icon: '🏆',
-      color: 'from-purple-500 to-pink-500',
-      bgColor: 'bg-purple-50 dark:bg-purple-900/20',
-      textColor: 'text-purple-600 dark:text-purple-400'
-    }
+    // CONDITIONAL RENDERING: Only show quest/certificate counters when NOT in demo mode
+    ...(isDemoMode ? [] : [
+      {
+        title: t('profile.completedQuests'),
+        value: tokenData.completedQuests,
+        icon: '✅',
+        color: 'from-green-500 to-teal-500',
+        bgColor: 'bg-green-50 dark:bg-green-900/20',
+        textColor: 'text-green-600 dark:text-green-400'
+      },
+      {
+        title: t('profile.certificates'),
+        // FIX: Use completedQuests count from tokenData for consistency
+        value: tokenData.completedQuests || 0,
+        icon: '🏆',
+        color: 'from-purple-500 to-pink-500',
+        bgColor: 'bg-purple-50 dark:bg-purple-900/20',
+        textColor: 'text-purple-600 dark:text-purple-400'
+      }
+    ])
   ];
 
   // Demo mode: Show regular stats with demo mode indicator

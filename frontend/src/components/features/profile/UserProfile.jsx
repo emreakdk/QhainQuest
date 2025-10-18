@@ -66,9 +66,12 @@ const UserProfile = () => {
           <Badge variant="primary">
             {truncateKey(publicKey)}
           </Badge>
-          <Badge variant="success">
-            {tokenData.completedQuests || 0} {t('profile.questCompleted')}
-          </Badge>
+          {/* UI SIMPLIFICATION: Hide quest completed badge in demo mode */}
+          {!isDemoMode && (
+            <Badge variant="success">
+              {tokenData.completedQuests || 0} {t('profile.questCompleted')}
+            </Badge>
+          )}
         </div>
       </div>
 
