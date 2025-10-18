@@ -17,18 +17,17 @@ export const ThemeProvider = ({ children }) => {
   // CRITICAL FIX: Apply theme to DOM immediately on mount and when state changes
   useEffect(() => {
     const html = document.documentElement;
-    const body = document.body;
     
-    // Remove existing theme classes
-    html.classList.remove('light', 'dark');
-    body.classList.remove('light', 'dark');
+    // CRITICAL FIX: Only manage 'dark' class on document.documentElement
+    // Tailwind darkMode: 'class' only checks for 'dark' class on html element
+    if (isDarkMode) {
+      html.classList.add('dark');
+    } else {
+      html.classList.remove('dark');
+    }
     
-    // Add current theme class
-    const themeClass = isDarkMode ? 'dark' : 'light';
-    html.classList.add(themeClass);
-    body.classList.add(themeClass);
-    
-    console.log(`[ThemeProvider] Applied theme: ${themeClass} (isDarkMode: ${isDarkMode})`);
+    console.log(`[ThemeProvider] Applied theme: ${isDarkMode ? 'dark' : 'light'} (isDarkMode: ${isDarkMode})`);
+    console.log(`[ThemeProvider] HTML classes:`, html.classList.toString());
   }, [isDarkMode]);
 
   // CRITICAL FIX: Sync with localStorage when theme changes
