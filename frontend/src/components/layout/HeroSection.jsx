@@ -43,7 +43,7 @@ const HeroSection = ({ onPageChange }) => {
 
       <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
         {/* Main Title */}
-        <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-3 sm:mb-4 md:mb-6 lg:mb-8">
+        <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-black mt-8 sm:mt-12 md:mt-16 lg:mt-20 mb-3 sm:mb-4 md:mb-6 lg:mb-8">
           <span className="block text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-200 to-white animate-gradient-x">
             ChainQuest
           </span>
