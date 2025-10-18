@@ -173,7 +173,7 @@ const ProfileDashboard = () => {
   }
 
   // Safe destructuring with fallbacks
-  const stats = dashboardData?.stats || { level: 1, totalXP: 0, completedQuests: [], perfectScores: 0, levelData: { name: t('level.beginner'), icon: '🌱' } };
+  const stats = dashboardData?.stats || { level: 1, totalXP: 0, completedQuests: [], perfectScores: 0, levelData: { name: 'Başlangıç', icon: '🌱' } };
   const tokenStats = dashboardData?.tokenStats || { currentBalance: 0, totalEarned: 0, totalTransferred: 0, totalWithdrawn: 0, transactionCount: 0 };
   const recentActivity = dashboardData?.recentActivity || [];
   const achievements = dashboardData?.achievements || [];
