@@ -42,6 +42,9 @@ const QuestGrid = () => {
   
   const completedQuestsCount = getCompletedQuestsCount();
   
+  // CRITICAL FIX: Calculate in-progress quests correctly for both modes
+  const inProgressQuestsCount = Math.max(0, realQuests.length - completedQuestsCount);
+  
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedDifficulty, setSelectedDifficulty] = useState('all');
   const [selectedQuest, setSelectedQuest] = useState(null);
@@ -231,7 +234,7 @@ const QuestGrid = () => {
           <div className="flex items-center justify-between">
             <div>
               <div className="text-2xl sm:text-3xl font-bold">
-                <AnimatedCounter value={tokenData.inProgressQuests || 0} duration={1500} />
+                <AnimatedCounter value={inProgressQuestsCount} duration={1500} />
               </div>
               <div className="text-purple-100 text-xs sm:text-sm">{t('stats.inProgress')}</div>
             </div>
