@@ -4,6 +4,17 @@ import { useTheme } from '../context/ThemeContext';
 import { useContext } from 'react';
 import { WalletContext } from '../context/WalletContext';
 
+// Import images
+import step1Image from '../assets/images/how-to-claim/step1-stellar-lab-network-selector.png';
+import step2Image from '../assets/images/how-to-claim/step2-stellar-lab-transaction-builder.png';
+import step3Image from '../assets/images/how-to-claim/step3-source-account-input.png';
+import step4Image from '../assets/images/how-to-claim/step4-fetch-sequence-button.png';
+import step5Image from '../assets/images/how-to-claim/step5-operation-type-change-trust.png';
+import step6Image from '../assets/images/how-to-claim/step6-asset-information-form.png';
+import step7Image from '../assets/images/how-to-claim/step7-sign-transaction-button.png';
+import step8Image from '../assets/images/how-to-claim/step8-sign-with-wallet-extension.png';
+import step9Image from '../assets/images/how-to-claim/step9-submit-transaction-success.png';
+
 const HowToClaimPage = ({ onPageChange }) => {
   const { t } = useLanguage();
   const { isDarkMode } = useTheme();
@@ -29,7 +40,7 @@ const HowToClaimPage = ({ onPageChange }) => {
       description: t('howToClaim.steps.step1.description'),
       visual: (
         <img 
-          src="/images/how-to-claim/step1-stellar-lab-network-selector.png"
+          src={step1Image}
           alt="Stellar Laboratory Network Selector - Testnet seçimi"
           className="w-full h-auto rounded-md object-contain"
         />
@@ -41,7 +52,7 @@ const HowToClaimPage = ({ onPageChange }) => {
       description: t('howToClaim.steps.step2.description'),
       visual: (
         <img 
-          src="/images/how-to-claim/step2-stellar-lab-transaction-builder.png"
+          src={step2Image}
           alt="Stellar Laboratory Transaction Builder - Build Transaction seçimi"
           className="w-full h-auto rounded-md object-contain"
         />
@@ -53,7 +64,7 @@ const HowToClaimPage = ({ onPageChange }) => {
       description: t('howToClaim.steps.step3.description'),
       visual: (
         <img 
-          src="/images/how-to-claim/step3-source-account-input.png"
+          src={step3Image}
           alt="Source Account alanına Public Key girilmesi"
           className="w-full h-auto rounded-md object-contain"
         />
@@ -65,7 +76,7 @@ const HowToClaimPage = ({ onPageChange }) => {
       description: t('howToClaim.steps.step4.description'),
       visual: (
         <img 
-          src="/images/how-to-claim/step4-fetch-sequence-button.png"
+          src={step4Image}
           alt="Fetch next sequence butonuna tıklama"
           className="w-full h-auto rounded-md object-contain"
         />
@@ -77,7 +88,7 @@ const HowToClaimPage = ({ onPageChange }) => {
       description: t('howToClaim.steps.step5.description'),
       visual: (
         <img 
-          src="/images/how-to-claim/step5-operation-type-change-trust.png"
+          src={step5Image}
           alt="Operation Type açılır menüsünden Change Trust seçimi"
           className="w-full h-auto rounded-md object-contain"
         />
@@ -89,7 +100,7 @@ const HowToClaimPage = ({ onPageChange }) => {
       description: t('howToClaim.steps.step6.description'),
       visual: (
         <img 
-          src="/images/how-to-claim/step6-asset-information-form.png"
+          src={step6Image}
           alt="Asset bilgileri formu - CQT ve Issuer ID girişi"
           className="w-full h-auto rounded-md object-contain"
         />
@@ -101,7 +112,7 @@ const HowToClaimPage = ({ onPageChange }) => {
       description: t('howToClaim.steps.step7.description'),
       visual: (
         <img 
-          src="/images/how-to-claim/step7-sign-transaction-button.png"
+          src={step7Image}
           alt="Sign in Transaction Signer butonu"
           className="w-full h-auto rounded-md object-contain"
         />
@@ -113,7 +124,7 @@ const HowToClaimPage = ({ onPageChange }) => {
       description: t('howToClaim.steps.step8.description'),
       visual: (
         <img 
-          src="/images/how-to-claim/step8-sign-with-wallet-extension.png"
+          src={step8Image}
           alt="Cüzdan uzantısı ile imzalama seçeneği"
           className="w-full h-auto rounded-md object-contain"
         />
@@ -125,7 +136,7 @@ const HowToClaimPage = ({ onPageChange }) => {
       description: t('howToClaim.steps.step9.description'),
       visual: (
         <img 
-          src="/images/how-to-claim/step9-submit-transaction-success.png"
+          src={step9Image}
           alt="Submit Transaction butonu ve başarılı imzalama"
           className="w-full h-auto rounded-md object-contain"
         />
