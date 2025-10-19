@@ -18,6 +18,7 @@ const Header = ({ currentPage, onPageChange }) => {
   const truncateKey = (key) => `${key.slice(0, 4)}...${key.slice(-4)}`;
 
   const navigationItems = [
+    { id: 'how-to-claim', label: t('nav.howToClaim'), icon: '📋' },
     { id: 'quests', label: t('nav.quests'), icon: '🎯' },
     { id: 'leaderboard', label: t('nav.leaderboard'), icon: '🏆' },
     { id: 'profile', label: t('nav.profile'), icon: '👤' },

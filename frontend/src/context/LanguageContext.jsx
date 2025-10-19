@@ -9,6 +9,7 @@ const translations = {
     'nav.profile': 'Profil',
     'nav.quests': 'Görevler',
     'nav.leaderboard': 'Başarılar',
+    'nav.howToClaim': 'Nasıl Çekilir?',
     
     // Theme
     'theme.switchToLight': 'Açık Temaya Geç',
@@ -695,6 +696,7 @@ const translations = {
     'nav.profile': 'Profile',
     'nav.quests': 'Quests',
     'nav.leaderboard': 'Achievements',
+    'nav.howToClaim': 'How to Claim?',
     
     // Theme
     'theme.switchToLight': 'Switch to Light Theme',
