@@ -85,7 +85,7 @@ const HowToClaimPage = () => {
         ? 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900' 
         : 'bg-gradient-to-br from-blue-50 via-purple-50 to-indigo-50'
     }`}>
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 max-w-4xl">
         {/* Header Section */}
         <div className="text-center mb-12 animate-fade-in-up">
           <h1 className={`text-4xl md:text-5xl font-bold mb-6 ${
@@ -134,7 +134,7 @@ const HowToClaimPage = () => {
           {steps.map((step, index) => (
             <div
               key={step.id}
-              className={`rounded-2xl p-8 animate-fade-in-up ${
+              className={`rounded-2xl p-4 sm:p-6 lg:p-8 animate-fade-in-up ${
                 isDarkMode 
                   ? 'bg-slate-800/50 border border-slate-700' 
                   : 'bg-white/70 border border-gray-200'
@@ -186,8 +186,8 @@ const HowToClaimPage = () => {
                           }`}>
                             {t('howToClaim.issuerId')}
                           </label>
-                          <div className="flex items-center space-x-2">
-                            <code className={`px-3 py-2 rounded text-sm font-mono flex-1 ${
+                          <div className="flex flex-col sm:flex-row gap-2 sm:gap-2 sm:items-center">
+                            <code className={`px-3 py-2 rounded text-xs sm:text-sm font-mono break-all ${
                               isDarkMode ? 'bg-slate-800 text-blue-400' : 'bg-gray-200 text-blue-600'
                             }`}>
                               {issuerId}
@@ -274,7 +274,7 @@ const HowToClaimPage = () => {
             }`}>
               {t('howToClaim.yourPublicKey')}
             </h4>
-            <code className={`px-3 py-2 rounded text-sm font-mono block ${
+            <code className={`px-3 py-2 rounded text-xs sm:text-sm font-mono block break-all ${
               isDarkMode ? 'bg-slate-800 text-blue-400' : 'bg-white text-blue-600'
             }`}>
               {publicKey}
