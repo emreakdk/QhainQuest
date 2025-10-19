@@ -15,6 +15,10 @@ const Header = ({ currentPage, onPageChange }) => {
   const { t, toggleLanguage, language } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const handleGoHome = () => {
+    window.location.href = '/';
+  };
+
   const truncateKey = (key) => `${key.slice(0, 4)}...${key.slice(-4)}`;
 
   const navigationItems = [
@@ -105,11 +109,26 @@ const Header = ({ currentPage, onPageChange }) => {
             )}
           </button>
 
+          {/* Exit to Home Button */}
+          <button
+            onClick={handleGoHome}
+            className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg transition-colors items-center justify-center cursor-pointer order-3 ${
+              (publicKey || isDemoMode) 
+                ? 'bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
+                : 'bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
+            }`}
+            title={t('header.goHome')}
+          >
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+          </button>
+
           {/* Mobile Menu Button */}
           {(publicKey || isDemoMode) && (
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer border border-slate-200 dark:border-slate-600 order-3"
+              className="lg:hidden p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer border border-slate-200 dark:border-slate-600 order-4"
               title="Menü"
             >
               <svg className="w-6 h-6 text-slate-700 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -195,6 +214,18 @@ const Header = ({ currentPage, onPageChange }) => {
                 {item.label}
               </button>
             ))}
+            
+            {/* Exit to Home Button - Mobile */}
+            <button
+              onClick={() => {
+                handleGoHome();
+                setMobileMenuOpen(false);
+              }}
+              className="w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all cursor-pointer text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 border-t border-slate-200 dark:border-slate-700 mt-2 pt-4"
+            >
+              <span className="mr-3 text-lg">🏠</span>
+              {t('header.goHome')}
+            </button>
             
             {/* Mobile Wallet Info */}
             {publicKey && (
