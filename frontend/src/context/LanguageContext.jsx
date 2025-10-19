@@ -46,7 +46,7 @@ const translations = {
     // Mobile Warnings
     'warnings.mobileTitle': 'Mobil Uyarı',
     'warnings.mobileClaim': 'Tokenlarınızı cüzdanınıza aktarmak için lütfen masaüstü tarayıcıdan giriş yapın.',
-    'warnings.mobileUseDemo': 'Mobilden girdiyseniz, Cüzdansız Kullan ile devam edin ↓',
+    'warnings.mobileUseDemo': 'Mobilden girdiyseniz, Cüzdansız Kullan ile devam edin',
 
     // Profile
     'profile.title': 'Profil',
@@ -698,7 +698,7 @@ const translations = {
     // Mobile Warnings
     'warnings.mobileTitle': 'Mobile Notice',
     'warnings.mobileClaim': 'Please log in from a desktop browser to transfer your tokens to your wallet.',
-    'warnings.mobileUseDemo': 'If on mobile, please continue with Use Without Wallet ↓',
+    'warnings.mobileUseDemo': 'If on mobile, please continue with Use Without Wallet',
 
     // Profile
     'profile.title': 'Profile',

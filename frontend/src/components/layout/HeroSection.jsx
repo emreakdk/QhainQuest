@@ -82,7 +82,8 @@ const HeroSection = ({ onPageChange }) => {
               {isMobile && (
                 <>
                   <p className="text-center text-slate-300 text-sm mb-2">
-                    {t('warnings.mobileUseDemo')}
+                    {t('warnings.mobileUseDemo')}{' '}
+                    <span className="inline-block text-lg font-bold text-white align-middle ml-1">↑</span>
                   </p>
                   <MobileWarning variant="entry" className="mt-4" />
                 </>
