@@ -281,7 +281,7 @@ const QuestGrid = () => {
                 <span className="sm:hidden">{t(category.nameKey || category.name).slice(0, 3)}</span>
                 <Badge 
                   variant={selectedCategory === category.id ? 'default' : 'outline'}
-                  className="ml-1 text-xs group-hover:text-white dark:group-hover:text-slate-300"
+                  className="ml-1 text-xs group-hover:text-black dark:group-hover:text-slate-300"
                 >
                   {realQuests.filter(q => {
                     // Fixed: Add null check for quest object
