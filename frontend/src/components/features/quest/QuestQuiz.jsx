@@ -374,7 +374,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
           <Card className="w-full max-w-lg mx-auto bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 border-purple-200 dark:border-purple-700">
             <CardHeader className="text-center pb-4 py-8">
               <div className="text-6xl mb-4 animate-bounce">🎉</div>
-              <h2 className="text-2xl font-bold text-purple-800 dark:text-purple-200 mb-4">
+              <h2 className="text-2xl font-bold text-slate-700 dark:text-purple-200 mb-4">
                 {t('profile.questCompleted')}
               </h2>
               <p className="text-purple-600 dark:text-purple-300 mb-8">
