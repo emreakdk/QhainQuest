@@ -33,7 +33,6 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
   const [showWrongAnswers, setShowWrongAnswers] = useState(false);
   const [currentWrongIndex, setCurrentWrongIndex] = useState(0);
   const [showCelebration, setShowCelebration] = useState(false);
-  const [wasAlreadyCompleted, setWasAlreadyCompleted] = useState(false);
   const [userAnswers, setUserAnswers] = useState([]); // Track all user answers
   const [questCompleted, setQuestCompleted] = useState(false); // Track quest completion
 
@@ -183,7 +182,6 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
       if (isAlreadyCompleted) {
         // Quest already completed - show message and don't transfer tokens
         setQuestCompleted(true);
-        setWasAlreadyCompleted(true);
         setIsSubmitting(false);
         showError('Quest Zaten Tamamlandı', 'Bu testi zaten tamamlamıştınız.');
         return;
@@ -196,7 +194,6 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
         // Mark quest as completed locally (ALWAYS save, including demo mode)
         questApiService.markQuestCompleted(userIdentifier, questId);
         setQuestCompleted(true);
-        setWasAlreadyCompleted(false); // First time completion
         
         // Add reward to claimable balance using global balance context
         addToClaimableBalance(userIdentifier, result.data.rewardAmount);
@@ -584,7 +581,6 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
       {showCelebration && (
         <CelebrationModal
           quest={quest}
-          wasAlreadyCompleted={wasAlreadyCompleted}
           onClose={() => {
             console.log('DEBUG: CelebrationModal closed');
             setShowCelebration(false);
