@@ -10,6 +10,7 @@ const translations = {
     'nav.leaderboard': 'Başarılar',
     'nav.howToClaim': 'Nasıl Çekilir?',
     
+    'header.switchToDemo': 'Demoya Geç',
     'theme.switchToLight': 'Açık Temaya Geç',
     'theme.switchToDark': 'Koyu Temaya Geç',
     'home.title': 'Bilgini Kanıtla, Geleceği Kazan.',
@@ -641,6 +642,7 @@ const translations = {
     'nav.leaderboard': 'Achievements',
     'nav.howToClaim': 'How to Claim?',
     
+    'header.switchToDemo': 'Switch to Demo',
     'theme.switchToLight': 'Switch to Light Theme',
     'theme.switchToDark': 'Switch to Dark Theme',
     
