@@ -80,13 +80,20 @@ const HeroSection = ({ onPageChange }) => {
               </Button>
               {/* Mobile Warning */}
               {isMobile && (
-                <>
-                  <p className="text-center text-slate-300 text-sm mb-2">
-                    {t('warnings.mobileUseDemo')}{' '}
-                    <span className="inline-block text-lg font-bold text-white align-middle ml-1">↑</span>
+                <div className="mt-4 flex flex-col items-center">
+                  {/* Standalone Arrow Element */}
+                  <span className="text-xl sm:text-2xl font-bold text-white mb-1 sm:mb-2 animate-bounce">
+                    ↑
+                  </span>
+                  
+                  {/* Guidance Text */}
+                  <p className="text-center text-sm sm:text-base text-slate-300 mb-4">
+                    {t('warnings.mobileUseDemo')}
                   </p>
-                  <MobileWarning variant="entry" className="mt-4" />
-                </>
+
+                  {/* Existing Mobile Warning Box */}
+                  <MobileWarning variant="entry" />
+                </div>
               )}
             </div>
           ) : (
