@@ -15,12 +15,10 @@ export const QuestProvider = ({ children }) => {
   const [userCertificates, setUserCertificates] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
 
-  // Quest'leri yükle - useCallback ile optimize edildi
   const loadQuests = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      // Gerçek verileri kullan
       setQuests(questDatabase);
     } catch (err) {
       setError('Quest\'ler yüklenirken hata oluştu');
@@ -30,7 +28,6 @@ export const QuestProvider = ({ children }) => {
     }
   }, []);
 
-  // Kullanıcı ilerlemesini yükle - useCallback ile optimize edildi
   const loadUserProgress = useCallback(async (userAddress) => {
     if (!userAddress) {
       setCurrentUser(null);
@@ -43,14 +40,12 @@ export const QuestProvider = ({ children }) => {
     try {
       setCurrentUser(userAddress);
       
-      // Gerçek veri yöneticisini kullan
       const { DataManager } = await import('../systems/dataManager.js');
       const dataManager = new DataManager(userAddress);
       const stats = dataManager.getUserStats();
       
       setUserStats(stats);
       
-      // Sertifikaları güvenli hale getir
       const safeCertificates = Array.isArray(stats.certificates) ? stats.certificates.map(cert => ({
         id: cert?.id || 'unknown',
         questId: cert?.questId || 'unknown',
@@ -67,7 +62,6 @@ export const QuestProvider = ({ children }) => {
       
       setUserCertificates(safeCertificates);
       
-      // Progress map'i oluştur
       const progressMap = new Map();
       if (stats.questHistory) {
         stats.questHistory.forEach(quest => {
@@ -82,33 +76,26 @@ export const QuestProvider = ({ children }) => {
     }
   }, []);
 
-  // Cevap gönder - useCallback ile optimize edildi
   const submitAnswer = useCallback(async (userAddress, questId, lessonId, answer, performance = {}) => {
     try {
       if (!userAddress) {
         throw new Error('Kullanıcı adresi bulunamadı');
       }
 
-      // Quest verilerini al
       const quest = quests.find(q => q.id === questId);
       if (!quest) {
         throw new Error('Quest bulunamadı');
       }
 
-      // Sadece quest tamamlandığında completeQuest çağır
       if (lessonId === quest.lessons.length - 1) {
-        // Gerçek veri yöneticisini kullan
         const { DataManager } = await import('../systems/dataManager.js');
         const dataManager = new DataManager(userAddress);
         
-        // Quest tamamlama işlemini gerçekleştir
         const result = await dataManager.completeQuest(quest, performance);
       
       if (result.success) {
-        // Context state'ini güncelle
         setUserStats(result.stats);
         
-        // Progress'i güncelle
         setUserProgress(prev => {
           const newProgress = new Map(prev);
           newProgress.set(questId, {
@@ -123,11 +110,9 @@ export const QuestProvider = ({ children }) => {
           return newProgress;
         });
 
-        // Sertifikaları güncelle
         if (result.certificate) {
           setUserCertificates(prev => {
             const current = Array.isArray(prev) ? prev : [];
-            // Sertifika objesini güvenli şekilde ekle
             const safeCertificate = {
               id: result.certificate.id || 'unknown',
               questId: result.certificate.questId || 'unknown',
@@ -148,7 +133,6 @@ export const QuestProvider = ({ children }) => {
         return result;
       }
       } else {
-        // Sadece cevap kaydedildi, quest tamamlanmadı
         return { success: true };
       }
     } catch (err) {
@@ -157,13 +141,11 @@ export const QuestProvider = ({ children }) => {
     }
   }, [quests]);
 
-  // Quest durumunu getir - useMemo ile optimize edildi
   const getQuestStatus = useCallback((quest) => {
     const progress = userProgress.get(quest.id) || 0;
     return questService.getQuestStatus(quest, progress);
   }, [userProgress]);
 
-  // Quest ilerlemesini getir - useMemo ile optimize edildi
   const getQuestProgress = useCallback((quest) => {
     const progress = userProgress.get(quest.id) || 0;
     return {
@@ -173,17 +155,14 @@ export const QuestProvider = ({ children }) => {
     };
   }, [userProgress]);
 
-  // Quest tamamlanmış mı kontrol et - useMemo ile optimize edildi
   const isQuestCompleted = useCallback((quest) => {
     return getQuestStatus(quest) === 'completed';
   }, [getQuestStatus]);
 
-  // Kullanıcının sertifikası var mı kontrol et - useMemo ile optimize edildi
   const hasCertificate = useCallback((questId) => {
     return userCertificates.some(cert => cert.questId === questId);
   }, [userCertificates]);
 
-  // Cache'i temizle - useCallback ile optimize edildi
   const refreshData = useCallback(async (userAddress) => {
     questService.clearCache();
     await loadQuests();
@@ -192,19 +171,16 @@ export const QuestProvider = ({ children }) => {
     }
   }, [loadQuests, loadUserProgress]);
 
-  // İlk yükleme
   useEffect(() => {
     loadQuests();
   }, [loadQuests]);
 
-  // Refresh user balance after quest completion
   const refreshUserBalance = useCallback(async (userAddress) => {
     if (!userAddress) return;
     
     try {
       console.log('Refreshing user balance for:', userAddress);
       
-      // Reload user progress to get updated stats
       await loadUserProgress(userAddress);
       
       console.log('User balance refreshed successfully');
@@ -213,9 +189,7 @@ export const QuestProvider = ({ children }) => {
     }
   }, [loadUserProgress]);
 
-  // Context value'yu useMemo ile optimize et
   const value = useMemo(() => ({
-    // State
     quests,
     loading,
     error,
@@ -223,14 +197,12 @@ export const QuestProvider = ({ children }) => {
     userStats,
     userCertificates,
     
-    // Actions
     loadQuests,
     loadUserProgress,
     submitAnswer,
     refreshData,
     refreshUserBalance,
     
-    // Helpers
     getQuestStatus,
     getQuestProgress,
     isQuestCompleted,

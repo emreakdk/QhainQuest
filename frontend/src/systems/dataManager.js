@@ -1,4 +1,3 @@
-// Gerçek Veri Yönetim Sistemi
 import { UserStatsManager } from './levelSystem.js';
 import { TokenManager } from './tokenSystem.js';
 
@@ -9,25 +8,20 @@ class DataManager {
     this.tokenManager = new TokenManager(userAddress);
   }
 
-  // Quest tamamlama işlemi
   async completeQuest(questData, performance) {
     try {
-      // 1. Seviye sistemi güncelle
       const levelResult = this.statsManager.addQuestCompletion(questData, performance);
       
-      // 2. Token ödülü ver
       const tokenResult = await this.tokenManager.awardQuestTokens(
         questData.id, 
         levelResult.tokensGained
       );
       
-      // 3. Sertifika ver (eğer gerekiyorsa)
       let certificateResult = null;
       if (this.shouldAwardCertificate(questData, levelResult.newLevel)) {
         certificateResult = await this.awardCertificate(questData);
       }
       
-      // 4. Sonuçları birleştir
       return {
         success: true,
         level: {
@@ -62,17 +56,13 @@ class DataManager {
     }
   }
 
-  // Sertifika verme kontrolü
   shouldAwardCertificate(questData, userLevel) {
-    // İlk kez tamamlama veya belirli seviye gereksinimleri
     return questData.certificateNftUrl && 
            (userLevel >= 2 || this.statsManager.stats.completedQuests.length === 1);
   }
 
-  // Sertifika verme
   async awardCertificate(questData) {
     try {
-      // NFT sertifikası oluştur ve ver
       const certificate = {
         id: `cert_${questData.id}_${Date.now()}`,
         questId: questData.id,
@@ -83,7 +73,6 @@ class DataManager {
         transactionHash: null // Blockchain'den gelecek
       };
       
-      // Sertifikayı kullanıcıya ekle
       if (!this.statsManager.stats.certificates) {
         this.statsManager.stats.certificates = [];
       }
@@ -109,14 +98,12 @@ class DataManager {
     }
   }
 
-  // Sertifika nadirliği hesapla
   calculateRarity(questData) {
     if (questData.difficulty === 'advanced') return 'legendary';
     if (questData.difficulty === 'intermediate') return 'rare';
     return 'common';
   }
 
-  // Kullanıcı dashboard verileri
   async getDashboardData() {
     try {
       const [stats, tokenStats, recentActivity] = await Promise.all([
@@ -139,18 +126,15 @@ class DataManager {
     }
   }
 
-  // Kullanıcı istatistikleri
   getUserStats() {
     return this.statsManager.getStats();
   }
 
-  // Son aktiviteler
   async getRecentActivity() {
     try {
       const tokenHistory = await this.tokenManager.getTokenHistory();
       const questHistory = this.statsManager.stats.questHistory || [];
       
-      // Son 10 aktiviteyi birleştir ve sırala
       const activities = [
         ...(tokenHistory || []).slice(0, 5).map(tx => ({
           type: 'token',
@@ -201,12 +185,10 @@ class DataManager {
     }
   }
 
-  // Son başarılar
   getRecentAchievements() {
     return this.statsManager.stats.achievements.slice(-5);
   }
 
-  // Seviye ilerlemesi
   getLevelProgress(stats) {
     return {
       currentLevel: stats.level,
@@ -217,7 +199,6 @@ class DataManager {
     };
   }
 
-  // Streak bilgileri
   getStreakInfo(stats) {
     return {
       dailyStreak: stats.dailyStreak,
@@ -228,7 +209,6 @@ class DataManager {
     };
   }
 
-  // Varsayılan dashboard verisi
   getDefaultDashboardData() {
     return {
       stats: {
@@ -264,11 +244,9 @@ class DataManager {
     };
   }
 
-  // Performans grafikleri için veri
   getPerformanceData() {
     const stats = this.statsManager.stats;
     
-    // Son 30 günün verileri
     const last30Days = [];
     for (let i = 29; i >= 0; i--) {
       const date = new Date();
@@ -283,7 +261,6 @@ class DataManager {
       });
     }
     
-    // Kategori bazlı istatistikler
     const categoryStats = {
       blockchain: { completed: 0, totalXP: 0, totalTokens: 0 },
       'smart-contracts': { completed: 0, totalXP: 0, totalTokens: 0 },
@@ -291,7 +268,6 @@ class DataManager {
       nft: { completed: 0, totalXP: 0, totalTokens: 0 }
     };
     
-    // Zorluk bazlı istatistikler
     const difficultyStats = {
       beginner: { completed: 0, totalXP: 0, totalTokens: 0 },
       intermediate: { completed: 0, totalXP: 0, totalTokens: 0 },
@@ -312,17 +288,14 @@ class DataManager {
     };
   }
 
-  // Veri temizleme (test için)
   clearUserData() {
     localStorage.removeItem(`chainquest_stats_${this.userAddress}`);
     localStorage.removeItem(`chainquest_balance_${this.userAddress}`);
   }
 }
 
-// Export the class
 export { DataManager };
 
-// Hook olarak kullanım
 export const useDataManager = (userAddress) => {
   if (!userAddress) {
     return {

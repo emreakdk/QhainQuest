@@ -4,7 +4,6 @@ import { useTheme } from '../context/ThemeContext';
 import { useContext } from 'react';
 import { WalletContext } from '../context/WalletContext';
 
-// Import images
 import step1Image from '../assets/images/how-to-claim/step1-stellar-lab-network-selector.png';
 import step2Image from '../assets/images/how-to-claim/step2-stellar-lab-transaction-builder.png';
 import step3Image from '../assets/images/how-to-claim/step3-source-account-input.png';

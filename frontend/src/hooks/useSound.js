@@ -38,14 +38,12 @@ const useSound = () => {
   }, [createAudioContext]);
 
   const playSuccessSound = useCallback(() => {
-    // Success chord: C-E-G
     playTone(523.25, 300); // C5
     setTimeout(() => playTone(659.25, 300), 100); // E5
     setTimeout(() => playTone(783.99, 400), 200); // G5
   }, [playTone]);
 
   const playErrorSound = useCallback(() => {
-    // Error sound: descending tone
     playTone(400, 200);
     setTimeout(() => playTone(300, 200), 100);
     setTimeout(() => playTone(200, 300), 200);
@@ -56,7 +54,6 @@ const useSound = () => {
   }, [playTone]);
 
   const playNotificationSound = useCallback(() => {
-    // Notification: gentle bell
     playTone(880, 300, 'sine');
     setTimeout(() => playTone(1108.73, 300, 'sine'), 150);
   }, [playTone]);

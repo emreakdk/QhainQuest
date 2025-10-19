@@ -7,17 +7,14 @@ class QuestService {
     this.maxCacheSize = 50; // Maksimum cache boyutu
   }
 
-  // Cache boyutunu kontrol et ve gereksizleri temizle
   _cleanupCache() {
     if (this.cache.size > this.maxCacheSize) {
       const entries = Array.from(this.cache.entries());
-      // En eski %20'yi sil
       const toDelete = entries.slice(0, Math.floor(entries.length * 0.2));
       toDelete.forEach(([key]) => this.cache.delete(key));
     }
   }
 
-  // Tüm quest'leri getir (cache'li)
   async getAllQuests() {
     const cacheKey = 'all_quests';
     
@@ -42,7 +39,6 @@ class QuestService {
     }
   }
 
-  // Belirli bir quest'i getir
   async getQuest(questId) {
     const cacheKey = `quest_${questId}`;
     
@@ -66,7 +62,6 @@ class QuestService {
     }
   }
 
-  // Kullanıcının quest'teki ilerlemesini getir
   async getUserProgress(userAddress, questId) {
     try {
       return await sorobanClient.getUserProgress(userAddress, questId);
@@ -76,7 +71,6 @@ class QuestService {
     }
   }
 
-  // Kullanıcının tüm quest'lerdeki ilerlemesini getir
   async getAllUserProgress(userAddress) {
     try {
       const quests = await this.getAllQuests();
@@ -94,7 +88,6 @@ class QuestService {
     }
   }
 
-  // Kullanıcının sertifika durumunu kontrol et
   async hasCertificate(userAddress, questId) {
     try {
       return await sorobanClient.hasCertificate(userAddress, questId);
@@ -104,7 +97,6 @@ class QuestService {
     }
   }
 
-  // Kullanıcının tüm sertifikalarını getir
   async getAllUserCertificates(userAddress) {
     try {
       const quests = await this.getAllQuests();
@@ -128,12 +120,10 @@ class QuestService {
     }
   }
 
-  // Cevap gönder
   async submitAnswer(userAddress, questId, lessonId, answer) {
     try {
       const result = await sorobanClient.submitAnswer(userAddress, questId, lessonId, answer);
       
-      // Cache'i temizle çünkü ilerleme değişti
       this.cache.delete(`quest_${questId}`);
       this.cache.delete('all_quests');
       
@@ -144,7 +134,6 @@ class QuestService {
     }
   }
 
-  // Kullanıcı istatistiklerini hesapla
   async getUserStats(userAddress) {
     try {
       const [allQuests, allProgress, allCertificates, tokenBalance] = await Promise.all([
@@ -186,9 +175,7 @@ class QuestService {
     }
   }
 
-  // Quest durumunu belirle
   getQuestStatus(quest, progress) {
-    // Fixed: Add null checks for quest object and lessons property
     if (!quest || !quest.lessons || !Array.isArray(quest.lessons)) {
       return 'available';
     }
@@ -201,17 +188,14 @@ class QuestService {
     }
   }
 
-  // Cache'i temizle
   clearCache() {
     this.cache.clear();
   }
 
-  // Belirli bir quest'in cache'ini temizle
   clearQuestCache(questId) {
     this.cache.delete(`quest_${questId}`);
   }
 }
 
-// Singleton instance
 export const questService = new QuestService();
 export default questService;

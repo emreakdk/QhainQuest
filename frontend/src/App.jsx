@@ -24,13 +24,11 @@ function AppContent() {
   const { loadTokenData } = useToken();
   const { loadBalanceForUser } = useBalance();
   const [currentPage, setCurrentPage] = useState(() => {
-    // Önce localStorage'dan al
     const savedPage = localStorage.getItem('chainquest-current-page');
     if (savedPage) {
       return savedPage;
     }
     
-    // Sonra URL'den al
     const urlParams = new URLSearchParams(window.location.search);
     const page = urlParams.get('page');
     return page || 'quests';
@@ -39,16 +37,13 @@ function AppContent() {
   const handlePageChange = (page) => {
     setCurrentPage(page);
     
-    // LocalStorage'a kaydet
     localStorage.setItem('chainquest-current-page', page);
     
-    // URL'yi güncelle
     const url = new URL(window.location);
     url.searchParams.set('page', page);
     window.history.pushState({}, '', url);
   };
 
-  // Load token data and balance when user changes
   useEffect(() => {
     const userIdentifier = isDemoMode ? 'demo' : publicKey;
     loadTokenData(userIdentifier);
@@ -70,8 +65,6 @@ function AppContent() {
     }
   };
 
-  
-  // Show loading spinner while wallet state is being initialized
   if (!isInitialized) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white flex items-center justify-center">

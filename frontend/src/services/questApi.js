@@ -1,22 +1,10 @@
-// Quest API Service for secure quest completion
-// This service handles communication with the backend API
 
 class QuestApiService {
   constructor() {
-    // API base URL - will be set based on environment
-    // In production, this will use the Vercel deployment URL
     this.baseUrl = import.meta.env.VITE_API_URL || '/api';
     this.timeout = 30000; // 30 seconds
   }
 
-  /**
-   * Complete a quest by submitting answers to the secure backend
-   * @param {string} userAddress - User's Stellar wallet address or 'demo' for demo mode
-   * @param {string} questId - ID of the quest being completed
-   * @param {Array} answers - Array of user's answers
-   * @param {boolean} isDemoMode - Whether this is a demo mode request
-   * @returns {Promise<Object>} API response
-   */
   async completeQuest(userAddress, questId, answers, isDemoMode = false) {
     try {
       const response = await fetch(`${this.baseUrl}/complete-quest`, {
@@ -48,7 +36,6 @@ class QuestApiService {
     } catch (error) {
       console.error('Quest completion API error:', error);
       
-      // Handle different types of errors
       if (error.name === 'AbortError') {
         throw new Error('Request timeout. Please try again.');
       }
@@ -69,16 +56,8 @@ class QuestApiService {
     }
   }
 
-  /**
-   * Check if a user has completed a specific quest
-   * @param {string} userAddress - User's Stellar wallet address
-   * @param {string} questId - ID of the quest to check
-   * @returns {Promise<boolean>} Whether the quest is completed
-   */
   async isQuestCompleted(userAddress, questId) {
     try {
-      // For now, we'll use localStorage as a fallback
-      // In production, this should be a separate API endpoint
       const completedQuests = JSON.parse(localStorage.getItem('completedQuests') || '[]');
       return completedQuests.includes(`${userAddress}-${questId}`);
     } catch (error) {
@@ -87,11 +66,6 @@ class QuestApiService {
     }
   }
 
-  /**
-   * Mark a quest as completed in local storage
-   * @param {string} userAddress - User's Stellar wallet address
-   * @param {string} questId - ID of the completed quest
-   */
   markQuestCompleted(userAddress, questId) {
     try {
       const completedQuests = JSON.parse(localStorage.getItem('completedQuests') || '[]');
@@ -106,11 +80,6 @@ class QuestApiService {
     }
   }
 
-  /**
-   * Get user's completed quests from local storage
-   * @param {string} userAddress - User's Stellar wallet address
-   * @returns {Array} Array of completed quest IDs
-   */
   getCompletedQuests(userAddress) {
     try {
       const completedQuests = JSON.parse(localStorage.getItem('completedQuests') || '[]');
@@ -123,10 +92,6 @@ class QuestApiService {
     }
   }
 
-  /**
-   * Clear completed quests for a user (useful for testing)
-   * @param {string} userAddress - User's Stellar wallet address
-   */
   clearCompletedQuests(userAddress) {
     try {
       const completedQuests = JSON.parse(localStorage.getItem('completedQuests') || '[]');
@@ -137,11 +102,6 @@ class QuestApiService {
     }
   }
 
-  /**
-   * Get claimable balance for a user from localStorage
-   * @param {string} userAddress - User's Stellar wallet address
-   * @returns {number} Claimable balance amount
-   */
   getClaimableBalance(userAddress) {
     try {
       const key = `claimableBalance_${userAddress}`;
@@ -153,11 +113,6 @@ class QuestApiService {
     }
   }
 
-  /**
-   * Add reward to claimable balance
-   * @param {string} userAddress - User's Stellar wallet address
-   * @param {number} rewardAmount - Amount to add to claimable balance
-   */
   addToClaimableBalance(userAddress, rewardAmount) {
     try {
       const key = `claimableBalance_${userAddress}`;
@@ -170,10 +125,6 @@ class QuestApiService {
     }
   }
 
-  /**
-   * Reset claimable balance to 0
-   * @param {string} userAddress - User's Stellar wallet address
-   */
   resetClaimableBalance(userAddress) {
     try {
       const key = `claimableBalance_${userAddress}`;
@@ -184,12 +135,6 @@ class QuestApiService {
     }
   }
 
-  /**
-   * Claim tokens by calling the claim-tokens API
-   * @param {string} userAddress - User's Stellar wallet address
-   * @param {number} amount - Amount to claim
-   * @returns {Promise<Object>} API response
-   */
   async claimTokens(userAddress, amount) {
     try {
       const response = await fetch(`${this.baseUrl}/claim-tokens`, {
@@ -219,7 +164,6 @@ class QuestApiService {
     } catch (error) {
       console.error('Token claim API error:', error);
 
-      // Handle different types of errors
       if (error.name === 'AbortError') {
         throw new Error('Request timeout. Please try again.');
       }
@@ -233,6 +177,5 @@ class QuestApiService {
   }
 }
 
-// Export singleton instance
 export const questApiService = new QuestApiService();
 export default questApiService;

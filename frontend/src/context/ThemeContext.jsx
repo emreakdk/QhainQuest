@@ -3,19 +3,15 @@ import { createContext, useContext, useEffect, useState } from 'react';
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  // CRITICAL FIX: Custom theme state management with proper localStorage sync
   const [isDarkMode, setIsDarkMode] = useState(() => {
-    // Read from localStorage on initialization
     const stored = localStorage.getItem('usehooks-ts-dark-mode');
     let initialTheme;
     if (stored !== null) {
       initialTheme = JSON.parse(stored);
     } else {
-      // Default to system preference if no stored value
       initialTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
     
-    // CRITICAL FIX: Apply theme immediately to prevent flash
     const html = document.documentElement;
     if (initialTheme) {
       html.classList.add('dark');
@@ -29,11 +25,9 @@ export const ThemeProvider = ({ children }) => {
     return initialTheme;
   });
 
-  // CRITICAL FIX: Apply theme to DOM immediately on mount and when state changes
   useEffect(() => {
     const html = document.documentElement;
     
-    // Check if user is on mobile (screen width < 768px)
     const isMobile = window.matchMedia('(max-width: 767px)').matches;
     
     console.log(`[ThemeProvider] === THEME APPLICATION START ===`);
@@ -42,14 +36,11 @@ export const ThemeProvider = ({ children }) => {
     console.log(`[ThemeProvider] HTML element:`, html);
     console.log(`[ThemeProvider] HTML classes before:`, html.classList.toString());
     
-    // CRITICAL FIX: Disable dark mode on mobile devices
     if (isMobile) {
-      // Force light mode on mobile regardless of theme state
       html.classList.remove('dark');
       html.style.colorScheme = 'light';
       console.log(`[ThemeProvider] 📱 Mobile detected - Forcing light mode`);
     } else {
-      // Apply normal theme logic on desktop
       if (isDarkMode) {
         html.classList.add('dark');
         console.log(`[ThemeProvider] ✅ Added 'dark' class to document.documentElement`);
@@ -58,7 +49,6 @@ export const ThemeProvider = ({ children }) => {
         console.log(`[ThemeProvider] ❌ Removed 'dark' class from document.documentElement`);
       }
       
-      // Set color scheme for browser compatibility
       html.style.colorScheme = isDarkMode ? 'dark' : 'light';
     }
     
@@ -67,7 +57,6 @@ export const ThemeProvider = ({ children }) => {
     console.log(`[ThemeProvider] Color scheme:`, html.style.colorScheme);
     console.log(`[ThemeProvider] === THEME APPLICATION END ===`);
     
-    // Additional verification after a short delay
     setTimeout(() => {
       console.log(`[ThemeProvider] === VERIFICATION ===`);
       console.log(`[ThemeProvider] Final HTML classes:`, document.documentElement.classList.toString());
@@ -75,13 +64,11 @@ export const ThemeProvider = ({ children }) => {
     }, 50);
   }, [isDarkMode]);
 
-  // CRITICAL FIX: Sync with localStorage when theme changes
   useEffect(() => {
     localStorage.setItem('usehooks-ts-dark-mode', JSON.stringify(isDarkMode));
     console.log(`[ThemeProvider] Saved to localStorage: ${isDarkMode}`);
   }, [isDarkMode]);
 
-  // Handle window resize to reapply theme logic when switching between mobile/desktop
   useEffect(() => {
     const handleResize = () => {
       const html = document.documentElement;
@@ -90,12 +77,10 @@ export const ThemeProvider = ({ children }) => {
       console.log(`[ThemeProvider] 📱 Resize detected - Mobile: ${isMobile}`);
       
       if (isMobile) {
-        // Force light mode on mobile
         html.classList.remove('dark');
         html.style.colorScheme = 'light';
         console.log(`[ThemeProvider] 📱 Resize - Forcing light mode on mobile`);
       } else {
-        // Apply normal theme logic on desktop
         if (isDarkMode) {
           html.classList.add('dark');
           html.style.colorScheme = 'dark';
@@ -107,10 +92,8 @@ export const ThemeProvider = ({ children }) => {
       }
     };
 
-    // Add resize listener
     window.addEventListener('resize', handleResize);
     
-    // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize);
     };
@@ -123,7 +106,6 @@ export const ThemeProvider = ({ children }) => {
     setIsDarkMode(newTheme);
   };
 
-  // Global function for DOM inspection (for debugging)
   useEffect(() => {
     window.inspectTheme = () => {
       const html = document.documentElement;

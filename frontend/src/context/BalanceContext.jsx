@@ -1,47 +1,21 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
-/**
- * Global Balance Context for Claimable Token Management
- * 
- * This context provides a single source of truth for claimable balance
- * across the entire application. It synchronizes with localStorage
- * and ensures all components display consistent data.
- * 
- * Architecture Benefits:
- * - Single source of truth for claimable balance
- * - Automatic localStorage synchronization
- * - Real-time updates across all components
- * - Eliminates data inconsistencies
- * - Centralized balance management logic
- */
 const BalanceContext = createContext();
 
 export const BalanceProvider = ({ children }) => {
-  // Global claimable balance state (amount ready to claim)
   const [claimableBalance, setClaimableBalance] = useState(0);
-  // Global total earned state (lifetime earnings - never resets)
   const [totalEarned, setTotalEarned] = useState(0);
   const [currentUser, setCurrentUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(null);
 
-  /**
-   * Initialize balances from localStorage
-   * This runs once on application startup
-   */
   useEffect(() => {
-    // Initialize with 0 balances
-    // Real balances will be loaded when user connects
     setClaimableBalance(0);
     setTotalEarned(0);
     setCurrentUser(null);
     setLastUpdated(null);
   }, []);
 
-  /**
-   * Load claimable balance for a specific user or demo mode
-   * @param {string} userAddress - User's wallet address or 'demo' for demo mode
-   */
   const loadBalanceForUser = useCallback((userAddress) => {
     if (!userAddress) {
       setCurrentUser(null);
@@ -51,11 +25,9 @@ export const BalanceProvider = ({ children }) => {
       return;
     }
 
-    // Handle demo mode
     if (userAddress === 'demo') {
       setCurrentUser('demo');
       
-      // Load demo mode balances
       const claimableKey = 'claimableBalance_demo';
       const totalEarnedKey = 'totalEarned_demo';
       
@@ -76,12 +48,10 @@ export const BalanceProvider = ({ children }) => {
     try {
       setCurrentUser(userAddress);
       
-      // Load claimable balance
       const claimableKey = `claimableBalance_${userAddress}`;
       const storedClaimableBalance = localStorage.getItem(claimableKey);
       const claimableBalance = storedClaimableBalance ? parseFloat(storedClaimableBalance) : 0;
       
-      // Load total earned
       const totalEarnedKey = `totalEarned_${userAddress}`;
       const storedTotalEarned = localStorage.getItem(totalEarnedKey);
       const totalEarned = storedTotalEarned ? parseFloat(storedTotalEarned) : 0;
@@ -98,11 +68,6 @@ export const BalanceProvider = ({ children }) => {
     }
   }, []);
 
-  /**
-   * Update claimable balance and total earned (add amount)
-   * @param {string} userAddress - User's wallet address or 'demo' for demo mode
-   * @param {number} amount - Amount to add to balance
-   */
   const addToClaimableBalance = useCallback((userAddress, amount) => {
     if (!userAddress || amount <= 0) {
       console.warn('[BalanceContext] Invalid parameters for addToClaimableBalance');
@@ -119,12 +84,10 @@ export const BalanceProvider = ({ children }) => {
       const newClaimableBalance = currentClaimableBalance + amount;
       const newTotalEarned = currentTotalEarned + amount;
       
-      // Update React state
       setClaimableBalance(newClaimableBalance);
       setTotalEarned(newTotalEarned);
       setLastUpdated(new Date().toISOString());
       
-      // Update localStorage
       localStorage.setItem(claimableKey, newClaimableBalance.toString());
       localStorage.setItem(totalEarnedKey, newTotalEarned.toString());
       
@@ -134,10 +97,6 @@ export const BalanceProvider = ({ children }) => {
     }
   }, [claimableBalance, totalEarned]);
 
-  /**
-   * Reset claimable balance to 0 (CRITICAL: totalEarned remains unchanged)
-   * @param {string} userAddress - User's wallet address
-   */
   const resetClaimableBalance = useCallback((userAddress) => {
     if (!userAddress) {
       console.warn('[BalanceContext] No user address provided for reset');
@@ -147,11 +106,9 @@ export const BalanceProvider = ({ children }) => {
     try {
       const claimableKey = `claimableBalance_${userAddress}`;
       
-      // CRITICAL FIX: Only reset claimable balance, totalEarned stays the same
       setClaimableBalance(0);
       setLastUpdated(new Date().toISOString());
       
-      // Update localStorage - only claimable balance
       localStorage.setItem(claimableKey, '0');
       
       console.log(`[BalanceContext] Reset claimable balance to 0 for ${userAddress}. Total earned remains: ${totalEarned}`);
@@ -160,11 +117,6 @@ export const BalanceProvider = ({ children }) => {
     }
   }, [totalEarned]);
 
-  /**
-   * Set claimable balance to a specific value
-   * @param {string} userAddress - User's wallet address
-   * @param {number} amount - New balance amount
-   */
   const setClaimableBalanceValue = useCallback((userAddress, amount) => {
     if (!userAddress || amount < 0) {
       console.warn('[BalanceContext] Invalid parameters for setClaimableBalanceValue');
@@ -174,11 +126,9 @@ export const BalanceProvider = ({ children }) => {
     try {
       const key = `claimableBalance_${userAddress}`;
       
-      // Update React state
       setClaimableBalance(amount);
       setLastUpdated(new Date().toISOString());
       
-      // Update localStorage
       localStorage.setItem(key, amount.toString());
       
       console.log(`[BalanceContext] Set balance to ${amount} for ${userAddress}`);
@@ -187,11 +137,6 @@ export const BalanceProvider = ({ children }) => {
     }
   }, []);
 
-  /**
-   * Get claimable balance from localStorage (for external use)
-   * @param {string} userAddress - User's wallet address
-   * @returns {number} Current claimable balance
-   */
   const getClaimableBalanceFromStorage = useCallback((userAddress) => {
     if (!userAddress) return 0;
     
@@ -205,24 +150,17 @@ export const BalanceProvider = ({ children }) => {
     }
   }, []);
 
-  /**
-   * Refresh balance from localStorage (useful for sync)
-   * @param {string} userAddress - User's wallet address
-   */
   const refreshBalance = useCallback((userAddress) => {
     loadBalanceForUser(userAddress);
   }, [loadBalanceForUser]);
 
-  // Context value object
   const value = {
-    // State
     claimableBalance,
     totalEarned,
     currentUser,
     isLoading,
     lastUpdated,
     
-    // Actions
     loadBalanceForUser,
     addToClaimableBalance,
     resetClaimableBalance,
@@ -238,10 +176,6 @@ export const BalanceProvider = ({ children }) => {
   );
 };
 
-/**
- * Custom hook for consuming BalanceContext
- * @returns {Object} Balance context value
- */
 export const useBalance = () => {
   const context = useContext(BalanceContext);
   

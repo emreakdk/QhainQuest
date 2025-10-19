@@ -4,19 +4,16 @@ import { useLanguage } from '../../context/LanguageContext';
 const MobileWarning = ({ className = "", variant = "dark" }) => {
   const { t } = useLanguage();
 
-  // Dark variant (default) - for entry page
   const darkClasses = "bg-gray-700 bg-opacity-50 border border-gray-600 text-gray-200";
   const darkIconClasses = "text-yellow-400";
   const darkTitleClasses = "text-yellow-100";
   const darkTextClasses = "text-gray-300";
 
-  // Light variant - for Quests and Profile pages
   const lightClasses = "bg-yellow-100 border border-yellow-300 text-yellow-800";
   const lightIconClasses = "text-yellow-600";
   const lightTitleClasses = "text-yellow-900";
   const lightTextClasses = "text-yellow-700";
 
-  // Entry variant - for entry page with transparent white background
   const entryClasses = "bg-white/15 border border-white/30 text-white rounded-lg flex items-center gap-2";
   const entryIconClasses = "text-white";
   const entryTitleClasses = "text-white";

@@ -4,18 +4,14 @@ const LanguageContext = createContext();
 
 const translations = {
   tr: {
-    // Navigation
     'nav.connectWallet': 'Cüzdanı Bağla',
     'nav.profile': 'Profil',
     'nav.quests': 'Görevler',
     'nav.leaderboard': 'Başarılar',
     'nav.howToClaim': 'Nasıl Çekilir?',
     
-    // Theme
     'theme.switchToLight': 'Açık Temaya Geç',
     'theme.switchToDark': 'Koyu Temaya Geç',
-    
-    // Home Page
     'home.title': 'Bilgini Kanıtla, Geleceği Kazan.',
     'home.subtitle': 'ChainQuest ile Stellar blok zincirinde benzersiz görevleri tamamla, değerli token ödülleri kazan ve devredilemez Soulbound Token sertifikalarıyla yeteneklerini ölümsüzleştir.',
     'home.startAdventure': 'Macerana Başla!',
@@ -24,7 +20,6 @@ const translations = {
     'home.useWithoutWallet': 'Cüzdansız Kullan',
     'home.demoMode': 'Demo Modu',
     
-    // Features Section
     'features.quests': 'Etkileşimli Görevler',
     'features.rewards': 'Token Ödülleri',
     'features.certificates': 'NFT Sertifikaları',
@@ -34,7 +29,6 @@ const translations = {
     'features.competition': 'Rekabet',
     'features.competitionDesc': 'Diğer kullanıcılarla yarışın ve liderlik tablosunda üst sıralarda yer alın',
 
-    // Entry Page Process Section
     'entrypage.process.title': 'Nasıl Çalışır?',
     'entrypage.process.subtitle': 'Blockchain bilginizi geliştirin, token kazanın ve benzersiz sertifikalar elde edin',
     'entrypage.features.learn.title': 'Öğren',
@@ -44,12 +38,10 @@ const translations = {
     'entrypage.features.certify.title': 'Sertifikala',
     'entrypage.features.certify.desc': 'Benzersiz NFT sertifikaları ile yeteneklerinizi ölümsüzleştirin',
 
-    // Mobile Warnings
     'warnings.mobileTitle': 'Mobil Uyarı',
     'warnings.mobileClaim': 'Tokenlarınızı cüzdanınıza aktarmak için lütfen masaüstü tarayıcıdan giriş yapın.',
     'warnings.mobileUseDemo': 'Mobilden girdiyseniz, Cüzdansız Kullan ile devam edin',
 
-    // How to Claim Tokens Page
     'howToClaim.title': 'Token Nasıl Claim Edilir',
     'howToClaim.subtitle': 'CQT token\'larınızı almak için Stellar cüzdanınıza trustline eklemeniz gerekiyor. Bu rehber size adım adım nasıl yapacağınızı gösterecek.',
     'howToClaim.whyNeeded.title': 'Neden Bu Adım Gerekli?',
@@ -83,7 +75,6 @@ const translations = {
     'howToClaim.backToApp': 'Uygulamaya Dön',
     'howToClaim.linkText': 'Nasıl Claim Edilir?',
 
-    // Profile
     'profile.title': 'Profil',
     'profile.totalTokens': 'Toplam Token',
     'profile.certificates': 'Sertifikalar',
@@ -93,7 +84,6 @@ const translations = {
     'profile.achievements': 'Başarılar',
     'profile.nftCertificates': 'NFT Sertifikalarınız',
     
-    // Quests
     'quest.title': 'Görevler',
     'quest.description': 'Blockchain dünyasında bilginizi test edin, token kazanın ve benzersiz sertifikalar elde edin.',
     'quest.available': 'Mevcut Görevler',
@@ -110,13 +100,11 @@ const translations = {
     'quest.timeEstimate': 'Tahmini Süre',
     'quest.minutes': 'dakika',
     
-    // Quest Statistics
     'stats.totalQuests': 'Toplam Görev',
     'stats.completedQuests': 'Tamamlanan',
     'stats.inProgress': 'Devam Eden',
     'stats.earnedTokens': 'Kazanılan Token',
     
-    // Quest Categories
     'category.all': 'Tümü',
     'category.beginner': 'Başlangıç',
     'category.intermediate': 'Orta',
@@ -126,7 +114,6 @@ const translations = {
     'category.defi': 'DeFi',
     'category.nft': 'NFT',
     
-    // Common
     'common.loading': 'Yükleniyor...',
     'common.error': 'Hata',
     'common.success': 'Başarılı',
@@ -140,7 +127,6 @@ const translations = {
     'common.next': 'İleri',
     'common.tryAgain': 'Tekrar Dene',
 
-    // Quiz
     'quiz.question': 'Soru',
     'quiz.answer': 'Cevap',
     'quiz.correct': 'Doğru Cevap!',
@@ -163,7 +149,6 @@ const translations = {
     'quiz.timeEstimate': 'Tahmini Süre',
     'quiz.minutes': 'dakika',
     
-    // Celebration
     'celebration.title': 'Tebrikler! 🎉',
     'celebration.message': 'Quest\'i başarıyla tamamladınız!',
     'celebration.tokensEarned': 'Kazanılan Token',
@@ -176,7 +161,6 @@ const translations = {
     'celebration.close': 'Kapat',
     'celebration.continue': 'Devam Et',
 
-    // Wallet
     'wallet.connect': 'Cüzdanı Bağla',
     'wallet.disconnect': 'Bağlantıyı Kes',
     'wallet.extensionNotInstalled': 'Freighter uzantısı kurulu değil veya çalışmıyor.',
@@ -184,10 +168,8 @@ const translations = {
     'wallet.freighterFound': 'Freighter bulundu, bağlantı isteniyor...',
     'wallet.addressReceived': 'Adres geldi',
 
-    // Search
     'search.placeholder': 'Görev ara...',
 
-    // Achievements
     'achievements.firstStep': 'İlk Adım',
     'achievements.firstStepDesc': 'İlk görevinizi tamamladınız',
     'achievements.tokenCollector': 'Token Toplayıcı',
@@ -201,7 +183,6 @@ const translations = {
     'achievements.legend': 'Efsane',
     'achievements.legendDesc': 'Tüm görevleri tamamlayın',
 
-    // Activity Feed
     'activity.stellarBasicsCompleted': 'Stellar Temelleri görevini tamamladı',
     'activity.tokenRewardEarned': '150 Token ödülü kazandı',
     'activity.newCertificateEarned': 'Yeni sertifika aldı',
@@ -209,28 +190,22 @@ const translations = {
     'activity.hoursAgo': 'saat önce',
     'activity.daysAgo': 'gün önce',
 
-    // Quest List
     'questList.loading': 'Görevler yükleniyor...',
     'questList.error': 'Görevler yüklenemedi. Kontratta henüz görev olmayabilir.',
     'questList.availableQuests': 'Mevcut Görevler',
     'questList.fetchError': 'Görevleri çekerken hata',
 
-    // Filters
     'filters.title': 'Filtreler',
     'filters.difficulty': 'Zorluk',
     'filters.clear': 'Filtreleri Temizle',
 
-    // Testnet Info
     'testnet.environmentInfo': 'Ortam Bilgileri',
     'testnet.environment': 'Ortam',
 
-    // Certificate
     'certificate.blockchainStored': 'Bu sertifika blockchain\'de kalıcı olarak saklanmaktadır',
 
-    // Level System
     'level.beginner': 'Başlangıç',
 
-    // Quest Titles and Descriptions
     'quests.stellar_fundamentals.title': 'Stellar Temelleri',
     'quests.stellar_fundamentals.description': 'Stellar blockchain\'in temel kavramlarını öğrenin ve ilk işlemlerinizi gerçekleştirin. Bu quest ile Stellar ekosisteminin temellerini keşfedin.',
     'quests.soroban_smart_contracts.title': 'Soroban Smart Contracts',
@@ -242,19 +217,13 @@ const translations = {
     'quests.advanced_stellar.title': 'İleri Seviye Stellar',
     'quests.advanced_stellar.description': 'Stellar\'ın gelişmiş özelliklerini öğrenin. Multi-sig, path payments ve complex transactions konularını keşfedin.',
 
-    // Difficulty Descriptions
     'difficulty.beginner.description': 'Temel kavramlar ve basit uygulamalar',
     'difficulty.intermediate.description': 'Orta seviye teknik bilgi gerektirir',
     'difficulty.advanced.description': 'Gelişmiş teknik bilgi ve deneyim gerektirir',
 
-    // Profile Page
     'profile.totalEarned': 'Toplam Kazanılan',
     'profile.claimableBalance': 'Çekilebilir Bakiye',
-    'profile.completedQuests': 'Tamamlanan Quest',
-    'profile.certificates': 'Sertifikalar',
     'profile.claimButton': 'Hesaba Aktar',
-    'profile.overview': 'Genel Bakış',
-    'profile.achievements': 'Başarılar',
     'profile.progressChart': 'İlerleme Grafiği',
     'profile.chartPlaceholder': 'Grafik burada görünecek',
     'profile.yourCertificates': 'Sertifikalarınız',
@@ -264,30 +233,24 @@ const translations = {
     'profile.recentAchievements': 'Son Başarılar',
     'profile.connectWalletForAchievements': 'Başarılarınızı görüntülemek için cüzdanınızı bağlayın.',
 
-    // Token Messages
     'token.successfullyTransferred': 'Token\'lar Başarıyla Aktarıldı!',
     'token.transferError': 'Token Aktarım Hatası',
     'token.transferredToWallet': 'token Stellar cüzdanınıza aktarıldı. Transaction Hash:',
     'token.claimSuccess': 'Token\'lar Başarıyla Aktarıldı!',
 
-    // Profile Tabs
     'profile.tabs.dashboard': 'Kontrol Paneli',
     'profile.tabs.activity': 'Aktivite',
 
-    // Profile Dashboard
     'profile.dashboard.loadingError': 'Dashboard verileri yüklenemedi',
     'profile.dashboard.retry': 'Tekrar Dene',
     'profile.dashboard.recentActivities': 'Son Aktiviteler',
     'profile.dashboard.activity': 'Aktivite',
 
-    // Profile Stats
     'profile.stats.claimSuccess': 'Token\'lar Başarıyla Aktarıldı!',
 
-    // Quest Messages
     'quest.alreadyCompleted': 'Bu quest\'i başarıyla tamamladınız. Yeni quest\'leri keşfetmek için ana sayfaya dönün.',
     'quest.dashboardDataError': 'Dashboard veri yükleme hatası:',
 
-    // Profile Streak Information
     'profile.streak.title': 'Streak Bilgileri',
     'profile.streak.daily': 'Günlük Streak',
     'profile.streak.best': 'En İyi Streak',
@@ -295,49 +258,39 @@ const translations = {
     'profile.streak.unknown': 'Bilinmiyor',
     'profile.streak.dayUnit': 'gün',
 
-    // Profile Token Statistics
     'profile.tokenStats.title': 'Token İstatistikleri',
     'profile.tokenStats.withdrawn': 'Cüzdana Çekilen',
 
-    // Common
     'common.unknown': 'Bilinmiyor',
     'common.dayUnit': 'gün',
     'common.or': 'veya',
 
-      // Demo Mode
       'demo.claimError.title': 'Cüzdan Bağlantısı Gerekli',
       'demo.claimError.message': 'Tokenlarınızı cüzdanınıza aktarmak için lütfen bir cüzdan bağlayın.',
       'demo.statsLocked.title': 'İstatistikler Kilitli',
       'demo.statsLocked.message': 'Detaylı istatistiklerinizi görmek için lütfen cüzdanınızı bağlayın.',
       'demo.earnedInDemo': 'Demo modunda kazanıldı',
 
-    // Wallet Connection Required
     'wallet.connectionRequired.title': 'Cüzdan Bağlantısı Gerekli',
     'wallet.connectionRequired.message': 'Token claim işlemi için cüzdan bağlantısı gereklidir.',
 
-    // Profile Claim Section
     'profile.claim.title': 'Token\'larınızı Hesabınıza Aktarın',
     'profile.claim.description': 'token\'ı Stellar cüzdanınıza aktarabilirsiniz.',
     'profile.claim.transferring': 'Aktarılıyor...',
     'profile.claim.button': 'Çek',
 
-    // Empty States
     'emptyState.certificates': 'Henüz sertifika kazanmadınız. Quest\'leri tamamlayarak sertifika kazanın!',
     'emptyState.activity': 'Henüz aktivite bulunmuyor.',
     'emptyState.noDescription': 'Açıklama yok',
     'emptyState.noDate': 'Tarih yok',
     'achievements.emptyState': 'Henüz başarı kazanmadınız. Quest\'leri tamamlayarak başarılar kazanın!',
 
-    // Common
     'common.noData': 'Veri yok',
 
-    // Profile Claim
     'profile.claim.readyToClaim': 'Çekilebilir tokenlar',
 
-    // Profile Stats
     'profile.stats.perfectScore': 'Mükemmel skor',
 
-    // Achievements
     'achievements.achievement': 'Başarı',
     'achievements.achievementEarned': 'Başarı kazanıldı!',
     'achievements.pageTitle': 'Başarı Panosu',
@@ -354,7 +307,6 @@ const translations = {
     'achievements.cta.title': 'Daha fazla görev tamamlayarak başarılarınızı artırın!',
     'achievements.cta.button': 'Görevleri Keşfet',
 
-    // Quiz Questions - Stellar Fundamentals
     'quests.stellar_fundamentals.q1.question': 'Stellar ağında işlemler hangi konsensüs algoritması ile doğrulanır?',
     'quests.stellar_fundamentals.q1.option1': 'Proof of Work (PoW)',
     'quests.stellar_fundamentals.q1.option2': 'Stellar Consensus Protocol (SCP)',
@@ -390,7 +342,6 @@ const translations = {
     'quests.stellar_fundamentals.q5.option4': 'Python, JavaScript, Go, Java, C++',
     'quests.stellar_fundamentals.q5.explanation': 'Stellar, çoklu dil desteği ile geniş geliştirici topluluğuna hizmet verir.',
 
-    // Quiz Questions - Soroban Smart Contracts
     'quests.soroban_smart_contracts.q1.question': 'Soroban nedir?',
     'quests.soroban_smart_contracts.q1.option1': 'Bir Stellar cüzdanı',
     'quests.soroban_smart_contracts.q1.option2': 'Stellar üzerinde bir akıllı kontrat platformu',
@@ -426,7 +377,6 @@ const translations = {
     'quests.soroban_smart_contracts.q5.option4': 'Sabit ücret',
     'quests.soroban_smart_contracts.q5.explanation': 'Soroban\'da smart contract işlemleri için XLM (Stellar Lumens) gas fee olarak kullanılır.',
 
-    // Quiz Questions - DeFi Protocols
     'quests.defi_protocols.q1.question': 'Merkeziyetsiz finans (DeFi) ne anlama gelir?',
     'quests.defi_protocols.q1.option1': 'Geleneksel bankacılık',
     'quests.defi_protocols.q1.option2': 'Blockchain tabanlı finansal hizmetler',
@@ -462,7 +412,6 @@ const translations = {
     'quests.defi_protocols.q5.option4': 'Automated Mining Machine',
     'quests.defi_protocols.q5.explanation': 'AMM, merkeziyetsiz borsalarda likidite sağlayarak otomatik fiyat belirleme yapan protokoldür.',
 
-    // Quiz Questions - NFT Ecosystem
     'quests.nft_ecosystem.q1.question': 'NFT\'nin açılımı nedir?',
     'quests.nft_ecosystem.q1.option1': 'Non-Fungible Token',
     'quests.nft_ecosystem.q1.option2': 'New Financial Technology',
@@ -498,7 +447,6 @@ const translations = {
     'quests.nft_ecosystem.q5.option4': 'Bir cüzdan protokolü',
     'quests.nft_ecosystem.q5.explanation': 'SEP-005, Stellar ağında NFT\'lerin oluşturulması ve yönetimi için standart protokoldür.',
 
-    // Quiz Questions - Advanced Stellar
     'quests.advanced_stellar.q1.question': 'Stellar\'da "multi-signature" nedir?',
     'quests.advanced_stellar.q1.option1': 'Çoklu imza gerektiren işlemler',
     'quests.advanced_stellar.q1.option2': 'Çoklu token transferi',
@@ -534,7 +482,6 @@ const translations = {
     'quests.advanced_stellar.q5.option4': 'Daha fazla token',
     'quests.advanced_stellar.q5.explanation': 'Multi-sig hesaplar, tek bir private key\'in tehlikeye girmesi durumunda bile fonların güvende kalmasını sağlar.',
     
-    // Blockchain Güvenliği
     'quests.blockchain_security.title': 'Blockchain Güvenliği',
     'quests.blockchain_security.description': 'Blockchain ağlarındaki yaygın güvenlik açıklarını ve korunma yöntemlerini öğrenin.',
     'quests.blockchain_security.q1.question': 'Bir blockchain ağında gerçekleşen ve ağın çoğunluğunun (%51) kötü niyetli aktörler tarafından kontrol edilmesiyle işlem geçmişini değiştirebilme saldırısına ne ad verilir?',
@@ -573,7 +520,6 @@ const translations = {
     'quests.blockchain_security.q5.option5': 'Man-in-the-middle Attack',
     'quests.blockchain_security.q5.explanation': 'Front-running, daha yüksek işlem ücreti ödeyerek başka bir işlemden önce bloğa girmeye çalışmaktır.',
     
-    // Merkeziyetsiz Kimlik (DID)
     'quests.decentralized_identity.title': 'Merkeziyetsiz Kimlik (DID)',
     'quests.decentralized_identity.description': 'Kullanıcıların kendi kimlik verilerini kontrol etmelerini sağlayan teknolojileri keşfedin.',
     'quests.decentralized_identity.q1.question': 'Merkeziyetsiz Kimlik (DID) sistemlerinin temel amacı nedir?',
@@ -612,7 +558,6 @@ const translations = {
     'quests.decentralized_identity.q5.option5': 'Sadece donanım cüzdanlarında',
     'quests.decentralized_identity.q5.explanation': 'DID belgeleri, blockchain veya P2P ağlar gibi merkeziyetsiz sistemlerde saklanır.',
     
-    // Layer 2 Ölçeklendirme Çözümleri
     'quests.layer2_scaling.title': 'Layer 2 Ölçeklendirme Çözümleri',
     'quests.layer2_scaling.description': 'Blockchain ağlarının hızını ve kapasitesini artıran Layer 2 teknolojilerini anlayın.',
     'quests.layer2_scaling.q1.question': 'Layer 2 ölçeklendirme çözümlerinin temel amacı nedir?',
@@ -651,7 +596,6 @@ const translations = {
     'quests.layer2_scaling.q5.option5': 'Token takasları için',
     'quests.layer2_scaling.q5.explanation': 'State Channels, iki taraf arasında off-chain işlemler için idealdir.',
     
-    // Web3 Geliştirme Temelleri
     'quests.web3_dev_basics.title': 'Web3 Geliştirme Temelleri',
     'quests.web3_dev_basics.description': 'Merkeziyetsiz uygulamalar (dApps) oluşturmak için kullanılan temel araçları ve kavramları öğrenin.',
     'quests.web3_dev_basics.q1.question': 'Bir dApp (Merkeziyetsiz Uygulama) ile geleneksel bir web uygulaması arasındaki temel fark nedir?',
@@ -691,18 +635,15 @@ const translations = {
     'quests.web3_dev_basics.q5.explanation': 'Smart contracts, koşullar sağlandığında otomatik çalışan self-executing agreements\'dır.',
   },
   en: {
-    // Navigation
     'nav.connectWallet': 'Connect Wallet',
     'nav.profile': 'Profile',
     'nav.quests': 'Quests',
     'nav.leaderboard': 'Achievements',
     'nav.howToClaim': 'How to Claim?',
     
-    // Theme
     'theme.switchToLight': 'Switch to Light Theme',
     'theme.switchToDark': 'Switch to Dark Theme',
     
-    // Home Page
     'home.title': 'Prove Your Knowledge, Win the Future.',
     'home.subtitle': 'Complete unique quests on the Stellar blockchain with ChainQuest, earn valuable token rewards and immortalize your skills with non-transferable Soulbound Token certificates.',
     'home.startAdventure': 'Start Your Adventure!',
@@ -711,7 +652,6 @@ const translations = {
     'home.useWithoutWallet': 'Use Without Wallet',
     'home.demoMode': 'Demo Mode',
     
-    // Features Section
     'features.quests': 'Interactive Quests',
     'features.rewards': 'Token Rewards',
     'features.certificates': 'NFT Certificates',
@@ -721,7 +661,6 @@ const translations = {
     'features.competition': 'Competition',
     'features.competitionDesc': 'Compete with other users and climb the leaderboard',
 
-    // Entry Page Process Section
     'entrypage.process.title': 'How It Works?',
     'entrypage.process.subtitle': 'Develop your blockchain knowledge, earn tokens and get unique certificates',
     'entrypage.features.learn.title': 'Learn',
@@ -731,12 +670,10 @@ const translations = {
     'entrypage.features.certify.title': 'Certify',
     'entrypage.features.certify.desc': 'Immortalize your skills with unique NFT certificates',
 
-    // Mobile Warnings
     'warnings.mobileTitle': 'Mobile Notice',
     'warnings.mobileClaim': 'Please log in from a desktop browser to transfer your tokens to your wallet.',
     'warnings.mobileUseDemo': 'If on mobile, please continue with Use Without Wallet',
 
-    // How to Claim Tokens Page
     'howToClaim.title': 'How to Claim Tokens',
     'howToClaim.subtitle': 'To receive your CQT tokens, you need to add a trustline to your Stellar wallet. This guide will show you step by step how to do it.',
     'howToClaim.whyNeeded.title': 'Why is this step necessary?',
@@ -770,7 +707,6 @@ const translations = {
     'howToClaim.backToApp': 'Back to App',
     'howToClaim.linkText': 'How to Claim?',
 
-    // Profile
     'profile.title': 'Profile',
     'profile.totalTokens': 'Total Tokens',
     'profile.certificates': 'Certificates',
@@ -780,7 +716,6 @@ const translations = {
     'profile.achievements': 'Achievements',
     'profile.nftCertificates': 'Your NFT Certificates',
     
-    // Quests
     'quest.title': 'Quests',
     'quest.description': 'Test your knowledge in the blockchain world, earn tokens and get unique certificates.',
     'quest.available': 'Available Quests',
@@ -797,13 +732,11 @@ const translations = {
     'quest.timeEstimate': 'Estimated Time',
     'quest.minutes': 'minutes',
     
-    // Quest Statistics
     'stats.totalQuests': 'Total Quests',
     'stats.completedQuests': 'Completed',
     'stats.inProgress': 'In Progress',
     'stats.earnedTokens': 'Earned Tokens',
     
-    // Quest Categories
     'category.all': 'All',
     'category.beginner': 'Beginner',
     'category.intermediate': 'Intermediate',
@@ -813,7 +746,6 @@ const translations = {
     'category.defi': 'DeFi',
     'category.nft': 'NFT',
     
-    // Common
     'common.loading': 'Loading...',
     'common.error': 'Error',
     'common.success': 'Success',
@@ -827,7 +759,6 @@ const translations = {
     'common.next': 'Next',
     'common.tryAgain': 'Try Again',
 
-    // Quiz
     'quiz.question': 'Question',
     'quiz.answer': 'Answer',
     'quiz.correct': 'Correct Answer!',
@@ -850,7 +781,6 @@ const translations = {
     'quiz.timeEstimate': 'Estimated Time',
     'quiz.minutes': 'minutes',
     
-    // Celebration
     'celebration.title': 'Congratulations! 🎉',
     'celebration.message': 'You have successfully completed the quest!',
     'celebration.tokensEarned': 'Tokens Earned',
@@ -863,7 +793,6 @@ const translations = {
     'celebration.close': 'Close',
     'celebration.continue': 'Continue',
 
-    // Wallet
     'wallet.connect': 'Connect Wallet',
     'wallet.disconnect': 'Disconnect',
     'wallet.extensionNotInstalled': 'Freighter extension is not installed or not working.',
@@ -871,10 +800,8 @@ const translations = {
     'wallet.freighterFound': 'Freighter found, requesting connection...',
     'wallet.addressReceived': 'Address received',
 
-    // Search
     'search.placeholder': 'Search quests...',
 
-    // Achievements
     'achievements.firstStep': 'First Step',
     'achievements.firstStepDesc': 'You completed your first quest',
     'achievements.tokenCollector': 'Token Collector',
@@ -888,7 +815,6 @@ const translations = {
     'achievements.legend': 'Legend',
     'achievements.legendDesc': 'Complete all quests',
 
-    // Activity Feed
     'activity.stellarBasicsCompleted': 'Completed Stellar Basics quest',
     'activity.tokenRewardEarned': 'Earned 150 Token reward',
     'activity.newCertificateEarned': 'Earned new certificate',
@@ -896,28 +822,22 @@ const translations = {
     'activity.hoursAgo': 'hours ago',
     'activity.daysAgo': 'days ago',
 
-    // Quest List
     'questList.loading': 'Loading quests...',
     'questList.error': 'Quests could not be loaded. There may be no quests in the contract yet.',
     'questList.availableQuests': 'Available Quests',
     'questList.fetchError': 'Error fetching quests',
 
-    // Filters
     'filters.title': 'Filters',
     'filters.difficulty': 'Difficulty',
     'filters.clear': 'Clear Filters',
 
-    // Testnet Info
     'testnet.environmentInfo': 'Environment Information',
     'testnet.environment': 'Environment',
 
-    // Certificate
     'certificate.blockchainStored': 'This certificate is permanently stored on the blockchain',
 
-    // Level System
     'level.beginner': 'Beginner',
 
-    // Quest Titles and Descriptions
     'quests.stellar_fundamentals.title': 'Stellar Fundamentals',
     'quests.stellar_fundamentals.description': 'Learn the basic concepts of Stellar blockchain and perform your first transactions. Discover the fundamentals of the Stellar ecosystem with this quest.',
     'quests.soroban_smart_contracts.title': 'Soroban Smart Contracts',
@@ -929,19 +849,13 @@ const translations = {
     'quests.advanced_stellar.title': 'Advanced Stellar',
     'quests.advanced_stellar.description': 'Learn advanced features of Stellar. Explore multi-sig, path payments and complex transactions topics.',
 
-    // Difficulty Descriptions
     'difficulty.beginner.description': 'Basic concepts and simple applications',
     'difficulty.intermediate.description': 'Requires intermediate technical knowledge',
     'difficulty.advanced.description': 'Requires advanced technical knowledge and experience',
 
-    // Profile Page
     'profile.totalEarned': 'Total Earned',
     'profile.claimableBalance': 'Claimable Balance',
-    'profile.completedQuests': 'Completed Quests',
-    'profile.certificates': 'Certificates',
     'profile.claimButton': 'Transfer to Account',
-    'profile.overview': 'Overview',
-    'profile.achievements': 'Achievements',
     'profile.progressChart': 'Progress Chart',
     'profile.chartPlaceholder': 'Chart will appear here',
     'profile.yourCertificates': 'Your Certificates',
@@ -951,30 +865,24 @@ const translations = {
     'profile.recentAchievements': 'Recent Achievements',
     'profile.connectWalletForAchievements': 'Connect your wallet to view your achievements.',
 
-    // Token Messages
     'token.successfullyTransferred': 'Tokens Successfully Transferred!',
     'token.transferError': 'Token Transfer Error',
     'token.transferredToWallet': 'tokens transferred to your Stellar wallet. Transaction Hash:',
     'token.claimSuccess': 'Tokens Successfully Transferred!',
 
-    // Profile Tabs
     'profile.tabs.dashboard': 'Dashboard',
     'profile.tabs.activity': 'Activity',
 
-    // Profile Dashboard
     'profile.dashboard.loadingError': 'Dashboard data could not be loaded',
     'profile.dashboard.retry': 'Try Again',
     'profile.dashboard.recentActivities': 'Recent Activities',
     'profile.dashboard.activity': 'Activity',
 
-    // Profile Stats
     'profile.stats.claimSuccess': 'Tokens Successfully Transferred!',
 
-    // Quest Messages
     'quest.alreadyCompleted': 'You have successfully completed this quest. Return to the main page to discover new quests.',
     'quest.dashboardDataError': 'Dashboard data loading error:',
 
-    // Profile Streak Information
     'profile.streak.title': 'Streak Information',
     'profile.streak.daily': 'Daily Streak',
     'profile.streak.best': 'Best Streak',
@@ -982,49 +890,39 @@ const translations = {
     'profile.streak.unknown': 'Unknown',
     'profile.streak.dayUnit': 'day',
 
-    // Profile Token Statistics
     'profile.tokenStats.title': 'Token Statistics',
     'profile.tokenStats.withdrawn': 'Withdrawn to Wallet',
 
-    // Common
     'common.unknown': 'Unknown',
     'common.dayUnit': 'day',
     'common.or': 'or',
 
-      // Demo Mode
       'demo.claimError.title': 'Wallet Connection Required',
       'demo.claimError.message': 'Please connect a wallet to transfer your tokens.',
       'demo.statsLocked.title': 'Statistics Locked',
       'demo.statsLocked.message': 'Please connect your wallet to view detailed statistics.',
       'demo.earnedInDemo': 'earned in demo mode',
 
-    // Wallet Connection Required
     'wallet.connectionRequired.title': 'Wallet Connection Required',
     'wallet.connectionRequired.message': 'Wallet connection is required for token claim operation.',
 
-    // Profile Claim Section
     'profile.claim.title': 'Transfer Your Tokens to Your Account',
     'profile.claim.description': 'tokens can be transferred to your Stellar wallet.',
     'profile.claim.transferring': 'Transferring...',
     'profile.claim.button': 'Claim',
 
-    // Empty States
     'emptyState.certificates': 'You haven\'t earned any certificates yet. Complete quests to earn certificates!',
     'emptyState.activity': 'No activity yet.',
     'emptyState.noDescription': 'No description',
     'emptyState.noDate': 'No date',
     'achievements.emptyState': 'You haven\'t earned any achievements yet. Complete quests to earn achievements!',
 
-    // Common
     'common.noData': 'No data',
 
-    // Profile Claim
     'profile.claim.readyToClaim': 'Tokens ready to claim',
 
-    // Profile Stats
     'profile.stats.perfectScore': 'Perfect score',
 
-    // Achievements
     'achievements.achievement': 'Achievement',
     'achievements.achievementEarned': 'Achievement earned!',
     'achievements.pageTitle': 'Achievements Dashboard',
@@ -1041,7 +939,6 @@ const translations = {
     'achievements.cta.title': 'Increase your achievements by completing more quests!',
     'achievements.cta.button': 'Explore Quests',
 
-    // Quiz Questions - Stellar Fundamentals
     'quests.stellar_fundamentals.q1.question': 'What consensus algorithm is used to validate transactions in the Stellar network?',
     'quests.stellar_fundamentals.q1.option1': 'Proof of Work (PoW)',
     'quests.stellar_fundamentals.q1.option2': 'Stellar Consensus Protocol (SCP)',
@@ -1077,7 +974,6 @@ const translations = {
     'quests.stellar_fundamentals.q5.option4': 'Python, JavaScript, Go, Java, C++',
     'quests.stellar_fundamentals.q5.explanation': 'Stellar serves a broad developer community with multi-language support.',
 
-    // Quiz Questions - Soroban Smart Contracts
     'quests.soroban_smart_contracts.q1.question': 'What is Soroban?',
     'quests.soroban_smart_contracts.q1.option1': 'A Stellar wallet',
     'quests.soroban_smart_contracts.q1.option2': 'A smart contract platform on Stellar',
@@ -1113,7 +1009,6 @@ const translations = {
     'quests.soroban_smart_contracts.q5.option4': 'Fixed fee',
     'quests.soroban_smart_contracts.q5.explanation': 'XLM (Stellar Lumens) is used as gas fee for smart contract operations in Soroban.',
 
-    // Quiz Questions - DeFi Protocols
     'quests.defi_protocols.q1.question': 'What does Decentralized Finance (DeFi) mean?',
     'quests.defi_protocols.q1.option1': 'Traditional banking',
     'quests.defi_protocols.q1.option2': 'Blockchain-based financial services',
@@ -1149,7 +1044,6 @@ const translations = {
     'quests.defi_protocols.q5.option4': 'Automated Mining Machine',
     'quests.defi_protocols.q5.explanation': 'AMM is a protocol that provides liquidity in decentralized exchanges for automatic price determination.',
 
-    // Quiz Questions - NFT Ecosystem
     'quests.nft_ecosystem.q1.question': 'What does NFT stand for?',
     'quests.nft_ecosystem.q1.option1': 'Non-Fungible Token',
     'quests.nft_ecosystem.q1.option2': 'New Financial Technology',
@@ -1185,7 +1079,6 @@ const translations = {
     'quests.nft_ecosystem.q5.option4': 'A wallet protocol',
     'quests.nft_ecosystem.q5.explanation': 'SEP-005 is the standard protocol for creating and managing NFTs on the Stellar network.',
 
-    // Quiz Questions - Advanced Stellar
     'quests.advanced_stellar.q1.question': 'What is "multi-signature" in Stellar?',
     'quests.advanced_stellar.q1.option1': 'Transactions requiring multiple signatures',
     'quests.advanced_stellar.q1.option2': 'Multiple token transfers',
@@ -1221,7 +1114,6 @@ const translations = {
     'quests.advanced_stellar.q5.option4': 'More tokens',
     'quests.advanced_stellar.q5.explanation': 'Multi-sig accounts ensure funds remain secure even if a single private key is compromised.',
     
-    // Blockchain Security
     'quests.blockchain_security.title': 'Blockchain Security',
     'quests.blockchain_security.description': 'Learn about common vulnerabilities in blockchain networks and methods for protection.',
     'quests.blockchain_security.q1.question': 'What is the name of the attack where malicious actors control the majority (51%) of a blockchain network\'s hashing power to alter transaction history?',
@@ -1260,7 +1152,6 @@ const translations = {
     'quests.blockchain_security.q5.option5': 'Man-in-the-middle Attack',
     'quests.blockchain_security.q5.explanation': 'Front-running is paying a higher transaction fee to get included in a block before another transaction.',
     
-    // Decentralized Identity (DID)
     'quests.decentralized_identity.title': 'Decentralized Identity (DID)',
     'quests.decentralized_identity.description': 'Explore technologies that allow users to control their own identity data.',
     'quests.decentralized_identity.q1.question': 'What is the primary goal of Decentralized Identity (DID) systems?',
@@ -1299,7 +1190,6 @@ const translations = {
     'quests.decentralized_identity.q5.option5': 'Only on hardware wallets',
     'quests.decentralized_identity.q5.explanation': 'DID documents are stored in decentralized systems like blockchain or P2P networks.',
     
-    // Layer 2 Scaling Solutions
     'quests.layer2_scaling.title': 'Layer 2 Scaling Solutions',
     'quests.layer2_scaling.description': 'Understand Layer 2 technologies that increase the speed and capacity of blockchain networks.',
     'quests.layer2_scaling.q1.question': 'What is the main purpose of Layer 2 scaling solutions?',
@@ -1338,7 +1228,6 @@ const translations = {
     'quests.layer2_scaling.q5.option5': 'For token swaps',
     'quests.layer2_scaling.q5.explanation': 'State Channels are ideal for off-chain transactions between two parties.',
     
-    // Web3 Development Basics
     'quests.web3_dev_basics.title': 'Web3 Development Basics',
     'quests.web3_dev_basics.description': 'Learn the fundamental tools and concepts used to build decentralized applications (dApps).',
     'quests.web3_dev_basics.q1.question': 'What is the main difference between a dApp (Decentralized Application) and a traditional web application?',

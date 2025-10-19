@@ -1,6 +1,4 @@
-// Seviye Sistemi ve Kuralları
 export const LEVEL_SYSTEM = {
-  // Seviye gereksinimleri (XP)
   LEVELS: {
     1: { xp: 0, name: 'Başlangıç', color: 'gray', icon: '🌱' },
     2: { xp: 100, name: 'Öğrenci', color: 'green', icon: '📚' },
@@ -12,52 +10,41 @@ export const LEVEL_SYSTEM = {
     8: { xp: 3000, name: 'Efsane', color: 'indigo', icon: '🌟' }
   },
 
-  // XP kazanma kuralları
   XP_RULES: {
-    // Quest tamamlama
     QUEST_COMPLETED: 50,
     QUEST_FIRST_TIME: 75, // İlk kez tamamlama bonusu
     
-    // Ders tamamlama
     LESSON_COMPLETED: 10,
     LESSON_PERFECT: 15, // Hiç yanlış yapmadan tamamlama
     
-    // Streak bonusları
     DAILY_STREAK: 5, // Günlük streak bonusu
     WEEKLY_STREAK: 25, // Haftalık streak bonusu
     MONTHLY_STREAK: 100, // Aylık streak bonusu
     
-    // Zorluk bonusları
     DIFFICULTY_BONUS: {
       beginner: 1.0,
       intermediate: 1.5,
       advanced: 2.0
     },
     
-    // Sosyal bonuslar
     FIRST_CERTIFICATE: 25,
     MILESTONE_REACHED: 50, // 5, 10, 25, 50 quest tamamlama
     PERFECT_WEEK: 100, // Haftada tüm quest'leri doğru tamamlama
   },
 
-  // Token kazanma kuralları
   TOKEN_RULES: {
-    // Base token (quest tamamlama)
     BASE_QUEST_REWARD: 10,
     
-    // Zorluk çarpanları
     DIFFICULTY_MULTIPLIER: {
       beginner: 1.0,
       intermediate: 1.5,
       advanced: 2.0
     },
     
-    // Performans bonusları
     PERFECT_SCORE: 1.5, // Tüm soruları doğru cevaplama
     SPEED_BONUS: 1.2, // Hızlı tamamlama (zamanın yarısında)
     STREAK_BONUS: 1.1, // Streak bonusu
     
-    // Seviye bonusları
     LEVEL_BONUS: {
       1: 1.0,
       2: 1.1,
@@ -70,7 +57,6 @@ export const LEVEL_SYSTEM = {
     }
   },
 
-  // Milestone'lar
   MILESTONES: {
     QUESTS_COMPLETED: [5, 10, 25, 50, 100, 200],
     PERFECT_SCORES: [3, 7, 15, 30, 50],
@@ -80,35 +66,29 @@ export const LEVEL_SYSTEM = {
   }
 };
 
-// XP hesaplama fonksiyonları
 class LevelCalculator {
   static calculateXP(questData, userStats) {
     let totalXP = 0;
     
-    // Quest tamamlama XP'si
     const baseXP = LEVEL_SYSTEM.XP_RULES.QUEST_COMPLETED;
     const difficultyMultiplier = LEVEL_SYSTEM.XP_RULES.DIFFICULTY_BONUS[questData.difficulty] || 1.0;
     
     totalXP += baseXP * difficultyMultiplier;
     
-    // İlk kez tamamlama bonusu
     if (!userStats.completedQuests.includes(questData.id)) {
       totalXP += LEVEL_SYSTEM.XP_RULES.QUEST_FIRST_TIME;
     }
     
-    // Ders bazlı XP
     questData.lessons.forEach((lesson, index) => {
       if (lesson.completed) {
         totalXP += LEVEL_SYSTEM.XP_RULES.LESSON_COMPLETED;
         
-        // Perfect score bonusu
         if (lesson.perfect) {
           totalXP += LEVEL_SYSTEM.XP_RULES.LESSON_PERFECT;
         }
       }
     });
     
-    // Streak bonusları
     if (userStats.dailyStreak >= 3) {
       totalXP += LEVEL_SYSTEM.XP_RULES.DAILY_STREAK;
     }
@@ -125,18 +105,14 @@ class LevelCalculator {
   static calculateTokens(questData, userStats, performance) {
     let totalTokens = 0;
     
-    // Base token
     const baseTokens = LEVEL_SYSTEM.TOKEN_RULES.BASE_QUEST_REWARD * questData.lessons.length;
     
-    // Zorluk çarpanı
     const difficultyMultiplier = LEVEL_SYSTEM.TOKEN_RULES.DIFFICULTY_MULTIPLIER[questData.difficulty] || 1.0;
     
-    // Seviye bonusu
     const levelBonus = LEVEL_SYSTEM.TOKEN_RULES.LEVEL_BONUS[userStats.level] || 1.0;
     
     totalTokens = baseTokens * difficultyMultiplier * levelBonus;
     
-    // Performans bonusları
     if (performance.perfectScore) {
       totalTokens *= LEVEL_SYSTEM.TOKEN_RULES.PERFECT_SCORE;
     }
@@ -194,7 +170,6 @@ class LevelCalculator {
   static checkMilestones(userStats) {
     const newMilestones = [];
     
-    // Quest tamamlama milestone'ları
     LEVEL_SYSTEM.MILESTONES.QUESTS_COMPLETED.forEach(milestone => {
       if (userStats.completedQuests.length === milestone && !userStats.achievedMilestones.includes(`quests_${milestone}`)) {
         newMilestones.push({
@@ -206,7 +181,6 @@ class LevelCalculator {
       }
     });
     
-    // Perfect score milestone'ları
     LEVEL_SYSTEM.MILESTONES.PERFECT_SCORES.forEach(milestone => {
       if (userStats.perfectScores === milestone && !userStats.achievedMilestones.includes(`perfect_${milestone}`)) {
         newMilestones.push({
@@ -218,7 +192,6 @@ class LevelCalculator {
       }
     });
     
-    // Streak milestone'ları
     LEVEL_SYSTEM.MILESTONES.STREAK_DAYS.forEach(milestone => {
       if (userStats.dailyStreak === milestone && !userStats.achievedMilestones.includes(`streak_${milestone}`)) {
         newMilestones.push({
@@ -234,7 +207,6 @@ class LevelCalculator {
   }
 }
 
-// Kullanıcı istatistikleri sınıfı
 class UserStatsManager {
   constructor(userAddress) {
     this.userAddress = userAddress;
@@ -242,7 +214,6 @@ class UserStatsManager {
   }
 
   loadStats() {
-    // localStorage'dan kullanıcı istatistiklerini yükle
     const saved = localStorage.getItem(`chainquest_stats_${this.userAddress}`);
     return saved ? JSON.parse(saved) : this.getDefaultStats();
   }
@@ -286,10 +257,8 @@ class UserStatsManager {
       const yesterdayString = yesterday.toDateString();
       
       if (lastActive === yesterdayString) {
-        // Streak devam ediyor
         this.stats.dailyStreak++;
       } else if (lastActive !== today) {
-        // Streak kırıldı
         this.stats.dailyStreak = 1;
       }
       
@@ -298,33 +267,26 @@ class UserStatsManager {
   }
 
   addQuestCompletion(questData, performance) {
-    // XP hesapla ve ekle
     const xpGained = LevelCalculator.calculateXP(questData, this.stats);
     this.stats.totalXP += xpGained;
     
-    // Token hesapla ve ekle
     const tokensGained = LevelCalculator.calculateTokens(questData, this.stats, performance);
     this.stats.totalTokens += tokensGained;
     
-    // Quest'i tamamlanan listesine ekle
     if (!this.stats.completedQuests.includes(questData.id)) {
       this.stats.completedQuests.push(questData.id);
     }
     
-    // Perfect score kontrolü
     if (performance.perfectScore) {
       this.stats.perfectScores++;
     }
     
-    // Performans istatistiklerini güncelle
     this.updatePerformanceStats(questData, performance);
     
-    // Yeni seviye kontrolü
     const newLevel = LevelCalculator.getCurrentLevel(this.stats.totalXP);
     const leveledUp = newLevel > this.stats.level;
     this.stats.level = newLevel;
     
-    // Milestone kontrolü
     const newMilestones = LevelCalculator.checkMilestones(this.stats);
     newMilestones.forEach(milestone => {
       this.stats.achievedMilestones.push(`${milestone.type}_${milestone.value}`);
@@ -333,10 +295,8 @@ class UserStatsManager {
       this.stats.achievements.push(milestone);
     });
     
-    // Streak güncelle
     this.updateStreak();
     
-    // İstatistikleri kaydet
     this.saveStats();
     
     return {
@@ -351,15 +311,12 @@ class UserStatsManager {
   updatePerformanceStats(questData, performance) {
     const stats = this.stats.performanceStats;
     
-    // Toplam ders sayısını güncelle
     stats.totalLessonsCompleted += questData.lessons.length;
     
-    // Perfect ders sayısını güncelle
     if (performance.perfectScore) {
       stats.perfectLessons += questData.lessons.length;
     }
     
-    // Ortalama skor hesapla
     const totalQuests = this.stats.completedQuests.length;
     if (totalQuests > 0) {
       stats.averageScore = (stats.averageScore * (totalQuests - 1) + performance.score) / totalQuests;
@@ -367,7 +324,6 @@ class UserStatsManager {
       stats.averageScore = performance.score;
     }
     
-    // En iyi streak güncelle
     stats.bestStreak = Math.max(stats.bestStreak, this.stats.dailyStreak);
   }
 
@@ -381,5 +337,4 @@ class UserStatsManager {
   }
 }
 
-// Export the classes
 export { LevelCalculator, UserStatsManager };

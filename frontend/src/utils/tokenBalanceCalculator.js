@@ -1,25 +1,15 @@
-// Token Balance Calculator Utility
-// This utility calculates the total token balance based on completed quests
 
 import { questDatabase } from '../data/questData';
 
-/**
- * Calculate total token balance for a user based on completed quests
- * @param {string} userAddress - User's Stellar wallet address
- * @returns {number} Total token balance
- */
 export const calculateTotalTokenBalance = (userAddress) => {
   try {
-    // CRITICAL FIX: Remove blocking condition - allow demo mode ('demo') to work
     if (!userAddress || userAddress === '') return 0;
     
-    // Get completed quests from localStorage
     const completedQuests = JSON.parse(localStorage.getItem('completedQuests') || '[]');
     const userCompletedQuests = completedQuests
       .filter(key => key.startsWith(`${userAddress}-`))
       .map(key => key.replace(`${userAddress}-`, ''));
     
-    // Calculate total balance
     let totalBalance = 0;
     
     userCompletedQuests.forEach(questId => {
@@ -37,23 +27,15 @@ export const calculateTotalTokenBalance = (userAddress) => {
   }
 };
 
-/**
- * Get completed quests for a user
- * @param {string} userAddress - User's Stellar wallet address
- * @returns {Array} Array of completed quest objects
- */
 export const getCompletedQuestsForUser = (userAddress) => {
   try {
-    // CRITICAL FIX: Remove blocking condition - allow demo mode ('demo') to work
     if (!userAddress || userAddress === '') return [];
     
-    // Get completed quests from localStorage
     const completedQuests = JSON.parse(localStorage.getItem('completedQuests') || '[]');
     const userCompletedQuests = completedQuests
       .filter(key => key.startsWith(`${userAddress}-`))
       .map(key => key.replace(`${userAddress}-`, ''));
     
-    // Get quest objects
     const completedQuestObjects = userCompletedQuests
       .map(questId => questDatabase.find(q => q.id === questId))
       .filter(quest => quest !== undefined);
@@ -66,14 +48,8 @@ export const getCompletedQuestsForUser = (userAddress) => {
   }
 };
 
-/**
- * Get token balance breakdown for a user (including claimable balance)
- * @param {string} userAddress - User's Stellar wallet address
- * @returns {Object} Token balance breakdown
- */
 export const getTokenBalanceBreakdown = (userAddress) => {
   try {
-    // CRITICAL FIX: Remove blocking condition - allow demo mode ('demo') to work
     if (!userAddress || userAddress === '') {
       return {
         totalBalance: 0,
@@ -88,7 +64,6 @@ export const getTokenBalanceBreakdown = (userAddress) => {
     console.log(`[getTokenBalanceBreakdown] ${userAddress}: completedQuests array:`, completedQuests);
     console.log(`[getTokenBalanceBreakdown] ${userAddress}: completedQuests.length:`, completedQuests.length);
     
-    // Debug: Check localStorage for demo mode
     if (userAddress === 'demo') {
       const allCompletedQuests = JSON.parse(localStorage.getItem('completedQuests') || '[]');
       console.log(`[getTokenBalanceBreakdown] Demo mode - all completedQuests in localStorage:`, allCompletedQuests);
@@ -96,13 +71,10 @@ export const getTokenBalanceBreakdown = (userAddress) => {
       console.log(`[getTokenBalanceBreakdown] Demo mode - demo quests:`, demoQuests);
     }
     
-    // Get claimable balance from localStorage (amount ready to claim)
     const claimableBalance = parseFloat(localStorage.getItem(`claimableBalance_${userAddress}`) || '0');
     
-    // Get claimed balance from localStorage (amount already transferred to wallet)
     const claimedBalance = parseFloat(localStorage.getItem(`claimedBalance_${userAddress}`) || '0');
     
-    // Total earned = claimable + claimed (all tokens ever earned)
     const totalBalance = claimableBalance + claimedBalance;
     
     console.log(`[getTokenBalanceBreakdown] ${userAddress}: questCount=${completedQuests.length}, claimable=${claimableBalance}, claimed=${claimedBalance}, total=${totalBalance}`);

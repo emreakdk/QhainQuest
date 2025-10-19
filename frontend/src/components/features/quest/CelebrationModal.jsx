@@ -10,7 +10,6 @@ const CelebrationModal = ({ quest, onClose, onComplete }) => {
   const [showAnimation, setShowAnimation] = useState(false);
 
   useEffect(() => {
-    // Animasyonu başlat
     setShowAnimation(true);
   }, []);
 

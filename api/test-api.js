@@ -1,9 +1,6 @@
-// Test script for ChainQuest API
-// Run this to test the API functionality before deployment
 
 const API_BASE_URL = 'http://localhost:3000/api'; // Change to your deployed URL
 
-// Test data
 const testUserAddress = 'GXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'; // Replace with a real testnet address
 const testQuestId = 'stellar-fundamentals';
 const testAnswers = [
@@ -25,7 +22,6 @@ const wrongAnswers = [
 async function testQuestCompletion() {
   console.log('🧪 Testing ChainQuest API...\n');
 
-  // Test 1: Valid quest completion
   console.log('Test 1: Valid quest completion');
   try {
     const response = await fetch(`${API_BASE_URL}/complete-quest`, {
@@ -54,7 +50,6 @@ async function testQuestCompletion() {
 
   console.log('\n' + '='.repeat(50) + '\n');
 
-  // Test 2: Duplicate quest completion
   console.log('Test 2: Duplicate quest completion (should fail)');
   try {
     const response = await fetch(`${API_BASE_URL}/complete-quest`, {
@@ -83,7 +78,6 @@ async function testQuestCompletion() {
 
   console.log('\n' + '='.repeat(50) + '\n');
 
-  // Test 3: Invalid answers
   console.log('Test 3: Invalid answers (should fail)');
   try {
     const response = await fetch(`${API_BASE_URL}/complete-quest`, {
@@ -112,7 +106,6 @@ async function testQuestCompletion() {
 
   console.log('\n' + '='.repeat(50) + '\n');
 
-  // Test 4: Invalid quest ID
   console.log('Test 4: Invalid quest ID (should fail)');
   try {
     const response = await fetch(`${API_BASE_URL}/complete-quest`, {
@@ -141,7 +134,6 @@ async function testQuestCompletion() {
 
   console.log('\n' + '='.repeat(50) + '\n');
 
-  // Test 5: Invalid user address
   console.log('Test 5: Invalid user address (should fail)');
   try {
     const response = await fetch(`${API_BASE_URL}/complete-quest`, {
@@ -171,5 +163,4 @@ async function testQuestCompletion() {
   console.log('\n🎉 API testing completed!');
 }
 
-// Run the tests
 testQuestCompletion().catch(console.error);

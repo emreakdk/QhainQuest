@@ -1,17 +1,12 @@
-// Simplified Soroban client - Mock implementation for now
-// This avoids the large bundle size issue while maintaining functionality
 
 import { TESTNET_CONFIG, getRpcUrl, getNetworkPassphrase, getContractAddress } from '../config/testnet.js';
 
-// Soroban client konfigürasyonu - Config dosyasından al
 const SOROBAN_RPC_URL = getRpcUrl();
 const NETWORK_PASSPHRASE = getNetworkPassphrase();
 
-// Contract adresleri (deploy edildikten sonra güncellenecek)
 const CHAINQUEST_CONTRACT_ADDRESS = getContractAddress('chainquest');
 const TOKEN_CONTRACT_ADDRESS = getContractAddress('token');
 
-// Application configuration
 const APP_ENVIRONMENT = TESTNET_CONFIG.environment;
 const DEFAULT_QUEST_REWARD = TESTNET_CONFIG.quest.defaultReward;
 
@@ -40,15 +35,12 @@ class SorobanClientService {
     this.initialized = true;
   }
 
-  // Configuration getter
   getConfig() {
     return this.config;
   }
 
-  // Quest verilerini blockchain'den çek - Mock implementation
   async getQuest(questId) {
     await this.initialize();
-    // Mock data döndür
     return {
       id: questId,
       name: "Mock Quest",
@@ -59,7 +51,6 @@ class SorobanClientService {
     };
   }
 
-  // Tüm quest'leri çek (mock data)
   async getAllQuests() {
     await this.initialize();
     return [
@@ -168,38 +159,29 @@ class SorobanClientService {
     ];
   }
 
-  // Kullanıcının quest'teki ilerlemesini çek - Mock implementation
   async getUserProgress(userAddress, questId) {
     await this.initialize();
-    // Mock: Her kullanıcı için rastgele ilerleme
     const progress = Math.floor(Math.random() * 3); // 0-2 arası
     return progress;
   }
 
-  // Kullanıcının sertifikası olup olmadığını kontrol et - Mock implementation
   async hasCertificate(userAddress, questId) {
     await this.initialize();
-    // Mock: %30 ihtimalle sertifika var
     return Math.random() < 0.3;
   }
 
-  // Kullanıcı cevabını gönder - Mock implementation
   async submitAnswer(userAddress, questId, lessonId, answer) {
     await this.initialize();
     console.log('Mock: Cevap gönderiliyor:', { userAddress, questId, lessonId, answer });
     
-    // Mock: Başarılı response döndür
     return { success: true, message: 'Cevap başarıyla gönderildi (Mock)' };
   }
 
-  // Kullanıcının token bakiyesini çek - Mock implementation
   async getUserTokenBalance(userAddress) {
     await this.initialize();
-    // Mock: Rastgele token bakiye
     return Math.floor(Math.random() * 1000) + 100;
   }
 
-  // Quest verilerini parse et
   parseQuestData(data) {
     return {
       id: data.id,
@@ -215,12 +197,10 @@ class SorobanClientService {
     };
   }
 
-  // Contract function çağır - Mock implementation
   async callContractFunction(contractAddress, functionName, args = []) {
     await this.initialize();
     console.log('Mock: Contract function çağrılıyor:', { contractAddress, functionName, args });
     
-    // Mock: Başarılı response döndür
     return { 
       success: true, 
       result: 'Mock result',
@@ -228,30 +208,24 @@ class SorobanClientService {
     };
   }
 
-  // Token transfer - Mock implementation
   async transferTokens(fromAddress, toAddress, amount) {
     await this.initialize();
     console.log('Mock: Token transfer:', { fromAddress, toAddress, amount });
     
-    // Mock: Başarılı transfer
     return { success: true, transactionHash: 'mock_tx_hash' };
   }
 
-  // Token balance al - Mock implementation
   async getTokenBalance(userAddress, tokenContract) {
     await this.initialize();
     console.log('Mock: Token balance alınıyor:', { userAddress, tokenContract });
     
-    // Mock: Rastgele balance döndür
     return Math.floor(Math.random() * 1000) + 100;
   }
 
-  // Kullanıcı işlemlerini al - Mock implementation
   async getUserTransactions(userAddress, limit = 10) {
     await this.initialize();
     console.log('Mock: Kullanıcı işlemleri alınıyor:', { userAddress, limit });
     
-    // Mock: Rastgele işlemler döndür
     const mockTransactions = [];
     for (let i = 0; i < limit; i++) {
       mockTransactions.push({
@@ -268,7 +242,6 @@ class SorobanClientService {
     return mockTransactions;
   }
 
-  // Token istatistiklerini al - Mock implementation
   async getTokenStats(userAddress) {
     await this.initialize();
     console.log('Mock: Token istatistikleri alınıyor:', { userAddress });
@@ -282,9 +255,7 @@ class SorobanClientService {
   }
 }
 
-// Export the class
 export { SorobanClientService };
 
-// Singleton instance
 export const sorobanClient = new SorobanClientService();
 export default sorobanClient;

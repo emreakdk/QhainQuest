@@ -13,7 +13,6 @@ const FreighterConnect = ({ onConnect }) => {
       setLoading(true);
       setError(null);
       
-      // Lazy load Freighter API
       const { requestAccess, getAddress, isConnected } = await import("@stellar/freighter-api");
       
       const installed = await isConnected();

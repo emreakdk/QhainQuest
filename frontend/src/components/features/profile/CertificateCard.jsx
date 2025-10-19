@@ -77,5 +77,4 @@ const CertificateCard = ({ certificate }) => {
   );
 };
 
-// Memoized component to prevent unnecessary re-renders
 export default memo(CertificateCard);

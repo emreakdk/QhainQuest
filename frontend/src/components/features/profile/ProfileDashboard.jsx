@@ -13,7 +13,6 @@ import Button from '../../ui/Button';
 import Badge from '../../ui/Badge';
 import MobileWarning from '../../ui/MobileWarning';
 
-// Basit grafik komponenti (Chart.js olmadan)
 const SimpleChart = ({ data, type = 'line', height = 200, t }) => {
   if (!data || data.length === 0) return <div className="h-48 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center">{t('common.noData')}</div>;
 
@@ -87,7 +86,6 @@ const ProfileDashboard = () => {
     }
   };
 
-  // CRITICAL FIX: Real claim function (same as ProfileStats)
   const handleClaimTokens = async () => {
     if (!publicKey || claimableBalance <= 0) {
       return;
@@ -98,14 +96,11 @@ const ProfileDashboard = () => {
     try {
       console.log(`[ProfileDashboard] Claiming ${claimableBalance} tokens for user ${publicKey}`);
       
-      // Use centralized token context for API call
       const result = await claimTokens(publicKey, claimableBalance);
       
       if (result.success) {
-        // Reset global claimable balance to 0
         resetClaimableBalance(publicKey);
         
-        // Show success message
         showSuccess(
           t('profile.stats.claimSuccess'),
           `${claimableBalance} ${t('token.transferredToWallet')} ${result.data.transactionHash}`
@@ -123,7 +118,6 @@ const ProfileDashboard = () => {
     }
   };
 
-  // Demo mode placeholder
   if (isDemoMode) {
     return (
       <div className="space-y-6">
@@ -174,7 +168,6 @@ const ProfileDashboard = () => {
     );
   }
 
-  // Safe destructuring with fallbacks
   const stats = dashboardData?.stats || { level: 1, totalXP: 0, completedQuests: [], perfectScores: 0, levelData: { name: 'Başlangıç', icon: '🌱' } };
   const tokenStats = dashboardData?.tokenStats || { currentBalance: 0, totalEarned: 0, totalTransferred: 0, totalWithdrawn: 0, transactionCount: 0 };
   const recentActivity = dashboardData?.recentActivity || [];
@@ -308,5 +301,4 @@ const ProfileDashboard = () => {
   );
 };
 
-// Memoized component to prevent unnecessary re-renders
 export default memo(ProfileDashboard);

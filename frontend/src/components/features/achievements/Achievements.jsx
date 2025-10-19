@@ -16,7 +16,6 @@ const Achievements = () => {
   const { tokenData } = useToken(); // Live quest data
   const [selectedPeriod, setSelectedPeriod] = useState('all-time');
   
-  // CRITICAL FIX: Real user data from global context
   const currentUser = {
     rank: 1, // Always #1 for personal dashboard
     address: publicKey || "Not Connected",
@@ -27,7 +26,6 @@ const Achievements = () => {
     isCurrentUser: true
   };
 
-  // Handle no data case
   if (!publicKey) {
     return (
       <div className="space-y-8">
@@ -60,7 +58,6 @@ const Achievements = () => {
     { id: 'weekly', label: t('achievements.filter.thisWeek') }
   ];
 
-  // Helper functions removed - no longer needed for single user display
 
   return (
     <div className="space-y-8">

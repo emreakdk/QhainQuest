@@ -1,4 +1,3 @@
-// Gerçek Quest Verileri
 export const questDatabase = [
   {
     id: 'stellar-fundamentals',
@@ -381,7 +380,6 @@ export const questDatabase = [
     completionRate: 15
   },
   
-  // === YENİ QUEST 1: Blockchain Güvenliği ===
   {
     id: 'blockchain-security',
     nameKey: 'quests.blockchain_security.title',
@@ -464,7 +462,6 @@ export const questDatabase = [
     completionRate: 0
   },
 
-  // === YENİ QUEST 2: Merkeziyetsiz Kimlik (DID) ===
   {
     id: 'decentralized-identity',
     nameKey: 'quests.decentralized_identity.title',
@@ -547,7 +544,6 @@ export const questDatabase = [
     completionRate: 0
   },
 
-  // === YENİ QUEST 3: Layer 2 Çözümleri ===
   {
     id: 'layer2-scaling',
     nameKey: 'quests.layer2_scaling.title',
@@ -630,7 +626,6 @@ export const questDatabase = [
     completionRate: 0
   },
 
-  // === YENİ QUEST 4: Web3 Geliştirme Temelleri ===
   {
     id: 'web3-dev-basics',
     nameKey: 'quests.web3_dev_basics.title',
@@ -714,7 +709,6 @@ export const questDatabase = [
   }
 ];
 
-// Quest kategorileri
 export const questCategories = [
   { id: 'all', nameKey: 'category.all', icon: '📚', color: 'slate' },
   { id: 'blockchain', nameKey: 'category.blockchain', icon: '⛓️', color: 'blue' },
@@ -723,7 +717,6 @@ export const questCategories = [
   { id: 'nft', nameKey: 'category.nft', icon: '🎨', color: 'pink' }
 ];
 
-// Zorluk seviyeleri
 export const difficultyLevels = {
   beginner: { 
     nameKey: 'category.beginner', 
@@ -745,7 +738,6 @@ export const difficultyLevels = {
   }
 };
 
-// Kullanıcı istatistikleri (mock data)
 export const mockUserStats = {
   totalTokens: 1250,
   completedQuests: 3,
@@ -759,7 +751,6 @@ export const mockUserStats = {
   totalTimeSpent: 180 // dakika
 };
 
-// Kullanıcı progress verileri (mock data)
 export const mockUserProgress = {
   'stellar-fundamentals': {
     currentStep: 3,
@@ -787,7 +778,6 @@ export const mockUserProgress = {
   }
 };
 
-// Kullanıcı sertifikaları (mock data)
 export const mockUserCertificates = [
   {
     id: 'cert-1',

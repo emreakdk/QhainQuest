@@ -18,7 +18,6 @@ export const TokenProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
 
-  // Load token data for a user
   const loadTokenData = useCallback(async (userAddress) => {
     console.log(`[TokenContext] loadTokenData called with userAddress: ${userAddress}`);
     
@@ -41,20 +40,14 @@ export const TokenProvider = ({ children }) => {
     try {
       setCurrentUser(userAddress);
       
-      // Get comprehensive breakdown (FIXED: Don't double-count claimable balance)
       const breakdown = getTokenBalanceBreakdown(userAddress);
-      // Get claimable balance from localStorage directly (BalanceContext will sync this)
       const claimableBalance = questApiService.getClaimableBalance(userAddress);
       
-      // Get quest database for total quest count
       const { questDatabase } = await import('../data/questData');
       
-      // Calculate in-progress quests (this would need quest progress data)
-      // For now, we'll calculate it as: total quests - completed quests
       const totalQuests = questDatabase.length;
       const inProgressQuests = Math.max(0, totalQuests - breakdown.questCount);
       
-      // Use the corrected breakdown from tokenBalanceCalculator
       const tokenData = {
         totalEarned: breakdown.totalBalance,           // FIXED: Now correctly calculated
         claimableBalance: breakdown.claimableBalance,  // Ready to claim
@@ -70,7 +63,6 @@ export const TokenProvider = ({ children }) => {
       console.log(`[TokenContext] ${userAddress}: breakdown.completedQuests:`, breakdown.completedQuests);
       console.log(`[TokenContext] ${userAddress}: tokenData.completedQuests:`, tokenData.completedQuests);
       
-      // DEBUG: Special logging for demo mode
       if (userAddress === 'demo') {
         console.log('[TokenContext DEBUG] Demo Mode - Full breakdown:', breakdown);
         console.log('[TokenContext DEBUG] Demo Mode - Quest count from breakdown:', breakdown.questCount);
@@ -87,14 +79,12 @@ export const TokenProvider = ({ children }) => {
     }
   }, []);
 
-  // Add tokens to claimable balance (when quest completed)
   const addToClaimableBalance = useCallback((userAddress, amount) => {
     if (!userAddress || amount <= 0) return;
     
     try {
       questApiService.addToClaimableBalance(userAddress, amount);
       
-      // Refresh data
       loadTokenData(userAddress);
       
       console.log(`Added ${amount} tokens to claimable balance`);
@@ -103,7 +93,6 @@ export const TokenProvider = ({ children }) => {
     }
   }, [loadTokenData]);
 
-  // Claim tokens (transfer to wallet)
   const claimTokens = useCallback(async (userAddress, amount) => {
     if (!userAddress || amount <= 0) return { success: false, error: 'Invalid parameters' };
     
@@ -112,10 +101,8 @@ export const TokenProvider = ({ children }) => {
       const result = await questApiService.claimTokens(userAddress, amount);
       
       if (result.success) {
-        // Reset claimable balance
         questApiService.resetClaimableBalance(userAddress);
         
-        // Refresh data
         await loadTokenData(userAddress);
         
         console.log('Tokens claimed successfully:', result.data);
@@ -131,21 +118,17 @@ export const TokenProvider = ({ children }) => {
     }
   }, [loadTokenData]);
 
-  // Refresh token data
   const refreshTokenData = useCallback(() => {
     if (currentUser) {
       loadTokenData(currentUser);
     }
   }, [currentUser, loadTokenData]);
 
-  // Context value
   const value = {
-    // State
     tokenData,
     isLoading,
     currentUser,
     
-    // Actions
     loadTokenData,
     addToClaimableBalance,
     claimTokens,

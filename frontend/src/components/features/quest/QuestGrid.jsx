@@ -13,36 +13,29 @@ import Badge from '../../ui/Badge';
 import MobileWarning from '../../ui/MobileWarning';
 import { questDatabase, questCategories, difficultyLevels, mockUserStats, mockUserProgress } from '../../../data/questData';
 
-// Lazy load QuestQuiz
 const QuestQuiz = lazy(() => import('./QuestQuiz'));
 
 const QuestGrid = () => {
-  // Moved all Hook calls to the top level to comply with the Rules of Hooks
   const { t } = useLanguage();
   const { publicKey, isDemoMode } = useContext(WalletContext);
   const { quests, loading, error, userStats, userProgress, getQuestStatus, getQuestProgress, refreshData } = useQuest();
   const { tokenData } = useToken(); // Use centralized token data
   const { totalEarned } = useBalance(); // Use global total earned
   
-  // Data processing moved after all Hooks
   const realQuests = quests.length > 0 ? quests : questDatabase;
   
-  // CRITICAL FIX: Direct localStorage reading for Demo Mode counters
   const getCompletedQuestsCount = () => {
     if (isDemoMode) {
-      // For Demo Mode, read directly from localStorage
       const allCompletedQuests = JSON.parse(localStorage.getItem('completedQuests') || '[]');
       const demoQuests = allCompletedQuests.filter(key => key.startsWith('demo-'));
       return demoQuests.length;
     } else {
-      // For Wallet Mode, use tokenData
       return tokenData.completedQuests || 0;
     }
   };
   
   const completedQuestsCount = getCompletedQuestsCount();
   
-  // CRITICAL FIX: Calculate in-progress quests correctly for both modes
   const inProgressQuestsCount = Math.max(0, realQuests.length - completedQuestsCount);
   
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -57,23 +50,18 @@ const QuestGrid = () => {
     }
   }, [publicKey, refreshData]);
 
-  // Helper functions moved after all Hooks
   const getQuestCategory = (quest) => {
-    // Fixed: Add null check for quest object
     if (!quest) return 'blockchain';
     return quest.category || 'blockchain';
   };
 
   const getQuestDifficulty = (quest) => {
-    // Fixed: Add null check for quest object
     if (!quest) return 'beginner';
     return quest.difficulty || 'beginner';
   };
 
-  // Determine user identifier (wallet address or demo mode)
   const userIdentifier = isDemoMode ? 'demo' : publicKey;
   
-  // Use centralized token data instead of userStats
   const realUserStats = {
     level: 1, 
     totalXP: 0, 
@@ -85,7 +73,6 @@ const QuestGrid = () => {
   };
 
   const filteredQuests = realQuests.filter(quest => {
-    // Fixed: Add null checks for quest object properties
     if (!quest || (!quest.name && !quest.nameKey) || (!quest.description && !quest.descriptionKey)) {
       return false;
     }
@@ -99,7 +86,6 @@ const QuestGrid = () => {
   });
 
   const handleStartQuest = (quest) => {
-    // Quest tamamlanmış mı kontrol et
     const questProgress = userProgress.get(quest.id);
     if (questProgress && questProgress.completed) {
       console.log(`Quest ${quest.id} zaten tamamlanmış!`);
@@ -109,7 +95,6 @@ const QuestGrid = () => {
   };
 
   const handleContinueQuest = (quest) => {
-    // Quest tamamlanmış mı kontrol et
     const questProgress = userProgress.get(quest.id);
     if (questProgress && questProgress.completed) {
       console.log(`Quest ${quest.id} zaten tamamlanmış!`);
@@ -118,7 +103,6 @@ const QuestGrid = () => {
     setSelectedQuest(quest);
   };
 
-  // Conditional rendering moved after all Hooks
   if (loading) {
     return (
       <div className="space-y-8">
@@ -158,12 +142,10 @@ const QuestGrid = () => {
           onComplete={() => {
             setSelectedQuest(null);
             refreshData();
-            // Quest completion sonrası tasks page'inde kal (homepage'e gitme)
             console.log('Quest completed, staying on tasks page');
           }} 
           onClose={() => {
             setSelectedQuest(null);
-            // Close button'a tıklandığında da tasks page'inde kal
             console.log('Quest closed, staying on tasks page');
           }}
         />
@@ -284,7 +266,6 @@ const QuestGrid = () => {
                   className="ml-1 text-xs text-slate-700 group-hover:text-slate-700 dark:text-slate-200 dark:group-hover:text-slate-200"
                 >
                   {realQuests.filter(q => {
-                    // Fixed: Add null check for quest object
                     if (!q) return false;
                     return getQuestCategory(q) === category.id || category.id === 'all';
                   }).length}
@@ -331,7 +312,6 @@ const QuestGrid = () => {
             <div className="flex flex-wrap gap-2">
               <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">{t('filters.difficulty')}:</span>
               {Object.entries(difficultyLevels).map(([key, level]) => {
-                // Define specific colors for each difficulty level when active
                 const getActiveClasses = (difficultyKey) => {
                   switch (difficultyKey) {
                     case 'beginner':

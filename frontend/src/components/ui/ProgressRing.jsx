@@ -24,7 +24,6 @@ const ProgressRing = ({
       const elapsed = currentTime - startTime;
       const animationProgress = Math.min(elapsed / duration, 1);
       
-      // Easing function (ease-out)
       const easedProgress = 1 - Math.pow(1 - animationProgress, 3);
       const currentProgress = startProgress + (endProgress - startProgress) * easedProgress;
       

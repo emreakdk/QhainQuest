@@ -36,17 +36,14 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
   const [userAnswers, setUserAnswers] = useState([]); // Track all user answers
   const [questCompleted, setQuestCompleted] = useState(false); // Track quest completion
 
-  // DEBUG: isSubmitting state değişimini izle
   useEffect(() => {
     console.log('DEBUG: isSubmitting state changed to:', isSubmitting);
   }, [isSubmitting]);
 
-  // DEBUG: showCelebration state değişimini izle
   useEffect(() => {
     console.log('DEBUG: showCelebration state changed to:', showCelebration);
   }, [showCelebration]);
 
-  // Check if quest is already completed
   useEffect(() => {
     const checkQuestCompletion = async () => {
       if (publicKey && questId) {
@@ -58,9 +55,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
     checkQuestCompletion();
   }, [publicKey, questId]);
 
-  // Zorluk seviyeleri için quest kategorileri
   const getDifficultyLevel = (quest) => {
-    // Quest object'inden difficulty property'sini kullan
     switch (quest.difficulty) {
       case 'beginner':
         return { level: 'easy', color: 'green', label: t('category.beginner') };
@@ -73,14 +68,10 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
     }
   };
 
-  // generateMultipleChoice ve ilgili fonksiyonlar artık gereksiz
-  // Quest data zaten i18n key'leri ile hazır geliyor
 
   useEffect(() => {
-    // Quest verilerini yükle
     const loadQuest = async () => {
       try {
-        // questDatabase'den gerçek quest verilerini al
         const realQuest = questDatabase.find(q => q.id === questId);
         
         if (!realQuest) {
@@ -89,10 +80,8 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
           return;
         }
 
-        // Quest data zaten i18n key'leri ile hazır, direkt kullan
         setQuest(realQuest);
         
-        // Kullanıcının mevcut ilerlemesini al
         const progress = getQuestProgress(realQuest);
         setCurrentLessonIndex(progress.currentStep);
         
@@ -124,7 +113,6 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
       setIsCorrect(isAnswerCorrect);
       setShowResult(true);
 
-      // Store the user's answer
       const newAnswers = [...userAnswers, selectedChoiceKey];
       setUserAnswers(newAnswers);
 
@@ -132,7 +120,6 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
         showSuccess(t('quiz.correct'), t('quiz.greatJob'));
         playSuccessSound();
         
-        // Sonraki derse geç veya quest'i tamamla
         if (currentLessonIndex < quest.lessons.length - 1) {
           setTimeout(() => {
             setCurrentLessonIndex(currentLessonIndex + 1);
@@ -141,11 +128,9 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
             setIsSubmitting(false);
           }, 2000);
         } else {
-          // Quest tamamlandı - secure API'ye gönder
           await completeQuestSecurely(newAnswers);
         }
       } else {
-        // Yanlış cevap - wrongAnswers listesine ekle
         setWrongAnswers(prev => [...prev, {
           lesson: currentLesson,
           wrongAnswer: selectedAnswer,
@@ -163,59 +148,46 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
     }
   };
 
-  // Secure quest completion function
   const completeQuestSecurely = async (answers) => {
     try {
       console.log('Completing quest securely with answers:', answers);
       
-      // Validate that all questions are answered
       if (answers.length !== quest.lessons.length) {
         throw new Error(`Quest tamamlanamadı: ${answers.length}/${quest.lessons.length} soru cevaplandı. Tüm soruları cevaplamalısınız.`);
       }
       
-      // Determine user identifier (wallet address or demo mode)
       const userIdentifier = isDemoMode ? 'demo' : publicKey;
       
-      // Check if quest is already completed (ALWAYS check, including demo mode)
       const isAlreadyCompleted = await questApiService.isQuestCompleted(userIdentifier, questId);
       
       if (isAlreadyCompleted) {
-        // Quest already completed - show message and don't transfer tokens
         setQuestCompleted(true);
         setIsSubmitting(false);
         showError('Quest Zaten Tamamlandı', 'Bu testi zaten tamamlamıştınız.');
         return;
       }
       
-      // Call the secure API (with demo mode support)
       const result = await questApiService.completeQuest(userIdentifier, questId, answers, isDemoMode);
       
       if (result.success) {
-        // Mark quest as completed locally (ALWAYS save, including demo mode)
         questApiService.markQuestCompleted(userIdentifier, questId);
         setQuestCompleted(true);
         
-        // Add reward to claimable balance using global balance context
         addToClaimableBalance(userIdentifier, result.data.rewardAmount);
         
-        // CRITICAL: Set loading to false immediately on success
         setIsSubmitting(false);
         
-        // Show celebration
         setShowCelebration(true);
         showSuccess(
           'Tebrikler! Görevi tamamladınız.', 
           `${result.data.rewardAmount} token claimable balance'a eklendi!`
         );
         
-        // Update user stats in context (skip for demo mode)
         if (!isDemoMode) {
           await submitAnswer(publicKey, questId, currentLessonIndex, answers[answers.length - 1]);
           
-          // CRITICAL: Refresh user balance to show updated token amount
           await refreshUserBalance(publicKey);
           
-          // Refresh centralized token data (no more page reload needed!)
           refreshTokenData();
         }
         
@@ -226,7 +198,6 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
     } catch (error) {
       console.error('Secure quest completion error:', error);
       showError('Quest Tamamlanamadı', error.message);
-      // CRITICAL: Set loading to false on error too
       setIsSubmitting(false);
     }
   };
@@ -247,7 +218,6 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
     setCurrentWrongIndex(0);
   };
 
-  // Yanlış cevapları tekrar etme modu
   if (showWrongAnswers && wrongAnswers.length > 0) {
     const wrongLesson = wrongAnswers[currentWrongIndex];
     const isLastWrong = currentWrongIndex === wrongAnswers.length - 1;
@@ -332,9 +302,6 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
     );
   }
 
-  // Guard clause: Prevent crash if quest data is not loaded yet or quest is not found
-  // This must be checked BEFORE accessing any quest properties
-  // Skip this check if showing celebration or completed state (quest data should already be loaded)
   if (!showCelebration && !questCompleted && (!quest || !currentLesson)) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -343,7 +310,6 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
     );
   }
 
-  // Additional guard clause: Prevent crash if questId is invalid or quest is not found
   if (!questId) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -366,7 +332,6 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
     );
   }
 
-  // Show completed quest message
   if (questCompleted) {
     return (
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -393,7 +358,6 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
     );
   }
 
-  // Celebration Modal is now handled by the CelebrationModal component below
 
   return (
     <div className="max-w-4xl mx-auto p-4 sm:p-6">

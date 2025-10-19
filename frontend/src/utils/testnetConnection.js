@@ -1,12 +1,6 @@
-// Testnet Connection Utilities
-// This file provides utilities to test and verify testnet connections
 
 import { TESTNET_CONFIG, getRpcUrl, getNetworkPassphrase, isTestnet } from '../config/testnet.js';
 
-/**
- * Test the connection to Stellar Testnet
- * @returns {Promise<Object>} Connection test result
- */
 export async function testTestnetConnection() {
   const result = {
     success: false,
@@ -18,14 +12,12 @@ export async function testTestnetConnection() {
   };
 
   try {
-    // Test 1: Environment check
     result.tests.push({
       name: 'Environment Check',
       success: isTestnet(),
       message: isTestnet() ? 'Running on testnet' : 'Not running on testnet'
     });
 
-    // Test 2: RPC URL validation
     const rpcUrl = getRpcUrl();
     result.tests.push({
       name: 'RPC URL Validation',
@@ -33,7 +25,6 @@ export async function testTestnetConnection() {
       message: rpcUrl ? `RPC URL: ${rpcUrl}` : 'RPC URL not configured'
     });
 
-    // Test 3: Network passphrase validation
     const networkPassphrase = getNetworkPassphrase();
     result.tests.push({
       name: 'Network Passphrase Validation',
@@ -41,7 +32,6 @@ export async function testTestnetConnection() {
       message: networkPassphrase ? 'Testnet passphrase configured' : 'Network passphrase not configured'
     });
 
-    // Test 4: Contract addresses check
     const chainquestContract = TESTNET_CONFIG.contracts.chainquest;
     const tokenContract = TESTNET_CONFIG.contracts.token;
     
@@ -53,14 +43,12 @@ export async function testTestnetConnection() {
         'Contract addresses configured'
     });
 
-    // Test 5: Feature flags check
     result.tests.push({
       name: 'Feature Flags Check',
       success: TESTNET_CONFIG.features.enableTokenRewards && TESTNET_CONFIG.features.enableCertificates,
       message: 'Feature flags configured'
     });
 
-    // Overall success
     result.success = result.tests.every(test => test.success);
 
     console.log('Testnet Connection Test Results:', result);
@@ -78,10 +66,6 @@ export async function testTestnetConnection() {
   }
 }
 
-/**
- * Get testnet status information
- * @returns {Object} Testnet status
- */
 export function getTestnetStatus() {
   return {
     environment: TESTNET_CONFIG.environment,
@@ -94,15 +78,10 @@ export function getTestnetStatus() {
   };
 }
 
-/**
- * Validate testnet configuration
- * @returns {Object} Validation result
- */
 export function validateTestnetConfig() {
   const issues = [];
   const warnings = [];
 
-  // Check required configurations
   if (!getRpcUrl()) {
     issues.push('RPC URL is not configured');
   }
@@ -131,10 +110,6 @@ export function validateTestnetConfig() {
   };
 }
 
-/**
- * Get testnet configuration summary
- * @returns {Object} Configuration summary
- */
 export function getTestnetSummary() {
   const validation = validateTestnetConfig();
   
@@ -158,7 +133,6 @@ export function getTestnetSummary() {
   };
 }
 
-// Export default functions
 export default {
   testTestnetConnection,
   getTestnetStatus,

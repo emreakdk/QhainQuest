@@ -17,13 +17,11 @@ const ProfileStats = ({ userStats, onPageChange }) => {
   const { claimableBalance, totalEarned, resetClaimableBalance } = useBalance(); // Use global balance context
   const [isClaiming, setIsClaiming] = useState(false);
 
-  // Handle token claiming using global balance context
   const handleClaimTokens = async () => {
     if (claimableBalance <= 0) {
       return;
     }
 
-    // Check if in demo mode
     if (isDemoMode) {
       showError(
         t('demo.claimError.title'),
@@ -32,7 +30,6 @@ const ProfileStats = ({ userStats, onPageChange }) => {
       return;
     }
 
-    // Check if wallet is connected
     if (!publicKey) {
       showError(
         t('wallet.connectionRequired.title'),
@@ -46,14 +43,11 @@ const ProfileStats = ({ userStats, onPageChange }) => {
     try {
       console.log(`[ProfileStats] Claiming ${claimableBalance} tokens for user ${publicKey}`);
       
-      // Use centralized token context for API call
       const result = await claimTokens(publicKey, claimableBalance);
       
       if (result.success) {
-        // Reset global claimable balance to 0
         resetClaimableBalance(publicKey);
         
-        // Show success message
         showSuccess(
           t('profile.stats.claimSuccess'),
           `${claimableBalance} ${t('token.transferredToWallet')} ${result.data.transactionHash}`
@@ -71,11 +65,9 @@ const ProfileStats = ({ userStats, onPageChange }) => {
     }
   };
 
-  // Debug logging for counter values
   console.log(`[ProfileStats] tokenData.completedQuests:`, tokenData.completedQuests);
   console.log(`[ProfileStats] tokenData:`, tokenData);
 
-  // UI SIMPLIFICATION: Hide quest/certificate counters in demo mode
   const stats = [
     {
       title: t('profile.totalEarned'),
@@ -93,7 +85,6 @@ const ProfileStats = ({ userStats, onPageChange }) => {
       bgColor: 'bg-blue-50 dark:bg-blue-900/20',
       textColor: 'text-blue-600 dark:text-blue-400'
     },
-    // CONDITIONAL RENDERING: Only show quest/certificate counters when NOT in demo mode
     ...(isDemoMode ? [] : [
       {
         title: t('profile.completedQuests'),
@@ -105,7 +96,6 @@ const ProfileStats = ({ userStats, onPageChange }) => {
       },
       {
         title: t('profile.certificates'),
-        // FIX: Use completedQuests count from tokenData for consistency
         value: tokenData.completedQuests || 0,
         icon: '🏆',
         color: 'from-purple-500 to-pink-500',
@@ -115,7 +105,6 @@ const ProfileStats = ({ userStats, onPageChange }) => {
     ])
   ];
 
-  // Demo mode: Show regular stats with demo mode indicator
   if (isDemoMode) {
     return (
       <div className="space-y-6">
@@ -273,5 +262,4 @@ const ProfileStats = ({ userStats, onPageChange }) => {
   );
 };
 
-// Memoized component to prevent unnecessary re-renders
 export default memo(ProfileStats);

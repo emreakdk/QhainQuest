@@ -10,7 +10,6 @@ const AnimatedCounter = ({
   const [displayValue, setDisplayValue] = useState(0);
 
   useEffect(() => {
-    // Güvenli değer kontrolü
     const safeValue = typeof value === 'number' && !isNaN(value) && isFinite(value) ? Math.max(0, value) : 0;
     
     if (safeValue === displayValue) return;
@@ -22,7 +21,6 @@ const AnimatedCounter = ({
       const elapsed = Date.now() - startTime;
       const progress = Math.min(elapsed / duration, 1);
       
-      // Smooth easing
       const easeOutQuart = 1 - Math.pow(1 - progress, 4);
       const currentValue = startValue + (safeValue - startValue) * easeOutQuart;
       

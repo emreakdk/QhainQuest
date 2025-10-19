@@ -20,16 +20,13 @@ const UserProfile = ({ onPageChange }) => {
   const { tokenData } = useToken(); // Use centralized token data
   const [activeTab, setActiveTab] = useState('overview');
   const [completedQuests, setCompletedQuests] = useState([]);
-  // Remove completedQuestsCount state - use tokenData.completedQuests instead
 
-  // Kullanıcı verilerini yükle - Fixed: Removed userStats from dependencies to prevent infinite loop
   useEffect(() => {
     if (publicKey) {
       loadUserProgress(publicKey);
     }
   }, [publicKey, loadUserProgress]);
 
-  // Load completed quests from localStorage - Fixed: Separate useEffect for completed quests
   useEffect(() => {
     const userIdentifier = isDemoMode ? 'demo' : publicKey;
     if (userIdentifier) {
@@ -39,14 +36,11 @@ const UserProfile = ({ onPageChange }) => {
     }
   }, [publicKey, isDemoMode, tokenData.completedQuests]); // Use tokenData.completedQuests for updates
 
-  // Memoized tabs array to prevent unnecessary re-renders
-  // UI SIMPLIFICATION: Hide certificates tab in demo mode
   const tabs = useMemo(() => {
     const baseTabs = [
       { id: 'overview', label: t('profile.overview'), icon: '📊' }
     ];
     
-    // Only add certificates tab when NOT in demo mode
     if (!isDemoMode) {
       baseTabs.push({ id: 'certificates', label: t('profile.certificates'), icon: '🏆' });
     }
@@ -54,10 +48,8 @@ const UserProfile = ({ onPageChange }) => {
     return baseTabs;
   }, [t, isDemoMode]);
 
-  // Memoized function to prevent recreation on every render
   const truncateKey = useCallback((key) => `${key.slice(0, 6)}...${key.slice(-6)}`, []);
 
-  // Memoized tab change handler to prevent recreation on every render
   const handleTabChange = useCallback((tabId) => {
     setActiveTab(tabId);
   }, []);
@@ -157,7 +149,6 @@ const UserProfile = ({ onPageChange }) => {
                   return null;
                 })()}
                 {completedQuests.length > 0 ? completedQuests.map(quest => {
-                  // FIX: Check for quest object and required properties
                   if (!quest || !quest.id) {
                     console.warn('Invalid quest object:', quest);
                     return null;
