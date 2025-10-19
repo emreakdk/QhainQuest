@@ -283,7 +283,7 @@ const translations = {
     'profile.stats.claimSuccess': 'Token\'lar Başarıyla Aktarıldı!',
 
     // Quest Messages
-    'quest.alreadyCompleted': 'Bu quest\'i zaten başarıyla tamamladınız. Yeni quest\'leri keşfetmek için ana sayfaya dönün.',
+    'quest.alreadyCompleted': 'Bu quest\'i başarıyla tamamladınız. Yeni quest\'leri keşfetmek için ana sayfaya dönün.',
     'quest.dashboardDataError': 'Dashboard veri yükleme hatası:',
 
     // Profile Streak Information
@@ -969,7 +969,7 @@ const translations = {
     'profile.stats.claimSuccess': 'Tokens Successfully Transferred!',
 
     // Quest Messages
-    'quest.alreadyCompleted': 'You have already successfully completed this quest. Return to the main page to discover new quests.',
+    'quest.alreadyCompleted': 'You have successfully completed this quest. Return to the main page to discover new quests.',
     'quest.dashboardDataError': 'Dashboard data loading error:',
 
     // Profile Streak Information

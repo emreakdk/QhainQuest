@@ -371,13 +371,13 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
     return (
       <div className="max-w-4xl mx-auto p-6">
         <Card className="mb-6">
-          <CardHeader>
+          <CardHeader className="py-8">
             <div className="text-center">
               <div className="text-6xl mb-4">✅</div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
                 {t('profile.questCompleted')}!
               </h2>
-              <p className="text-slate-700 dark:text-slate-300 mb-6">
+              <p className="text-slate-700 dark:text-slate-300 mb-8">
                 {t('quest.alreadyCompleted')}
               </p>
               <Button
