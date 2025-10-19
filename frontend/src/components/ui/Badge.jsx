@@ -17,7 +17,7 @@ const Badge = forwardRef(({
     danger: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
     info: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
     gradient: 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white',
-    outline: 'border border-slate-300 text-slate-700 dark:border-slate-600 dark:text-slate-200 dark:bg-slate-700',
+    outline: 'border border-slate-300 text-slate-700 bg-slate-50 dark:border-slate-600 dark:text-slate-200 dark:bg-slate-700',
   };
 
   const sizes = {
