@@ -44,7 +44,7 @@ const CelebrationModal = ({ quest, onClose, onComplete, wasAlreadyCompleted = fa
             </p>
           </CardHeader>
           
-          <CardContent className="space-y-6 px-8 py-6">
+          <CardContent className="space-y-6 px-8 py-8">
             {/* Quest Bilgileri */}
             <div className="text-center">
               <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
@@ -85,7 +85,7 @@ const CelebrationModal = ({ quest, onClose, onComplete, wasAlreadyCompleted = fa
             </div>
 
             {/* Butonlar */}
-            <div className="flex gap-4 px-2">
+            <div className="flex gap-4 px-2 pt-2">
               <Button
                 onClick={handleClose}
                 variant="outline"
