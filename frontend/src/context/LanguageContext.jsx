@@ -18,6 +18,7 @@ const translations = {
     'home.title': 'Bilgini Kanıtla, Geleceği Kazan.',
     'home.subtitle': 'ChainQuest ile Stellar blok zincirinde benzersiz görevleri tamamla, değerli token ödülleri kazan ve devredilemez Soulbound Token sertifikalarıyla yeteneklerini ölümsüzleştir.',
     'home.startAdventure': 'Macerana Başla!',
+    'home.connectWallet': 'Cüzdanını Bağla',
     'home.connected': 'Bağlandı',
     'home.useWithoutWallet': 'Cüzdansız Kullan',
     'home.demoMode': 'Demo Modu',
@@ -45,6 +46,7 @@ const translations = {
     // Mobile Warnings
     'warnings.mobileTitle': 'Mobil Uyarı',
     'warnings.mobileClaim': 'Tokenlarınızı cüzdanınıza aktarmak için lütfen masaüstü tarayıcıdan giriş yapın.',
+    'warnings.mobileUseDemo': 'Mobilden girdiyseniz, Cüzdansız Kullan ile devam edin ↓',
 
     // Profile
     'profile.title': 'Profil',
@@ -668,6 +670,7 @@ const translations = {
     'home.title': 'Prove Your Knowledge, Win the Future.',
     'home.subtitle': 'Complete unique quests on the Stellar blockchain with ChainQuest, earn valuable token rewards and immortalize your skills with non-transferable Soulbound Token certificates.',
     'home.startAdventure': 'Start Your Adventure!',
+    'home.connectWallet': 'Connect Wallet',
     'home.connected': 'Connected',
     'home.useWithoutWallet': 'Use Without Wallet',
     'home.demoMode': 'Demo Mode',
@@ -695,6 +698,7 @@ const translations = {
     // Mobile Warnings
     'warnings.mobileTitle': 'Mobile Notice',
     'warnings.mobileClaim': 'Please log in from a desktop browser to transfer your tokens to your wallet.',
+    'warnings.mobileUseDemo': 'If on mobile, please continue with Use Without Wallet ↓',
 
     // Profile
     'profile.title': 'Profile',

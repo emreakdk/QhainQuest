@@ -47,7 +47,7 @@ const FreighterConnect = ({ onConnect }) => {
         size="lg"
         className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 cursor-pointer"
       >
-        {t('home.startAdventure')}
+        {t('home.connectWallet')}
       </Button>
 
       {error && (
