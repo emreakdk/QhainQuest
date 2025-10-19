@@ -273,7 +273,7 @@ const QuestGrid = () => {
                 className={`group flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 rounded-xl font-medium transition-all cursor-pointer text-sm ${
                   selectedCategory === category.id
                     ? 'bg-indigo-600 text-white shadow-lg'
-                    : 'bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-300 hover:bg-slate-200 hover:text-black dark:hover:bg-slate-600 dark:hover:text-slate-300'
+                    : 'bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-300 hover:bg-slate-200 hover:text-white dark:hover:bg-slate-600 dark:hover:text-slate-300'
                 }`}
               >
                 <span className="text-sm sm:text-base">{category.icon}</span>
@@ -281,7 +281,7 @@ const QuestGrid = () => {
                 <span className="sm:hidden">{t(category.nameKey || category.name).slice(0, 3)}</span>
                 <Badge 
                   variant={selectedCategory === category.id ? 'default' : 'outline'}
-                  className="ml-1 text-xs text-slate-700 group-hover:text-black dark:text-slate-200 dark:group-hover:text-slate-200"
+                  className="ml-1 text-xs text-slate-700 group-hover:!text-black dark:text-slate-200 dark:group-hover:!text-slate-200"
                 >
                   {realQuests.filter(q => {
                     // Fixed: Add null check for quest object
