@@ -27,55 +27,109 @@ const HowToClaimPage = ({ onPageChange }) => {
       id: 1,
       title: t('howToClaim.steps.step1.title'),
       description: t('howToClaim.steps.step1.description'),
-      visual: 'step1-visual'
+      visual: (
+        <img 
+          src="/images/how-to-claim/step1-stellar-lab-network-selector.png"
+          alt="Stellar Laboratory Network Selector - Testnet seçimi"
+          className="w-full h-auto rounded-md object-contain"
+        />
+      )
     },
     {
       id: 2,
       title: t('howToClaim.steps.step2.title'),
       description: t('howToClaim.steps.step2.description'),
-      visual: 'step2-visual'
+      visual: (
+        <img 
+          src="/images/how-to-claim/step2-stellar-lab-transaction-builder.png"
+          alt="Stellar Laboratory Transaction Builder - Build Transaction seçimi"
+          className="w-full h-auto rounded-md object-contain"
+        />
+      )
     },
     {
       id: 3,
       title: t('howToClaim.steps.step3.title'),
       description: t('howToClaim.steps.step3.description'),
-      visual: 'step3-visual'
+      visual: (
+        <img 
+          src="/images/how-to-claim/step3-source-account-input.png"
+          alt="Source Account alanına Public Key girilmesi"
+          className="w-full h-auto rounded-md object-contain"
+        />
+      )
     },
     {
       id: 4,
       title: t('howToClaim.steps.step4.title'),
       description: t('howToClaim.steps.step4.description'),
-      visual: 'step4-visual'
+      visual: (
+        <img 
+          src="/images/how-to-claim/step4-fetch-sequence-button.png"
+          alt="Fetch next sequence butonuna tıklama"
+          className="w-full h-auto rounded-md object-contain"
+        />
+      )
     },
     {
       id: 5,
       title: t('howToClaim.steps.step5.title'),
       description: t('howToClaim.steps.step5.description'),
-      visual: 'step5-visual'
+      visual: (
+        <img 
+          src="/images/how-to-claim/step5-operation-type-change-trust.png"
+          alt="Operation Type açılır menüsünden Change Trust seçimi"
+          className="w-full h-auto rounded-md object-contain"
+        />
+      )
     },
     {
       id: 6,
       title: t('howToClaim.steps.step6.title'),
       description: t('howToClaim.steps.step6.description'),
-      visual: 'step6-visual'
+      visual: (
+        <img 
+          src="/images/how-to-claim/step6-asset-information-form.png"
+          alt="Asset bilgileri formu - CQT ve Issuer ID girişi"
+          className="w-full h-auto rounded-md object-contain"
+        />
+      )
     },
     {
       id: 7,
       title: t('howToClaim.steps.step7.title'),
       description: t('howToClaim.steps.step7.description'),
-      visual: 'step7-visual'
+      visual: (
+        <img 
+          src="/images/how-to-claim/step7-sign-transaction-button.png"
+          alt="Sign in Transaction Signer butonu"
+          className="w-full h-auto rounded-md object-contain"
+        />
+      )
     },
     {
       id: 8,
       title: t('howToClaim.steps.step8.title'),
       description: t('howToClaim.steps.step8.description'),
-      visual: 'step8-visual'
+      visual: (
+        <img 
+          src="/images/how-to-claim/step8-sign-with-wallet-extension.png"
+          alt="Cüzdan uzantısı ile imzalama seçeneği"
+          className="w-full h-auto rounded-md object-contain"
+        />
+      )
     },
     {
       id: 9,
       title: t('howToClaim.steps.step9.title'),
       description: t('howToClaim.steps.step9.description'),
-      visual: 'step9-visual'
+      visual: (
+        <img 
+          src="/images/how-to-claim/step9-submit-transaction-success.png"
+          alt="Submit Transaction butonu ve başarılı imzalama"
+          className="w-full h-auto rounded-md object-contain"
+        />
+      )
     }
   ];
 
@@ -211,24 +265,28 @@ const HowToClaimPage = ({ onPageChange }) => {
                   )}
                 </div>
 
-                {/* Visual Placeholder */}
-                <div className={`w-full lg:w-80 h-48 rounded-lg flex items-center justify-center ${
+                {/* Visual */}
+                <div className={`w-full lg:w-80 h-48 rounded-lg flex items-center justify-center overflow-hidden ${
                   isDarkMode ? 'bg-slate-700' : 'bg-gray-200'
                 }`}>
-                  <div className="text-center">
-                    <div className={`w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center ${
-                      isDarkMode ? 'bg-slate-600' : 'bg-gray-300'
-                    }`}>
-                      <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
+                  {typeof step.visual === 'string' ? (
+                    <div className="text-center">
+                      <div className={`w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center ${
+                        isDarkMode ? 'bg-slate-600' : 'bg-gray-300'
+                      }`}>
+                        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                      <p className={`text-sm ${
+                        isDarkMode ? 'text-slate-400' : 'text-gray-500'
+                      }`}>
+                        {step.visual}
+                      </p>
                     </div>
-                    <p className={`text-sm ${
-                      isDarkMode ? 'text-slate-400' : 'text-gray-500'
-                    }`}>
-                      {t('howToClaim.visualPlaceholder')}
-                    </p>
-                  </div>
+                  ) : (
+                    step.visual
+                  )}
                 </div>
               </div>
             </div>
