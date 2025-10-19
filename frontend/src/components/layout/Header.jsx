@@ -8,7 +8,7 @@ import Button from '../ui/Button';
 import FreighterConnect from '../features/wallet/FreighterConnect';
 
 const Header = ({ currentPage, onPageChange }) => {
-  const { publicKey, setPublicKey, isDemoMode, exitDemoMode, enterDemoMode } = useContext(WalletContext);
+  const { publicKey, setPublicKey, isDemoMode, exitDemoMode } = useContext(WalletContext);
   const { tokenData } = useToken(); // Get centralized token data
   const { claimableBalance, totalEarned } = useBalance(); // Get global balances
   const { theme, toggleTheme, isDarkMode } = useTheme();
@@ -106,17 +106,6 @@ const Header = ({ currentPage, onPageChange }) => {
             )}
           </button>
 
-          {/* Switch to Demo Button */}
-          {!isDemoMode && publicKey && (
-            <button
-              onClick={enterDemoMode}
-              className="hidden md:flex px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
-              title={t('header.switchToDemo')}
-            >
-              {t('header.switchToDemo')}
-            </button>
-          )}
-
           {/* Mobile Menu Button */}
           {(publicKey || isDemoMode) && (
             <button
@@ -207,20 +196,6 @@ const Header = ({ currentPage, onPageChange }) => {
                 {item.label}
               </button>
             ))}
-            
-            {/* Switch to Demo Button - Mobile */}
-            {!isDemoMode && publicKey && (
-              <button
-                onClick={() => {
-                  enterDemoMode();
-                  setMobileMenuOpen(false);
-                }}
-                className="w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all cursor-pointer text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700 border-t border-slate-200 dark:border-slate-700 mt-2 pt-4"
-              >
-                <span className="mr-3 text-lg">🎮</span>
-                {t('header.switchToDemo')}
-              </button>
-            )}
             
             {/* Mobile Wallet Info */}
             {publicKey && (
