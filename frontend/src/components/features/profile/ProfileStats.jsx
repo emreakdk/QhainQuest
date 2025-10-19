@@ -9,7 +9,7 @@ import { Card, CardContent } from '../../ui/Card';
 import Badge from '../../ui/Badge';
 import Button from '../../ui/Button';
 
-const ProfileStats = ({ userStats }) => {
+const ProfileStats = ({ userStats, onPageChange }) => {
   const { t } = useLanguage();
   const { publicKey, isDemoMode } = useContext(WalletContext);
   const { showSuccess, showError } = useNotification();
@@ -163,20 +163,34 @@ const ProfileStats = ({ userStats }) => {
                     {claimableBalance} {t('profile.claim.description')}
                   </p>
                 </div>
-                <Button
-                  onClick={handleClaimTokens}
-                  disabled={isClaiming}
-                  className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-6 py-3"
-                >
-                  {isClaiming ? (
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Button
+                    onClick={handleClaimTokens}
+                    disabled={isClaiming}
+                    className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-6 py-3"
+                  >
+                    {isClaiming ? (
+                      <div className="flex items-center space-x-2">
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        <span>{t('profile.claim.transferring')}</span>
+                      </div>
+                    ) : (
+                      t('profile.claim.button')
+                    )}
+                  </Button>
+                  <Button
+                    onClick={() => onPageChange && onPageChange('how-to-claim')}
+                    variant="secondary"
+                    className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-6 py-3"
+                  >
                     <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      <span>{t('profile.claim.transferring')}</span>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span>{t('howToClaim.linkText')}</span>
                     </div>
-                  ) : (
-                    t('profile.claim.button')
-                  )}
-                </Button>
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -223,20 +237,34 @@ const ProfileStats = ({ userStats }) => {
                   {claimableBalance} {t('profile.claim.description')}
                 </p>
               </div>
-              <Button
-                onClick={handleClaimTokens}
-                disabled={isClaiming}
-                className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-6 py-3"
-              >
-                {isClaiming ? (
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button
+                  onClick={handleClaimTokens}
+                  disabled={isClaiming}
+                  className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-6 py-3"
+                >
+                  {isClaiming ? (
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>{t('profile.claim.transferring')}</span>
+                    </div>
+                  ) : (
+                    t('profile.claimButton')
+                  )}
+                </Button>
+                <Button
+                  onClick={() => onPageChange && onPageChange('how-to-claim')}
+                  variant="secondary"
+                  className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white px-6 py-3"
+                >
                   <div className="flex items-center space-x-2">
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <span>{t('profile.claim.transferring')}</span>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>{t('howToClaim.linkText')}</span>
                   </div>
-                ) : (
-                  t('profile.claimButton')
-                )}
-              </Button>
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>

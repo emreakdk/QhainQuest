@@ -7,6 +7,7 @@ import HeroSection from './components/layout/HeroSection';
 import QuestGrid from './components/features/quest/QuestGrid';
 import UserProfile from './components/features/profile/UserProfile';
 import Achievements from './components/features/achievements/Achievements';
+import HowToClaimPage from './pages/HowToClaimPage';
 
 function App() {
   return (
@@ -59,9 +60,11 @@ function AppContent() {
       case 'quests':
         return <QuestGrid />;
       case 'profile':
-        return <UserProfile />;
+        return <UserProfile onPageChange={handlePageChange} />;
       case 'leaderboard':
         return <Achievements />;
+      case 'how-to-claim':
+        return <HowToClaimPage />;
       default:
         return <QuestGrid />;
     }

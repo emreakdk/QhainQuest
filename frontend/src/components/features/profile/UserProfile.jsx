@@ -13,7 +13,7 @@ import Button from '../../ui/Button';
 import Badge from '../../ui/Badge';
 import MobileWarning from '../../ui/MobileWarning';
 
-const UserProfile = () => {
+const UserProfile = ({ onPageChange }) => {
   const { publicKey, isDemoMode } = useContext(WalletContext);
   const { t } = useLanguage();
   const { userStats, userCertificates, loadUserProgress } = useQuest();
@@ -87,7 +87,7 @@ const UserProfile = () => {
       </div>
 
       {/* Profile Stats */}
-      <ProfileStats userStats={userStats} />
+      <ProfileStats userStats={userStats} onPageChange={onPageChange} />
 
       {/* Mobile Warning */}
       {isMobile && (
