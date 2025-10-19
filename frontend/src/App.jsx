@@ -64,7 +64,7 @@ function AppContent() {
       case 'leaderboard':
         return <Achievements />;
       case 'how-to-claim':
-        return <HowToClaimPage />;
+        return <HowToClaimPage onPageChange={handlePageChange} />;
       default:
         return <QuestGrid />;
     }

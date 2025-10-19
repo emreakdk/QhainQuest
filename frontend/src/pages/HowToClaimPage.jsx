@@ -4,7 +4,7 @@ import { useTheme } from '../context/ThemeContext';
 import { useContext } from 'react';
 import { WalletContext } from '../context/WalletContext';
 
-const HowToClaimPage = () => {
+const HowToClaimPage = ({ onPageChange }) => {
   const { t } = useLanguage();
   const { isDarkMode } = useTheme();
   const { publicKey } = useContext(WalletContext);
@@ -285,7 +285,7 @@ const HowToClaimPage = () => {
         {/* Back Button */}
         <div className="text-center mt-12 animate-fade-in-up" style={{ animationDelay: '1.3s' }}>
           <button
-            onClick={() => window.history.back()}
+            onClick={() => onPageChange && onPageChange('profile')}
             className={`px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200 hover:scale-105 ${
               isDarkMode
                 ? 'bg-purple-600 hover:bg-purple-700 text-white'
