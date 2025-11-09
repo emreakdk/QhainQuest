@@ -284,6 +284,16 @@ Claims tokens for a user address.
 
 The API endpoints include CORS headers and OPTIONS method support for health checks. All endpoints return appropriate HTTP status codes and error messages.
 
+## Smart Contract (Token Information)
+
+**Network:** Stellar Testnet  
+
+**Token Code:** CQT  
+
+**Issuer Account ID (Contract Address):** `GAUJITLLEZWQ6WRKITZ5PMILUWA4B7XFIZPH7GXN53SC6DEBVSZ3LQHHXO`  
+
+Users must add a **trustline** to this issuer in their Freighter wallet to receive CQT tokens.
+
 ## License
 
 MIT
