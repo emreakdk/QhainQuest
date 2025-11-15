@@ -5,10 +5,11 @@ import { useLanguage } from '../../../context/LanguageContext';
 import { useQuest } from '../../../context/QuestContext';
 import { useToken } from '../../../context/TokenContext';
 import { getCompletedQuestsForUser } from '../../../utils/tokenBalanceCalculator';
-import { isMobile } from 'react-device-detect';
+import { useDeviceType } from '../../../hooks/useDeviceType';
 import ProfileStats from './ProfileStats';
 import CertificateCard from './CertificateCard';
 import ProfileDashboard from './ProfileDashboard';
+import LearningRecommendations from '../ai/LearningRecommendations';
 import Button from '../../ui/Button';
 import Badge from '../../ui/Badge';
 import MobileWarning from '../../ui/MobileWarning';
@@ -18,6 +19,7 @@ const UserProfile = ({ onPageChange }) => {
   const { t } = useLanguage();
   const { userStats, userCertificates, loadUserProgress } = useQuest();
   const { tokenData } = useToken(); // Use centralized token data
+  const { isMobile } = useDeviceType();
   const [activeTab, setActiveTab] = useState('overview');
   const [completedQuests, setCompletedQuests] = useState([]);
 
@@ -80,6 +82,11 @@ const UserProfile = ({ onPageChange }) => {
 
       {/* Profile Stats */}
       <ProfileStats userStats={userStats} onPageChange={onPageChange} />
+
+      {/* AI Learning Recommendations */}
+      <div className="mb-6">
+        <LearningRecommendations userAddress={publicKey} isDemoMode={isDemoMode} />
+      </div>
 
       {/* Mobile Warning */}
       {isMobile && (

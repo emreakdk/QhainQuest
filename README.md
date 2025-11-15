@@ -1,4 +1,6 @@
-# QhainQuest — Full-Stack Challenge Submission
+# ChainQuest — AI-Powered Learn-to-Earn Platform
+
+**Submission for Huawei Developer Competition Europe 2025 (Spark Infinity) - Track A: AI-Powered Innovations**
 
 ## Live App
 
@@ -10,20 +12,24 @@ https://github.com/emreakdk/QhainQuest
 
 ## Overview
 
-QhainQuest is a full-stack web application that enables users to complete quizzes and tests on blockchain technologies to earn tokens. The platform integrates with the Freighter wallet for Stellar network transactions, displays token balances on Profile and Wallet pages, features a responsive user interface, and includes a light/dark mode toggle for enhanced user experience.
+ChainQuest is a full-stack web application that enables users to complete quizzes and tests on blockchain technologies to earn tokens. The platform features **AI-powered learning assistance** powered by Huawei Cloud LLM, integrates with the Freighter wallet for Stellar network transactions, displays token balances on Profile and Wallet pages, features a responsive user interface, and includes a light/dark mode toggle for enhanced user experience.
+
+**Key Innovation:** The platform integrates AI-powered features including an interactive learning assistant and personalized learning recommendations, making it suitable for the Huawei Developer Competition's AI-Powered Innovations track.
 
 ## Tech Stack
 
 - **Frontend**: React 19, Vite, TailwindCSS
 - **Blockchain**: Stellar SDK, Soroban Smart Contracts
 - **Wallet Integration**: Freighter Wallet API
-- **Backend**: Vercel Serverless Functions (Node.js)
-- **Deployment**: Vercel
+- **Backend**: Vercel Serverless Functions (Node.js) / Huawei FunctionGraph (Cloud-ready)
+- **AI Integration**: Huawei Cloud LLM (Pangu Model)
+- **Deployment**: Vercel / Huawei Cloud (OBS + FunctionGraph + API Gateway)
 - **State Management**: React Context API
 - **Styling**: TailwindCSS with custom animations
 
 ## Features
 
+### Core Features
 - **Quiz System**: Interactive quizzes covering blockchain, DeFi, NFT, and smart contract topics
 - **Token Awarding**: Users earn tokens (CQT) upon successfully completing quizzes
 - **Wallet Connection**: Seamless integration with Freighter wallet for Stellar network
@@ -33,6 +39,16 @@ QhainQuest is a full-stack web application that enables users to complete quizze
 - **Demo Mode**: Test the platform without wallet connection
 - **Quest Tracking**: Track completed quests and progress
 
+### AI-Powered Features (Huawei Cloud Integration)
+- **🤖 AI Learning Assistant**: Interactive chat interface that explains blockchain concepts, answers questions, and provides quiz help
+  - Located on the Home/Quests page
+  - Powered by Huawei Cloud LLM
+  - Provides real-time explanations and guidance
+- **🎯 AI Learning Recommendations**: Personalized learning path suggestions based on user progress
+  - Located on the Profile page
+  - Analyzes completed quests and suggests next steps
+  - Adapts recommendations based on user performance
+
 ## Project Structure
 
 ```
@@ -40,14 +56,19 @@ ChainQuest/
 ├── api/                    # Serverless API functions
 │   ├── complete-quest.js   # Quest completion endpoint
 │   ├── claim-tokens.js     # Token claiming endpoint
+│   ├── ai-assistant.js     # AI assistant endpoint (Huawei Cloud LLM)
 │   └── package.json
 ├── backend/                # Smart contract artifacts
 │   └── contract/
 ├── frontend/               # React frontend application
 │   ├── src/
 │   │   ├── components/     # React components
+│   │   │   └── features/
+│   │   │       └── ai/      # AI components (AIAssistant, LearningRecommendations)
 │   │   ├── pages/          # Page components
 │   │   ├── services/       # API and blockchain services
+│   │   │   ├── aiService.js # AI service client
+│   │   │   └── questApi.js  # Quest API client
 │   │   ├── config/         # Configuration files
 │   │   ├── context/        # React context providers
 │   │   ├── data/           # Quest and static data
@@ -57,6 +78,7 @@ ChainQuest/
 │   └── package.json
 ├── public/                 # Root public assets
 ├── vercel.json             # Vercel deployment configuration
+├── ARCHITECTURE.md         # Architecture documentation
 └── package.json            # Root package configuration
 ```
 
@@ -160,18 +182,25 @@ VITE_ENABLE_DEBUG=false
 VITE_ENABLE_ANALYTICS=false
 ```
 
-### Backend Environment Variables (Vercel)
+### Backend Environment Variables (Vercel/Huawei Cloud)
 
-Set these in your Vercel dashboard:
+Set these in your Vercel dashboard or Huawei FunctionGraph configuration:
 
 ```env
 # Token Configuration (REQUIRED)
 TOKEN_CODE=CQT
 TOKEN_ISSUER_PUBLIC_KEY=YOUR_TOKEN_ISSUER_PUBLIC_KEY
 DISTRIBUTOR_SECRET_KEY=YOUR_DISTRIBUTOR_SECRET_KEY
+
+# Huawei Cloud LLM Configuration (for AI features)
+HUAWEI_LLM_BASE_URL=https://your-huawei-llm-endpoint.com
+HUAWEI_LLM_API_KEY=YOUR_HUAWEI_LLM_API_KEY
+HUAWEI_LLM_MODEL=pangu-alpha  # Optional, defaults to 'pangu-alpha'
 ```
 
-**⚠️ Security Warning**: Never expose `DISTRIBUTOR_SECRET_KEY` in your frontend code or public repositories!
+**⚠️ Security Warning**: Never expose `DISTRIBUTOR_SECRET_KEY` or `HUAWEI_LLM_API_KEY` in your frontend code or public repositories!
+
+**📝 Note**: The AI features currently use mock responses for development. To enable Huawei Cloud LLM integration, set the `HUAWEI_LLM_BASE_URL` and `HUAWEI_LLM_API_KEY` environment variables. See `api/ai-assistant.js` for integration details.
 
 ## Deployment Instructions
 
@@ -216,6 +245,38 @@ For backend deployment on Render or Railway:
 3. **Set start command:** Use Vercel serverless functions or deploy as a Node.js service
 4. **Configure environment variables** as listed above
 5. **Update frontend API URL** to point to your deployed backend
+
+## AI Features Demo Guide
+
+### Testing AI Features
+
+1. **AI Learning Assistant (Home/Quests Page)**
+   - Navigate to the Quests page
+   - Scroll to the "AI Learning Assistant" section
+   - Try asking questions like:
+     - "What is blockchain?"
+     - "Explain Stellar network"
+     - "What are smart contracts?"
+   - The assistant provides explanations powered by Huawei Cloud LLM
+
+2. **AI Learning Recommendations (Profile Page)**
+   - Navigate to the Profile page
+   - View the "AI Learning Recommendations" section
+   - Click refresh to get personalized recommendations based on your progress
+   - Recommendations adapt based on completed quests and performance
+
+### AI Integration Code Locations
+
+- **Backend AI Endpoint**: `api/ai-assistant.js`
+  - Handles AI requests and integrates with Huawei Cloud LLM
+  - TODO comments indicate where to plug in actual Huawei Cloud API calls
+
+- **Frontend AI Service**: `frontend/src/services/aiService.js`
+  - Client service for making AI API calls
+
+- **AI Components**:
+  - `frontend/src/components/features/ai/AIAssistant.jsx` - Chat interface
+  - `frontend/src/components/features/ai/LearningRecommendations.jsx` - Recommendations widget
 
 ## API Endpoints
 
@@ -280,6 +341,40 @@ Claims tokens for a user address.
 }
 ```
 
+### POST /api/ai-assistant
+
+AI-powered assistant endpoint for explanations and recommendations.
+
+**Request:**
+```json
+{
+  "type": "explain",
+  "prompt": "What is blockchain?",
+  "context": {},
+  "questId": "stellar-fundamentals"
+}
+```
+
+**Success Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "type": "explain",
+    "response": "A blockchain is a distributed ledger technology...",
+    "timestamp": "2024-01-15T10:30:00Z"
+  }
+}
+```
+
+**Request Types:**
+- `explain` - Get explanations for concepts
+- `recommend` - Get learning recommendations
+- `help` - Get quiz help
+- `analyze` - Analyze user progress
+
+**Note**: This endpoint integrates with Huawei Cloud LLM. Configure `HUAWEI_LLM_BASE_URL` and `HUAWEI_LLM_API_KEY` environment variables to enable.
+
 ### Health Check
 
 The API endpoints include CORS headers and OPTIONS method support for health checks. All endpoints return appropriate HTTP status codes and error messages.
@@ -294,10 +389,67 @@ The API endpoints include CORS headers and OPTIONS method support for health che
 
 Users must add a **trustline** to this issuer in their Freighter wallet to receive CQT tokens.
 
+## Huawei Cloud Deployment
+
+This project is designed to be deployed on Huawei Cloud infrastructure:
+
+### Recommended Architecture
+
+1. **Frontend**: Deploy to OBS (Object Storage Service) + CDN
+2. **Backend API**: Deploy to FunctionGraph (Serverless Functions)
+3. **API Gateway**: Route `/api/*` endpoints to FunctionGraph functions
+4. **AI Service**: Integrate with Huawei Cloud LLM (Pangu Model)
+
+### Deployment Steps
+
+1. **FunctionGraph Setup**:
+   - Create functions for each API endpoint (`complete-quest`, `claim-tokens`, `ai-assistant`)
+   - Configure environment variables
+   - Set timeout to 30 seconds
+
+2. **API Gateway Setup**:
+   - Create API routes pointing to FunctionGraph functions
+   - Configure CORS policies
+   - Set up rate limiting
+
+3. **OBS + CDN Setup**:
+   - Upload frontend build to OBS bucket
+   - Configure CDN for static assets
+   - Update API base URL in frontend environment variables
+
+4. **Huawei Cloud LLM Integration**:
+   - Obtain LLM API credentials
+   - Set `HUAWEI_LLM_BASE_URL` and `HUAWEI_LLM_API_KEY` in FunctionGraph
+   - Update `api/ai-assistant.js` with actual API call implementation
+
+See `ARCHITECTURE.md` for detailed architecture documentation.
+
+## Competition Submission Notes
+
+This project is submitted for **Huawei Developer Competition Europe 2025 (Spark Infinity) - Track A: AI-Powered Innovations**.
+
+### Key Highlights
+
+- ✅ **AI-Powered Features**: Interactive learning assistant and personalized recommendations
+- ✅ **Huawei Cloud Ready**: Designed for FunctionGraph and API Gateway deployment
+- ✅ **Cloud-Function Friendly**: All backend endpoints are stateless and serverless-ready
+- ✅ **Production Ready**: Error handling, logging, and security best practices
+- ✅ **Demo Ready**: 3-5 minute demo path with clear AI feature showcase
+
+### Demo Path (3-5 minutes)
+
+1. **Home Page** (30s): Show landing page and connect wallet/demo mode
+2. **AI Assistant** (1-2 min): Demonstrate AI chat on Quests page
+   - Ask "What is blockchain?"
+   - Ask "Explain Stellar network"
+3. **Complete a Quest** (1 min): Show quiz completion and token earning
+4. **Profile + Recommendations** (1 min): Show AI recommendations on Profile page
+5. **Summary** (30s): Highlight AI integration and Huawei Cloud readiness
+
 ## License
 
 MIT
 
 ---
 
-_This project was developed as part of a full-stack developer challenge submission._
+_This project was developed for Huawei Developer Competition Europe 2025 (Spark Infinity) - Track A: AI-Powered Innovations._

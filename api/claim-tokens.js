@@ -36,7 +36,23 @@ try {
   console.error('Network initialization failed:', error);
 }
 
+/**
+ * Token Claim API Endpoint
+ * 
+ * Handles token distribution to users via Stellar network.
+ * Cloud-function-friendly: Stateless handler suitable for serverless deployment.
+ * 
+ * TODO: For Huawei FunctionGraph deployment:
+ * - Ensure environment variables (TOKEN_CODE, TOKEN_ISSUER_PUBLIC_KEY, DISTRIBUTOR_SECRET_KEY) are set
+ * - Configure API Gateway to route /api/claim-tokens to this function
+ * - Set appropriate timeout (30s recommended)
+ * - Consider adding rate limiting at API Gateway level
+ */
 export default async function handler(req, res) {
+  const requestId = `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  const startTime = Date.now();
+
+  // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -44,6 +60,8 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') {
     return res.status(204).end();
   }
+
+  console.log(`[${requestId}] Token claim request received`);
 
   if (req.method !== 'POST') {
     return res.status(405).json({
@@ -106,11 +124,15 @@ export default async function handler(req, res) {
     });
 
   } catch (error) {
-    console.error('Token claim error:', error);
+    const duration = Date.now() - startTime;
+    console.error(`[${requestId}] Token claim error after ${duration}ms:`, error);
+    console.error(`[${requestId}] Error stack:`, error.stack);
+    
     return res.status(500).json({
       success: false,
       error: 'Internal server error.',
-      details: error.message
+      details: process.env.NODE_ENV === 'development' ? error.message : 'An unexpected error occurred. Please try again later.',
+      requestId
     });
   }
 }

@@ -3,7 +3,22 @@ let QUEST_DATA = null;
 
 const completedQuests = new Set();
 
+/**
+ * Quest Completion API Endpoint
+ * 
+ * Handles quest completion validation and reward calculation.
+ * Cloud-function-friendly: Stateless handler suitable for serverless deployment.
+ * 
+ * TODO: For Huawei FunctionGraph deployment:
+ * - Ensure environment variables are set in FunctionGraph configuration
+ * - Configure API Gateway to route /api/complete-quest to this function
+ * - Set appropriate timeout (30s recommended)
+ */
 export default async function handler(req, res) {
+  const requestId = `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  const startTime = Date.now();
+
+  // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -11,6 +26,8 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') {
     return res.status(204).end(); // 204 No Content for preflight
   }
+
+  console.log(`[${requestId}] Quest completion request received`);
 
   if (!QUEST_DATA) {
     try {
@@ -162,11 +179,15 @@ export default async function handler(req, res) {
     });
 
   } catch (error) {
-    console.error('Quest completion error:', error);
+    const duration = Date.now() - startTime;
+    console.error(`[${requestId}] Quest completion error after ${duration}ms:`, error);
+    console.error(`[${requestId}] Error stack:`, error.stack);
+    
     return res.status(500).json({
       success: false,
       error: 'Internal server error.',
-      details: error.message
+      details: process.env.NODE_ENV === 'development' ? error.message : 'An unexpected error occurred. Please try again later.',
+      requestId
     });
   }
 }

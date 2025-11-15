@@ -7,6 +7,9 @@
     },
     "api/claim-tokens.js": {
       "maxDuration": 30
+    },
+    "api/ai-assistant.js": {
+      "maxDuration": 30
     }
   }
 }

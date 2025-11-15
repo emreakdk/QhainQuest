@@ -5,7 +5,7 @@ import { useToken } from '../../../context/TokenContext';
 import { useBalance } from '../../../context/BalanceContext';
 import { useNotification } from '../../../context/NotificationContext';
 import { useDataManager } from '../../../systems/dataManager.js';
-import { isMobile } from 'react-device-detect';
+import { useDeviceType } from '../../../hooks/useDeviceType';
 import { Card, CardContent, CardHeader } from '../../ui/Card';
 import AnimatedCounter from '../../ui/AnimatedCounter';
 import ProgressRing from '../../ui/ProgressRing';
@@ -55,6 +55,7 @@ const ProfileDashboard = () => {
   const { claimableBalance, totalEarned, resetClaimableBalance } = useBalance(); // Use global balances
   const { showSuccess, showError } = useNotification();
   const { getDashboardData, getPerformanceData, getUserStats } = useDataManager(publicKey);
+  const { isMobile } = useDeviceType();
   
   const [dashboardData, setDashboardData] = useState(null);
   const [performanceData, setPerformanceData] = useState(null);

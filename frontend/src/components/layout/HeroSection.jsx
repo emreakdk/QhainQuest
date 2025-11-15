@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { WalletContext } from '../../context/WalletContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useBalance } from '../../context/BalanceContext';
-import { isMobile } from 'react-device-detect';
+import { useDeviceType } from '../../hooks/useDeviceType';
 import Button from '../ui/Button';
 import MobileWarning from '../ui/MobileWarning';
 import FreighterConnect from '../features/wallet/FreighterConnect';
@@ -11,6 +11,7 @@ const HeroSection = ({ onPageChange }) => {
   const { publicKey, setPublicKey, isDemoMode, enterDemoMode, isConnected } = useContext(WalletContext);
   const { loadBalanceForUser } = useBalance();
   const { t } = useLanguage();
+  const { isMobile } = useDeviceType();
 
   const handleDemoMode = () => {
     console.log('🎮 [DEBUG] Entering demo mode...');

@@ -4,13 +4,14 @@ import { useQuest } from '../../../context/QuestContext';
 import { useToken } from '../../../context/TokenContext';
 import { useBalance } from '../../../context/BalanceContext';
 import { WalletContext } from '../../../context/WalletContext';
-import { isMobile } from 'react-device-detect';
+import { useDeviceType } from '../../../hooks/useDeviceType';
 import { SkeletonCard, SkeletonStats } from '../../ui/Skeleton';
 import AnimatedCounter from '../../ui/AnimatedCounter';
 import QuestCard from './QuestCard';
 import Button from '../../ui/Button';
 import Badge from '../../ui/Badge';
 import MobileWarning from '../../ui/MobileWarning';
+import AIAssistant from '../ai/AIAssistant';
 import { questDatabase, questCategories, difficultyLevels, mockUserStats, mockUserProgress } from '../../../data/questData';
 
 const QuestQuiz = lazy(() => import('./QuestQuiz'));
@@ -21,6 +22,7 @@ const QuestGrid = () => {
   const { quests, loading, error, userStats, userProgress, getQuestStatus, getQuestProgress, refreshData } = useQuest();
   const { tokenData } = useToken(); // Use centralized token data
   const { totalEarned } = useBalance(); // Use global total earned
+  const { isMobile } = useDeviceType();
   
   const realQuests = quests.length > 0 ? quests : questDatabase;
   
@@ -243,6 +245,11 @@ const QuestGrid = () => {
           <MobileWarning variant="light" />
         </div>
       )}
+
+      {/* AI Assistant Section */}
+      <div className="mb-8">
+        <AIAssistant />
+      </div>
 
       {/* Enhanced Filters */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 sm:p-6 shadow-lg border border-slate-200 dark:border-slate-700">
