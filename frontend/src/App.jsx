@@ -1,13 +1,15 @@
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect, useMemo } from 'react';
 import { WalletContext } from './context/WalletContext';
 import { TokenProvider, useToken } from './context/TokenContext';
 import { BalanceProvider, useBalance } from './context/BalanceContext';
+import { useQuest } from './context/QuestContext';
 import Header from './components/layout/Header';
 import HeroSection from './components/layout/HeroSection';
 import QuestGrid from './components/features/quest/QuestGrid';
 import UserProfile from './components/features/profile/UserProfile';
 import Achievements from './components/features/achievements/Achievements';
 import HowToClaimPage from './pages/HowToClaimPage';
+import GlobalLoader from './components/ui/GlobalLoader';
 
 function App() {
   return (
@@ -21,8 +23,9 @@ function App() {
 
 function AppContent() {
   const { publicKey, isDemoMode, isInitialized } = useContext(WalletContext);
-  const { loadTokenData } = useToken();
+  const { loadTokenData, isLoading: isTokenLoading } = useToken();
   const { loadBalanceForUser } = useBalance();
+  const { loading: isQuestLoading } = useQuest();
   const [currentPage, setCurrentPage] = useState(() => {
     const savedPage = localStorage.getItem('chainquest-current-page');
     if (savedPage) {
@@ -33,6 +36,7 @@ function AppContent() {
     const page = urlParams.get('page');
     return page || 'quests';
   });
+  const [isInitialDataLoading, setIsInitialDataLoading] = useState(true);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -44,11 +48,44 @@ function AppContent() {
     window.history.pushState({}, '', url);
   };
 
+  // Track initial data loading
   useEffect(() => {
+    if (isInitialized) {
+      const userIdentifier = isDemoMode ? 'demo' : publicKey;
+      if (userIdentifier) {
+        // Start loading data
+        loadTokenData(userIdentifier);
+        loadBalanceForUser(userIdentifier);
+      }
+      
+      // Set initial loading to false after a brief moment to allow data fetching to start
+      // This ensures we show the loader only when actually loading
+      const timer = setTimeout(() => {
+        setIsInitialDataLoading(false);
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [publicKey, isDemoMode, isInitialized, loadTokenData, loadBalanceForUser]);
+
+  // Determine if we should show the global loader
+  const showGlobalLoader = useMemo(() => {
+    // Show loader if wallet is not initialized yet
+    if (!isInitialized) {
+      return true;
+    }
+    
+    // If user is connected (has wallet or demo mode), check if data is loading
     const userIdentifier = isDemoMode ? 'demo' : publicKey;
-    loadTokenData(userIdentifier);
-    loadBalanceForUser(userIdentifier);
-  }, [publicKey, isDemoMode, loadTokenData, loadBalanceForUser]);
+    if (userIdentifier) {
+      // Show loader during initial data loading phase or if critical data is still loading
+      if (isInitialDataLoading || isTokenLoading || isQuestLoading) {
+        return true;
+      }
+    }
+    
+    return false;
+  }, [isInitialized, isInitialDataLoading, isTokenLoading, isQuestLoading, publicKey, isDemoMode]);
 
   const renderPage = () => {
     switch (currentPage) {
@@ -64,31 +101,23 @@ function AppContent() {
         return <QuestGrid />;
     }
   };
-
-  if (!isInitialized) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-lg font-medium">Yükleniyor...</p>
-        </div>
-      </div>
-    );
-  }
   
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${(publicKey || isDemoMode) ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white' : 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white'}`}>
-      <Header currentPage={currentPage} onPageChange={handlePageChange} />
-      <main className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white"> 
-        {(publicKey || isDemoMode) ? (
-          <div className="container mx-auto p-4 pt-24">
-            {renderPage()}
-          </div>
-        ) : (
-          <HeroSection onPageChange={handlePageChange} />
-        )}
-      </main>
-    </div>
+    <>
+      <GlobalLoader isVisible={showGlobalLoader} />
+      <div className={`min-h-screen transition-colors duration-300 ${(publicKey || isDemoMode) ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white' : 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white'}`}>
+        <Header currentPage={currentPage} onPageChange={handlePageChange} />
+        <main className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white"> 
+          {(publicKey || isDemoMode) ? (
+            <div className="container mx-auto p-4 pt-24">
+              {renderPage()}
+            </div>
+          ) : (
+            <HeroSection onPageChange={handlePageChange} />
+          )}
+        </main>
+      </div>
+    </>
   );
 }
 

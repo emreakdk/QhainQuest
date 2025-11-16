@@ -115,6 +115,7 @@ const translations = {
     'category.nft': 'NFT',
     
     'common.loading': 'Yükleniyor...',
+    'common.loadingQuests': 'Görevleriniz ve ilerlemeniz yükleniyor...',
     'common.error': 'Hata',
     'common.success': 'Başarılı',
     'common.confirm': 'Onayla',
@@ -633,6 +634,32 @@ const translations = {
     'quests.web3_dev_basics.q5.option4': 'Kullanıcı arayüzleri oluşturmak için',
     'quests.web3_dev_basics.q5.option5': 'Sunucu yönetimi yapmak için',
     'quests.web3_dev_basics.q5.explanation': 'Smart contracts, koşullar sağlandığında otomatik çalışan self-executing agreements\'dır.',
+
+    // AI Assistant translations
+    'ai.title': 'AI Öğrenme Asistanı',
+    'ai.subtitle': 'Huawei Cloud AI ile desteklenmektedir',
+    'ai.clear': 'Temizle',
+    'ai.tryAsking': 'Şunları sorabilirsiniz:',
+    'ai.placeholder': 'Blockchain, Stellar veya görevleriniz hakkında herhangi bir şey sorun...',
+    'ai.ask': 'Sor',
+    'ai.thinking': 'AI düşünüyor...',
+    'ai.emptyState': 'Blockchain, Stellar veya görevleriniz hakkında herhangi bir şey sorun!',
+    'ai.inputHint': 'Göndermek için Enter, yeni satır için Shift+Enter',
+    'ai.error': 'AI yanıtı alınamadı. Lütfen tekrar deneyin.',
+    'ai.quickQuestions.blockchain': 'Blockchain nedir?',
+    'ai.quickQuestions.stellar': 'Stellar ağını açıkla',
+    'ai.quickQuestions.smartContracts': 'Akıllı kontratlar nedir?',
+    'ai.quickQuestions.tokens': 'Tokenlar nasıl çalışır?',
+    
+    // Learning Recommendations translations
+    'ai.recommendations.title': 'AI Öğrenme Önerileri',
+    'ai.recommendations.subtitle': 'Huawei Cloud AI ile desteklenmektedir',
+    'ai.recommendations.analyzing': 'İlerlemeniz analiz ediliyor...',
+    'ai.recommendations.error': 'Öneriler yüklenemedi.',
+    'ai.recommendations.tryAgain': 'Tekrar Dene',
+    'ai.recommendations.emptyState': 'Kişiselleştirilmiş öğrenme önerileri almak için yenile butonuna tıklayın!',
+    'ai.recommendations.completedQuests': 'Tamamlanan Görevler',
+    'ai.recommendations.totalEarned': 'Toplam Kazanç',
   },
   en: {
     'nav.connectWallet': 'Connect Wallet',
@@ -747,6 +774,7 @@ const translations = {
     'category.nft': 'NFT',
     
     'common.loading': 'Loading...',
+    'common.loadingQuests': 'Loading your quests and progress...',
     'common.error': 'Error',
     'common.success': 'Success',
     'common.confirm': 'Confirm',
@@ -1265,6 +1293,32 @@ const translations = {
     'quests.web3_dev_basics.q5.option4': 'Building user interfaces',
     'quests.web3_dev_basics.q5.option5': 'Server administration',
     'quests.web3_dev_basics.q5.explanation': 'Smart contracts are self-executing agreements that run automatically when conditions are met.',
+
+    // AI Assistant translations
+    'ai.title': 'AI Learning Assistant',
+    'ai.subtitle': 'Powered by Huawei Cloud AI',
+    'ai.clear': 'Clear',
+    'ai.tryAsking': 'Try asking:',
+    'ai.placeholder': 'Ask me anything about blockchain, Stellar, or your quests...',
+    'ai.ask': 'Ask',
+    'ai.thinking': 'AI is thinking...',
+    'ai.emptyState': 'Ask me anything about blockchain, Stellar, or your quests!',
+    'ai.inputHint': 'Press Enter to send, Shift+Enter for new line',
+    'ai.error': 'Failed to get AI response. Please try again.',
+    'ai.quickQuestions.blockchain': 'What is blockchain?',
+    'ai.quickQuestions.stellar': 'Explain Stellar network',
+    'ai.quickQuestions.smartContracts': 'What are smart contracts?',
+    'ai.quickQuestions.tokens': 'How do tokens work?',
+    
+    // Learning Recommendations translations
+    'ai.recommendations.title': 'AI Learning Recommendations',
+    'ai.recommendations.subtitle': 'Powered by Huawei Cloud AI',
+    'ai.recommendations.analyzing': 'Analyzing your progress...',
+    'ai.recommendations.error': 'Failed to load recommendations.',
+    'ai.recommendations.tryAgain': 'Try Again',
+    'ai.recommendations.emptyState': 'Click refresh to get personalized learning recommendations!',
+    'ai.recommendations.completedQuests': 'Completed Quests',
+    'ai.recommendations.totalEarned': 'Total Earned',
   }
 };
 
