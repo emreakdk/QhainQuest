@@ -14,6 +14,7 @@ export const QuestProvider = ({ children }) => {
   const [userStats, setUserStats] = useState(null);
   const [userCertificates, setUserCertificates] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
+  const [activeQuizId, setActiveQuizId] = useState(null); // Track active quiz
 
   const loadQuests = useCallback(async () => {
     setLoading(true);
@@ -189,6 +190,14 @@ export const QuestProvider = ({ children }) => {
     }
   }, [loadUserProgress]);
 
+  const setActiveQuiz = useCallback((quizId) => {
+    setActiveQuizId(quizId);
+  }, []);
+
+  const clearActiveQuiz = useCallback(() => {
+    setActiveQuizId(null);
+  }, []);
+
   const value = useMemo(() => ({
     quests,
     loading,
@@ -196,12 +205,15 @@ export const QuestProvider = ({ children }) => {
     userProgress,
     userStats,
     userCertificates,
+    activeQuizId,
     
     loadQuests,
     loadUserProgress,
     submitAnswer,
     refreshData,
     refreshUserBalance,
+    setActiveQuiz,
+    clearActiveQuiz,
     
     getQuestStatus,
     getQuestProgress,
@@ -214,11 +226,14 @@ export const QuestProvider = ({ children }) => {
     userProgress,
     userStats,
     userCertificates,
+    activeQuizId,
     loadQuests,
     loadUserProgress,
     submitAnswer,
     refreshData,
     refreshUserBalance,
+    setActiveQuiz,
+    clearActiveQuiz,
     getQuestStatus,
     getQuestProgress,
     isQuestCompleted,

@@ -75,9 +75,17 @@ const HeroSection = ({ onPageChange }) => {
                 onClick={handleDemoMode}
                 variant="secondary"
                 size="lg"
-                className="w-full bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 !text-white font-semibold px-4 sm:px-6 md:px-8 py-3 sm:py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 cursor-pointer text-sm sm:text-base mb-4 sm:mb-3 md:mb-4"
+                className="w-full bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 !text-white font-semibold px-4 sm:px-6 md:px-8 py-3 sm:py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 cursor-pointer text-sm sm:text-base"
               >
                 {t('home.useWithoutWallet')}
+              </Button>
+              <Button
+                variant="secondary"
+                size="lg"
+                className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 !text-white font-semibold px-4 sm:px-6 md:px-8 py-3 sm:py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 cursor-pointer text-sm sm:text-base mb-4 sm:mb-3 md:mb-4"
+                onClick={() => onPageChange('learn-web3')}
+              >
+                {t('nav.learnWeb3')}
               </Button>
               {/* Mobile Warning */}
               {isMobile && (
@@ -105,14 +113,24 @@ const HeroSection = ({ onPageChange }) => {
                   {isDemoMode ? t('home.demoMode') : t('home.connected')}
                 </span>
               </div>
-              <Button 
-                variant="primary" 
-                size="lg"
-                className="w-full animate-bounce cursor-pointer text-sm sm:text-base px-4 sm:px-6 md:px-8 py-3 sm:py-4"
-                onClick={handleGoToQuests}
-              >
-                {t('nav.quests')}
-              </Button>
+              <div className="space-y-3">
+                <Button 
+                  variant="primary" 
+                  size="lg"
+                  className="w-full animate-bounce cursor-pointer text-sm sm:text-base px-4 sm:px-6 md:px-8 py-3 sm:py-4"
+                  onClick={handleGoToQuests}
+                >
+                  {t('nav.quests')}
+                </Button>
+                <Button 
+                  variant="secondary" 
+                  size="lg"
+                  className="w-full cursor-pointer text-sm sm:text-base px-4 sm:px-6 md:px-8 py-3 sm:py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 !text-white border-0"
+                  onClick={() => onPageChange('learn-web3')}
+                >
+                  {t('nav.learnWeb3')}
+                </Button>
+              </div>
             </div>
           )}
         </div>

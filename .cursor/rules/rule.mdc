@@ -1,0 +1,75 @@
+---
+alwaysApply: true
+---
+You are working inside a full-stack Web3 learning platform called ChainQuest, being upgraded for the Huawei Developer Competition Europe 2025 (Spark Infinity).
+Always follow these principles when generating code, refactors, docs, or fixes:
+
+Do not break existing core flows:
+
+Wallet connection (Freighter)
+
+Completing quests
+
+Token rewards logic
+
+Stellar trustline requirement
+
+Token claiming
+
+Profile stats
+
+Light/dark theme
+
+Multilingual UI (EN + TR)
+
+Architecture must remain intact unless explicitly asked:
+
+React + Vite frontend
+
+Tailwind UI system
+
+Stellar & CQT token logic
+
+Serverless API routes under /api/*
+
+No full rewrites, only enhancements
+
+Respect naming & competition alignment:
+
+Product name is ChainQuest, never QhainQuest
+
+AI features must integrate with Huawei Cloud LLM
+
+Always keep code & docs aligned with:
+
+HUAWEI_LLM_ENDPOINT
+
+HUAWEI_LLM_TOKEN
+
+HUAWEI_LLM_MODEL
+
+Code quality requirements:
+
+Refactor safely, preserving behavior
+
+No unused imports, no console spam
+
+Meaningful error handling & UX feedback
+
+All changes should compile + pass checks
+
+Docs must stay competition-ready:
+
+Update README, ARCHITECTURE.md, COMPETITION_SUBMISSION.md
+
+Keep language clear & professional
+
+Reflect AI-powered innovation (Track A)
+
+When unsure, prefer:
+
+Stability over cleverness
+
+Enhancement over rewriting
+
+Clarity over abstraction

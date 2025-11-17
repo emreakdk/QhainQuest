@@ -18,7 +18,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
   const { publicKey, isDemoMode } = useContext(WalletContext);
   const { t } = useLanguage();
   const { showSuccess, showError } = useNotification();
-  const { submitAnswer, getQuestProgress, refreshUserBalance } = useQuest();
+  const { submitAnswer, getQuestProgress, refreshUserBalance, setActiveQuiz, clearActiveQuiz } = useQuest();
   const { refreshTokenData } = useToken();
   const { addToClaimableBalance } = useBalance(); // Use global balance context
   const { playSuccessSound, playErrorSound, playClickSound } = useSound();
@@ -85,6 +85,9 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
         const progress = getQuestProgress(realQuest);
         setCurrentLessonIndex(progress.currentStep);
         
+        // Set active quiz when quiz starts
+        setActiveQuiz(questId);
+        
         console.log(`Quest yüklendi: ${t(realQuest.nameKey)}, Soru sayısı: ${realQuest.lessons.length}`);
       } catch (error) {
         console.error('Quest yükleme hatası:', error);
@@ -93,7 +96,12 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
     };
 
     loadQuest();
-  }, [questId, getQuestProgress, showError]);
+    
+    // Cleanup: clear active quiz when component unmounts
+    return () => {
+      clearActiveQuiz();
+    };
+  }, [questId, getQuestProgress, showError, setActiveQuiz, clearActiveQuiz]);
 
   const currentLesson = quest?.lessons[currentLessonIndex];
   const difficulty = quest ? getDifficultyLevel(quest) : { level: 'easy', color: 'green', label: 'Kolay' };
@@ -172,6 +180,9 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
       if (result.success) {
         questApiService.markQuestCompleted(userIdentifier, questId);
         setQuestCompleted(true);
+        
+        // Clear active quiz when quest is completed
+        clearActiveQuiz();
         
         addToClaimableBalance(userIdentifier, result.data.rewardAmount);
         
@@ -373,7 +384,10 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
                 </h2>
               </div>
               <Button
-                onClick={onClose}
+                onClick={() => {
+                  clearActiveQuiz();
+                  onClose();
+                }}
                 variant="outline"
                 size="sm"
                 className="cursor-pointer flex-shrink-0"

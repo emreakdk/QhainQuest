@@ -9,6 +9,7 @@ import QuestGrid from './components/features/quest/QuestGrid';
 import UserProfile from './components/features/profile/UserProfile';
 import Achievements from './components/features/achievements/Achievements';
 import HowToClaimPage from './pages/HowToClaimPage';
+import LearnWeb3 from './pages/LearnWeb3';
 import GlobalLoader from './components/ui/GlobalLoader';
 
 function App() {
@@ -97,6 +98,8 @@ function AppContent() {
         return <Achievements />;
       case 'how-to-claim':
         return <HowToClaimPage onPageChange={handlePageChange} />;
+      case 'learn-web3':
+        return <LearnWeb3 onPageChange={handlePageChange} />;
       default:
         return <QuestGrid />;
     }
@@ -110,6 +113,10 @@ function AppContent() {
         <main className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white"> 
           {(publicKey || isDemoMode) ? (
             <div className="container mx-auto p-4 pt-24">
+              {renderPage()}
+            </div>
+          ) : currentPage === 'learn-web3' ? (
+            <div className="pt-20">
               {renderPage()}
             </div>
           ) : (
