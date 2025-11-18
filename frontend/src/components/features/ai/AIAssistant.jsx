@@ -2,6 +2,17 @@ import { useState, useRef, useEffect } from 'react';
 import { aiService } from '../../../services/aiService';
 import { useLanguage } from '../../../context/LanguageContext';
 import Button from '../../ui/Button';
+import { 
+  TbRobot, 
+  TbUser, 
+  TbTrash, 
+  TbLink, 
+  TbStar, 
+  TbFileText, 
+  TbCoins,
+  TbBulb,
+  TbSend
+} from 'react-icons/tb';
 
 /**
  * AI Assistant Component
@@ -102,10 +113,10 @@ const AIAssistant = ({ questId = null, context = {} }) => {
   };
 
   const quickQuestions = [
-    { text: 'What is blockchain?', icon: '🔗' },
-    { text: 'Explain Stellar network', icon: '⭐' },
-    { text: 'What are smart contracts?', icon: '📜' },
-    { text: 'How do tokens work?', icon: '🪙' }
+    { text: 'What is blockchain?', icon: TbLink },
+    { text: 'Explain Stellar network', icon: TbStar },
+    { text: 'What are smart contracts?', icon: TbFileText },
+    { text: 'How do tokens work?', icon: TbCoins }
   ];
 
   return (
@@ -114,8 +125,8 @@ const AIAssistant = ({ questId = null, context = {} }) => {
       <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-4 sm:p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-2xl">
-              🤖
+            <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+              <TbRobot size={22} className="text-white" />
             </div>
             <div>
               <h3 className="text-lg sm:text-xl font-bold text-white">
@@ -129,8 +140,9 @@ const AIAssistant = ({ questId = null, context = {} }) => {
           {history.length > 0 && (
             <button
               onClick={clearHistory}
-              className="text-white/80 hover:text-white text-sm px-3 py-1 rounded-lg hover:bg-white/10 transition-colors"
+              className="flex items-center gap-2 text-white/80 hover:text-white text-sm px-3 py-1 rounded-lg hover:bg-white/10 transition-colors"
             >
+              <TbTrash size={18} />
               Clear
             </button>
           )}
@@ -144,17 +156,20 @@ const AIAssistant = ({ questId = null, context = {} }) => {
             Try asking:
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {quickQuestions.map((q, idx) => (
-              <button
-                key={idx}
-                onClick={() => handleQuickQuestion(q.text)}
-                disabled={loading}
-                className="flex items-center space-x-2 px-3 py-2 text-left text-sm bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <span>{q.icon}</span>
-                <span className="text-slate-700 dark:text-slate-300">{q.text}</span>
-              </button>
-            ))}
+            {quickQuestions.map((q, idx) => {
+              const IconComponent = q.icon;
+              return (
+                <button
+                  key={idx}
+                  onClick={() => handleQuickQuestion(q.text)}
+                  disabled={loading}
+                  className="group flex items-center gap-2 px-3 py-2 text-left text-sm bg-slate-100 dark:bg-slate-700 rounded-lg transition-all duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 hover:bg-purple-50 dark:hover:bg-purple-900/20 hover:border-purple-200 dark:hover:border-purple-700 border border-transparent hover:shadow-sm"
+                >
+                  <IconComponent size={18} className="text-[#8b5cf6] dark:text-gray-300 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors duration-200" />
+                  <span className="text-slate-700 dark:text-slate-300 group-hover:text-purple-900 dark:group-hover:text-purple-200 transition-colors duration-200">{q.text}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
       )}
@@ -163,7 +178,7 @@ const AIAssistant = ({ questId = null, context = {} }) => {
       <div className="p-4 sm:p-6 max-h-[400px] overflow-y-auto" ref={responseRef}>
         {history.length === 0 && !loading && !error && (
           <div className="text-center py-8 text-slate-500 dark:text-slate-400">
-            <div className="text-4xl mb-3">💡</div>
+            <TbBulb size={48} className="mx-auto mb-3 text-[#facc15] dark:text-gray-300 opacity-80" />
             <p className="text-sm">
               Ask me anything about blockchain, Stellar, or your quests!
             </p>
@@ -175,7 +190,7 @@ const AIAssistant = ({ questId = null, context = {} }) => {
             {/* User Question */}
             <div className="flex items-start space-x-3">
               <div className="w-8 h-8 bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center flex-shrink-0">
-                <span className="text-sm">👤</span>
+                <TbUser size={18} className="text-indigo-600 dark:text-indigo-300" />
               </div>
               <div className="flex-1 bg-slate-100 dark:bg-slate-700 rounded-lg p-3">
                 <p className="text-sm text-slate-800 dark:text-slate-200">
@@ -187,7 +202,7 @@ const AIAssistant = ({ questId = null, context = {} }) => {
             {/* AI Response */}
             <div className="flex items-start space-x-3">
               <div className="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center flex-shrink-0">
-                <span className="text-sm">🤖</span>
+                <TbRobot size={18} className="text-purple-600 dark:text-purple-300" />
               </div>
               <div className="flex-1 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-lg p-3 border border-indigo-200 dark:border-indigo-700">
                 <p className="text-sm text-slate-800 dark:text-slate-200 whitespace-pre-wrap">
@@ -201,7 +216,7 @@ const AIAssistant = ({ questId = null, context = {} }) => {
         {loading && (
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center">
-              <span className="text-sm">🤖</span>
+              <TbRobot size={18} className="text-purple-600 dark:text-purple-300" />
             </div>
             <div className="flex-1">
               <div className="flex items-center space-x-2">
@@ -246,12 +261,15 @@ const AIAssistant = ({ questId = null, context = {} }) => {
           <Button
             type="submit"
             disabled={loading || !prompt.trim()}
-            className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
             {loading ? (
               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
             ) : (
-              'Ask'
+              <>
+                <TbSend size={18} />
+                Ask
+              </>
             )}
           </Button>
         </div>

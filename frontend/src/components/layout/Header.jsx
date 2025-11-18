@@ -6,6 +6,20 @@ import { useTheme } from '../../context/ThemeContext';
 import { useLanguage } from '../../context/LanguageContext';
 import Button from '../ui/Button';
 import FreighterConnect from '../features/wallet/FreighterConnect';
+import { 
+  TbSchool, 
+  TbListDetails, 
+  TbChecklist, 
+  TbAward, 
+  TbUserHexagon,
+  TbWallet,
+  TbLanguage,
+  TbSun,
+  TbMoon,
+  TbMenu2,
+  TbX,
+  TbCoins
+} from 'react-icons/tb';
 
 const Header = ({ currentPage, onPageChange }) => {
   const { publicKey, setPublicKey, isDemoMode, exitDemoMode } = useContext(WalletContext);
@@ -19,10 +33,11 @@ const Header = ({ currentPage, onPageChange }) => {
   const truncateKey = (key) => `${key.slice(0, 4)}...${key.slice(-4)}`;
 
   const navigationItems = [
-    { id: 'how-to-claim', label: t('nav.howToClaim'), icon: '📋' },
-    { id: 'quests', label: t('nav.quests'), icon: '🎯' },
-    { id: 'leaderboard', label: t('nav.leaderboard'), icon: '🏆' },
-    { id: 'profile', label: t('nav.profile'), icon: '👤' },
+    { id: 'learn-web3', label: t('nav.learnWeb3'), icon: TbSchool },
+    { id: 'how-to-claim', label: t('nav.howToClaim'), icon: TbListDetails },
+    { id: 'quests', label: t('nav.quests'), icon: TbChecklist },
+    { id: 'leaderboard', label: t('nav.leaderboard'), icon: TbAward },
+    { id: 'profile', label: t('nav.profile'), icon: TbUserHexagon },
   ];
 
   return (
@@ -41,20 +56,23 @@ const Header = ({ currentPage, onPageChange }) => {
         {/* Navigation Menu - Desktop */}
         {(publicKey || isDemoMode) && (
           <div className="hidden lg:flex items-center space-x-1 absolute left-1/2 transform -translate-x-1/2">
-            {navigationItems.map(item => (
-              <button
-                key={item.id}
-                onClick={() => onPageChange(item.id)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer ${
-                  currentPage === item.id
-                    ? 'bg-indigo-600 text-white shadow-lg'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
-                }`}
-              >
-                <span className="mr-2">{item.icon}</span>
-                {item.label}
-              </button>
-            ))}
+            {navigationItems.map(item => {
+              const IconComponent = item.icon;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => onPageChange(item.id)}
+                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer group ${
+                    currentPage === item.id
+                      ? 'bg-indigo-600 text-white shadow-lg'
+                      : 'text-slate-600 dark:text-slate-400 hover:bg-indigo-600 hover:text-white dark:hover:text-white dark:hover:bg-slate-800'
+                  }`}
+                >
+                  <IconComponent size={18} className={currentPage === item.id ? 'text-white' : 'text-[#8b5cf6] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200 transition-colors'} />
+                  {item.label}
+                </button>
+              );
+            })}
           </div>
         )}
 
@@ -63,22 +81,20 @@ const Header = ({ currentPage, onPageChange }) => {
           {/* Language Toggle */}
           <button
             onClick={toggleLanguage}
-            className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg transition-colors flex items-center justify-center cursor-pointer order-1 ${
+            className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg transition-colors flex items-center justify-center cursor-pointer order-1 group ${
               (publicKey || isDemoMode) 
                 ? 'bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
                 : 'bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
             }`}
             title={language === 'tr' ? 'Switch to English' : 'Türkçeye Geç'}
           >
-            <span className="text-xs sm:text-sm font-medium">
-              {language === 'tr' ? 'EN' : 'TR'}
-            </span>
+            <TbLanguage size={18} className="text-[#4a90e2] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200 transition-colors" />
           </button>
 
           {/* Token Balance Display - CRITICAL FIX: Show only claimable balance */}
           {(publicKey || isDemoMode) && claimableBalance > 0 && (
-            <div className="hidden sm:flex items-center space-x-2 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 px-2 sm:px-3 py-1.5 rounded-lg border border-yellow-200 dark:border-yellow-700">
-              <span className="text-yellow-600 dark:text-yellow-400">💰</span>
+            <div className="hidden sm:flex items-center gap-2 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 px-2 sm:px-3 py-1.5 rounded-lg border border-yellow-200 dark:border-yellow-700">
+              <TbCoins size={18} className="text-yellow-600 dark:text-yellow-400" />
               <span className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300">
                 {claimableBalance} CQT
               </span>
@@ -88,7 +104,7 @@ const Header = ({ currentPage, onPageChange }) => {
           {/* Theme Toggle Button - Hidden on mobile */}
           <button
             onClick={toggleTheme}
-            className={`hidden md:flex w-8 h-8 sm:w-10 sm:h-10 rounded-lg transition-colors items-center justify-center cursor-pointer order-2 ${
+            className={`hidden md:flex w-8 h-8 sm:w-10 sm:h-10 rounded-lg transition-colors items-center justify-center cursor-pointer order-2 group ${
               (publicKey || isDemoMode) 
                 ? 'bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
                 : 'bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
@@ -96,13 +112,9 @@ const Header = ({ currentPage, onPageChange }) => {
             title={isDarkMode ? t('theme.switchToLight') : t('theme.switchToDark')}
           >
             {isDarkMode ? (
-              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-              </svg>
+              <TbSun size={18} className="text-[#facc15] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200 transition-colors" />
             ) : (
-              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-              </svg>
+              <TbMoon size={18} className="text-[#4a90e2] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200 transition-colors" />
             )}
           </button>
 
@@ -110,12 +122,10 @@ const Header = ({ currentPage, onPageChange }) => {
           {(publicKey || isDemoMode) && (
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer border border-slate-200 dark:border-slate-600 order-3"
+              className="lg:hidden p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer border border-slate-200 dark:border-slate-600 order-3 group"
               title="Menü"
             >
-              <svg className="w-6 h-6 text-slate-700 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
+              <TbMenu2 size={18} className="text-[#8b5cf6] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200 transition-colors" />
             </button>
           )}
 
@@ -169,33 +179,34 @@ const Header = ({ currentPage, onPageChange }) => {
               <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Menü</h3>
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors cursor-pointer"
+                className="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors cursor-pointer group"
                 title="Menüyü Kapat"
               >
-                <svg className="w-5 h-5 text-slate-600 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <TbX size={18} className="text-[#4a90e2] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200 transition-colors" />
               </button>
             </div>
             
             {/* Navigation Items */}
-            {navigationItems.map(item => (
-              <button
-                key={item.id}
-                onClick={() => {
-                  onPageChange(item.id);
-                  setMobileMenuOpen(false);
-                }}
-                className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all cursor-pointer ${
-                  currentPage === item.id
-                    ? 'bg-indigo-600 text-white shadow-lg'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-700'
-                }`}
-              >
-                <span className="mr-3 text-lg">{item.icon}</span>
-                {item.label}
-              </button>
-            ))}
+            {navigationItems.map(item => {
+              const IconComponent = item.icon;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    onPageChange(item.id);
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all cursor-pointer inline-flex items-center gap-2 group ${
+                    currentPage === item.id
+                      ? 'bg-indigo-600 text-white shadow-lg'
+                      : 'text-slate-600 dark:text-slate-400 hover:bg-indigo-600 hover:text-white dark:hover:text-white dark:hover:bg-slate-700'
+                  }`}
+                >
+                  <IconComponent size={18} className={currentPage === item.id ? 'text-white' : 'text-[#8b5cf6] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200 transition-colors'} />
+                  {item.label}
+                </button>
+              );
+            })}
             
             {/* Mobile Wallet Info */}
             {publicKey && (

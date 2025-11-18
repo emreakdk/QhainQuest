@@ -3,6 +3,7 @@ import { useLanguage } from '../../../context/LanguageContext';
 import { useQuest } from '../../../context/QuestContext';
 import { useToken } from '../../../context/TokenContext';
 import { useBalance } from '../../../context/BalanceContext';
+import { useTheme } from '../../../context/ThemeContext';
 import { WalletContext } from '../../../context/WalletContext';
 import { useDeviceType } from '../../../hooks/useDeviceType';
 import { SkeletonCard, SkeletonStats } from '../../ui/Skeleton';
@@ -13,6 +14,21 @@ import Badge from '../../ui/Badge';
 import MobileWarning from '../../ui/MobileWarning';
 import AIAssistant from '../ai/AIAssistant';
 import { questDatabase, questCategories, difficultyLevels, mockUserStats, mockUserProgress } from '../../../data/questData';
+import { 
+  TbBook, 
+  TbCheck, 
+  TbRefresh, 
+  TbCoins, 
+  TbSearch, 
+  TbX, 
+  TbFilter,
+  TbAlertCircle,
+  TbLink,
+  TbRobot,
+  TbPalette,
+  TbCircle,
+  TbCircleDot
+} from 'react-icons/tb';
 
 const QuestQuiz = lazy(() => import('./QuestQuiz'));
 
@@ -22,7 +38,20 @@ const QuestGrid = () => {
   const { quests, loading, error, userStats, userProgress, getQuestStatus, getQuestProgress, refreshData } = useQuest();
   const { tokenData } = useToken(); // Use centralized token data
   const { totalEarned } = useBalance(); // Use global total earned
+  const { isDarkMode } = useTheme();
   const { isMobile } = useDeviceType();
+
+  // Category hover background classes matching quest card icon colors
+  const getCategoryHoverClass = (categoryId) => {
+    const hoverClasses = {
+      'all': 'hover:bg-slate-200 dark:hover:bg-slate-600',
+      'blockchain': 'hover:bg-cyan-50 dark:hover:bg-cyan-900/20', // matches #2ab3a6 (teal/cyan)
+      'smart-contracts': 'hover:bg-purple-50 dark:hover:bg-purple-900/20', // matches #8b5cf6 (purple)
+      'defi': 'hover:bg-yellow-50 dark:hover:bg-yellow-900/20', // matches #facc15 (yellow)
+      'nft': 'hover:bg-orange-50 dark:hover:bg-orange-900/20' // matches #fb923c (orange)
+    };
+    return hoverClasses[categoryId] || hoverClasses['all'];
+  };
   
   const realQuests = quests.length > 0 ? quests : questDatabase;
   
@@ -179,14 +208,24 @@ const QuestGrid = () => {
                 className="w-full px-4 py-3 pl-12 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-slate-900 dark:text-white"
               />
               <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
-                <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+                <TbSearch size={18} className="text-[#4a90e2] dark:text-gray-300" />
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* AI Assistant Section - Moved above stats */}
+      <div className="mb-8">
+        <AIAssistant />
+      </div>
+
+      {/* Mobile Warning */}
+      {isMobile && (
+        <div className="mb-6">
+          <MobileWarning variant="light" />
+        </div>
+      )}
 
       {/* Enhanced Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
@@ -198,7 +237,7 @@ const QuestGrid = () => {
               </div>
               <div className="text-blue-100 text-xs sm:text-sm">{t('stats.totalQuests')}</div>
             </div>
-            <div className="text-3xl sm:text-4xl opacity-80">📚</div>
+            <TbBook size={28} className="opacity-80 text-white" />
           </div>
         </div>
         
@@ -210,7 +249,7 @@ const QuestGrid = () => {
               </div>
               <div className="text-green-100 text-xs sm:text-sm">{t('stats.completedQuests')}</div>
             </div>
-            <div className="text-3xl sm:text-4xl opacity-80">✅</div>
+            <TbCheck size={28} className="opacity-80 text-white" />
           </div>
         </div>
         
@@ -222,7 +261,7 @@ const QuestGrid = () => {
               </div>
               <div className="text-purple-100 text-xs sm:text-sm">{t('stats.inProgress')}</div>
             </div>
-            <div className="text-3xl sm:text-4xl opacity-80">🔄</div>
+            <TbRefresh size={28} className="opacity-80 text-white" />
           </div>
         </div>
         
@@ -234,51 +273,69 @@ const QuestGrid = () => {
               </div>
               <div className="text-yellow-100 text-xs sm:text-sm">{t('stats.earnedTokens')}</div>
             </div>
-            <div className="text-3xl sm:text-4xl opacity-80">💰</div>
+            <TbCoins size={28} className="opacity-80 text-white" />
           </div>
         </div>
       </div>
 
-      {/* Mobile Warning */}
-      {isMobile && (
-        <div className="mb-6">
-          <MobileWarning variant="light" />
-        </div>
-      )}
-
-      {/* AI Assistant Section */}
-      <div className="mb-8">
-        <AIAssistant />
-      </div>
 
       {/* Enhanced Filters */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 sm:p-6 shadow-lg border border-slate-200 dark:border-slate-700">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex flex-wrap gap-2">
-            {questCategories.map(category => (
-              <button
-                key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
-                className={`group flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 rounded-xl font-medium transition-all cursor-pointer text-sm ${
-                  selectedCategory === category.id
-                    ? 'bg-indigo-600 text-white shadow-lg'
-                    : 'bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-300 hover:bg-slate-200 hover:text-slate-800 dark:hover:bg-slate-600 dark:hover:text-slate-300'
-                }`}
-              >
-                <span className="text-sm sm:text-base">{category.icon}</span>
-                <span className="hidden sm:inline">{t(category.nameKey || category.name)}</span>
-                <span className="sm:hidden">{t(category.nameKey || category.name).slice(0, 3)}</span>
-                <Badge 
-                  variant={selectedCategory === category.id ? 'default' : 'outline'}
-                  className="ml-1 text-xs text-slate-700 group-hover:text-slate-700 dark:text-slate-200 dark:group-hover:text-slate-200"
+            {questCategories.map(category => {
+              const categoryIcons = {
+                'all': TbBook,
+                'blockchain': TbLink,
+                'smart-contracts': TbRobot,
+                'defi': TbCoins,
+                'nft': TbPalette
+              };
+              const IconComponent = categoryIcons[category.id] || TbBook;
+              const isActive = selectedCategory === category.id;
+              // Icon colors matching quest card category icon colors exactly
+              const categoryAccentColors = {
+                'all': '#64748b',
+                'blockchain': '#2ab3a6', // teal/cyan - matches quest card
+                'smart-contracts': '#8b5cf6', // purple - matches quest card
+                'defi': '#facc15', // yellow - matches quest card
+                'nft': '#fb923c' // orange - matches quest card
+              };
+              const accentColor = categoryAccentColors[category.id] || categoryAccentColors['all'];
+              
+              return (
+                <button
+                  key={category.id}
+                  onClick={() => setSelectedCategory(category.id)}
+                  className={`group flex items-center gap-2 px-2 sm:px-4 py-2 rounded-xl font-medium transition-all duration-200 ease-in-out cursor-pointer text-sm focus:outline-none ${
+                    isActive
+                      ? 'bg-indigo-600 text-white shadow-lg'
+                      : `bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-300 ${getCategoryHoverClass(category.id)}`
+                  }`}
                 >
-                  {realQuests.filter(q => {
-                    if (!q) return false;
-                    return getQuestCategory(q) === category.id || category.id === 'all';
-                  }).length}
-                </Badge>
-              </button>
-            ))}
+                  <IconComponent 
+                    size={18} 
+                    className={`transition-colors duration-200 ${
+                      isActive 
+                        ? 'text-white' 
+                        : ''
+                    }`}
+                    style={!isActive ? { color: isDarkMode ? 'rgb(203, 213, 225)' : accentColor } : {}}
+                  />
+                  <span className="hidden sm:inline">{t(category.nameKey || category.name)}</span>
+                  <span className="sm:hidden">{t(category.nameKey || category.name).slice(0, 3)}</span>
+                  <Badge 
+                    variant={isActive ? 'default' : 'outline'}
+                    className="ml-1 text-xs transition-colors duration-200"
+                  >
+                    {realQuests.filter(q => {
+                      if (!q) return false;
+                      return getQuestCategory(q) === category.id || category.id === 'all';
+                    }).length}
+                  </Badge>
+                </button>
+              );
+            })}
           </div>
 
           <div className="flex items-center gap-2">
@@ -290,11 +347,9 @@ const QuestGrid = () => {
                   setSelectedDifficulty('all');
                   setSearchQuery('');
                 }}
-                className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl hover:bg-red-200 dark:hover:bg-red-900/30 transition-colors cursor-pointer text-sm border border-red-200 dark:border-red-700"
+                className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl transition-all duration-200 ease-in-out cursor-pointer text-sm border border-red-200 dark:border-red-700 group focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 hover:bg-red-200 dark:hover:bg-red-900/30 hover:border-red-300 dark:hover:border-red-600 hover:shadow-sm"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <TbX size={18} className="text-red-600 dark:text-red-400 transition-colors duration-200" />
                 <span className="hidden sm:inline">{t('filters.clear')}</span>
                 <span className="sm:hidden">Temizle</span>
               </button>
@@ -302,11 +357,9 @@ const QuestGrid = () => {
 
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-300 rounded-xl hover:bg-slate-200 hover:text-white dark:hover:bg-slate-600 dark:hover:text-slate-300 transition-colors cursor-pointer text-sm"
+              className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-300 rounded-xl transition-all duration-200 ease-in-out cursor-pointer text-sm group focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-200 dark:hover:border-blue-700 border border-transparent"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.707A1 1 0 013 7V4z" />
-              </svg>
+              <TbFilter size={18} className="text-[#4a90e2] dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200" />
               <span className="hidden sm:inline">{t('filters.title')}</span>
               <span className="sm:hidden">Filter</span>
             </button>
@@ -319,30 +372,133 @@ const QuestGrid = () => {
             <div className="flex flex-wrap gap-2">
               <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">{t('filters.difficulty')}:</span>
               {Object.entries(difficultyLevels).map(([key, level]) => {
-                const getActiveClasses = (difficultyKey) => {
-                  switch (difficultyKey) {
-                    case 'beginner':
-                      return 'bg-green-600 text-white';
-                    case 'intermediate':
-                      return 'bg-yellow-500 text-white';
-                    case 'advanced':
-                      return 'bg-red-600 text-white';
-                    default:
-                      return 'bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-300';
+                const getDifficultyStyles = (difficultyKey, isActive) => {
+                  if (!isActive) return undefined;
+                  
+                  if (isDarkMode) {
+                    switch (difficultyKey) {
+                      case 'beginner':
+                        return {
+                          backgroundColor: 'rgba(34, 197, 94, 0.15)',
+                          color: 'rgba(34, 197, 94, 0.9)',
+                          borderColor: 'rgba(34, 197, 94, 0.4)',
+                          boxShadow: '0 0 8px rgba(34, 197, 94, 0.1)',
+                        };
+                      case 'intermediate':
+                        return {
+                          backgroundColor: 'rgba(234, 179, 8, 0.15)',
+                          color: 'rgba(234, 179, 8, 0.9)',
+                          borderColor: 'rgba(234, 179, 8, 0.4)',
+                          boxShadow: '0 0 8px rgba(234, 179, 8, 0.1)',
+                        };
+                      case 'advanced':
+                        return {
+                          backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                          color: 'rgba(239, 68, 68, 0.9)',
+                          borderColor: 'rgba(239, 68, 68, 0.4)',
+                          boxShadow: '0 0 8px rgba(239, 68, 68, 0.1)',
+                        };
+                      default:
+                        return undefined;
+                    }
+                  } else {
+                    switch (difficultyKey) {
+                      case 'beginner':
+                        return {
+                          backgroundColor: '#D4F5DD',
+                          color: '#167A3E',
+                          borderColor: '#A8E6C1',
+                        };
+                      case 'intermediate':
+                        return {
+                          backgroundColor: '#FFE9C2',
+                          color: '#885400',
+                          borderColor: '#FFD699',
+                        };
+                      case 'advanced':
+                        return {
+                          backgroundColor: '#FFD4D4',
+                          color: '#9C1A1A',
+                          borderColor: '#FFB3B3',
+                        };
+                      default:
+                        return undefined;
+                    }
                   }
                 };
 
+                const getIconColor = (difficultyKey, isActive) => {
+                  if (!isActive) return undefined;
+                  
+                  if (isDarkMode) {
+                    switch (difficultyKey) {
+                      case 'beginner':
+                        return 'rgba(34, 197, 94, 0.9)';
+                      case 'intermediate':
+                        return 'rgba(234, 179, 8, 0.9)';
+                      case 'advanced':
+                        return 'rgba(239, 68, 68, 0.9)';
+                      default:
+                        return undefined;
+                    }
+                  } else {
+                    switch (difficultyKey) {
+                      case 'beginner':
+                        return '#167A3E';
+                      case 'intermediate':
+                        return '#885400';
+                      case 'advanced':
+                        return '#9C1A1A';
+                      default:
+                        return undefined;
+                    }
+                  }
+                };
+
+                const isActive = selectedDifficulty === key;
+                const difficultyHoverColors = {
+                  'beginner': { light: '#dcfce7', dark: 'rgba(34, 197, 94, 0.18)' },
+                  'intermediate': { light: '#fef3c7', dark: 'rgba(234, 179, 8, 0.18)' },
+                  'advanced': { light: '#fee2e2', dark: 'rgba(239, 68, 68, 0.18)' }
+                };
+                const hoverColors = difficultyHoverColors[key] || difficultyHoverColors['beginner'];
+                
                 return (
                   <button
                     key={key}
                     onClick={() => setSelectedDifficulty(selectedDifficulty === key ? 'all' : key)}
-                    className={`flex items-center gap-2 px-3 py-1 rounded-lg text-sm font-medium transition-all cursor-pointer ${
-                      selectedDifficulty === key
-                        ? getActiveClasses(key)
-                        : 'bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-300 hover:bg-slate-200 hover:text-white dark:hover:bg-slate-600 dark:hover:text-slate-300'
+                    className={`flex items-center gap-2 rounded-full px-2 py-[2px] border text-[11px] font-medium transition-all duration-200 ease-in-out cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                      isActive
+                        ? 'focus:ring-green-500'
+                        : `bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-300 border-slate-300 dark:border-slate-600 focus:ring-slate-400 ${
+                            key === 'beginner' ? 'hover:bg-green-50 dark:hover:bg-green-900/20' :
+                            key === 'intermediate' ? 'hover:bg-yellow-50 dark:hover:bg-yellow-900/20' :
+                            'hover:bg-red-50 dark:hover:bg-red-900/20'
+                          }`
                     }`}
+                    style={isActive ? getDifficultyStyles(key, true) : {}}
+                    onMouseEnter={(e) => {
+                      if (!isActive) {
+                        if (isDarkMode) {
+                          e.currentTarget.style.backgroundColor = hoverColors.dark;
+                          e.currentTarget.style.boxShadow = `0 0 8px ${hoverColors.dark.replace('0.18', '0.12')}`;
+                        } else {
+                          e.currentTarget.style.backgroundColor = hoverColors.light;
+                        }
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isActive) {
+                        e.currentTarget.style.backgroundColor = '';
+                        e.currentTarget.style.boxShadow = '';
+                      }
+                    }}
                   >
-                    <span>{level.icon}</span>
+                    {isActive ? (
+                      <TbCircleDot size={18} style={{ color: getIconColor(key, true) }} />
+                    ) : (
+                      <TbCircle size={18} className="text-[#4a90e2] dark:text-gray-300 transition-colors duration-200" />
+                    )}
                     <span>{t(level.nameKey || level.name)}</span>
                   </button>
                 );
@@ -369,7 +525,7 @@ const QuestGrid = () => {
       {/* Empty State */}
       {filteredQuests.length === 0 && (
         <div className="text-center py-12">
-          <div className="text-6xl mb-4">🔍</div>
+          <TbSearch size={48} className="mx-auto mb-4 text-[#4a90e2] dark:text-gray-300 opacity-80" />
           <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
             Aradığınız görev bulunamadı
           </h3>
@@ -390,3 +546,12 @@ const QuestGrid = () => {
 };
 
 export default QuestGrid;
+
+
+
+
+
+
+
+
+

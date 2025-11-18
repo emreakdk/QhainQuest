@@ -29,7 +29,7 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ['react', 'react-dom'],
+    include: ['react', 'react-dom', 'react-icons'],
     exclude: ['soroban-client']
   },
   server: {

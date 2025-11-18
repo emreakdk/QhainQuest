@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { useLanguage } from "../../../context/LanguageContext";
 import Button from "../../ui/Button";
+import { TbWallet } from "react-icons/tb";
 
 const FreighterConnect = ({ onConnect }) => {
   const [publicKey, setPublicKey] = useState(null);
@@ -44,8 +45,9 @@ const FreighterConnect = ({ onConnect }) => {
         loading={loading}
         variant="primary"
         size="lg"
-        className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 cursor-pointer"
+        className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 cursor-pointer inline-flex items-center gap-2"
       >
+        <TbWallet size={20} />
         {t('home.connectWallet')}
       </Button>
 
