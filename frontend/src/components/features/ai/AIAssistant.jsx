@@ -60,6 +60,7 @@ const AIAssistant = ({ questId = null, context = {} }) => {
       const newEntry = {
         prompt: userPrompt,
         response: result.response,
+        mode: result.mode || 'demo', // Store mode for UI display
         timestamp: new Date().toISOString()
       };
 
@@ -91,6 +92,7 @@ const AIAssistant = ({ questId = null, context = {} }) => {
       const newEntry = {
         prompt: quickPrompt,
         response: result.response,
+        mode: result.mode || 'demo', // Store mode for UI display
         timestamp: new Date().toISOString()
       };
 
@@ -134,7 +136,9 @@ const AIAssistant = ({ questId = null, context = {} }) => {
                 AI Learning Assistant
               </h3>
               <p className="text-sm text-indigo-100">
-                Powered by Huawei Cloud AI
+                {history.length > 0 && history[history.length - 1]?.mode === 'huawei'
+                  ? 'Powered by Huawei Cloud AI'
+                  : 'AI Learning Assistant'}
               </p>
             </div>
           </div>
@@ -206,6 +210,17 @@ const AIAssistant = ({ questId = null, context = {} }) => {
                 <TbRobot size={18} className="text-purple-600 dark:text-purple-300" />
               </div>
               <div className="flex-1 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-lg p-3 border border-indigo-200 dark:border-indigo-700">
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  {entry.mode && (
+                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                      entry.mode === 'huawei'
+                        ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
+                        : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300'
+                    }`}>
+                      {entry.mode === 'huawei' ? 'Huawei Cloud AI' : 'Demo mode'}
+                    </span>
+                  )}
+                </div>
                 <p className="text-sm text-slate-800 dark:text-slate-200 whitespace-pre-wrap">
                   {entry.response}
                 </p>

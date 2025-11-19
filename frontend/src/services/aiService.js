@@ -4,82 +4,14 @@
  * Service layer for AI-powered features in ChainQuest.
  * Integrates with backend AI endpoints that connect to Huawei Cloud LLM.
  * 
- * In development mode, returns mocked responses to avoid API dependency.
- * In production, calls the actual API endpoint.
+ * All methods call the /api/ai-assistant endpoint as the single source of truth.
+ * No mock responses - the API handles demo mode when credentials are missing.
  */
 
 class AIService {
   constructor() {
     this.baseUrl = import.meta.env.VITE_API_URL || '/api';
     this.timeout = 30000; // 30 seconds
-    this.isDev = import.meta.env.DEV; // Vite dev mode detection
-  }
-
-  /**
-   * Generate a mock AI response for local development
-   * 
-   * @param {string} type - Request type: 'explain', 'recommend', 'help', 'analyze'
-   * @param {string} prompt - User's question or prompt
-   * @param {object} context - Additional context
-   * @returns {string} Mock AI response
-   */
-  getMockResponse(type, prompt, context = {}) {
-    const lowerPrompt = prompt.toLowerCase();
-
-    switch (type) {
-      case 'explain':
-        if (lowerPrompt.includes('blockchain') || lowerPrompt.includes('block chain')) {
-          return 'A blockchain is a distributed ledger technology that maintains a continuously growing list of records (blocks) that are linked and secured using cryptography. Each block contains a cryptographic hash of the previous block, a timestamp, and transaction data. This creates an immutable chain of data that is transparent and decentralized, meaning no single entity controls it.';
-        }
-        if (lowerPrompt.includes('stellar') || lowerPrompt.includes('xlm')) {
-          return 'Stellar is an open-source, decentralized payment network that enables fast, low-cost cross-border transactions. It uses its native cryptocurrency, Lumens (XLM), and supports custom tokens. Stellar\'s consensus protocol allows for quick transaction settlement (3-5 seconds) and very low fees, making it ideal for micropayments and remittances.';
-        }
-        if (lowerPrompt.includes('smart contract')) {
-          return 'A smart contract is a self-executing contract with the terms of the agreement directly written into code. When predefined conditions are met, the contract automatically executes the agreed-upon actions. Smart contracts run on blockchain networks like Ethereum or Stellar, ensuring transparency, security, and automation without intermediaries.';
-        }
-        if (lowerPrompt.includes('token') || lowerPrompt.includes('cryptocurrency')) {
-          return 'Tokens are digital assets that can represent various things on a blockchain: currency, ownership, access rights, or utility. They are created and managed through smart contracts or native blockchain protocols. In the Stellar network, tokens are called "assets" and can be issued by anyone, making it easy to create custom tokens for specific use cases.';
-        }
-        return `I'd be happy to explain "${prompt}". In the context of blockchain technology, this concept relates to decentralized systems that enable secure, transparent transactions without central authorities. Would you like me to elaborate on any specific aspect?`;
-
-      case 'recommend':
-        const recommendations = [
-          'Based on your progress, I recommend starting with "Stellar Fundamentals" to build a strong foundation.',
-          'You\'ve completed several beginner quests! Consider moving to intermediate topics like "DeFi Basics" or "Smart Contracts 101".',
-          'For a well-rounded understanding, try exploring different categories: blockchain basics, DeFi, and NFTs.',
-          'Since you\'re interested in tokens, I suggest the "Token Economics" quest next.',
-          'Great progress! I recommend exploring "Advanced Blockchain Concepts" to deepen your understanding.'
-        ];
-        return recommendations[Math.floor(Math.random() * recommendations.length)];
-
-      case 'help':
-        return 'I can help you understand this question better. Here\'s a hint: Think about the core principles of blockchain technology - decentralization, immutability, and transparency. Consider what makes blockchain different from traditional databases. Try to eliminate obviously incorrect options first, then focus on the remaining choices.';
-
-      case 'analyze':
-        const completedQuests = context.completedQuests || 0;
-        if (completedQuests === 0) {
-          return 'Welcome to ChainQuest! You\'re just getting started. I recommend beginning with the "Stellar Fundamentals" quest to learn the basics of blockchain technology. Take your time and don\'t hesitate to ask questions!';
-        } else if (completedQuests < 3) {
-          return 'You\'re making good progress! You\'ve completed a few quests and are building a solid foundation. I recommend continuing with beginner-level quests to strengthen your understanding before moving to more advanced topics.';
-        } else {
-          return 'Excellent work! You\'ve completed several quests and are building a solid foundation in blockchain technology. I recommend focusing on areas where you\'ve had difficulty, and consider exploring intermediate topics to expand your knowledge.';
-        }
-
-      default:
-        return 'I\'m here to help you learn about blockchain technology. How can I assist you today?';
-    }
-  }
-
-  /**
-   * Simulate API delay for mock responses
-   * 
-   * @param {number} min - Minimum delay in ms (default: 500)
-   * @param {number} max - Maximum delay in ms (default: 800)
-   * @returns {Promise<void>}
-   */
-  async simulateDelay(min = 500, max = 800) {
-    const delay = Math.floor(Math.random() * (max - min + 1)) + min;
-    return new Promise(resolve => setTimeout(resolve, delay));
   }
 
   /**
@@ -92,18 +24,7 @@ class AIService {
    * @returns {Promise<object>} AI response
    */
   async explainConcept(prompt, context = {}, questId = null, language = 'en') {
-    // In development mode, return mock response
-    if (this.isDev) {
-      await this.simulateDelay();
-      const mockResponse = this.getMockResponse('explain', prompt, context);
-      return {
-        success: true,
-        response: mockResponse,
-        type: 'explain'
-      };
-    }
-
-    // Production: call actual API
+    // Always call the API endpoint - no mock responses
     try {
       const response = await fetch(`${this.baseUrl}/ai-assistant`, {
         method: 'POST',
@@ -115,7 +36,7 @@ class AIService {
           prompt,
           context,
           questId,
-          language: language || 'en' // Pass language parameter
+          language: language || 'en'
         }),
         signal: AbortSignal.timeout(this.timeout)
       });
@@ -162,10 +83,11 @@ class AIService {
         throw new Error(data.error);
       }
 
-      // Return response with answer field (for backward compatibility)
+      // Return response with mode field
       return {
         success: true,
         response: data.answer || data.data?.response || data.response || '',
+        mode: data.mode || data.data?.mode || 'demo', // 'huawei' or 'demo'
         type: data.data?.type || 'explain'
       };
 
@@ -193,19 +115,8 @@ class AIService {
    * @param {string} userAddress - User's wallet address
    * @returns {Promise<object>} AI recommendations
    */
-  async getRecommendations(prompt, context = {}, userAddress = null) {
-    // In development mode, return mock response
-    if (this.isDev) {
-      await this.simulateDelay();
-      const mockResponse = this.getMockResponse('recommend', prompt, context);
-      return {
-        success: true,
-        response: mockResponse,
-        type: 'recommend'
-      };
-    }
-
-    // Production: call actual API
+  async getRecommendations(prompt, context = {}, userAddress = null, language = 'en') {
+    // Always call the API endpoint - no mock responses
     try {
       const response = await fetch(`${this.baseUrl}/ai-assistant`, {
         method: 'POST',
@@ -216,7 +127,8 @@ class AIService {
           type: 'recommend',
           prompt,
           context,
-          userAddress
+          userAddress,
+          language: language || 'en'
         }),
         signal: AbortSignal.timeout(this.timeout)
       });
@@ -265,6 +177,7 @@ class AIService {
       return {
         success: true,
         response: data.answer || data.data?.response || data.response || '',
+        mode: data.mode || data.data?.mode || 'demo',
         type: data.data?.type || 'recommend'
       };
 
@@ -291,19 +204,8 @@ class AIService {
    * @param {string} questId - Quest ID
    * @returns {Promise<object>} AI help response
    */
-  async getQuizHelp(prompt, context = {}, questId = null) {
-    // In development mode, return mock response
-    if (this.isDev) {
-      await this.simulateDelay();
-      const mockResponse = this.getMockResponse('help', prompt, context);
-      return {
-        success: true,
-        response: mockResponse,
-        type: 'help'
-      };
-    }
-
-    // Production: call actual API
+  async getQuizHelp(prompt, context = {}, questId = null, language = 'en') {
+    // Always call the API endpoint - no mock responses
     try {
       const response = await fetch(`${this.baseUrl}/ai-assistant`, {
         method: 'POST',
@@ -314,7 +216,8 @@ class AIService {
           type: 'help',
           prompt,
           context,
-          questId
+          questId,
+          language: language || 'en'
         }),
         signal: AbortSignal.timeout(this.timeout)
       });
@@ -363,6 +266,7 @@ class AIService {
       return {
         success: true,
         response: data.answer || data.data?.response || data.response || '',
+        mode: data.mode || data.data?.mode || 'demo',
         type: data.data?.type || 'help'
       };
 
@@ -388,19 +292,8 @@ class AIService {
    * @param {string} userAddress - User's wallet address
    * @returns {Promise<object>} AI analysis
    */
-  async analyzeProgress(context = {}, userAddress = null) {
-    // In development mode, return mock response
-    if (this.isDev) {
-      await this.simulateDelay();
-      const mockResponse = this.getMockResponse('analyze', 'Analyze my learning progress and provide insights.', context);
-      return {
-        success: true,
-        response: mockResponse,
-        type: 'analyze'
-      };
-    }
-
-    // Production: call actual API
+  async analyzeProgress(context = {}, userAddress = null, language = 'en') {
+    // Always call the API endpoint - no mock responses
     try {
       const response = await fetch(`${this.baseUrl}/ai-assistant`, {
         method: 'POST',
@@ -411,7 +304,8 @@ class AIService {
           type: 'analyze',
           prompt: 'Analyze my learning progress and provide insights.',
           context,
-          userAddress
+          userAddress,
+          language: language || 'en'
         }),
         signal: AbortSignal.timeout(this.timeout)
       });
@@ -460,6 +354,7 @@ class AIService {
       return {
         success: true,
         response: data.answer || data.data?.response || data.response || '',
+        mode: data.mode || data.data?.mode || 'demo',
         type: data.data?.type || 'analyze'
       };
 

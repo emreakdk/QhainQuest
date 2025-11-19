@@ -83,18 +83,20 @@ export default async function handler(req, res) {
       console.log(`[${requestId}] Language overridden to ${normalizedLanguage} based on user prompt`);
     }
 
-    // Get AI response
-    const aiResponse = await getAIResponse(type, prompt, context, questId, userAddress, normalizedLanguage);
+    // Get AI response with mode indicator
+    const aiResponseResult = await getAIResponse(type, prompt, context, questId, userAddress, normalizedLanguage);
 
     const duration = Date.now() - startTime;
-    console.log(`[${requestId}] AI response generated in ${duration}ms (type: ${type}, language: ${normalizedLanguage})`);
+    console.log(`[${requestId}] AI response generated in ${duration}ms (type: ${type}, language: ${normalizedLanguage}, mode: ${aiResponseResult.mode})`);
 
     return res.status(200).json({
       success: true,
-      answer: aiResponse,
+      answer: aiResponseResult.response,
+      mode: aiResponseResult.mode, // 'huawei' or 'demo'
       data: {
         type,
-        response: aiResponse,
+        response: aiResponseResult.response,
+        mode: aiResponseResult.mode,
         timestamp: new Date().toISOString()
       },
       error: null
@@ -116,6 +118,7 @@ export default async function handler(req, res) {
       success: false,
       error: errorMessage,
       answer: null,
+      mode: 'demo', // Always include mode field, even on errors
       details: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
@@ -149,7 +152,11 @@ async function getAIResponse(type, prompt, context = {}, questId = null, userAdd
   if (hasRequiredCredentials) {
     try {
       console.log('[AI Assistant] Calling Huawei Cloud LLM API');
-      return await callHuaweiLLM(type, prompt, context, questId, userAddress, language);
+      const response = await callHuaweiLLM(type, prompt, context, questId, userAddress, language);
+      return {
+        response: response,
+        mode: 'huawei'
+      };
     } catch (error) {
       console.error('[AI Assistant] Huawei LLM call failed, falling back to demo mode:', error.message);
       // Fall through to demo mode message
@@ -163,7 +170,11 @@ async function getAIResponse(type, prompt, context = {}, questId = null, userAdd
   }
 
   // Return demo mode message when credentials are missing
-  return getMockAIResponse(type, prompt, context, questId, language);
+  const demoResponse = getMockAIResponse(type, prompt, context, questId, language);
+  return {
+    response: demoResponse,
+    mode: 'demo'
+  };
 }
 
 /**
