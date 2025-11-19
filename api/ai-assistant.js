@@ -127,9 +127,8 @@ export default async function handler(req, res) {
 /**
  * Get AI response with Huawei LLM integration or demo mode message
  * 
- * When HUAWEI_LLM_ENDPOINT or HUAWEI_LLM_TOKEN is missing, returns a localized
- * demo mode message instead of fake answers. When all three env vars are present
- * and ENABLE_HUAWEI_LLM is 'true', calls the real Huawei Cloud LLM API.
+ * When HUAWEI_LLM_ENDPOINT and HUAWEI_LLM_TOKEN are present, calls the real Huawei Cloud LLM API.
+ * When credentials are missing, returns a localized demo mode message.
  * 
  * @param {string} type - Request type: 'explain', 'recommend', 'help', 'analyze'
  * @param {string} prompt - User's question or prompt
@@ -137,7 +136,7 @@ export default async function handler(req, res) {
  * @param {string} questId - Optional quest ID
  * @param {string} userAddress - Optional user address
  * @param {string} language - Language code ('en' or 'tr')
- * @returns {Promise<string>} AI-generated response or demo mode message
+ * @returns {Promise<{response: string, mode: 'huawei'|'demo'}>} AI response with mode indicator
  */
 async function getAIResponse(type, prompt, context = {}, questId = null, userAddress = null, language = 'en') {
   // Huawei Cloud LLM Configuration

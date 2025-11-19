@@ -10,8 +10,35 @@
 
 class AIService {
   constructor() {
-    this.baseUrl = import.meta.env.VITE_API_URL || '/api';
+    // Single API_BASE_URL constant
+    // In local dev (localhost), use Vercel backend URL
+    // In production (Vercel), use same origin (empty string)
+    const API_BASE_URL = typeof window !== 'undefined' && window.location.hostname === "localhost" 
+      ? "https://chainquest-app.vercel.app" 
+      : "";
+    
+    // Store as instance property for use in methods
+    this.API_BASE_URL = API_BASE_URL;
     this.timeout = 30000; // 30 seconds
+    
+    // Log for debugging
+    if (import.meta.env.DEV) {
+      console.log('[AI Service] Initialized with API_BASE_URL:', this.API_BASE_URL);
+    }
+  }
+
+  /**
+   * Build the full API URL for ai-assistant endpoint
+   * Always uses exactly "/api/ai-assistant" path (no duplicate /api segments)
+   * @returns {string} Full URL to the ai-assistant endpoint
+   */
+  getApiUrl() {
+    // Build URL as: ${API_BASE_URL}/api/ai-assistant
+    // If API_BASE_URL is empty, it becomes /api/ai-assistant (relative, same origin)
+    // If API_BASE_URL is set, it becomes https://chainquest-app.vercel.app/api/ai-assistant
+    // Ensure no double slashes by normalizing the base URL
+    const base = this.API_BASE_URL ? this.API_BASE_URL.replace(/\/+$/, '') : '';
+    return `${base}/api/ai-assistant`;
   }
 
   /**
@@ -26,7 +53,7 @@ class AIService {
   async explainConcept(prompt, context = {}, questId = null, language = 'en') {
     // Always call the API endpoint - no mock responses
     try {
-      const response = await fetch(`${this.baseUrl}/ai-assistant`, {
+      const response = await fetch(this.getApiUrl(), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -98,6 +125,17 @@ class AIService {
         throw new Error('Request timeout. Please try again.');
       }
       
+      // Handle network/CORS errors with clear user-facing messages
+      if (error.message && (
+        error.message.includes('Failed to fetch') ||
+        error.message.includes('NetworkError') ||
+        error.message.includes('CORS') ||
+        error.message.includes('Network request failed') ||
+        error.message.includes('Missing Allow Origin')
+      )) {
+        throw new Error('Network error: Unable to connect to the AI service. This may be a CORS issue or the service is unavailable. Please check your connection and try again.');
+      }
+      
       // Re-throw if it's already a meaningful Error
       if (error instanceof Error && error.message) {
         throw error;
@@ -118,7 +156,7 @@ class AIService {
   async getRecommendations(prompt, context = {}, userAddress = null, language = 'en') {
     // Always call the API endpoint - no mock responses
     try {
-      const response = await fetch(`${this.baseUrl}/ai-assistant`, {
+      const response = await fetch(this.getApiUrl(), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -188,6 +226,17 @@ class AIService {
         throw new Error('Request timeout. Please try again.');
       }
       
+      // Handle network/CORS errors with clear user-facing messages
+      if (error.message && (
+        error.message.includes('Failed to fetch') ||
+        error.message.includes('NetworkError') ||
+        error.message.includes('CORS') ||
+        error.message.includes('Network request failed') ||
+        error.message.includes('Missing Allow Origin')
+      )) {
+        throw new Error('Network error: Unable to connect to the AI service. This may be a CORS issue or the service is unavailable. Please check your connection and try again.');
+      }
+      
       if (error instanceof Error && error.message) {
         throw error;
       }
@@ -207,7 +256,7 @@ class AIService {
   async getQuizHelp(prompt, context = {}, questId = null, language = 'en') {
     // Always call the API endpoint - no mock responses
     try {
-      const response = await fetch(`${this.baseUrl}/ai-assistant`, {
+      const response = await fetch(this.getApiUrl(), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -277,6 +326,17 @@ class AIService {
         throw new Error('Request timeout. Please try again.');
       }
       
+      // Handle network/CORS errors with clear user-facing messages
+      if (error.message && (
+        error.message.includes('Failed to fetch') ||
+        error.message.includes('NetworkError') ||
+        error.message.includes('CORS') ||
+        error.message.includes('Network request failed') ||
+        error.message.includes('Missing Allow Origin')
+      )) {
+        throw new Error('Network error: Unable to connect to the AI service. This may be a CORS issue or the service is unavailable. Please check your connection and try again.');
+      }
+      
       if (error instanceof Error && error.message) {
         throw error;
       }
@@ -295,7 +355,7 @@ class AIService {
   async analyzeProgress(context = {}, userAddress = null, language = 'en') {
     // Always call the API endpoint - no mock responses
     try {
-      const response = await fetch(`${this.baseUrl}/ai-assistant`, {
+      const response = await fetch(this.getApiUrl(), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -363,6 +423,17 @@ class AIService {
       
       if (error.name === 'AbortError') {
         throw new Error('Request timeout. Please try again.');
+      }
+      
+      // Handle network/CORS errors with clear user-facing messages
+      if (error.message && (
+        error.message.includes('Failed to fetch') ||
+        error.message.includes('NetworkError') ||
+        error.message.includes('CORS') ||
+        error.message.includes('Network request failed') ||
+        error.message.includes('Missing Allow Origin')
+      )) {
+        throw new Error('Network error: Unable to connect to the AI service. This may be a CORS issue or the service is unavailable. Please check your connection and try again.');
       }
       
       if (error instanceof Error && error.message) {
