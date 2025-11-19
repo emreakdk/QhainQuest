@@ -193,14 +193,15 @@ TOKEN_ISSUER_PUBLIC_KEY=YOUR_TOKEN_ISSUER_PUBLIC_KEY
 DISTRIBUTOR_SECRET_KEY=YOUR_DISTRIBUTOR_SECRET_KEY
 
 # Huawei Cloud LLM Configuration (for AI features)
-HUAWEI_LLM_BASE_URL=https://your-huawei-llm-endpoint.com
-HUAWEI_LLM_API_KEY=YOUR_HUAWEI_LLM_API_KEY
-HUAWEI_LLM_MODEL=pangu-alpha  # Optional, defaults to 'pangu-alpha'
+# Required for AI Assistant functionality
+HUAWEI_LLM_ENDPOINT=https://api-ap-southeast-1.modelarts-maas.com/v1/chat/completions
+HUAWEI_LLM_TOKEN=YOUR_HUAWEI_LLM_TOKEN
+HUAWEI_LLM_MODEL=deepseek-v3.1  # Optional, defaults to 'deepseek-v3.1'
 ```
 
-**⚠️ Security Warning**: Never expose `DISTRIBUTOR_SECRET_KEY` or `HUAWEI_LLM_API_KEY` in your frontend code or public repositories!
+**⚠️ Security Warning**: Never expose `DISTRIBUTOR_SECRET_KEY` or `HUAWEI_LLM_TOKEN` in your frontend code or public repositories!
 
-**📝 Note**: The AI features currently use mock responses for development. To enable Huawei Cloud LLM integration, set the `HUAWEI_LLM_BASE_URL` and `HUAWEI_LLM_API_KEY` environment variables. See `api/ai-assistant.js` for integration details.
+**📝 Note**: The AI Assistant automatically uses Huawei Cloud LLM when `HUAWEI_LLM_ENDPOINT` and `HUAWEI_LLM_TOKEN` are configured. If these are missing, it returns a demo mode message. See `api/ai-assistant.js` for integration details.
 
 ## Deployment Instructions
 
@@ -373,7 +374,7 @@ AI-powered assistant endpoint for explanations and recommendations.
 - `help` - Get quiz help
 - `analyze` - Analyze user progress
 
-**Note**: This endpoint integrates with Huawei Cloud LLM. Configure `HUAWEI_LLM_BASE_URL` and `HUAWEI_LLM_API_KEY` environment variables to enable.
+**Note**: This endpoint integrates with Huawei Cloud LLM. Configure `HUAWEI_LLM_ENDPOINT` and `HUAWEI_LLM_TOKEN` environment variables to enable. The API automatically uses Huawei Cloud LLM when credentials are present.
 
 ### Health Check
 

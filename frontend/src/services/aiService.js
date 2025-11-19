@@ -88,9 +88,10 @@ class AIService {
    * @param {string} prompt - User's question or concept to explain
    * @param {object} context - Additional context (quest data, etc.)
    * @param {string} questId - Optional quest ID
+   * @param {string} language - Language code ('en' or 'tr')
    * @returns {Promise<object>} AI response
    */
-  async explainConcept(prompt, context = {}, questId = null) {
+  async explainConcept(prompt, context = {}, questId = null, language = 'en') {
     // In development mode, return mock response
     if (this.isDev) {
       await this.simulateDelay();
@@ -113,7 +114,8 @@ class AIService {
           type: 'explain',
           prompt,
           context,
-          questId
+          questId,
+          language: language || 'en' // Pass language parameter
         }),
         signal: AbortSignal.timeout(this.timeout)
       });

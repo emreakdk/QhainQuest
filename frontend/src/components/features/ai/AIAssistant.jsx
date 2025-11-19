@@ -21,7 +21,7 @@ import {
  * Integrates with Huawei Cloud LLM via backend API.
  */
 const AIAssistant = ({ questId = null, context = {} }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [prompt, setPrompt] = useState('');
   const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
@@ -50,7 +50,8 @@ const AIAssistant = ({ questId = null, context = {} }) => {
     setPrompt('');
 
     try {
-      const result = await aiService.explainConcept(userPrompt, context, questId);
+      // Get current language from context (language is 'tr' or 'en')
+      const result = await aiService.explainConcept(userPrompt, context, questId, language || 'en');
       
       if (!result || !result.response) {
         throw new Error('Received empty response from AI service.');
@@ -81,7 +82,7 @@ const AIAssistant = ({ questId = null, context = {} }) => {
     setError(null);
 
     try {
-      const result = await aiService.explainConcept(quickPrompt, context, questId);
+      const result = await aiService.explainConcept(quickPrompt, context, questId, language || 'en');
       
       if (!result || !result.response) {
         throw new Error('Received empty response from AI service.');

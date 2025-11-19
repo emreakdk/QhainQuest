@@ -11,10 +11,12 @@
  * - Demo mode message when credentials are missing
  * 
  * Environment Variables:
- * - HUAWEI_LLM_ENDPOINT: Huawei Cloud LLM API endpoint (required for real API)
- * - HUAWEI_LLM_TOKEN: Authentication token (required for real API)
- * - HUAWEI_LLM_MODEL: Model name (default: deepsseek-v3.1)
- * - ENABLE_HUAWEI_LLM: Feature flag (set to 'true' to enable)
+ * - HUAWEI_LLM_ENDPOINT: Huawei Cloud LLM API endpoint (required, e.g., https://api-ap-southeast-1.modelarts-maas.com/v1/chat/completions)
+ * - HUAWEI_LLM_TOKEN: Authentication token (required)
+ * - HUAWEI_LLM_MODEL: Model name (default: deepseek-v3.1)
+ * 
+ * Note: The API automatically uses Huawei Cloud LLM when both HUAWEI_LLM_ENDPOINT and HUAWEI_LLM_TOKEN are present.
+ * If credentials are missing, it returns a demo mode message.
  */
 
 export default async function handler(req, res) {
@@ -138,15 +140,13 @@ async function getAIResponse(type, prompt, context = {}, questId = null, userAdd
   // Huawei Cloud LLM Configuration
   const HUAWEI_LLM_ENDPOINT = process.env.HUAWEI_LLM_ENDPOINT;
   const HUAWEI_LLM_TOKEN = process.env.HUAWEI_LLM_TOKEN;
-  const HUAWEI_LLM_MODEL = process.env.HUAWEI_LLM_MODEL || 'deepsseek-v3.1';
-  const ENABLE_HUAWEI_LLM = process.env.ENABLE_HUAWEI_LLM === 'true';
+  const HUAWEI_LLM_MODEL = process.env.HUAWEI_LLM_MODEL || 'deepseek-v3.1';
 
   // Check if required credentials are present (ENDPOINT and TOKEN are required, MODEL has default)
   const hasRequiredCredentials = HUAWEI_LLM_ENDPOINT && HUAWEI_LLM_TOKEN;
-  const hasAllConfig = hasRequiredCredentials && HUAWEI_LLM_MODEL;
 
-  // Try to call real LLM if enabled and all credentials are configured
-  if (ENABLE_HUAWEI_LLM && hasAllConfig) {
+  // Automatically use Huawei LLM when credentials are present (no feature flag needed)
+  if (hasRequiredCredentials) {
     try {
       console.log('[AI Assistant] Calling Huawei Cloud LLM API');
       return await callHuaweiLLM(type, prompt, context, questId, userAddress, language);
@@ -156,16 +156,10 @@ async function getAIResponse(type, prompt, context = {}, questId = null, userAdd
     }
   } else {
     // Log why we're using demo mode
-    if (!ENABLE_HUAWEI_LLM) {
-      console.log('[AI Assistant] ENABLE_HUAWEI_LLM is not set to "true", returning demo mode message');
-    } else if (!hasRequiredCredentials) {
-      const missing = [];
-      if (!HUAWEI_LLM_ENDPOINT) missing.push('HUAWEI_LLM_ENDPOINT');
-      if (!HUAWEI_LLM_TOKEN) missing.push('HUAWEI_LLM_TOKEN');
-      console.log(`[AI Assistant] Missing required credentials: ${missing.join(', ')}, returning demo mode message`);
-    } else if (!HUAWEI_LLM_MODEL) {
-      console.log('[AI Assistant] HUAWEI_LLM_MODEL not set, using default model');
-    }
+    const missing = [];
+    if (!HUAWEI_LLM_ENDPOINT) missing.push('HUAWEI_LLM_ENDPOINT');
+    if (!HUAWEI_LLM_TOKEN) missing.push('HUAWEI_LLM_TOKEN');
+    console.log(`[AI Assistant] Missing required credentials: ${missing.join(', ')}, returning demo mode message`);
   }
 
   // Return demo mode message when credentials are missing
@@ -186,7 +180,7 @@ async function getAIResponse(type, prompt, context = {}, questId = null, userAdd
 async function callHuaweiLLM(type, prompt, context, questId, userAddress, language = 'en') {
   const HUAWEI_LLM_ENDPOINT = process.env.HUAWEI_LLM_ENDPOINT;
   const HUAWEI_LLM_TOKEN = process.env.HUAWEI_LLM_TOKEN;
-  const HUAWEI_LLM_MODEL = process.env.HUAWEI_LLM_MODEL || 'deepsseek-v3.1';
+  const HUAWEI_LLM_MODEL = process.env.HUAWEI_LLM_MODEL || 'deepseek-v3.1';
 
   if (!HUAWEI_LLM_ENDPOINT || !HUAWEI_LLM_TOKEN) {
     throw new Error('Huawei LLM endpoint and token are required');
@@ -201,35 +195,29 @@ async function callHuaweiLLM(type, prompt, context, questId, userAddress, langua
     { role: 'user', content: prompt }
   ];
 
-  // Construct API URL (handle both with and without /v1/chat/completions)
-  let apiUrl = HUAWEI_LLM_ENDPOINT;
+  // Use the exact endpoint provided (should already include /v1/chat/completions)
+  // If it doesn't, append it
+  let apiUrl = HUAWEI_LLM_ENDPOINT.trim();
   if (!apiUrl.endsWith('/v1/chat/completions') && !apiUrl.endsWith('/chat/completions')) {
     apiUrl = `${apiUrl.replace(/\/$/, '')}/v1/chat/completions`;
   }
 
   console.log(`[AI Assistant] Calling Huawei LLM: ${apiUrl} (model: ${HUAWEI_LLM_MODEL})`);
 
+  // Request body exactly as per Huawei Cloud API documentation
   const requestBody = {
     model: HUAWEI_LLM_MODEL,
     messages: messages,
+    stream: false, // Explicitly set to false as per requirements
     temperature: 0.7,
     max_tokens: 1000
   };
 
-  // Try Authorization: Bearer first, fallback to X-Auth-Token if needed
+  // Headers exactly as per Huawei Cloud API documentation
   const headers = {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${HUAWEI_LLM_TOKEN}` // Always use Bearer format
   };
-
-  // Huawei Cloud typically uses X-Auth-Token, but some APIs use Bearer
-  // Try Bearer first, as it's more standard
-  if (HUAWEI_LLM_TOKEN.startsWith('Bearer ') || HUAWEI_LLM_TOKEN.startsWith('bearer ')) {
-    headers['Authorization'] = HUAWEI_LLM_TOKEN;
-  } else {
-    // Try both headers - some Huawei APIs use X-Auth-Token
-    headers['Authorization'] = `Bearer ${HUAWEI_LLM_TOKEN}`;
-    headers['X-Auth-Token'] = HUAWEI_LLM_TOKEN;
-  }
 
   // Create AbortController for timeout
   const controller = new AbortController();

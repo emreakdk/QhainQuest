@@ -8,12 +8,13 @@ yarn-error.log*
 dist/
 build/
 
-# Environment variables
+# Environment variables (NEVER commit these!)
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+.env.local.example  # Example file may contain sensitive structure info
 
 # IDE files
 .vscode/
