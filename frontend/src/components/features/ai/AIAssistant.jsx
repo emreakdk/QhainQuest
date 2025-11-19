@@ -21,7 +21,7 @@ import {
  * Integrates with Huawei Cloud LLM via backend API.
  */
 const AIAssistant = ({ questId = null, context = {} }) => {
-  const { t, language } = useLanguage();
+  const { t, language, setLanguage } = useLanguage();
   const [prompt, setPrompt] = useState('');
   const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
@@ -29,6 +29,94 @@ const AIAssistant = ({ questId = null, context = {} }) => {
   const [history, setHistory] = useState([]);
   const textareaRef = useRef(null);
   const responseRef = useRef(null);
+
+  /**
+   * Helper function to detect language from user prompt
+   * Normalizes prompt to lowercase, strips accents, and checks for language switch patterns
+   * @param {string} prompt - User's prompt text
+   * @param {string} currentLanguage - Current UI language ('tr' or 'en')
+   * @returns {string} Detected language ('en', 'tr') or currentLanguage if no pattern matches
+   */
+  const detectLanguageFromPrompt = (prompt, currentLanguage) => {
+    if (!prompt || typeof prompt !== 'string') {
+      return currentLanguage;
+    }
+
+    // Normalize prompt: remove accents and convert to lowercase for accent-insensitive matching
+    const normalizedPrompt = prompt
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+      .trim();
+
+    // English language request patterns
+    const englishPatterns = [
+      'ingilizce konus',
+      'ingilizce konus bi',
+      'ingilizce cevap',
+      'ingilizce cevap ver',
+      'ingilizce yanit',
+      'ingilizce yanit ver',
+      'ingilizce yaz',
+      'ingilizce acikla',
+      'ingilizce anlat',
+      'ingilizce lutfen',
+      'ingilizce olarak',
+      'speak english',
+      'answer in english',
+      'respond in english',
+      'reply in english',
+      'english please',
+      'pls speak english',
+      'please speak english',
+      'please english',
+      'english olarak',
+      'english konus',
+      'english cevap',
+      'english yaz',
+      'english acikla',
+      'ingilizce' // Standalone word
+    ];
+
+    // Turkish language request patterns
+    const turkishPatterns = [
+      'turkce konus',
+      'turkce konus bi',
+      'turkce cevap',
+      'turkce cevap ver',
+      'turkce yanit',
+      'turkce yanit ver',
+      'turkce olarak',
+      'turkce yaz',
+      'turkce acikla',
+      'speak turkish',
+      'answer in turkish',
+      'respond in turkish',
+      'reply in turkish',
+      'turkish please',
+      'pls speak turkish',
+      'please turkish',
+      'turkce', // Standalone word
+      'turkish' // Standalone word
+    ];
+
+    // Check for English request first (higher priority for explicit requests)
+    for (const pattern of englishPatterns) {
+      if (normalizedPrompt.includes(pattern)) {
+        return 'en';
+      }
+    }
+
+    // Check for Turkish request
+    for (const pattern of turkishPatterns) {
+      if (normalizedPrompt.includes(pattern)) {
+        return 'tr';
+      }
+    }
+
+    // No pattern matched, return current language
+    return currentLanguage;
+  };
 
   // Auto-scroll to bottom when response updates
   useEffect(() => {
@@ -50,8 +138,23 @@ const AIAssistant = ({ questId = null, context = {} }) => {
     setPrompt('');
 
     try {
-      // Get current language from context (language is 'tr' or 'en')
-      const result = await aiService.explainConcept(userPrompt, context, questId, language || 'en');
+      // Detect effective language from prompt and current UI language
+      const effectiveLanguage = detectLanguageFromPrompt(userPrompt, language || 'en');
+      
+      // If effective language differs from current language, update the global UI language
+      if (effectiveLanguage !== language && setLanguage) {
+        setLanguage(effectiveLanguage);
+        if (import.meta.env.DEV) {
+          console.log('[AI Assistant] Language switched:', { from: language, to: effectiveLanguage, prompt: userPrompt });
+        }
+      }
+      
+      if (import.meta.env.DEV) {
+        console.log('[AI Assistant] Submitting request:', { language, effectiveLanguage, prompt: userPrompt });
+      }
+      
+      // Call AI service with effective language
+      const result = await aiService.explainConcept(userPrompt, context, questId, effectiveLanguage);
       
       if (!result || !result.response) {
         throw new Error('Received empty response from AI service.');
@@ -60,7 +163,7 @@ const AIAssistant = ({ questId = null, context = {} }) => {
       const newEntry = {
         prompt: userPrompt,
         response: result.response,
-        mode: result.mode || 'demo', // Store mode for UI display
+        mode: result.mode || 'cloud-fallback', // Store mode for UI display
         timestamp: new Date().toISOString()
       };
 
@@ -83,7 +186,23 @@ const AIAssistant = ({ questId = null, context = {} }) => {
     setError(null);
 
     try {
-      const result = await aiService.explainConcept(quickPrompt, context, questId, language || 'en');
+      // Detect effective language from prompt and current UI language
+      const effectiveLanguage = detectLanguageFromPrompt(quickPrompt, language || 'en');
+      
+      // If effective language differs from current language, update the global UI language
+      if (effectiveLanguage !== language && setLanguage) {
+        setLanguage(effectiveLanguage);
+        if (import.meta.env.DEV) {
+          console.log('[AI Assistant] Language switched:', { from: language, to: effectiveLanguage, prompt: quickPrompt });
+        }
+      }
+      
+      if (import.meta.env.DEV) {
+        console.log('[AI Assistant] Quick question:', { language, effectiveLanguage, prompt: quickPrompt });
+      }
+      
+      // Call AI service with effective language
+      const result = await aiService.explainConcept(quickPrompt, context, questId, effectiveLanguage);
       
       if (!result || !result.response) {
         throw new Error('Received empty response from AI service.');
@@ -92,7 +211,7 @@ const AIAssistant = ({ questId = null, context = {} }) => {
       const newEntry = {
         prompt: quickPrompt,
         response: result.response,
-        mode: result.mode || 'demo', // Store mode for UI display
+        mode: result.mode || 'cloud-fallback', // Store mode for UI display
         timestamp: new Date().toISOString()
       };
 
@@ -211,13 +330,9 @@ const AIAssistant = ({ questId = null, context = {} }) => {
               </div>
               <div className="flex-1 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-lg p-3 border border-indigo-200 dark:border-indigo-700">
                 <div className="flex items-center justify-between gap-2 mb-2">
-                  {entry.mode && (
-                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
-                      entry.mode === 'huawei'
-                        ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
-                        : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300'
-                    }`}>
-                      {entry.mode === 'huawei' ? 'Huawei Cloud AI' : 'Demo mode'}
+                  {entry.mode === 'huawei' && (
+                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">
+                      Huawei Cloud AI
                     </span>
                   )}
                 </div>

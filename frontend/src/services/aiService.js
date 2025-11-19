@@ -5,7 +5,7 @@
  * Integrates with backend AI endpoints that connect to Huawei Cloud LLM.
  * 
  * All methods call the /api/ai-assistant endpoint as the single source of truth.
- * No mock responses - the API handles demo mode when credentials are missing.
+ * The API handles fallback mode when Huawei Cloud is unavailable.
  */
 
 class AIService {
@@ -114,7 +114,7 @@ class AIService {
       return {
         success: true,
         response: data.answer || data.data?.response || data.response || '',
-        mode: data.mode || data.data?.mode || 'demo', // 'huawei' or 'demo'
+        mode: data.mode || data.data?.mode || 'fallback', // 'huawei' or 'fallback'
         type: data.data?.type || 'explain'
       };
 
@@ -215,7 +215,7 @@ class AIService {
       return {
         success: true,
         response: data.answer || data.data?.response || data.response || '',
-        mode: data.mode || data.data?.mode || 'demo',
+        mode: data.mode || data.data?.mode || 'fallback',
         type: data.data?.type || 'recommend'
       };
 
@@ -315,7 +315,7 @@ class AIService {
       return {
         success: true,
         response: data.answer || data.data?.response || data.response || '',
-        mode: data.mode || data.data?.mode || 'demo',
+        mode: data.mode || data.data?.mode || 'fallback',
         type: data.data?.type || 'help'
       };
 
@@ -414,7 +414,7 @@ class AIService {
       return {
         success: true,
         response: data.answer || data.data?.response || data.response || '',
-        mode: data.mode || data.data?.mode || 'demo',
+        mode: data.mode || data.data?.mode || 'fallback',
         type: data.data?.type || 'analyze'
       };
 

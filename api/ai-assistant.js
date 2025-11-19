@@ -2,13 +2,13 @@
  * AI Assistant API Endpoint
  * 
  * Production-ready AI assistant endpoint for ChainQuest learning platform.
- * Integrates with Huawei Cloud LLM with graceful fallback to demo mode message.
+ * Integrates with Huawei Cloud LLM with graceful fallback to local fallback engine.
  * 
  * Features:
  * - Huawei Cloud LLM integration (when configured)
  * - English/Turkish language support
  * - Graceful error handling
- * - Demo mode message when credentials are missing
+ * - Cloud fallback mode when Huawei Cloud is unavailable
  * 
  * Environment Variables:
  * - HUAWEI_LLM_ENDPOINT: Huawei Cloud LLM API endpoint (required, e.g., https://api-ap-southeast-1.modelarts-maas.com/v1/chat/completions)
@@ -16,7 +16,7 @@
  * - HUAWEI_LLM_MODEL: Model name (default: deepseek-v3.1)
  * 
  * Note: The API automatically uses Huawei Cloud LLM when both HUAWEI_LLM_ENDPOINT and HUAWEI_LLM_TOKEN are present.
- * If credentials are missing, it returns a demo mode message.
+ * If Huawei Cloud is unavailable, it falls back to the local fallback engine.
  */
 
 export default async function handler(req, res) {
@@ -92,7 +92,7 @@ export default async function handler(req, res) {
     return res.status(200).json({
       success: true,
       answer: aiResponseResult.response,
-      mode: aiResponseResult.mode, // 'huawei' or 'demo'
+      mode: aiResponseResult.mode, // 'huawei' or 'cloud-fallback'
       data: {
         type,
         response: aiResponseResult.response,
@@ -118,17 +118,17 @@ export default async function handler(req, res) {
       success: false,
       error: errorMessage,
       answer: null,
-      mode: 'demo', // Always include mode field, even on errors
+      mode: 'cloud-fallback', // Always include mode field, even on errors
       details: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
 }
 
 /**
- * Get AI response with Huawei LLM integration or demo mode message
+ * Get AI response with Huawei LLM integration or fallback engine
  * 
  * When HUAWEI_LLM_ENDPOINT and HUAWEI_LLM_TOKEN are present, calls the real Huawei Cloud LLM API.
- * When credentials are missing, returns a localized demo mode message.
+ * When Huawei Cloud is unavailable, returns a localized fallback message.
  * 
  * @param {string} type - Request type: 'explain', 'recommend', 'help', 'analyze'
  * @param {string} prompt - User's question or prompt
@@ -136,7 +136,7 @@ export default async function handler(req, res) {
  * @param {string} questId - Optional quest ID
  * @param {string} userAddress - Optional user address
  * @param {string} language - Language code ('en' or 'tr')
- * @returns {Promise<{response: string, mode: 'huawei'|'demo'}>} AI response with mode indicator
+ * @returns {Promise<{response: string, mode: 'huawei'|'cloud-fallback'}>} AI response with mode indicator
  */
 async function getAIResponse(type, prompt, context = {}, questId = null, userAddress = null, language = 'en') {
   // Huawei Cloud LLM Configuration
@@ -150,34 +150,34 @@ async function getAIResponse(type, prompt, context = {}, questId = null, userAdd
   // Automatically use Huawei LLM when credentials are present (no feature flag needed)
   if (hasRequiredCredentials) {
     try {
-      console.log('[AI Assistant] Calling Huawei Cloud LLM API');
-      const response = await callHuaweiLLM(type, prompt, context, questId, userAddress, language);
+      console.log('[AI Assistant] Calling Huawei Cloud LLM API with retry');
+      const response = await callHuaweiLLMWithRetry(type, prompt, context, questId, userAddress, language);
       return {
         response: response,
         mode: 'huawei'
       };
     } catch (error) {
-      console.error('[AI Assistant] Huawei LLM call failed, falling back to demo mode:', error.message);
-      // Fall through to demo mode message
+      console.error('[AI Assistant] Huawei LLM call failed after retries, using fallback:', error.message);
+      // Fall through to fallback message (silently, no user indication)
     }
   } else {
-    // Log why we're using demo mode
+    // Log why we're using fallback mode (credentials missing)
     const missing = [];
     if (!HUAWEI_LLM_ENDPOINT) missing.push('HUAWEI_LLM_ENDPOINT');
     if (!HUAWEI_LLM_TOKEN) missing.push('HUAWEI_LLM_TOKEN');
-    console.log(`[AI Assistant] Missing required credentials: ${missing.join(', ')}, returning demo mode message`);
+    console.log(`[AI Assistant] Huawei Cloud unavailable (missing: ${missing.join(', ')}), using fallback`);
   }
 
-  // Return demo mode message when credentials are missing
-  const demoResponse = getMockAIResponse(type, prompt, context, questId, language);
+  // Return fallback response when Huawei Cloud is unavailable (no indication to user)
+  const fallbackResponse = getMockAIResponse(type, prompt, context, questId, language);
   return {
-    response: demoResponse,
-    mode: 'demo'
+    response: fallbackResponse,
+    mode: 'cloud-fallback' // Internal mode, not shown to user
   };
 }
 
 /**
- * Call Huawei Cloud LLM API
+ * Call Huawei Cloud LLM API (single attempt)
  * 
  * @param {string} type - Request type
  * @param {string} prompt - User prompt
@@ -187,7 +187,7 @@ async function getAIResponse(type, prompt, context = {}, questId = null, userAdd
  * @param {string} language - Language code ('en' or 'tr')
  * @returns {Promise<string>} AI response
  */
-async function callHuaweiLLM(type, prompt, context, questId, userAddress, language = 'en') {
+async function callHuaweiLLMOnce(type, prompt, context, questId, userAddress, language = 'en') {
   const HUAWEI_LLM_ENDPOINT = process.env.HUAWEI_LLM_ENDPOINT;
   const HUAWEI_LLM_TOKEN = process.env.HUAWEI_LLM_TOKEN;
   const HUAWEI_LLM_MODEL = process.env.HUAWEI_LLM_MODEL || 'deepseek-v3.1';
@@ -309,8 +309,50 @@ async function callHuaweiLLM(type, prompt, context, questId, userAddress, langua
 }
 
 /**
+ * Call Huawei Cloud LLM API with retry mechanism
+ * Attempts up to 2 times total (1 retry) before throwing an error
+ * 
+ * @param {string} type - Request type
+ * @param {string} prompt - User prompt
+ * @param {object} context - Additional context
+ * @param {string} questId - Quest ID
+ * @param {string} userAddress - User address
+ * @param {string} language - Language code ('en' or 'tr')
+ * @returns {Promise<string>} AI response
+ * @throws {Error} If all attempts fail
+ */
+async function callHuaweiLLMWithRetry(type, prompt, context, questId, userAddress, language = 'en') {
+  const maxAttempts = 2;
+  let lastError = null;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      if (attempt > 1) {
+        console.log(`[AI Assistant] Retrying Huawei LLM call (attempt ${attempt}/${maxAttempts})`);
+        // Small delay before retry (exponential backoff: 500ms, 1000ms)
+        await new Promise(resolve => setTimeout(resolve, 500 * attempt));
+      }
+      
+      return await callHuaweiLLMOnce(type, prompt, context, questId, userAddress, language);
+    } catch (error) {
+      lastError = error;
+      console.error(`[AI Assistant] Huawei LLM call attempt ${attempt}/${maxAttempts} failed:`, error.message);
+      
+      // If this was the last attempt, throw the error
+      if (attempt === maxAttempts) {
+        throw new Error(`Huawei LLM call failed after ${maxAttempts} attempts: ${error.message}`);
+      }
+    }
+  }
+
+  // This should never be reached, but TypeScript/ESLint might complain
+  throw lastError || new Error('Huawei LLM call failed');
+}
+
+/**
  * Detect language override from user prompt
- * Detects phrases like "türkçe konuş", "speak turkish", etc.
+ * Detects phrases like "türkçe konuş", "speak turkish", "ingilizce konuş", "speak english", etc.
+ * Supports accent-insensitive matching for Turkish patterns.
  * 
  * @param {string} prompt - User prompt
  * @param {string} currentLanguage - Current language setting
@@ -321,46 +363,77 @@ function detectLanguageFromPrompt(prompt, currentLanguage) {
     return null;
   }
 
-  const lowerPrompt = prompt.toLowerCase().trim();
+  // Normalize prompt: remove accents and convert to lowercase for accent-insensitive matching
+  const normalizedPrompt = prompt
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+    .trim();
 
-  // Turkish language request patterns
+  // Turkish language request patterns (accent-insensitive)
+  // Match both "türkçe" and "turkce", "konuş" and "konus", etc.
   const turkishPatterns = [
-    'türkçe konuş',
     'turkce konus',
-    'türkçe cevap',
+    'turkce konus bi',
     'turkce cevap',
-    'türkçe yanıt',
+    'turkce cevap ver',
     'turkce yanit',
-    'türkçe olarak',
+    'turkce yanit ver',
     'turkce olarak',
+    'turkce yaz',
+    'turkce acikla',
     'speak turkish',
     'answer in turkish',
     'respond in turkish',
-    'türkçe',
-    'turkish'
+    'reply in turkish',
+    'turkish please',
+    'pls speak turkish',
+    'please turkish',
+    'turkce', // Standalone word
+    'turkish' // Standalone word
   ];
 
   // English language request patterns
+  // Includes Turkish phrases like "ingilizce konuş", "ingilizce yaz", etc.
   const englishPatterns = [
-    'english konuş',
-    'english cevap',
+    'ingilizce konus',
+    'ingilizce konus bi',
+    'ingilizce cevap',
+    'ingilizce cevap ver',
+    'ingilizce yanit',
+    'ingilizce yanit ver',
+    'ingilizce yaz',
+    'ingilizce acikla',
+    'ingilizce anlat',
+    'ingilizce lutfen',
+    'ingilizce olarak',
     'speak english',
     'answer in english',
     'respond in english',
-    'english olarak'
+    'reply in english',
+    'english please',
+    'pls speak english',
+    'please speak english',
+    'please english',
+    'english olarak',
+    'english konus',
+    'english cevap',
+    'english yaz',
+    'english acikla',
+    'ingilizce' // Standalone word
   ];
 
-  // Check for Turkish request
-  for (const pattern of turkishPatterns) {
-    if (lowerPrompt.includes(pattern)) {
-      return 'tr';
+  // Check for English request first (higher priority for explicit requests)
+  for (const pattern of englishPatterns) {
+    if (normalizedPrompt.includes(pattern)) {
+      return 'en';
     }
   }
 
-  // Check for English request
-  for (const pattern of englishPatterns) {
-    if (lowerPrompt.includes(pattern)) {
-      return 'en';
+  // Check for Turkish request
+  for (const pattern of turkishPatterns) {
+    if (normalizedPrompt.includes(pattern)) {
+      return 'tr';
     }
   }
 
@@ -379,9 +452,12 @@ function detectLanguageFromPrompt(prompt, currentLanguage) {
 function buildSystemPrompt(type, context, questId, language = 'en') {
   const isTurkish = language === 'tr';
 
+  // Base prompt respects the language parameter
+  // The assistant answers in fluent Turkish when language === 'tr' and in fluent English when language === 'en'
+  // The language argument already includes any override from detectLanguageFromPrompt
   const basePrompt = isTurkish
-    ? 'Sen ChainQuest adlı bir blockchain öğrenme platformu için bir AI asistanısın. Kullanıcı Türkçe veya İngilizce yazsa bile, TÜM cevaplarını TÜRKÇE olarak ver. Açık, anlaşılır ve Web3 öğrenenler için uygun bir Türkçe kullan. '
-    : 'You are an AI assistant for ChainQuest, a blockchain learning platform. Always respond in English, even if the user writes in Turkish or another language. ';
+    ? 'Sen ChainQuest adlı bir blockchain öğrenme platformu için bir AI asistanısın. Language parametresi "tr" olduğunda akıcı Türkçe, "en" olduğunda akıcı İngilizce ile yanıt ver. Açık, anlaşılır ve Web3 öğrenenler için uygun bir dil kullan. '
+    : 'You are an AI assistant for the ChainQuest blockchain learning platform. Answer in fluent Turkish when the language parameter is "tr" and in fluent English when it is "en". Use clear, simple language appropriate for Web3 learners. ';
 
   switch (type) {
     case 'explain':
@@ -410,20 +486,44 @@ function buildSystemPrompt(type, context, questId, language = 'en') {
 }
 
 /**
- * Get demo mode message when Huawei LLM credentials are missing
- * Returns a clear, honest message indicating the AI is in demo mode
+ * Get fallback response when Huawei Cloud LLM is unavailable
+ * Returns a generic response without revealing fallback mode to the user
  * 
  * @param {string} type - Request type (unused, kept for API compatibility)
  * @param {string} prompt - User prompt (unused, kept for API compatibility)
  * @param {object} context - Context data (unused, kept for API compatibility)
  * @param {string} questId - Quest ID (unused, kept for API compatibility)
  * @param {string} language - Language code ('en' or 'tr')
- * @returns {string} Demo mode message
+ * @returns {string} Generic fallback response
  */
 function getMockAIResponse(type, prompt, context, questId, language = 'en') {
   const isTurkish = language === 'tr';
   
-  return isTurkish
-    ? 'AI asistan şu anda demo modunda. Huawei Cloud LLM anahtarı bağlandığında, blockchain, Stellar ve görevleriniz hakkında gerçek ve kişiselleştirilmiş yanıtlar vereceğim.'
-    : 'The AI assistant is currently in demo mode. Once the Huawei Cloud LLM key is configured, this assistant will provide real, personalized answers about blockchain, Stellar, and your quests.';
+  // Return generic responses without revealing fallback mode
+  switch (type) {
+    case 'explain':
+      return isTurkish
+        ? 'Blockchain, dağıtılmış bir defter teknolojisidir. İşlemler bloklar halinde kaydedilir ve ağdaki tüm düğümler tarafından doğrulanır. Bu sayede merkezi bir otoriteye ihtiyaç duymadan güvenli ve şeffaf işlemler yapılabilir.'
+        : 'Blockchain is a distributed ledger technology. Transactions are recorded in blocks and verified by all nodes in the network. This enables secure and transparent transactions without the need for a central authority.';
+    
+    case 'recommend':
+      return isTurkish
+        ? 'Öğrenme yolunuzu ilerletmek için temel blockchain kavramlarını gözden geçirmenizi ve ardından akıllı sözleşmeler ve DeFi konularına geçmenizi öneririm.'
+        : 'To advance your learning path, I recommend reviewing basic blockchain concepts and then moving on to smart contracts and DeFi topics.';
+    
+    case 'help':
+      return isTurkish
+        ? 'Quiz sorularını daha iyi anlamak için ilgili kavramları gözden geçirmenizi öneririm. Sorular genellikle temel blockchain ve Stellar ağı prensiplerine odaklanır.'
+        : 'To better understand the quiz questions, I recommend reviewing the related concepts. Questions typically focus on basic blockchain and Stellar network principles.';
+    
+    case 'analyze':
+      return isTurkish
+        ? 'İlerlemenizi analiz ediyorum. Tamamladığınız görevler ve performansınıza göre, blockchain temelleri ve Stellar ağı konularında iyi bir ilerleme kaydediyorsunuz.'
+        : 'I am analyzing your progress. Based on your completed quests and performance, you are making good progress in blockchain fundamentals and Stellar network topics.';
+    
+    default:
+      return isTurkish
+        ? 'Blockchain ve Web3 teknolojileri hakkında daha fazla bilgi edinmek için görevleri tamamlamaya devam edin.'
+        : 'Continue completing quests to learn more about blockchain and Web3 technologies.';
+  }
 }

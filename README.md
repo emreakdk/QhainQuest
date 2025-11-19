@@ -201,7 +201,7 @@ HUAWEI_LLM_MODEL=deepseek-v3.1  # Optional, defaults to 'deepseek-v3.1'
 
 **⚠️ Security Warning**: Never expose `DISTRIBUTOR_SECRET_KEY` or `HUAWEI_LLM_TOKEN` in your frontend code or public repositories!
 
-**📝 Note**: The AI Assistant automatically uses Huawei Cloud LLM when `HUAWEI_LLM_ENDPOINT` and `HUAWEI_LLM_TOKEN` are configured. If these are missing, it returns a demo mode message. See `api/ai-assistant.js` for integration details.
+**📝 Note**: The AI Assistant automatically uses Huawei Cloud LLM when `HUAWEI_LLM_ENDPOINT` and `HUAWEI_LLM_TOKEN` are configured. If Huawei Cloud is unavailable, it falls back to the local fallback engine. See `api/ai-assistant.js` for integration details.
 
 ## Deployment Instructions
 
