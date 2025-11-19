@@ -42,105 +42,71 @@ const Header = ({ currentPage, onPageChange }) => {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-lg backdrop-blur-sm">
-      <nav className="container mx-auto flex items-center justify-between p-4">
-        {/* Logo */}
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">CQ</span>
+      <nav className="container mx-auto flex items-center justify-between p-3 sm:p-4 gap-2 sm:gap-4">
+        {/* Left Zone: Logo + CQT Chip (always visible) */}
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-shrink-0">
+          {/* Logo */}
+          <div className="flex items-center space-x-2 flex-shrink-0">
+            <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">CQ</span>
+            </div>
+            <span className="hidden sm:inline text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent whitespace-nowrap">
+              ChainQuest
+            </span>
           </div>
-          <span className="text-2xl sm:text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-            ChainQuest
-          </span>
-        </div>
 
-        {/* Navigation Menu - Desktop */}
-        {(publicKey || isDemoMode) && (
-          <div className="hidden lg:flex items-center space-x-1 absolute left-1/2 transform -translate-x-1/2">
-            {navigationItems.map(item => {
-              const IconComponent = item.icon;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => onPageChange(item.id)}
-                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer group ${
-                    currentPage === item.id
-                      ? 'bg-indigo-600 text-white shadow-lg'
-                      : 'text-slate-600 dark:text-slate-400 hover:bg-indigo-600 hover:text-white dark:hover:text-white dark:hover:bg-slate-800'
-                  }`}
-                >
-                  <IconComponent size={18} className={currentPage === item.id ? 'text-white' : 'text-[#8b5cf6] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200 transition-colors'} />
-                  {item.label}
-                </button>
-              );
-            })}
-          </div>
-        )}
-
-        {/* Right side controls */}
-        <div className="flex items-center gap-2 sm:gap-4">
-          {/* Language Toggle */}
-          <button
-            onClick={toggleLanguage}
-            className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg transition-colors flex items-center justify-center cursor-pointer order-1 group ${
-              (publicKey || isDemoMode) 
-                ? 'bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
-                : 'bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
-            }`}
-            title={language === 'tr' ? 'Switch to English' : 'Türkçeye Geç'}
-          >
-            <TbLanguage size={18} className="text-[#4a90e2] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200 transition-colors" />
-          </button>
-
-          {/* Token Balance Display - CRITICAL FIX: Show only claimable balance */}
+          {/* Token Balance Display - Always visible when available */}
           {(publicKey || isDemoMode) && claimableBalance > 0 && (
-            <div className="hidden sm:flex items-center gap-2 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 px-2 sm:px-3 py-1.5 rounded-lg border border-yellow-200 dark:border-yellow-700">
-              <TbCoins size={18} className="text-yellow-600 dark:text-yellow-400" />
+            <div className="flex items-center gap-1.5 sm:gap-2 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 px-2 sm:px-3 py-1.5 rounded-lg border border-yellow-200 dark:border-yellow-700 flex-shrink-0 whitespace-nowrap">
+              <TbCoins size={16} className="text-yellow-600 dark:text-yellow-400 flex-shrink-0" />
               <span className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300">
                 {claimableBalance} CQT
               </span>
             </div>
           )}
+        </div>
 
-          {/* Theme Toggle Button - Hidden on mobile */}
-          <button
-            onClick={toggleTheme}
-            className={`hidden md:flex w-8 h-8 sm:w-10 sm:h-10 rounded-lg transition-colors items-center justify-center cursor-pointer order-2 group ${
-              (publicKey || isDemoMode) 
-                ? 'bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
-                : 'bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300'
-            }`}
-            title={isDarkMode ? t('theme.switchToLight') : t('theme.switchToDark')}
-          >
-            {isDarkMode ? (
-              <TbSun size={18} className="text-[#facc15] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200 transition-colors" />
-            ) : (
-              <TbMoon size={18} className="text-[#4a90e2] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200 transition-colors" />
-            )}
-          </button>
+        {/* Center Zone: Navigation Menu - Desktop Only */}
+        <div className="hidden lg:flex items-center gap-1 flex-1 justify-center max-w-2xl mx-4">
+          {navigationItems.map(item => {
+            const IconComponent = item.icon;
+            // Allow access to learn-web3 and how-to-claim even without wallet
+            const isPublicPage = item.id === 'learn-web3' || item.id === 'how-to-claim';
+            const canShow = (publicKey || isDemoMode) || isPublicPage;
+            
+            if (!canShow) return null;
+            
+            return (
+              <button
+                key={item.id}
+                onClick={() => onPageChange(item.id)}
+                className={`inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer group whitespace-nowrap flex-shrink-0 ${
+                  currentPage === item.id
+                    ? 'bg-indigo-600 text-white shadow-lg'
+                    : 'text-slate-600 dark:text-slate-400 hover:bg-indigo-600 hover:text-white dark:hover:text-white dark:hover:bg-slate-800'
+                }`}
+              >
+                <IconComponent size={18} className={currentPage === item.id ? 'text-white' : 'text-[#8b5cf6] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200 transition-colors flex-shrink-0'} />
+                <span className="hidden xl:inline">{item.label}</span>
+              </button>
+            );
+          })}
+        </div>
 
-          {/* Mobile Menu Button */}
-          {(publicKey || isDemoMode) && (
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer border border-slate-200 dark:border-slate-600 order-3 group"
-              title="Menü"
-            >
-              <TbMenu2 size={18} className="text-[#8b5cf6] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200 transition-colors" />
-            </button>
-          )}
-
-          {/* Wallet Connection */}
-          <div className="hidden sm:block">
+        {/* Right Zone: Wallet Controls + Language/Theme Toggles */}
+        <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-3 flex-shrink-0 min-w-0">
+          {/* Wallet Connection - Desktop: Full info, Mobile: Compact */}
+          <div className="hidden lg:flex items-center gap-2 sm:gap-3 flex-shrink-0">
             {publicKey ? (
-              <div className="flex items-center space-x-2 sm:space-x-3">
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 hidden md:block">
+              <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+                <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse flex-shrink-0"></div>
+                  <span className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 whitespace-nowrap">
                     {t('home.connected')}
                   </span>
                 </div>
-                <div className="bg-slate-100 dark:bg-slate-800 px-2 sm:px-3 py-1.5 rounded-lg">
-                  <span className="font-mono text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                <div className="bg-slate-100 dark:bg-slate-800 px-2 sm:px-3 py-1.5 rounded-lg flex-shrink-0">
+                  <span className="font-mono text-xs sm:text-sm text-slate-700 dark:text-slate-300 whitespace-nowrap">
                     {truncateKey(publicKey)}
                   </span>
                 </div>
@@ -153,7 +119,7 @@ const Header = ({ currentPage, onPageChange }) => {
                       exitDemoMode();
                     }
                   }}
-                  className="hidden md:block"
+                  className="whitespace-nowrap flex-shrink-0"
                 >
                   {t('wallet.disconnect')}
                 </Button>
@@ -167,16 +133,47 @@ const Header = ({ currentPage, onPageChange }) => {
               }} />
             )}
           </div>
+
+          {/* Language Toggle */}
+          <button
+            onClick={toggleLanguage}
+            className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg transition-colors flex items-center justify-center cursor-pointer group bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300 flex-shrink-0"
+            title={language === 'tr' ? 'Switch to English' : 'Türkçeye Geç'}
+          >
+            <TbLanguage size={18} className="text-[#4a90e2] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200 transition-colors" />
+          </button>
+
+          {/* Theme Toggle Button */}
+          <button
+            onClick={toggleTheme}
+            className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg transition-colors flex items-center justify-center cursor-pointer group bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300 flex-shrink-0"
+            title={isDarkMode ? t('theme.switchToLight') : t('theme.switchToDark')}
+          >
+            {isDarkMode ? (
+              <TbSun size={18} className="text-[#facc15] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200 transition-colors" />
+            ) : (
+              <TbMoon size={18} className="text-[#4a90e2] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200 transition-colors" />
+            )}
+          </button>
+
+          {/* Mobile Menu Button - Always show on mobile */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer border border-slate-200 dark:border-slate-600 group flex-shrink-0"
+            title="Menü"
+          >
+            <TbMenu2 size={18} className="text-[#8b5cf6] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200 transition-colors" />
+          </button>
         </div>
       </nav>
 
       {/* Mobile Menu */}
-      {mobileMenuOpen && (publicKey || isDemoMode) && (
+      {mobileMenuOpen && (
         <div className="lg:hidden bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 shadow-xl">
           <div className="container mx-auto p-4 space-y-2">
             {/* Mobile Menu Header */}
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Menü</h3>
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{t('nav.menu') || 'Menü'}</h3>
               <button
                 onClick={() => setMobileMenuOpen(false)}
                 className="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors cursor-pointer group"
@@ -186,9 +183,27 @@ const Header = ({ currentPage, onPageChange }) => {
               </button>
             </div>
             
-            {/* Navigation Items */}
+            {/* Mobile Token Balance - Show in menu when available */}
+            {(publicKey || isDemoMode) && claimableBalance > 0 && (
+              <div className="mb-4 pb-4 border-b border-slate-200 dark:border-slate-700">
+                <div className="flex items-center gap-2 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 px-3 py-2 rounded-lg border border-yellow-200 dark:border-yellow-700">
+                  <TbCoins size={18} className="text-yellow-600 dark:text-yellow-400" />
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                    {claimableBalance} CQT {t('wallet.available') || 'Available'}
+                  </span>
+                </div>
+              </div>
+            )}
+            
+            {/* Navigation Items - Show when wallet connected or allow access to public pages */}
             {navigationItems.map(item => {
               const IconComponent = item.icon;
+              // Allow access to learn-web3 and how-to-claim even without wallet
+              const isPublicPage = item.id === 'learn-web3' || item.id === 'how-to-claim';
+              const canShow = (publicKey || isDemoMode) || isPublicPage;
+              
+              if (!canShow) return null;
+              
               return (
                 <button
                   key={item.id}
@@ -208,10 +223,23 @@ const Header = ({ currentPage, onPageChange }) => {
               );
             })}
             
-            {/* Mobile Wallet Info */}
+            {/* Mobile Wallet Connect - Show when not connected */}
+            {!publicKey && !isDemoMode && (
+              <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+                <FreighterConnect onConnect={(address) => {
+                  setPublicKey(address);
+                  if (isDemoMode) {
+                    exitDemoMode(address);
+                  }
+                  setMobileMenuOpen(false);
+                }} />
+              </div>
+            )}
+            
+            {/* Mobile Wallet Info - Show when connected */}
             {publicKey && (
               <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
-                <div className="flex items-center space-x-2 mb-2">
+                <div className="flex items-center gap-2 mb-2">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                   <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
                     {t('home.connected')}
