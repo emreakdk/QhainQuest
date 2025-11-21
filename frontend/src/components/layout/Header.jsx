@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { WalletContext } from '../../context/WalletContext';
 import { useToken } from '../../context/TokenContext';
 import { useBalance } from '../../context/BalanceContext';
@@ -30,6 +30,24 @@ const Header = ({ currentPage, onPageChange }) => {
   const { theme, toggleTheme, isDarkMode } = useTheme();
   const { t, toggleLanguage, language } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isCompact, setIsCompact] = useState(false);
+
+  // Listen to window resize to toggle compact mode at 1500px breakpoint
+  useEffect(() => {
+    const checkWidth = () => {
+      setIsCompact(window.innerWidth < 1500);
+    };
+
+    // Check on mount
+    checkWidth();
+
+    // Listen to resize events
+    window.addEventListener('resize', checkWidth);
+
+    return () => {
+      window.removeEventListener('resize', checkWidth);
+    };
+  }, []);
 
   const navigationItems = [
     { id: 'learn-web3', label: t('nav.learnWeb3'), icon: TbSchool },
@@ -85,8 +103,8 @@ const Header = ({ currentPage, onPageChange }) => {
                     : 'text-slate-600 dark:text-slate-400 hover:bg-indigo-600 hover:text-white dark:hover:text-white dark:hover:bg-slate-800'
                 }`}
               >
-                <IconComponent size={18} className={currentPage === item.id ? 'text-white' : 'text-[#8b5cf6] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200 transition-colors flex-shrink-0'} />
-                <span className="hidden lg-header:inline">{item.label}</span>
+                <IconComponent size={18} className={`${currentPage === item.id ? 'text-white' : 'text-[#8b5cf6] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200'} transition-colors flex-shrink-0`} />
+                {!isCompact && <span className="inline">{item.label}</span>}
               </button>
             );
           })}
