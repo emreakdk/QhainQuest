@@ -86,7 +86,7 @@ const Header = ({ currentPage, onPageChange }) => {
                 }`}
               >
                 <IconComponent size={18} className={currentPage === item.id ? 'text-white' : 'text-[#8b5cf6] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200 transition-colors flex-shrink-0'} />
-                <span className="hidden xl:inline">{item.label}</span>
+                <span className="hidden lg-header:inline">{item.label}</span>
               </button>
             );
           })}
@@ -134,34 +134,31 @@ const Header = ({ currentPage, onPageChange }) => {
             )}
           </div>
 
-          {/* Language & Theme Toggles - Hidden at ≤1500px */}
-          <div className="hidden lg-header:flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-            {/* Language Toggle */}
-            <IconButton
-              onClick={toggleLanguage}
-              title={language === 'tr' ? 'Switch to English' : 'Türkçeye Geç'}
-              size="md"
-              variant="noFocus"
-              className="group"
-            >
-              <TbLanguage size={18} className="text-[#1a1a1a] dark:text-gray-300 group-hover:text-[#0a0a0a] dark:group-hover:text-gray-200 transition-colors" />
-            </IconButton>
+          {/* Language Toggle */}
+          <IconButton
+            onClick={toggleLanguage}
+            title={language === 'tr' ? 'Switch to English' : 'Türkçeye Geç'}
+            size="md"
+            variant="noFocus"
+            className="group hidden lg:flex"
+          >
+            <TbLanguage size={18} className="text-[#1a1a1a] dark:text-gray-300 group-hover:text-[#0a0a0a] dark:group-hover:text-gray-200 transition-colors" />
+          </IconButton>
 
-            {/* Theme Toggle Button */}
-            <IconButton
-              onClick={toggleTheme}
-              title={isDarkMode ? t('theme.switchToLight') : t('theme.switchToDark')}
-              size="md"
-              variant="noFocus"
-              className="group"
-            >
-              {isDarkMode ? (
-                <TbSun size={18} className="text-[#1a1a1a] dark:text-gray-300 group-hover:text-[#0a0a0a] dark:group-hover:text-gray-200 transition-colors" />
-              ) : (
-                <TbMoon size={18} className="text-[#1a1a1a] dark:text-gray-300 group-hover:text-[#0a0a0a] dark:group-hover:text-gray-200 transition-colors" />
-              )}
-            </IconButton>
-          </div>
+          {/* Theme Toggle Button */}
+          <IconButton
+            onClick={toggleTheme}
+            title={isDarkMode ? t('theme.switchToLight') : t('theme.switchToDark')}
+            size="md"
+            variant="noFocus"
+            className="group hidden lg:flex"
+          >
+            {isDarkMode ? (
+              <TbSun size={18} className="text-[#1a1a1a] dark:text-gray-300 group-hover:text-[#0a0a0a] dark:group-hover:text-gray-200 transition-colors" />
+            ) : (
+              <TbMoon size={18} className="text-[#1a1a1a] dark:text-gray-300 group-hover:text-[#0a0a0a] dark:group-hover:text-gray-200 transition-colors" />
+            )}
+          </IconButton>
 
           {/* Mobile Menu Button - Always show on mobile */}
           <IconButton
