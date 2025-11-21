@@ -8,6 +8,7 @@ import { useNotification } from '../../../context/NotificationContext';
 import { Card, CardContent } from '../../ui/Card';
 import Badge from '../../ui/Badge';
 import Button from '../../ui/Button';
+import { TbCoins, TbClock, TbCheck, TbAward } from 'react-icons/tb';
 
 const ProfileStats = ({ userStats, onPageChange }) => {
   const { t } = useLanguage();
@@ -72,35 +73,31 @@ const ProfileStats = ({ userStats, onPageChange }) => {
     {
       title: t('profile.totalEarned'),
       value: totalEarned, // CRITICAL FIX: Use global totalEarned from BalanceContext
-      icon: '💰',
-      color: 'from-yellow-500 to-orange-500',
-      bgColor: 'bg-yellow-50 dark:bg-yellow-900/20',
-      textColor: 'text-yellow-600 dark:text-yellow-400'
+      icon: TbCoins,
+      gradient: 'from-yellow-500 to-orange-500 dark:from-yellow-600 dark:to-orange-600',
+      labelColor: 'text-yellow-100'
     },
     {
       title: t('profile.claimableBalance'),
       value: claimableBalance, // Use global balance context
-      icon: '⏳',
-      color: 'from-blue-500 to-cyan-500',
-      bgColor: 'bg-blue-50 dark:bg-blue-900/20',
-      textColor: 'text-blue-600 dark:text-blue-400'
+      icon: TbClock,
+      gradient: 'from-blue-500 to-cyan-500 dark:from-blue-600 dark:to-cyan-600',
+      labelColor: 'text-blue-100'
     },
     ...(isDemoMode ? [] : [
       {
         title: t('profile.completedQuests'),
         value: tokenData.completedQuests,
-        icon: '✅',
-        color: 'from-green-500 to-teal-500',
-        bgColor: 'bg-green-50 dark:bg-green-900/20',
-        textColor: 'text-green-600 dark:text-green-400'
+        icon: TbCheck,
+        gradient: 'from-green-500 to-teal-500 dark:from-green-600 dark:to-teal-600',
+        labelColor: 'text-green-100'
       },
       {
         title: t('profile.certificates'),
         value: tokenData.completedQuests || 0,
-        icon: '🏆',
-        color: 'from-purple-500 to-pink-500',
-        bgColor: 'bg-purple-50 dark:bg-purple-900/20',
-        textColor: 'text-purple-600 dark:text-purple-400'
+        icon: TbAward,
+        gradient: 'from-purple-500 to-pink-500 dark:from-purple-600 dark:to-pink-600',
+        labelColor: 'text-purple-100'
       }
     ])
   ];
@@ -117,26 +114,29 @@ const ProfileStats = ({ userStats, onPageChange }) => {
         </div>
         
         {/* Stats Grid - Show in demo mode but with limited functionality */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {stats.map((stat, index) => (
-            <Card key={index} className="overflow-hidden opacity-75">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">
+        {/* Graceful fallback: 1 column on very small screens, 2 columns on mobile (>= 640px), 4 columns on large (>= 1024px) */}
+        <div className="grid grid-cols-1 min-[375px]:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+          {stats.map((stat, index) => {
+            const IconComponent = stat.icon;
+            return (
+              <div
+                key={index}
+                className={`bg-gradient-to-br ${stat.gradient} rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 text-white transform hover:scale-105 transition-all duration-300 shadow-lg opacity-75`}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <div className="text-xl sm:text-2xl lg:text-3xl font-bold leading-tight">
+                      {stat.value?.toLocaleString() || 0}
+                    </div>
+                    <div className={`${stat.labelColor} text-[10px] sm:text-xs lg:text-sm mt-1`}>
                       {stat.title}
-                    </p>
-                    <p className="text-3xl font-bold text-slate-900 dark:text-white">
-                      {stat.value}
-                    </p>
+                    </div>
                   </div>
-                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center text-2xl`}>
-                    {stat.icon}
-                  </div>
+                  <IconComponent size={24} className="opacity-80 text-white flex-shrink-0 sm:w-7 sm:h-7" />
                 </div>
-              </CardContent>
-            </Card>
-          ))}
+              </div>
+            );
+          })}
         </div>
 
         {/* Claim Button - CRITICAL FIX: Show in demo mode to prompt wallet connection */}
@@ -190,27 +190,30 @@ const ProfileStats = ({ userStats, onPageChange }) => {
 
   return (
     <div className="space-y-6">
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat, index) => (
-          <Card key={index} className="overflow-hidden">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">
+      {/* Stats Grid - Mobile optimized 2x2 layout matching Quests page */}
+      {/* Graceful fallback: 1 column on very small screens, 2 columns on mobile (>= 375px), 4 columns on large (>= 1024px) */}
+      <div className="grid grid-cols-1 min-[375px]:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+        {stats.map((stat, index) => {
+          const IconComponent = stat.icon;
+          return (
+            <div
+              key={index}
+              className={`bg-gradient-to-br ${stat.gradient} rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 text-white transform hover:scale-105 transition-all duration-300 shadow-lg`}
+            >
+              <div className="flex items-center justify-between gap-2">
+                <div className="min-w-0 flex-1">
+                  <div className="text-xl sm:text-2xl lg:text-3xl font-bold leading-tight">
+                    {stat.value?.toLocaleString() || 0}
+                  </div>
+                  <div className={`${stat.labelColor} text-[10px] sm:text-xs lg:text-sm mt-1`}>
                     {stat.title}
-                  </p>
-                  <p className="text-3xl font-bold text-slate-900 dark:text-white">
-                    {stat.value}
-                  </p>
+                  </div>
                 </div>
-                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center text-2xl`}>
-                  {stat.icon}
-                </div>
+                <IconComponent size={24} className="opacity-80 text-white flex-shrink-0 sm:w-7 sm:h-7" />
               </div>
-            </CardContent>
-          </Card>
-        ))}
+            </div>
+          );
+        })}
       </div>
 
       {/* Claim Button */}

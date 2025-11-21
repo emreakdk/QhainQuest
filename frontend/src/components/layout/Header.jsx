@@ -5,7 +5,9 @@ import { useBalance } from '../../context/BalanceContext';
 import { useTheme } from '../../context/ThemeContext';
 import { useLanguage } from '../../context/LanguageContext';
 import Button from '../ui/Button';
+import IconButton from '../ui/IconButton';
 import FreighterConnect from '../features/wallet/FreighterConnect';
+import PublicKeyTooltip from '../ui/PublicKeyTooltip';
 import { 
   TbSchool, 
   TbListDetails, 
@@ -28,9 +30,6 @@ const Header = ({ currentPage, onPageChange }) => {
   const { theme, toggleTheme, isDarkMode } = useTheme();
   const { t, toggleLanguage, language } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-
-  const truncateKey = (key) => `${key.slice(0, 4)}...${key.slice(-4)}`;
 
   const navigationItems = [
     { id: 'learn-web3', label: t('nav.learnWeb3'), icon: TbSchool },
@@ -106,9 +105,10 @@ const Header = ({ currentPage, onPageChange }) => {
                   </span>
                 </div>
                 <div className="bg-slate-100 dark:bg-slate-800 px-2 sm:px-3 py-1.5 rounded-lg flex-shrink-0">
-                  <span className="font-mono text-xs sm:text-sm text-slate-700 dark:text-slate-300 whitespace-nowrap">
-                    {truncateKey(publicKey)}
-                  </span>
+                  <PublicKeyTooltip
+                    publicKey={publicKey}
+                    textClassName="font-mono text-xs sm:text-sm text-slate-700 dark:text-slate-300 whitespace-nowrap"
+                  />
                 </div>
                 <Button 
                   variant="ghost" 
@@ -134,36 +134,45 @@ const Header = ({ currentPage, onPageChange }) => {
             )}
           </div>
 
-          {/* Language Toggle */}
-          <button
-            onClick={toggleLanguage}
-            className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg transition-colors flex items-center justify-center cursor-pointer group bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300 flex-shrink-0"
-            title={language === 'tr' ? 'Switch to English' : 'Türkçeye Geç'}
-          >
-            <TbLanguage size={18} className="text-[#4a90e2] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200 transition-colors" />
-          </button>
+          {/* Language & Theme Toggles - Hidden at ≤1500px */}
+          <div className="hidden lg-header:flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+            {/* Language Toggle */}
+            <IconButton
+              onClick={toggleLanguage}
+              title={language === 'tr' ? 'Switch to English' : 'Türkçeye Geç'}
+              size="md"
+              variant="noFocus"
+              className="group"
+            >
+              <TbLanguage size={18} className="text-[#1a1a1a] dark:text-gray-300 group-hover:text-[#0a0a0a] dark:group-hover:text-gray-200 transition-colors" />
+            </IconButton>
 
-          {/* Theme Toggle Button */}
-          <button
-            onClick={toggleTheme}
-            className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg transition-colors flex items-center justify-center cursor-pointer group bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:text-slate-300 flex-shrink-0"
-            title={isDarkMode ? t('theme.switchToLight') : t('theme.switchToDark')}
-          >
-            {isDarkMode ? (
-              <TbSun size={18} className="text-[#facc15] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200 transition-colors" />
-            ) : (
-              <TbMoon size={18} className="text-[#4a90e2] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200 transition-colors" />
-            )}
-          </button>
+            {/* Theme Toggle Button */}
+            <IconButton
+              onClick={toggleTheme}
+              title={isDarkMode ? t('theme.switchToLight') : t('theme.switchToDark')}
+              size="md"
+              variant="noFocus"
+              className="group"
+            >
+              {isDarkMode ? (
+                <TbSun size={18} className="text-[#1a1a1a] dark:text-gray-300 group-hover:text-[#0a0a0a] dark:group-hover:text-gray-200 transition-colors" />
+              ) : (
+                <TbMoon size={18} className="text-[#1a1a1a] dark:text-gray-300 group-hover:text-[#0a0a0a] dark:group-hover:text-gray-200 transition-colors" />
+              )}
+            </IconButton>
+          </div>
 
           {/* Mobile Menu Button - Always show on mobile */}
-          <button
+          <IconButton
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer border border-slate-200 dark:border-slate-600 group flex-shrink-0"
             title="Menü"
+            size="md"
+            variant="default"
+            className="lg:hidden group"
           >
-            <TbMenu2 size={18} className="text-[#8b5cf6] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200 transition-colors" />
-          </button>
+            <TbMenu2 size={18} className="text-[#8b5cf6] dark:text-gray-300 group-hover:text-[#7c3aed] dark:group-hover:text-gray-200 transition-colors" />
+          </IconButton>
         </div>
       </nav>
 
@@ -174,13 +183,15 @@ const Header = ({ currentPage, onPageChange }) => {
             {/* Mobile Menu Header */}
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{t('nav.menu') || 'Menü'}</h3>
-              <button
+              <IconButton
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors cursor-pointer group"
                 title="Menüyü Kapat"
+                size="sm"
+                variant="default"
+                className="group"
               >
-                <TbX size={18} className="text-[#4a90e2] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200 transition-colors" />
-              </button>
+                <TbX size={18} className="text-[#4a90e2] dark:text-gray-300 group-hover:text-[#3b82f6] dark:group-hover:text-gray-200 transition-colors" />
+              </IconButton>
             </div>
             
             {/* Mobile Token Balance - Show in menu when available */}
@@ -246,9 +257,10 @@ const Header = ({ currentPage, onPageChange }) => {
                   </span>
                 </div>
                 <div className="bg-slate-100 dark:bg-slate-700 px-3 py-2 rounded-lg mb-2">
-                  <span className="font-mono text-sm text-slate-700 dark:text-slate-300">
-                    {truncateKey(publicKey)}
-                  </span>
+                  <PublicKeyTooltip
+                    publicKey={publicKey}
+                    textClassName="font-mono text-sm text-slate-700 dark:text-slate-300"
+                  />
                 </div>
                 <Button 
                   variant="ghost" 

@@ -2,129 +2,84 @@ import { createContext, useContext, useEffect, useState } from 'react';
 
 const ThemeContext = createContext();
 
+/**
+ * ThemeProvider - Centralized theme management for ChainQuest
+ * 
+ * Key design decisions:
+ * 1. Prevents flicker: Theme is set in index.html <script> before React loads
+ * 2. localStorage priority: User preference overrides system preference
+ * 3. System preference fallback: Uses prefers-color-scheme when no saved preference
+ * 4. Works on all devices: No mobile-specific restrictions - theme works everywhere
+ * 5. DOM sync: Updates document.documentElement.classList for Tailwind dark: classes
+ * 6. System theme listener: Updates theme when system preference changes (only if user hasn't set preference)
+ */
 export const ThemeProvider = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(() => {
+    // Check localStorage first, then fall back to system preference
+    // This ensures user preference is respected across sessions
     const stored = localStorage.getItem('usehooks-ts-dark-mode');
     let initialTheme;
     if (stored !== null) {
       initialTheme = JSON.parse(stored);
     } else {
+      // Fall back to system preference on first load
       initialTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
     
+    // Apply theme immediately on initialization
+    // Note: This is a backup - the main theme is set in index.html to prevent flicker
     const html = document.documentElement;
     if (initialTheme) {
       html.classList.add('dark');
-      console.log(`[ThemeProvider] ✅ Immediately added 'dark' class on initialization`);
     } else {
       html.classList.remove('dark');
-      console.log(`[ThemeProvider] ❌ Immediately removed 'dark' class on initialization`);
     }
     html.style.colorScheme = initialTheme ? 'dark' : 'light';
     
     return initialTheme;
   });
 
+  // Apply theme changes to DOM
   useEffect(() => {
     const html = document.documentElement;
     
-    const isMobile = window.matchMedia('(max-width: 767px)').matches;
-    
-    console.log(`[ThemeProvider] === THEME APPLICATION START ===`);
-    console.log(`[ThemeProvider] Current isDarkMode:`, isDarkMode);
-    console.log(`[ThemeProvider] Is Mobile:`, isMobile);
-    console.log(`[ThemeProvider] HTML element:`, html);
-    console.log(`[ThemeProvider] HTML classes before:`, html.classList.toString());
-    
-    if (isMobile) {
+    if (isDarkMode) {
+      html.classList.add('dark');
+      html.style.colorScheme = 'dark';
+    } else {
       html.classList.remove('dark');
       html.style.colorScheme = 'light';
-      console.log(`[ThemeProvider] 📱 Mobile detected - Forcing light mode`);
-    } else {
-      if (isDarkMode) {
-        html.classList.add('dark');
-        console.log(`[ThemeProvider] ✅ Added 'dark' class to document.documentElement`);
-      } else {
-        html.classList.remove('dark');
-        console.log(`[ThemeProvider] ❌ Removed 'dark' class from document.documentElement`);
-      }
-      
-      html.style.colorScheme = isDarkMode ? 'dark' : 'light';
     }
-    
-    console.log(`[ThemeProvider] HTML classes after:`, html.classList.toString());
-    console.log(`[ThemeProvider] Has dark class:`, html.classList.contains('dark'));
-    console.log(`[ThemeProvider] Color scheme:`, html.style.colorScheme);
-    console.log(`[ThemeProvider] === THEME APPLICATION END ===`);
-    
-    setTimeout(() => {
-      console.log(`[ThemeProvider] === VERIFICATION ===`);
-      console.log(`[ThemeProvider] Final HTML classes:`, document.documentElement.classList.toString());
-      console.log(`[ThemeProvider] Final has dark class:`, document.documentElement.classList.contains('dark'));
-    }, 50);
   }, [isDarkMode]);
 
+  // Save theme preference to localStorage
   useEffect(() => {
     localStorage.setItem('usehooks-ts-dark-mode', JSON.stringify(isDarkMode));
-    console.log(`[ThemeProvider] Saved to localStorage: ${isDarkMode}`);
   }, [isDarkMode]);
 
+  // Listen for system theme changes (optional enhancement)
   useEffect(() => {
-    const handleResize = () => {
-      const html = document.documentElement;
-      const isMobile = window.matchMedia('(max-width: 767px)').matches;
-      
-      console.log(`[ThemeProvider] 📱 Resize detected - Mobile: ${isMobile}`);
-      
-      if (isMobile) {
-        html.classList.remove('dark');
-        html.style.colorScheme = 'light';
-        console.log(`[ThemeProvider] 📱 Resize - Forcing light mode on mobile`);
-      } else {
-        if (isDarkMode) {
-          html.classList.add('dark');
-          html.style.colorScheme = 'dark';
-        } else {
-          html.classList.remove('dark');
-          html.style.colorScheme = 'light';
-        }
-        console.log(`[ThemeProvider] 🖥️ Resize - Applied theme on desktop: ${isDarkMode ? 'dark' : 'light'}`);
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    const handleSystemThemeChange = (e) => {
+      // Only update if user hasn't set a preference (localStorage is empty)
+      const stored = localStorage.getItem('usehooks-ts-dark-mode');
+      if (stored === null) {
+        setIsDarkMode(e.matches);
       }
     };
 
-    window.addEventListener('resize', handleResize);
+    mediaQuery.addEventListener('change', handleSystemThemeChange);
     
     return () => {
-      window.removeEventListener('resize', handleResize);
+      mediaQuery.removeEventListener('change', handleSystemThemeChange);
     };
-  }, [isDarkMode]);
+  }, []);
 
   const theme = isDarkMode ? 'dark' : 'light';
   const toggleTheme = () => {
-    const newTheme = !isDarkMode;
-    console.log(`[ThemeProvider] Toggling theme: ${theme} -> ${newTheme ? 'dark' : 'light'}`);
-    setIsDarkMode(newTheme);
+    setIsDarkMode(prev => !prev);
   };
-
-  useEffect(() => {
-    window.inspectTheme = () => {
-      const html = document.documentElement;
-      console.log(`[DOM INSPECTION] HTML element:`, html);
-      console.log(`[DOM INSPECTION] HTML classes:`, html.classList.toString());
-      console.log(`[DOM INSPECTION] Has dark class:`, html.classList.contains('dark'));
-      console.log(`[DOM INSPECTION] Color scheme:`, html.style.colorScheme);
-      console.log(`[DOM INSPECTION] Current theme state:`, { isDarkMode, theme });
-      return {
-        html,
-        classes: html.classList.toString(),
-        hasDarkClass: html.classList.contains('dark'),
-        colorScheme: html.style.colorScheme,
-        isDarkMode,
-        theme
-      };
-    };
-    console.log(`[ThemeProvider] Global inspectTheme() function available for debugging`);
-  }, [isDarkMode, theme]);
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, isDarkMode }}>

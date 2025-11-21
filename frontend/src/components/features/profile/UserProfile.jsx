@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useContext } from 'react';
 import { WalletContext } from '../../../context/WalletContext';
 import { useLanguage } from '../../../context/LanguageContext';
@@ -13,6 +13,7 @@ import LearningRecommendations from '../ai/LearningRecommendations';
 import Button from '../../ui/Button';
 import Badge from '../../ui/Badge';
 import MobileWarning from '../../ui/MobileWarning';
+import PublicKeyTooltip from '../../ui/PublicKeyTooltip';
 
 const UserProfile = ({ onPageChange }) => {
   const { publicKey, isDemoMode } = useContext(WalletContext);
@@ -50,15 +51,13 @@ const UserProfile = ({ onPageChange }) => {
     return baseTabs;
   }, [t, isDemoMode]);
 
-  const truncateKey = useCallback((key) => `${key.slice(0, 6)}...${key.slice(-6)}`, []);
-
-  const handleTabChange = useCallback((tabId) => {
+  const handleTabChange = (tabId) => {
     setActiveTab(tabId);
-  }, []);
+  };
 
 
   return (
-    <div className="space-y-6 sm:space-y-8">
+    <div className="space-y-6 sm:space-y-8 pt-4 sm:pt-6">
       {/* Profile Header */}
       <div className="text-center">
         <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center">
@@ -69,7 +68,10 @@ const UserProfile = ({ onPageChange }) => {
         </h1>
         <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-2">
           <Badge variant="primary" className="text-xs sm:text-sm">
-            {truncateKey(publicKey)}
+            <PublicKeyTooltip
+              publicKey={publicKey}
+              textClassName="text-xs sm:text-sm"
+            />
           </Badge>
           {/* UI SIMPLIFICATION: Hide quest completed badge in demo mode */}
           {!isDemoMode && (

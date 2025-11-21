@@ -74,6 +74,7 @@ const QuestGrid = () => {
   const [selectedQuest, setSelectedQuest] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
+  const [showMobileFilterPanel, setShowMobileFilterPanel] = useState(false);
 
   useEffect(() => {
     if (publicKey) {
@@ -115,6 +116,9 @@ const QuestGrid = () => {
                          questDescription.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesDifficulty && matchesSearch;
   });
+
+  // Check if any filters are active (for mobile Filter button indicator)
+  const hasActiveFilters = selectedCategory !== 'all' || selectedDifficulty !== 'all' || searchQuery !== '';
 
   const handleStartQuest = (quest) => {
     const questProgress = userProgress.get(quest.id);
@@ -197,18 +201,18 @@ const QuestGrid = () => {
             {t('quest.description')}
           </p>
           
-          {/* Search Bar */}
-          <div className="mt-8 max-w-md mx-auto">
+          {/* Search Bar - Mobile optimized */}
+          <div className="mt-6 sm:mt-8 max-w-md mx-auto">
             <div className="relative">
               <input
                 type="text"
                 placeholder={t('search.placeholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-3 pl-12 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-slate-900 dark:text-white"
+                className="w-full px-4 py-3 sm:py-3 pl-11 sm:pl-12 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm sm:text-base text-slate-900 dark:text-white min-h-[44px]"
               />
-              <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
-                <TbSearch size={18} className="text-[#4a90e2] dark:text-gray-300" />
+              <div className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2">
+                <TbSearch size={18} className="text-[#4a90e2] dark:text-gray-300 flex-shrink-0" />
               </div>
             </div>
           </div>
@@ -227,61 +231,280 @@ const QuestGrid = () => {
         </div>
       )}
 
-      {/* Enhanced Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
-        <div className="bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-2xl p-4 sm:p-6 text-white transform hover:scale-105 transition-all duration-300 shadow-lg">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-2xl sm:text-3xl font-bold">
+      {/* Enhanced Stats - Mobile optimized */}
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
+        <div className="bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 text-white transform hover:scale-105 transition-all duration-300 shadow-lg">
+          <div className="flex items-center justify-between gap-2">
+            <div className="min-w-0 flex-1">
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold leading-tight">
                 <AnimatedCounter value={realQuests.length} duration={1500} />
               </div>
-              <div className="text-blue-100 text-xs sm:text-sm">{t('stats.totalQuests')}</div>
+              <div className="text-blue-100 text-[10px] sm:text-xs lg:text-sm mt-1">{t('stats.totalQuests')}</div>
             </div>
-            <TbBook size={28} className="opacity-80 text-white" />
+            <TbBook size={24} className="opacity-80 text-white flex-shrink-0 sm:w-7 sm:h-7" />
           </div>
         </div>
         
-        <div className="bg-gradient-to-br from-green-500 to-green-600 dark:from-green-600 dark:to-green-700 rounded-2xl p-4 sm:p-6 text-white transform hover:scale-105 transition-all duration-300 shadow-lg">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-2xl sm:text-3xl font-bold">
+        <div className="bg-gradient-to-br from-green-500 to-green-600 dark:from-green-600 dark:to-green-700 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 text-white transform hover:scale-105 transition-all duration-300 shadow-lg">
+          <div className="flex items-center justify-between gap-2">
+            <div className="min-w-0 flex-1">
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold leading-tight">
                 <AnimatedCounter value={completedQuestsCount} duration={1500} />
               </div>
-              <div className="text-green-100 text-xs sm:text-sm">{t('stats.completedQuests')}</div>
+              <div className="text-green-100 text-[10px] sm:text-xs lg:text-sm mt-1">{t('stats.completedQuests')}</div>
             </div>
-            <TbCheck size={28} className="opacity-80 text-white" />
+            <TbCheck size={24} className="opacity-80 text-white flex-shrink-0 sm:w-7 sm:h-7" />
           </div>
         </div>
         
-        <div className="bg-gradient-to-br from-purple-500 to-purple-600 dark:from-purple-600 dark:to-purple-700 rounded-2xl p-4 sm:p-6 text-white transform hover:scale-105 transition-all duration-300 shadow-lg">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-2xl sm:text-3xl font-bold">
+        <div className="bg-gradient-to-br from-purple-500 to-purple-600 dark:from-purple-600 dark:to-purple-700 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 text-white transform hover:scale-105 transition-all duration-300 shadow-lg">
+          <div className="flex items-center justify-between gap-2">
+            <div className="min-w-0 flex-1">
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold leading-tight">
                 <AnimatedCounter value={inProgressQuestsCount} duration={1500} />
               </div>
-              <div className="text-purple-100 text-xs sm:text-sm">{t('stats.inProgress')}</div>
+              <div className="text-purple-100 text-[10px] sm:text-xs lg:text-sm mt-1">{t('stats.inProgress')}</div>
             </div>
-            <TbRefresh size={28} className="opacity-80 text-white" />
+            <TbRefresh size={24} className="opacity-80 text-white flex-shrink-0 sm:w-7 sm:h-7" />
           </div>
         </div>
         
-        <div className="bg-gradient-to-br from-yellow-500 to-orange-500 dark:from-yellow-600 dark:to-orange-600 rounded-2xl p-4 sm:p-6 text-white transform hover:scale-105 transition-all duration-300 shadow-lg">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-2xl sm:text-3xl font-bold">
+        <div className="bg-gradient-to-br from-yellow-500 to-orange-500 dark:from-yellow-600 dark:to-orange-600 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 text-white transform hover:scale-105 transition-all duration-300 shadow-lg">
+          <div className="flex items-center justify-between gap-2">
+            <div className="min-w-0 flex-1">
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold leading-tight">
                 <AnimatedCounter value={totalEarned || 0} duration={1500} />
               </div>
-              <div className="text-yellow-100 text-xs sm:text-sm">{t('stats.earnedTokens')}</div>
+              <div className="text-yellow-100 text-[10px] sm:text-xs lg:text-sm mt-1">{t('stats.earnedTokens')}</div>
             </div>
-            <TbCoins size={28} className="opacity-80 text-white" />
+            <TbCoins size={24} className="opacity-80 text-white flex-shrink-0 sm:w-7 sm:h-7" />
           </div>
         </div>
       </div>
 
 
-      {/* Enhanced Filters */}
-      <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 sm:p-6 shadow-lg border border-slate-200 dark:border-slate-700">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* Mobile Filter Header - Only visible on mobile (< md) */}
+      <div className="md:hidden mb-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
+            {t('quest.title') || 'Quests'}
+          </h2>
+          <button
+            onClick={() => setShowMobileFilterPanel(!showMobileFilterPanel)}
+            className={`relative flex items-center gap-2 min-h-[44px] px-4 py-2.5 rounded-xl font-medium transition-all duration-200 ease-in-out cursor-pointer text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
+              hasActiveFilters
+                ? 'bg-indigo-600 text-white shadow-lg'
+                : 'bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
+            }`}
+          >
+            <TbFilter size={18} className="flex-shrink-0" />
+            <span>{t('filters.title') || 'Filter'}</span>
+            {hasActiveFilters && (
+              <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white dark:border-slate-800"></span>
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Filter Panel - Collapsible slide-down panel */}
+      <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+        showMobileFilterPanel ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
+      }`}>
+        <div className="bg-white dark:bg-slate-800/95 backdrop-blur-sm border border-slate-200 dark:border-slate-600 rounded-2xl p-4 mt-2 shadow-sm dark:shadow-xl">
+          {/* Category Filters */}
+          <div className="mb-4">
+            <div className="flex flex-wrap gap-2">
+              {questCategories.map(category => {
+                const categoryIcons = {
+                  'all': TbBook,
+                  'blockchain': TbLink,
+                  'smart-contracts': TbRobot,
+                  'defi': TbCoins,
+                  'nft': TbPalette
+                };
+                const IconComponent = categoryIcons[category.id] || TbBook;
+                const isActive = selectedCategory === category.id;
+                const categoryAccentColors = {
+                  'all': '#64748b',
+                  'blockchain': '#2ab3a6',
+                  'smart-contracts': '#8b5cf6',
+                  'defi': '#facc15',
+                  'nft': '#fb923c'
+                };
+                const accentColor = categoryAccentColors[category.id] || categoryAccentColors['all'];
+                
+                return (
+                  <button
+                    key={category.id}
+                    onClick={() => setSelectedCategory(category.id)}
+                    className={`group flex items-center gap-2 min-h-[44px] px-4 py-2.5 rounded-xl font-medium transition-all duration-200 ease-in-out cursor-pointer text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
+                      isActive
+                        ? 'bg-indigo-600 dark:bg-indigo-600 text-white shadow-lg'
+                        : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-slate-600 hover:text-indigo-700 dark:hover:text-slate-200'
+                    }`}
+                  >
+                    <IconComponent 
+                      size={18} 
+                      className={`flex-shrink-0 transition-colors duration-200 ${
+                        isActive 
+                          ? 'text-white' 
+                          : ''
+                      }`}
+                      style={!isActive ? { color: isDarkMode ? 'rgb(203, 213, 225)' : accentColor } : {}}
+                    />
+                    <span className="whitespace-nowrap">{t(category.nameKey || category.name)}</span>
+                    <Badge 
+                      variant={isActive ? 'default' : 'outline'}
+                      className="ml-1 text-[10px] px-1.5 py-0.5 transition-colors duration-200 flex-shrink-0"
+                    >
+                      {realQuests.filter(q => {
+                        if (!q) return false;
+                        return getQuestCategory(q) === category.id || category.id === 'all';
+                      }).length}
+                    </Badge>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Difficulty Filters */}
+          <div className="mb-4 pt-4 border-t border-slate-200 dark:border-slate-600">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-sm text-slate-500 dark:text-slate-400 font-medium w-full mb-2">{t('filters.difficulty')}:</span>
+              {Object.entries(difficultyLevels).map(([key, level]) => {
+                const getDifficultyStyles = (difficultyKey, isActive) => {
+                  if (!isActive) return undefined;
+                  
+                  if (isDarkMode) {
+                    // Dark theme active styles
+                    switch (difficultyKey) {
+                      case 'beginner':
+                        return {
+                          backgroundColor: 'rgba(34, 197, 94, 0.15)',
+                          color: 'rgba(34, 197, 94, 0.9)',
+                          borderColor: 'rgba(34, 197, 94, 0.4)',
+                          boxShadow: '0 0 8px rgba(34, 197, 94, 0.1)',
+                        };
+                      case 'intermediate':
+                        return {
+                          backgroundColor: 'rgba(234, 179, 8, 0.15)',
+                          color: 'rgba(234, 179, 8, 0.9)',
+                          borderColor: 'rgba(234, 179, 8, 0.4)',
+                          boxShadow: '0 0 8px rgba(234, 179, 8, 0.1)',
+                        };
+                      case 'advanced':
+                        return {
+                          backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                          color: 'rgba(239, 68, 68, 0.9)',
+                          borderColor: 'rgba(239, 68, 68, 0.4)',
+                          boxShadow: '0 0 8px rgba(239, 68, 68, 0.1)',
+                        };
+                      default:
+                        return undefined;
+                    }
+                  } else {
+                    // Light theme active styles
+                    switch (difficultyKey) {
+                      case 'beginner':
+                        return {
+                          backgroundColor: '#D4F5DD',
+                          color: '#167A3E',
+                          borderColor: '#A8E6C1',
+                        };
+                      case 'intermediate':
+                        return {
+                          backgroundColor: '#FFE9C2',
+                          color: '#885400',
+                          borderColor: '#FFD699',
+                        };
+                      case 'advanced':
+                        return {
+                          backgroundColor: '#FFD4D4',
+                          color: '#9C1A1A',
+                          borderColor: '#FFB3B3',
+                        };
+                      default:
+                        return undefined;
+                    }
+                  }
+                };
+
+                const getIconColor = (difficultyKey, isActive) => {
+                  if (!isActive) return undefined;
+                  
+                  if (isDarkMode) {
+                    switch (difficultyKey) {
+                      case 'beginner':
+                        return 'rgba(34, 197, 94, 0.9)';
+                      case 'intermediate':
+                        return 'rgba(234, 179, 8, 0.9)';
+                      case 'advanced':
+                        return 'rgba(239, 68, 68, 0.9)';
+                      default:
+                        return undefined;
+                    }
+                  } else {
+                    switch (difficultyKey) {
+                      case 'beginner':
+                        return '#167A3E';
+                      case 'intermediate':
+                        return '#885400';
+                      case 'advanced':
+                        return '#9C1A1A';
+                      default:
+                        return undefined;
+                    }
+                  }
+                };
+
+                const isActive = selectedDifficulty === key;
+                
+                return (
+                  <button
+                    key={key}
+                    onClick={() => setSelectedDifficulty(selectedDifficulty === key ? 'all' : key)}
+                    className={`flex items-center gap-2 min-h-[44px] rounded-full px-3 py-2 border text-xs font-medium transition-all duration-200 ease-in-out cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                      isActive
+                        ? 'focus:ring-green-500'
+                        : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600 focus:ring-slate-400 hover:bg-indigo-50 dark:hover:bg-slate-600 hover:text-indigo-700 dark:hover:text-slate-200'
+                    }`}
+                    style={isActive ? getDifficultyStyles(key, true) : {}}
+                  >
+                    {isActive ? (
+                      <TbCircleDot size={18} style={{ color: getIconColor(key, true) }} className="flex-shrink-0" />
+                    ) : (
+                      <TbCircle size={18} className="text-slate-400 dark:text-slate-500 transition-colors duration-200 flex-shrink-0" />
+                    )}
+                    <span className="whitespace-nowrap">{t(level.nameKey || level.name)}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Clear Filters Button - Mobile Panel */}
+          {hasActiveFilters && (
+            <div className="pt-4 border-t border-slate-200 dark:border-slate-600">
+              <button
+                onClick={() => {
+                  setSelectedCategory('all');
+                  setSelectedDifficulty('all');
+                  setSearchQuery('');
+                }}
+                className="w-full flex items-center justify-center gap-2 min-h-[44px] px-4 py-2.5 bg-red-600 dark:bg-red-700 text-white rounded-xl transition-all duration-200 ease-in-out cursor-pointer text-sm font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 hover:bg-red-700 dark:hover:bg-red-600"
+              >
+                <TbX size={18} className="flex-shrink-0" />
+                <span>{t('filters.clear') || 'Clear Filters'}</span>
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Desktop Filters - Keep existing layout for md and above */}
+      <div className="hidden md:block bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+        <div className="flex flex-row items-center justify-between gap-4">
           <div className="flex flex-wrap gap-2">
             {questCategories.map(category => {
               const categoryIcons = {
@@ -293,13 +516,12 @@ const QuestGrid = () => {
               };
               const IconComponent = categoryIcons[category.id] || TbBook;
               const isActive = selectedCategory === category.id;
-              // Icon colors matching quest card category icon colors exactly
               const categoryAccentColors = {
                 'all': '#64748b',
-                'blockchain': '#2ab3a6', // teal/cyan - matches quest card
-                'smart-contracts': '#8b5cf6', // purple - matches quest card
-                'defi': '#facc15', // yellow - matches quest card
-                'nft': '#fb923c' // orange - matches quest card
+                'blockchain': '#2ab3a6',
+                'smart-contracts': '#8b5cf6',
+                'defi': '#facc15',
+                'nft': '#fb923c'
               };
               const accentColor = categoryAccentColors[category.id] || categoryAccentColors['all'];
               
@@ -307,7 +529,7 @@ const QuestGrid = () => {
                 <button
                   key={category.id}
                   onClick={() => setSelectedCategory(category.id)}
-                  className={`group flex items-center gap-2 px-2 sm:px-4 py-2 rounded-xl font-medium transition-all duration-200 ease-in-out cursor-pointer text-sm focus:outline-none ${
+                  className={`group flex items-center gap-2 min-h-[44px] px-4 py-2 rounded-xl font-medium transition-all duration-200 ease-in-out cursor-pointer text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
                     isActive
                       ? 'bg-indigo-600 text-white shadow-lg'
                       : `bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-300 ${getCategoryHoverClass(category.id)}`
@@ -315,18 +537,17 @@ const QuestGrid = () => {
                 >
                   <IconComponent 
                     size={18} 
-                    className={`transition-colors duration-200 ${
+                    className={`flex-shrink-0 transition-colors duration-200 ${
                       isActive 
                         ? 'text-white' 
                         : ''
                     }`}
                     style={!isActive ? { color: isDarkMode ? 'rgb(203, 213, 225)' : accentColor } : {}}
                   />
-                  <span className="hidden sm:inline">{t(category.nameKey || category.name)}</span>
-                  <span className="sm:hidden">{t(category.nameKey || category.name).slice(0, 3)}</span>
+                  <span className="whitespace-nowrap">{t(category.nameKey || category.name)}</span>
                   <Badge 
                     variant={isActive ? 'default' : 'outline'}
-                    className="ml-1 text-xs transition-colors duration-200"
+                    className="ml-1 text-xs px-1.5 py-0.5 transition-colors duration-200 flex-shrink-0"
                   >
                     {realQuests.filter(q => {
                       if (!q) return false;
@@ -338,38 +559,36 @@ const QuestGrid = () => {
             })}
           </div>
 
-          <div className="flex items-center gap-2">
-            {/* Clear Filters Button - Only visible when filters are active */}
-            {(selectedCategory !== 'all' || selectedDifficulty !== 'all' || searchQuery !== '') && (
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {/* Clear Filters Button - Desktop */}
+            {hasActiveFilters && (
               <button
                 onClick={() => {
                   setSelectedCategory('all');
                   setSelectedDifficulty('all');
                   setSearchQuery('');
                 }}
-                className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl transition-all duration-200 ease-in-out cursor-pointer text-sm border border-red-200 dark:border-red-700 group focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 hover:bg-red-200 dark:hover:bg-red-900/30 hover:border-red-300 dark:hover:border-red-600 hover:shadow-sm"
+                className="flex items-center gap-2 min-h-[44px] px-4 py-2 bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl transition-all duration-200 ease-in-out cursor-pointer text-sm border border-red-200 dark:border-red-700 group focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 hover:bg-red-200 dark:hover:bg-red-900/30 hover:border-red-300 dark:hover:border-red-600 hover:shadow-sm"
               >
-                <TbX size={18} className="text-red-600 dark:text-red-400 transition-colors duration-200" />
-                <span className="hidden sm:inline">{t('filters.clear')}</span>
-                <span className="sm:hidden">Temizle</span>
+                <TbX size={18} className="text-red-600 dark:text-red-400 transition-colors duration-200 flex-shrink-0" />
+                <span className="whitespace-nowrap">{t('filters.clear')}</span>
               </button>
             )}
 
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-300 rounded-xl transition-all duration-200 ease-in-out cursor-pointer text-sm group focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-200 dark:hover:border-blue-700 border border-transparent"
+              className="flex items-center gap-2 min-h-[44px] px-4 py-2 bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-300 rounded-xl transition-all duration-200 ease-in-out cursor-pointer text-sm group focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-200 dark:hover:border-blue-700 border border-transparent"
             >
-              <TbFilter size={18} className="text-[#4a90e2] dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200" />
-              <span className="hidden sm:inline">{t('filters.title')}</span>
-              <span className="sm:hidden">Filter</span>
+              <TbFilter size={18} className="text-[#4a90e2] dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200 flex-shrink-0" />
+              <span className="whitespace-nowrap">{t('filters.title')}</span>
             </button>
           </div>
         </div>
 
-        {/* Advanced Filters */}
+        {/* Advanced Filters - Desktop */}
         {showFilters && (
           <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <span className="text-sm text-slate-600 dark:text-slate-400 font-medium">{t('filters.difficulty')}:</span>
               {Object.entries(difficultyLevels).map(([key, level]) => {
                 const getDifficultyStyles = (difficultyKey, isActive) => {
@@ -467,7 +686,7 @@ const QuestGrid = () => {
                   <button
                     key={key}
                     onClick={() => setSelectedDifficulty(selectedDifficulty === key ? 'all' : key)}
-                    className={`flex items-center gap-2 rounded-full px-2 py-[2px] border text-[11px] font-medium transition-all duration-200 ease-in-out cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                    className={`flex items-center gap-2 min-h-[44px] rounded-full px-2 py-[2px] border text-[11px] font-medium transition-all duration-200 ease-in-out cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                       isActive
                         ? 'focus:ring-green-500'
                         : `bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-300 border-slate-300 dark:border-slate-600 focus:ring-slate-400 ${
@@ -495,11 +714,11 @@ const QuestGrid = () => {
                     }}
                   >
                     {isActive ? (
-                      <TbCircleDot size={18} style={{ color: getIconColor(key, true) }} />
+                      <TbCircleDot size={18} style={{ color: getIconColor(key, true) }} className="flex-shrink-0" />
                     ) : (
-                      <TbCircle size={18} className="text-[#4a90e2] dark:text-gray-300 transition-colors duration-200" />
+                      <TbCircle size={18} className="text-[#4a90e2] dark:text-gray-300 transition-colors duration-200 flex-shrink-0" />
                     )}
-                    <span>{t(level.nameKey || level.name)}</span>
+                    <span className="whitespace-nowrap">{t(level.nameKey || level.name)}</span>
                   </button>
                 );
               })}

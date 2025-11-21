@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useContext } from 'react';
 import { useLanguage } from '../../../context/LanguageContext';
 import { useQuest } from '../../../context/QuestContext';
 import { WalletContext } from '../../../context/WalletContext';
@@ -7,6 +7,7 @@ import { useToken } from '../../../context/TokenContext';
 import { Card, CardContent } from '../../ui/Card';
 import Badge from '../../ui/Badge';
 import Button from '../../ui/Button';
+import PublicKeyTooltip from '../../ui/PublicKeyTooltip';
 
 const Achievements = () => {
   const { t } = useLanguage();
@@ -14,7 +15,6 @@ const Achievements = () => {
   const { userStats } = useQuest();
   const { totalEarned } = useBalance(); // Live token balance
   const { tokenData } = useToken(); // Live quest data
-  const [selectedPeriod, setSelectedPeriod] = useState('all-time');
   
   const currentUser = {
     rank: 1, // Always #1 for personal dashboard
@@ -28,7 +28,7 @@ const Achievements = () => {
 
   if (!publicKey) {
     return (
-      <div className="space-y-8">
+      <div className="space-y-8 pt-4 sm:pt-6">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">
             🏆 {t('achievements.pageTitle')}
@@ -52,15 +52,8 @@ const Achievements = () => {
     );
   }
 
-  const periods = [
-    { id: 'all-time', label: t('achievements.filter.allTime') },
-    { id: 'monthly', label: t('achievements.filter.thisMonth') },
-    { id: 'weekly', label: t('achievements.filter.thisWeek') }
-  ];
-
-
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 pt-4 sm:pt-6">
       {/* Header */}
       <div className="text-center">
         <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">
@@ -71,27 +64,8 @@ const Achievements = () => {
         </p>
       </div>
 
-      {/* Period Selector */}
-      <div className="flex justify-center">
-        <div className="bg-slate-100 dark:bg-slate-800 rounded-lg p-1">
-          {periods.map(period => (
-            <button
-              key={period.id}
-              onClick={() => setSelectedPeriod(period.id)}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                selectedPeriod === period.id
-                  ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              {period.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
       {/* Personal Achievement Card */}
-      <div className="max-w-md mx-auto">
+      <div className="max-w-md mx-auto mt-6 sm:mt-8">
         <Card className="relative overflow-hidden border-2 border-indigo-200 dark:border-indigo-700 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20">
           <CardContent className="p-8 text-center">
             {/* Achievement Badge */}
@@ -103,9 +77,12 @@ const Achievements = () => {
             <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
               {currentUser.username}
             </h3>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 font-mono">
-              {currentUser.address}
-            </p>
+            <div className="mb-6">
+              <PublicKeyTooltip
+                publicKey={currentUser.address}
+                textClassName="text-sm text-slate-500 dark:text-slate-400 font-mono"
+              />
+            </div>
 
             {/* Stats - CRITICAL FIX: Remove Seviye (Level) system */}
             <div className="space-y-3 text-sm">
@@ -138,62 +115,6 @@ const Achievements = () => {
           </CardContent>
         </Card>
       </div>
-
-      {/* Detailed Achievement Stats */}
-      <Card>
-        <CardContent className="p-6">
-          <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-6 text-center">
-            {t('achievements.detailedStats')}
-          </h3>
-          <div className="space-y-4">
-            <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 border-2 border-indigo-200 dark:border-indigo-700 rounded-lg p-6">
-              {/* User Info */}
-              <div className="flex items-center space-x-4 mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                  {currentUser.username.charAt(0)}
-                </div>
-                <div>
-                  <h4 className="font-semibold text-indigo-600 dark:text-indigo-400 text-lg">
-                    {currentUser.username}
-                  </h4>
-                  <p className="text-sm text-slate-500 dark:text-slate-400 font-mono">
-                    {currentUser.address}
-                  </p>
-                </div>
-              </div>
-
-              {/* Stats - CRITICAL FIX: Remove Seviye (Level) system */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                <div className="text-center">
-                  <div className="font-medium text-slate-900 dark:text-white text-2xl">
-                    {currentUser.totalTokens.toLocaleString()}
-                  </div>
-                  <div className="text-slate-500 dark:text-slate-400">{t('achievements.token')}</div>
-                </div>
-                <div className="text-center">
-                  <div className="font-medium text-slate-900 dark:text-white text-2xl">
-                    {currentUser.certificates}
-                  </div>
-                  <div className="text-slate-500 dark:text-slate-400">{t('achievements.certificate')}</div>
-                </div>
-                <div className="text-center">
-                  <div className="font-medium text-slate-900 dark:text-white text-2xl">
-                    {currentUser.completedQuests}
-                  </div>
-                  <div className="text-slate-500 dark:text-slate-400">{t('profile.completedQuests')}</div>
-                </div>
-              </div>
-
-              {/* Achievement Badge */}
-              <div className="mt-4 text-center">
-                <Badge variant="primary" className="text-lg px-4 py-2">
-                  {t('achievements.successfulStudent')}
-                </Badge>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
 
       {/* Call to Action */}
       <div className="text-center py-8">

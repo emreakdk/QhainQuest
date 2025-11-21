@@ -7,6 +7,9 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
+      screens: {
+        'lg-header': '1500px',
+      },
       colors: {
         primary: {
           50: '#f0f9ff',
