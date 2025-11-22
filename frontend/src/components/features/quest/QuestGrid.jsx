@@ -30,7 +30,7 @@ import {
 
 const QuestQuiz = lazy(() => import('./QuestQuiz'));
 
-const QuestGrid = () => {
+const QuestGrid = ({ onPageChange }) => {
   const { t } = useLanguage();
   const { publicKey, isDemoMode } = useContext(WalletContext);
   const { quests, loading, error, userStats, userProgress, getQuestStatus, getQuestProgress, refreshData } = useQuest();
@@ -181,6 +181,7 @@ const QuestGrid = () => {
             setSelectedQuest(null);
             console.log('Quest closed, staying on tasks page');
           }}
+          onPageChange={onPageChange}
         />
       </Suspense>
     );

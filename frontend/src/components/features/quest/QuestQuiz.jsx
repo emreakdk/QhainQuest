@@ -13,9 +13,9 @@ import { questDatabase } from '../../../data/questData';
 import { Card, CardContent, CardHeader } from '../../ui/Card';
 import Button from '../../ui/Button';
 import Badge from '../../ui/Badge';
-import CelebrationModal from './CelebrationModal';
+import QuestCompletionModal from './QuestCompletionModal';
 
-const QuestQuiz = ({ questId, onComplete, onClose }) => {
+const QuestQuiz = ({ questId, onComplete, onClose, onPageChange }) => {
   const { publicKey, isDemoMode } = useContext(WalletContext);
   const { t } = useLanguage();
   const { showSuccess, showError } = useNotification();
@@ -562,12 +562,12 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
         </Card>
       </div>
 
-      {/* Celebration Modal */}
+      {/* Quest Completion Modal */}
       {showCelebration && (
-        <CelebrationModal
+        <QuestCompletionModal
           quest={quest}
           onClose={() => {
-            console.log('DEBUG: CelebrationModal closed');
+            console.log('DEBUG: QuestCompletionModal closed');
             setShowCelebration(false);
             setIsTestActive(false);
             onComplete();
@@ -576,6 +576,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
             setIsTestActive(false);
             onComplete();
           }}
+          onPageChange={onPageChange}
         />
       )}
     </div>

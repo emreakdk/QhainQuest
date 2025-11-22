@@ -95,7 +95,7 @@ function AppContent() {
   const renderPage = () => {
     switch (currentPage) {
       case 'quests':
-        return <QuestGrid />;
+        return <QuestGrid onPageChange={handlePageChange} />;
       case 'profile':
         return <UserProfile onPageChange={handlePageChange} />;
       case 'leaderboard':
@@ -105,7 +105,7 @@ function AppContent() {
       case 'learn-web3':
         return <LearnWeb3 onPageChange={handlePageChange} />;
       default:
-        return <QuestGrid />;
+        return <QuestGrid onPageChange={handlePageChange} />;
     }
   };
   
