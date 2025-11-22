@@ -35,12 +35,13 @@ const Web3IdentityCard = ({
     });
   };
 
-  // Fixed card style with gradient - ensures gradient is captured in image
-  const fixedCardStyle = {
-    // This mimics the 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900' look
-    background: 'linear-gradient(135deg, #0f172a 0%, #3b0764 50%, #0f172a 100%)',
+  // Card capture style - FORCE opaque gradient background (no transparency)
+  const cardCaptureStyle = {
+    // FORCE the gradient background so it is NOT transparent
+    backgroundImage: 'linear-gradient(to bottom right, #0f172a, #4c1d95, #0f172a)',
+    backgroundColor: '#0f172a', // Fallback color to ensure opacity
     color: '#ffffff',
-    borderColor: 'rgba(139, 92, 246, 0.2)', // purple-500/20
+    border: '1px solid rgba(255, 255, 255, 0.1)',
     aspectRatio: '16/9',
     minHeight: '320px',
   };
@@ -48,11 +49,12 @@ const Web3IdentityCard = ({
   const handleDownload = useCallback(() => {
     if (cardRef.current === null) return;
     
-    // Do NOT set backgroundColor here, let the element's inline style handle it
     toPng(cardRef.current, { 
       cacheBust: true,
       pixelRatio: 2,
       quality: 1.0,
+      // Explicitly set background color in config as a safety net against transparency
+      backgroundColor: '#0f172a',
     })
       .then((dataUrl) => {
         const link = document.createElement('a');
@@ -71,8 +73,8 @@ const Web3IdentityCard = ({
       {/* Identity Card - Always Dark/Premium appearance */}
       <div
         ref={cardRef}
-        className="relative rounded-2xl p-8 shadow-2xl border overflow-hidden"
-        style={fixedCardStyle}
+        className="relative rounded-2xl p-8 shadow-2xl overflow-hidden"
+        style={cardCaptureStyle}
       >
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
