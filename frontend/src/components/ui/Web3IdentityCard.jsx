@@ -1,7 +1,6 @@
 import { useRef, useCallback } from 'react';
 import { toPng } from 'html-to-image';
 import { useLanguage } from '../../context/LanguageContext';
-import { useTheme } from '../../context/ThemeContext';
 import { TbDownload, TbCheck } from 'react-icons/tb';
 import Button from './Button';
 
@@ -12,7 +11,6 @@ const Web3IdentityCard = ({
   isDemoMode = false 
 }) => {
   const { t, language } = useLanguage();
-  const { isDarkMode } = useTheme();
   const cardRef = useRef(null);
 
   const formatAddress = (address) => {
@@ -40,14 +38,12 @@ const Web3IdentityCard = ({
   const handleDownload = useCallback(() => {
     if (cardRef.current === null) return;
     
-    // Force background color during capture to ensure theme consistency
-    const captureBgColor = isDarkMode ? '#0f172a' : '#ffffff';
-    
+    // Always use dark background for capture (card is always dark)
     toPng(cardRef.current, { 
       cacheBust: true,
       pixelRatio: 2,
       quality: 1.0,
-      backgroundColor: captureBgColor,
+      backgroundColor: '#0f172a', // slate-900 - always dark
     })
       .then((dataUrl) => {
         const link = document.createElement('a');
@@ -58,24 +54,24 @@ const Web3IdentityCard = ({
       .catch((err) => {
         console.error('Kimlik kartı oluşturulamadı:', err);
       });
-  }, [isDarkMode, publicKey]);
+  }, [publicKey]);
 
 
   return (
     <div className="w-full max-w-2xl mx-auto">
-      {/* Identity Card */}
+      {/* Identity Card - Always Dark/Premium appearance */}
       <div
         ref={cardRef}
-        className="relative bg-gradient-to-br from-slate-50 via-purple-50 to-slate-100 dark:from-slate-900 dark:via-purple-900 dark:to-slate-900 rounded-2xl p-8 shadow-2xl border border-purple-200 dark:border-purple-500/20 overflow-hidden"
+        className="relative bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 rounded-2xl p-8 shadow-2xl border border-purple-500/20 overflow-hidden"
         style={{
           aspectRatio: '16/9',
           minHeight: '320px',
         }}
       >
         {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10 dark:opacity-10">
+        <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 2px 2px, ${isDarkMode ? 'white' : 'black'} 1px, transparent 0)`,
+            backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
             backgroundSize: '40px 40px',
           }}></div>
         </div>
@@ -96,8 +92,8 @@ const Web3IdentityCard = ({
               </div>
               
               {/* Rank Badge */}
-              <div className="bg-white/10 dark:bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 border border-slate-300/50 dark:border-white/20">
-                <span className="text-sm font-semibold text-slate-900 dark:text-white">
+              <div className="bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20">
+                <span className="text-sm font-semibold text-white">
                   {getRank()}
                 </span>
               </div>
@@ -111,7 +107,7 @@ const Web3IdentityCard = ({
                   <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 mb-1">
                     ChainQuest
                   </div>
-                  <div className="text-xs text-slate-600 dark:text-slate-400">
+                  <div className="text-xs text-slate-400">
                     {language === 'tr' ? 'Web3 Öğrenme Platformu' : 'Web3 Learning Platform'}
                   </div>
                 </div>
@@ -119,17 +115,17 @@ const Web3IdentityCard = ({
 
               {/* Wallet Address */}
               <div className="mb-4">
-                <div className="text-xs text-slate-600 dark:text-slate-400 mb-1">
+                <div className="text-xs text-slate-400 mb-1">
                   {language === 'tr' ? 'Cüzdan Adresi' : 'Wallet Address'}
                 </div>
-                <div className="font-mono text-sm text-slate-900 dark:text-white bg-white/50 dark:bg-white/5 rounded px-3 py-2 border border-slate-300/50 dark:border-white/10">
+                <div className="font-mono text-sm text-white bg-white/5 rounded px-3 py-2 border border-white/10">
                   {formatAddress(publicKey)}
                 </div>
               </div>
 
               {/* CQT Earned - Large Gold Text */}
               <div className="mb-4">
-                <div className="text-xs text-slate-600 dark:text-slate-400 mb-2">
+                <div className="text-xs text-slate-400 mb-2">
                   {language === 'tr' ? 'Toplam Kazanılan' : 'Total Earned'}
                 </div>
                 <div className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-400">
@@ -138,16 +134,16 @@ const Web3IdentityCard = ({
               </div>
 
               {/* Footer - Verified Badge & Date */}
-              <div className="flex items-center justify-between pt-4 border-t border-slate-300/50 dark:border-white/10">
+              <div className="flex items-center justify-between pt-4 border-t border-white/10">
                 <div className="flex items-center gap-2">
                   <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
                     <TbCheck className="w-4 h-4 text-white" />
                   </div>
-                  <span className="text-xs text-slate-700 dark:text-slate-300 font-medium">
+                  <span className="text-xs text-slate-300 font-medium">
                     {language === 'tr' ? 'Doğrulanmış Öğrenci' : 'Verified Student'}
                   </span>
                 </div>
-                <div className="text-xs text-slate-600 dark:text-slate-400">
+                <div className="text-xs text-slate-400">
                   {getCurrentDate()}
                 </div>
               </div>
