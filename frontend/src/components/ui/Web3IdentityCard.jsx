@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useCallback } from 'react';
 import { toPng } from 'html-to-image';
 import { useLanguage } from '../../context/LanguageContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -37,67 +37,39 @@ const Web3IdentityCard = ({
     });
   };
 
-  const handleDownload = async () => {
-    if (!cardRef.current) return;
-
-    try {
-      // Dynamic background color based on current theme
-      const captureBackgroundColor = isDarkMode ? '#0f172a' : '#ffffff'; // slate-900 (dark) or white (light)
-
-      const dataUrl = await toPng(cardRef.current, {
-        quality: 1.0,
-        pixelRatio: 2,
-        backgroundColor: captureBackgroundColor,
-        cacheBust: true,
-        style: {
-          '-webkit-font-smoothing': 'antialiased',
-          '-moz-osx-font-smoothing': 'grayscale',
-        },
-      });
-
-      const link = document.createElement('a');
-      link.download = `ChainQuest-Profile-${publicKey?.slice(0, 8) || 'demo'}.png`;
-      link.href = dataUrl;
-      link.click();
-    } catch (error) {
-      console.error('Error generating image:', error);
+  const handleDownload = useCallback(() => {
+    if (cardRef.current === null) {
+      return;
     }
-  };
 
-  // Simple QR Code SVG Placeholder
-  const QRCodePlaceholder = () => {
-    const qrColor = isDarkMode ? 'white' : 'black';
-    const qrBgOpacity = isDarkMode ? 0.1 : 0.05;
-    return (
-      <svg width="80" height="80" viewBox="0 0 80 80" className="opacity-60">
-        <rect width="80" height="80" fill={qrColor} fillOpacity={qrBgOpacity} rx="4" />
-        <rect x="8" y="8" width="12" height="12" fill={qrColor} />
-        <rect x="60" y="8" width="12" height="12" fill={qrColor} />
-        <rect x="8" y="60" width="12" height="12" fill={qrColor} />
-        <rect x="20" y="20" width="4" height="4" fill={qrColor} />
-        <rect x="28" y="20" width="4" height="4" fill={qrColor} />
-        <rect x="36" y="20" width="4" height="4" fill={qrColor} />
-        <rect x="20" y="28" width="4" height="4" fill={qrColor} />
-        <rect x="36" y="28" width="4" height="4" fill={qrColor} />
-        <rect x="20" y="36" width="4" height="4" fill={qrColor} />
-        <rect x="28" y="36" width="4" height="4" fill={qrColor} />
-        <rect x="36" y="36" width="4" height="4" fill={qrColor} />
-        <rect x="48" y="20" width="4" height="4" fill={qrColor} />
-        <rect x="56" y="20" width="4" height="4" fill={qrColor} />
-        <rect x="48" y="28" width="4" height="4" fill={qrColor} />
-        <rect x="56" y="28" width="4" height="4" fill={qrColor} />
-        <rect x="20" y="48" width="4" height="4" fill={qrColor} />
-        <rect x="28" y="48" width="4" height="4" fill={qrColor} />
-        <rect x="36" y="48" width="4" height="4" fill={qrColor} />
-        <rect x="48" y="48" width="4" height="4" fill={qrColor} />
-        <rect x="56" y="48" width="4" height="4" fill={qrColor} />
-        <rect x="20" y="56" width="4" height="4" fill={qrColor} />
-        <rect x="36" y="56" width="4" height="4" fill={qrColor} />
-        <rect x="48" y="56" width="4" height="4" fill={qrColor} />
-        <rect x="56" y="56" width="4" height="4" fill={qrColor} />
-      </svg>
-    );
-  };
+    // 1. Determine exact colors based on CURRENT theme state
+    const captureBgColor = isDarkMode ? '#0f172a' : '#ffffff';
+    const captureTextColor = isDarkMode ? '#ffffff' : '#0f172a';
+
+    toPng(cardRef.current, {
+      cacheBust: true,
+      pixelRatio: 2,
+      quality: 1.0,
+      // 2. FORCE background color
+      backgroundColor: captureBgColor,
+      // 3. FORCE text color via style injection to ensure contrast
+      style: {
+        color: captureTextColor,
+        '-webkit-font-smoothing': 'antialiased',
+        '-moz-osx-font-smoothing': 'grayscale',
+      },
+    })
+      .then((dataUrl) => {
+        const link = document.createElement('a');
+        link.download = `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 6) : 'Demo'}.png`;
+        link.href = dataUrl;
+        link.click();
+      })
+      .catch((err) => {
+        console.error('Kimlik kartı oluşturulamadı:', err);
+      });
+  }, [isDarkMode, publicKey]);
+
 
   return (
     <div className="w-full max-w-2xl mx-auto">
@@ -143,8 +115,8 @@ const Web3IdentityCard = ({
 
             {/* Right Side - Info */}
             <div className="flex-1 flex flex-col justify-between h-full">
-              {/* Top Section - Logo & Wallet */}
-              <div className="flex items-start justify-between mb-4">
+              {/* Top Section - Logo */}
+              <div className="mb-4">
                 <div>
                   <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 mb-1">
                     ChainQuest
@@ -153,7 +125,6 @@ const Web3IdentityCard = ({
                     {language === 'tr' ? 'Web3 Öğrenme Platformu' : 'Web3 Learning Platform'}
                   </div>
                 </div>
-                <QRCodePlaceholder />
               </div>
 
               {/* Wallet Address */}
