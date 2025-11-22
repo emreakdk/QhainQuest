@@ -1,5 +1,5 @@
 import { useRef, useCallback } from 'react';
-import { toPng } from 'html-to-image';
+import html2canvas from 'html2canvas';
 import { useLanguage } from '../../context/LanguageContext';
 import { TbDownload, TbCheck } from 'react-icons/tb';
 import Button from './Button';
@@ -36,35 +36,36 @@ const Web3IdentityCard = ({
   };
 
   // Card capture style - FORCE opaque gradient background (no transparency)
+  // Using standard CSS syntax for html2canvas compatibility
   const cardCaptureStyle = {
-    // FORCE the gradient background so it is NOT transparent
-    backgroundImage: 'linear-gradient(to bottom right, #0f172a, #4c1d95, #0f172a)',
-    backgroundColor: '#0f172a', // Fallback color to ensure opacity
-    color: '#ffffff',
+    background: 'linear-gradient(135deg, #0f172a 0%, #3b0764 50%, #0f172a 100%)', // Explicit Gradient
+    color: 'white',
     border: '1px solid rgba(255, 255, 255, 0.1)',
     aspectRatio: '16/9',
     minHeight: '320px',
   };
 
-  const handleDownload = useCallback(() => {
+  const handleDownload = useCallback(async () => {
     if (cardRef.current === null) return;
     
-    toPng(cardRef.current, { 
-      cacheBust: true,
-      pixelRatio: 2,
-      quality: 1.0,
-      // Explicitly set background color in config as a safety net against transparency
-      backgroundColor: '#0f172a',
-    })
-      .then((dataUrl) => {
-        const link = document.createElement('a');
-        link.download = `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 6) : 'Demo'}.png`;
-        link.href = dataUrl;
-        link.click();
-      })
-      .catch((err) => {
-        console.error('Kimlik kartı oluşturulamadı:', err);
+    try {
+      // html2canvas captures the element exactly as rendered
+      const canvas = await html2canvas(cardRef.current, {
+        scale: 2, // Higher quality
+        useCORS: true, // Handle cross-origin images (like avatars)
+        backgroundColor: '#0f172a', // FORCE Dark Background (Slate-900) as a fallback
+        logging: false,
+        allowTaint: true,
       });
+      
+      const dataUrl = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.download = `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 6) : 'Demo'}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error('Kimlik oluşturma hatası:', err);
+    }
   }, [publicKey]);
 
 
