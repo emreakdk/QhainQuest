@@ -351,27 +351,18 @@ const QuestQuiz = ({ questId, onComplete, onClose, onPageChange }) => {
 
   if (questCompleted) {
     return (
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        <div className="transform transition-all duration-300 scale-100 opacity-100">
-          <Card className="w-full max-w-lg mx-auto bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 border-purple-200 dark:border-purple-700">
-            <CardHeader className="text-center pb-4 py-8">
-              <div className="text-6xl mb-4 animate-bounce">🎉</div>
-              <h2 className="text-2xl font-bold text-slate-700 dark:text-purple-200 mb-4">
-                {t('profile.questCompleted')}
-              </h2>
-              <p className="text-purple-600 dark:text-purple-300 mb-8">
-                {t('quest.alreadyCompleted')}
-              </p>
-              <Button
-                onClick={onClose}
-                className="cursor-pointer bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white px-8 py-3 rounded-xl font-semibold text-lg transition-all duration-200 hover:scale-105"
-              >
-                Ana Sayfaya Dön
-              </Button>
-            </CardHeader>
-          </Card>
-        </div>
-      </div>
+      <QuestCompletionModal
+        quest={quest}
+        onClose={() => {
+          setIsTestActive(false);
+          onClose();
+        }}
+        onComplete={() => {
+          setIsTestActive(false);
+          onClose();
+        }}
+        onPageChange={onPageChange}
+      />
     );
   }
 
