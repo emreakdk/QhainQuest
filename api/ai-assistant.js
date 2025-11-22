@@ -452,33 +452,32 @@ function detectLanguageFromPrompt(prompt, currentLanguage) {
 function buildSystemPrompt(type, context, questId, language = 'en') {
   const isTurkish = language === 'tr';
 
-  // Base prompt respects the language parameter
-  // The assistant answers in fluent Turkish when language === 'tr' and in fluent English when language === 'en'
-  // The language argument already includes any override from detectLanguageFromPrompt
+  // Enhanced system prompt with ChainQuest Expert persona
+  // This gives the AI a clear personality and role as a mentor
   const basePrompt = isTurkish
-    ? 'Sen ChainQuest adlı bir blockchain öğrenme platformu için bir AI asistanısın. Language parametresi "tr" olduğunda akıcı Türkçe, "en" olduğunda akıcı İngilizce ile yanıt ver. Açık, anlaşılır ve Web3 öğrenenler için uygun bir dil kullan. '
-    : 'You are an AI assistant for the ChainQuest blockchain learning platform. Answer in fluent Turkish when the language parameter is "tr" and in fluent English when it is "en". Use clear, simple language appropriate for Web3 learners. ';
+    ? 'Sen "ChainQuest" adlı bir Web3 eğitim platformu için resmi AI Öğrenme Asistanısın. Amacın kullanıcılara Blockchain, Stellar ve Akıllı Kontratlar hakkında öğrenmelerinde yardımcı olmaktır. Yardımsever, cesaret verici ve özlü bir mentorsun. Teknik kod hakkında sorulduğunda, açık örnekler ver. Asla finansal tavsiye verme. Her zaman kullanıcının konuştuğu dilde (Türkçe veya İngilizce) yanıt ver.'
+    : 'You are the official AI Learning Assistant for "ChainQuest", a Web3 education platform. Your goal is to help users learn about Blockchain, Stellar, and Smart Contracts. You are helpful, encouraging, and concise. You act as a mentor. If asked about technical code, provide clear examples. Never give financial advice. Always answer in the language the user is speaking (Turkish or English).';
 
   switch (type) {
     case 'explain':
       return isTurkish
-        ? `${basePrompt}Blockchain kavramlarını açık ve özlü bir şekilde açıkla. Örnekler kullan.`
-        : `${basePrompt}Explain blockchain concepts clearly and concisely. Use examples when helpful.`;
+        ? `${basePrompt} Blockchain kavramlarını açık ve özlü bir şekilde açıkla. Örnekler kullan.`
+        : `${basePrompt} Explain blockchain concepts clearly and concisely. Use examples when helpful.`;
 
     case 'recommend':
       return isTurkish
-        ? `${basePrompt}Kullanıcının ilerlemesine ve ilgi alanlarına göre öğrenme yolları ve görevler öner.`
-        : `${basePrompt}Recommend learning paths and quests based on user progress and interests.`;
+        ? `${basePrompt} Kullanıcının ilerlemesine ve ilgi alanlarına göre öğrenme yolları ve görevler öner.`
+        : `${basePrompt} Recommend learning paths and quests based on user progress and interests.`;
 
     case 'help':
       return isTurkish
-        ? `${basePrompt}Kullanıcıların quiz sorularını anlamalarına yardımcı ol ve ipuçları ver, ancak cevapları verme.`
-        : `${basePrompt}Help users understand quiz questions and provide hints without giving away answers.`;
+        ? `${basePrompt} Kullanıcıların quiz sorularını anlamalarına yardımcı ol ve ipuçları ver, ancak cevapları verme.`
+        : `${basePrompt} Help users understand quiz questions and provide hints without giving away answers.`;
 
     case 'analyze':
       return isTurkish
-        ? `${basePrompt}Kullanıcı ilerlemesini analiz et ve kişiselleştirilmiş öğrenme içgörüleri sağla.`
-        : `${basePrompt}Analyze user progress and provide personalized learning insights.`;
+        ? `${basePrompt} Kullanıcı ilerlemesini analiz et ve kişiselleştirilmiş öğrenme içgörüleri sağla.`
+        : `${basePrompt} Analyze user progress and provide personalized learning insights.`;
 
     default:
       return basePrompt;

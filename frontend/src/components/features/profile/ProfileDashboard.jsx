@@ -233,11 +233,15 @@ const ProfileDashboard = () => {
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <span className="text-slate-600 dark:text-slate-400">{t('profile.streak.daily')}</span>
-                <Badge variant="success">{streakInfo.dailyStreak} {t('profile.streak.dayUnit')}</Badge>
+                <span className="inline-flex items-center rounded-full px-2.5 py-1 border border-slate-200 bg-white text-slate-800 dark:bg-slate-800 dark:border-slate-500 dark:text-slate-300 text-xs font-medium">
+                  {streakInfo.dailyStreak} {t('profile.streak.dayUnit')}
+                </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-slate-600 dark:text-slate-400">{t('profile.streak.best')}</span>
-                <Badge variant="primary">{streakInfo.bestStreak} {t('profile.streak.dayUnit')}</Badge>
+                <span className="inline-flex items-center rounded-full px-2.5 py-1 border border-slate-200 bg-white text-slate-800 dark:bg-slate-800 dark:border-slate-500 dark:text-slate-300 text-xs font-medium">
+                  {streakInfo.bestStreak} {t('profile.streak.dayUnit')}
+                </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-slate-600 dark:text-slate-400">{t('profile.streak.lastActive')}</span>

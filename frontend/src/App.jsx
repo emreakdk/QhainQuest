@@ -2,6 +2,7 @@ import { useContext, useState, useEffect, useMemo } from 'react';
 import { WalletContext } from './context/WalletContext';
 import { TokenProvider, useToken } from './context/TokenContext';
 import { BalanceProvider, useBalance } from './context/BalanceContext';
+import { TestProvider } from './context/TestContext';
 import { useQuest } from './context/QuestContext';
 import Header from './components/layout/Header';
 import HeroSection from './components/layout/HeroSection';
@@ -11,12 +12,15 @@ import Achievements from './components/features/achievements/Achievements';
 import HowToClaimPage from './pages/HowToClaimPage';
 import LearnWeb3 from './pages/LearnWeb3';
 import GlobalLoader from './components/ui/GlobalLoader';
+import AIAssistantWidget from './components/features/ai/AIAssistantWidget';
 
 function App() {
   return (
     <TokenProvider>
       <BalanceProvider>
-        <AppContent />
+        <TestProvider>
+          <AppContent />
+        </TestProvider>
       </BalanceProvider>
     </TokenProvider>
   );
@@ -123,6 +127,8 @@ function AppContent() {
             <HeroSection onPageChange={handlePageChange} />
           )}
         </main>
+        {/* Global AI Assistant Widget - Available on all pages */}
+        {(publicKey || isDemoMode) && <AIAssistantWidget />}
       </div>
     </>
   );

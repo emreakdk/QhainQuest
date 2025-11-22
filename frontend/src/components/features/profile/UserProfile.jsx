@@ -6,10 +6,10 @@ import { useQuest } from '../../../context/QuestContext';
 import { useToken } from '../../../context/TokenContext';
 import { getCompletedQuestsForUser } from '../../../utils/tokenBalanceCalculator';
 import { useDeviceType } from '../../../hooks/useDeviceType';
+import { TbChartBar, TbAward } from 'react-icons/tb';
 import ProfileStats from './ProfileStats';
 import CertificateCard from './CertificateCard';
 import ProfileDashboard from './ProfileDashboard';
-import LearningRecommendations from '../ai/LearningRecommendations';
 import Button from '../../ui/Button';
 import Badge from '../../ui/Badge';
 import MobileWarning from '../../ui/MobileWarning';
@@ -41,11 +41,11 @@ const UserProfile = ({ onPageChange }) => {
 
   const tabs = useMemo(() => {
     const baseTabs = [
-      { id: 'overview', label: t('profile.overview'), icon: '📊' }
+      { id: 'overview', label: t('profile.overview'), icon: TbChartBar }
     ];
     
     if (!isDemoMode) {
-      baseTabs.push({ id: 'certificates', label: t('profile.certificates'), icon: '🏆' });
+      baseTabs.push({ id: 'certificates', label: t('profile.certificates'), icon: TbAward });
     }
     
     return baseTabs;
@@ -66,29 +66,19 @@ const UserProfile = ({ onPageChange }) => {
         <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-2">
           {t('profile.title')}
         </h1>
-        <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-2">
-          <Badge variant="primary" className="text-xs sm:text-sm">
+        <div className="flex items-center justify-center">
+          {/* Wallet Address Badge - Outlined style matching Streak badges */}
+          <span className="inline-flex items-center rounded-full px-2.5 py-1 border border-indigo-200 bg-white text-indigo-900 dark:bg-slate-800 dark:border-indigo-500 dark:text-indigo-300 text-xs sm:text-sm font-medium">
             <PublicKeyTooltip
               publicKey={publicKey}
-              textClassName="text-xs sm:text-sm"
+              textClassName="text-xs sm:text-sm text-indigo-900 dark:text-indigo-300"
             />
-          </Badge>
-          {/* UI SIMPLIFICATION: Hide quest completed badge in demo mode */}
-          {!isDemoMode && (
-            <Badge variant="success" className="text-xs sm:text-sm">
-              {tokenData.completedQuests || 0} {t('profile.questCompleted')}
-            </Badge>
-          )}
+          </span>
         </div>
       </div>
 
       {/* Profile Stats */}
       <ProfileStats userStats={userStats} onPageChange={onPageChange} />
-
-      {/* AI Learning Recommendations */}
-      <div className="mb-6">
-        <LearningRecommendations userAddress={publicKey} isDemoMode={isDemoMode} />
-      </div>
 
       {/* Mobile Warning */}
       {isMobile && (
@@ -100,20 +90,23 @@ const UserProfile = ({ onPageChange }) => {
       {/* Tabs */}
       <div className="border-b border-slate-200 dark:border-slate-700">
         <nav className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-8">
-          {tabs.map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => handleTabChange(tab.id)}
-              className={`py-3 sm:py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-                activeTab === tab.id
-                  ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
-                  : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 dark:text-slate-400 dark:hover:text-slate-300'
-              }`}
-            >
-              <span className="mr-2">{tab.icon}</span>
-              {tab.label}
-            </button>
-          ))}
+          {tabs.map(tab => {
+            const IconComponent = tab.icon;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => handleTabChange(tab.id)}
+                className={`py-3 sm:py-4 px-1 border-b-2 font-medium text-sm transition-colors flex items-center ${
+                  activeTab === tab.id
+                    ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
+                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 dark:text-slate-400 dark:hover:text-slate-300'
+                }`}
+              >
+                <IconComponent className="mr-2 w-5 h-5" />
+                {tab.label}
+              </button>
+            );
+          })}
         </nav>
       </div>
 

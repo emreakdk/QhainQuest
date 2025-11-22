@@ -10,9 +10,7 @@ import { SkeletonCard, SkeletonStats } from '../../ui/Skeleton';
 import AnimatedCounter from '../../ui/AnimatedCounter';
 import QuestCard from './QuestCard';
 import Button from '../../ui/Button';
-import Badge from '../../ui/Badge';
 import MobileWarning from '../../ui/MobileWarning';
-import AIAssistant from '../ai/AIAssistant';
 import { questDatabase, questCategories, difficultyLevels, mockUserStats, mockUserProgress } from '../../../data/questData';
 import { 
   TbBook, 
@@ -44,11 +42,11 @@ const QuestGrid = () => {
   // Category hover background classes matching quest card icon colors
   const getCategoryHoverClass = (categoryId) => {
     const hoverClasses = {
-      'all': 'hover:bg-slate-200 dark:hover:bg-slate-600',
-      'blockchain': 'hover:bg-cyan-50 dark:hover:bg-cyan-900/20', // matches #2ab3a6 (teal/cyan)
-      'smart-contracts': 'hover:bg-purple-50 dark:hover:bg-purple-900/20', // matches #8b5cf6 (purple)
-      'defi': 'hover:bg-yellow-50 dark:hover:bg-yellow-900/20', // matches #facc15 (yellow)
-      'nft': 'hover:bg-orange-50 dark:hover:bg-orange-900/20' // matches #fb923c (orange)
+      'all': 'hover:bg-slate-200 dark:hover:bg-slate-700',
+      'blockchain': 'hover:bg-cyan-50 dark:hover:bg-slate-700', // matches #2ab3a6 (teal/cyan)
+      'smart-contracts': 'hover:bg-purple-50 dark:hover:bg-slate-700', // matches #8b5cf6 (purple)
+      'defi': 'hover:bg-yellow-50 dark:hover:bg-slate-700', // matches #facc15 (yellow)
+      'nft': 'hover:bg-orange-50 dark:hover:bg-slate-700' // matches #fb923c (orange)
     };
     return hoverClasses[categoryId] || hoverClasses['all'];
   };
@@ -189,7 +187,54 @@ const QuestGrid = () => {
   }
 
   return (
-    <div className="space-y-8">
+    <>
+      <style>{`
+        /* --- DEFAULT / INACTIVE STATES --- */
+        
+        /* Light Mode: Default Inactive */
+        .category-chip {
+          background-color: #ffffff !important;
+          color: #475569 !important; /* slate-600 */
+          border: 1px solid #e2e8f0 !important; /* slate-200 */
+        }
+
+        /* Light Mode: Hover Inactive */
+        .category-chip:hover {
+          background-color: #f1f5f9 !important; /* slate-100 */
+          color: #1e293b !important; /* slate-800 */
+        }
+
+        /* Dark Mode: Default Inactive */
+        .dark .category-chip {
+          background-color: #1e293b !important; /* slate-800 */
+          color: #cbd5e1 !important; /* slate-300 */
+          border: 1px solid #334155 !important; /* slate-700 */
+        }
+
+        /* Dark Mode: Hover Inactive (ONLY applied when NOT active) */
+        .dark .category-chip:not(.active):hover {
+          background-color: #334155 !important; /* slate-700 */
+        }
+
+        /* --- ACTIVE STATES (PURPLE) --- */
+        
+        /* Base Active State (Both Modes) */
+        .category-chip.active {
+          background-color: #9333ea !important; /* purple-600 */
+          color: #ffffff !important;
+          border: 1px solid #9333ea !important;
+        }
+
+        /* CRITICAL FIX: Force Active State to STAY Purple on Hover */
+        .category-chip.active:hover,
+        .dark .category-chip.active:hover {
+          background-color: #9333ea !important; /* Keep it Purple */
+          color: #ffffff !important;
+          border: 1px solid #9333ea !important;
+          opacity: 1 !important;
+        }
+      `}</style>
+      <div className="space-y-8">
       {/* Hero Header */}
       <div className="text-center relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-pink-500/10 rounded-3xl"></div>
@@ -217,11 +262,6 @@ const QuestGrid = () => {
             </div>
           </div>
         </div>
-      </div>
-
-      {/* AI Assistant Section - Moved above stats */}
-      <div className="mb-8">
-        <AIAssistant />
       </div>
 
       {/* Mobile Warning */}
@@ -337,10 +377,8 @@ const QuestGrid = () => {
                   <button
                     key={category.id}
                     onClick={() => setSelectedCategory(category.id)}
-                    className={`group flex items-center gap-2 min-h-[44px] px-4 py-2.5 rounded-xl font-medium transition-all duration-200 ease-in-out cursor-pointer text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
-                      isActive
-                        ? 'bg-indigo-600 dark:bg-indigo-600 text-white shadow-lg'
-                        : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-slate-600 hover:text-indigo-700 dark:hover:text-slate-200'
+                    className={`category-chip px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 cursor-pointer ${
+                      selectedCategory === category.id ? 'active shadow-md' : ''
                     }`}
                   >
                     <IconComponent 
@@ -353,15 +391,12 @@ const QuestGrid = () => {
                       style={!isActive ? { color: isDarkMode ? 'rgb(203, 213, 225)' : accentColor } : {}}
                     />
                     <span className="whitespace-nowrap">{t(category.nameKey || category.name)}</span>
-                    <Badge 
-                      variant={isActive ? 'default' : 'outline'}
-                      className="ml-1 text-[10px] px-1.5 py-0.5 transition-colors duration-200 flex-shrink-0"
-                    >
+                    <span className="ml-1.5 text-sm opacity-70">
                       {realQuests.filter(q => {
                         if (!q) return false;
                         return getQuestCategory(q) === category.id || category.id === 'all';
                       }).length}
-                    </Badge>
+                    </span>
                   </button>
                 );
               })}
@@ -529,10 +564,8 @@ const QuestGrid = () => {
                 <button
                   key={category.id}
                   onClick={() => setSelectedCategory(category.id)}
-                  className={`group flex items-center gap-2 min-h-[44px] px-4 py-2 rounded-xl font-medium transition-all duration-200 ease-in-out cursor-pointer text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
-                    isActive
-                      ? 'bg-indigo-600 text-white shadow-lg'
-                      : `bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-300 ${getCategoryHoverClass(category.id)}`
+                  className={`category-chip px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 cursor-pointer ${
+                    selectedCategory === category.id ? 'active shadow-md' : ''
                   }`}
                 >
                   <IconComponent 
@@ -545,15 +578,12 @@ const QuestGrid = () => {
                     style={!isActive ? { color: isDarkMode ? 'rgb(203, 213, 225)' : accentColor } : {}}
                   />
                   <span className="whitespace-nowrap">{t(category.nameKey || category.name)}</span>
-                  <Badge 
-                    variant={isActive ? 'default' : 'outline'}
-                    className="ml-1 text-xs px-1.5 py-0.5 transition-colors duration-200 flex-shrink-0"
-                  >
+                  <span className="ml-1.5 text-sm opacity-70">
                     {realQuests.filter(q => {
                       if (!q) return false;
                       return getQuestCategory(q) === category.id || category.id === 'all';
                     }).length}
-                  </Badge>
+                  </span>
                 </button>
               );
             })}
@@ -728,7 +758,7 @@ const QuestGrid = () => {
       </div>
 
       {/* Quest Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 items-stretch">
         {filteredQuests.map(quest => (
           <QuestCard
             key={quest.id}
@@ -761,6 +791,7 @@ const QuestGrid = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 

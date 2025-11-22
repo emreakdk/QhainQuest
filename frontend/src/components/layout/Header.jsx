@@ -4,10 +4,12 @@ import { useToken } from '../../context/TokenContext';
 import { useBalance } from '../../context/BalanceContext';
 import { useTheme } from '../../context/ThemeContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { useTestStatus } from '../../context/TestContext';
 import Button from '../ui/Button';
 import IconButton from '../ui/IconButton';
 import FreighterConnect from '../features/wallet/FreighterConnect';
 import PublicKeyTooltip from '../ui/PublicKeyTooltip';
+import ExitWarningModal from '../ui/ExitWarningModal';
 import { 
   TbSchool, 
   TbListDetails, 
@@ -29,8 +31,11 @@ const Header = ({ currentPage, onPageChange }) => {
   const { claimableBalance, totalEarned } = useBalance(); // Get global balances
   const { theme, toggleTheme, isDarkMode } = useTheme();
   const { t, toggleLanguage, language } = useLanguage();
+  const { isTestActive, setIsTestActive } = useTestStatus();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isCompact, setIsCompact] = useState(false);
+  const [showExitWarning, setShowExitWarning] = useState(false);
+  const [pendingNavigation, setPendingNavigation] = useState(null);
 
   // Listen to window resize to toggle compact mode at 1500px breakpoint
   useEffect(() => {
@@ -57,20 +62,96 @@ const Header = ({ currentPage, onPageChange }) => {
     { id: 'profile', label: t('nav.profile'), icon: TbUserHexagon },
   ];
 
+  // Navigation guard: intercept navigation when test is active
+  const handlePageChange = (pageId) => {
+    if (isTestActive) {
+      // Store the target page and show warning modal
+      setPendingNavigation(pageId);
+      setShowExitWarning(true);
+    } else {
+      // Navigate normally
+      onPageChange(pageId);
+    }
+  };
+
+  // Handle modal confirm: exit test and navigate
+  const handleConfirmExit = () => {
+    // 1. End the active test session
+    if (setIsTestActive) setIsTestActive(false);
+    
+    // 2. Close the warning modal
+    setShowExitWarning(false);
+    
+    // 3. Navigate to the pending page (if set)
+    if (pendingNavigation !== null) {
+      onPageChange(pendingNavigation);
+      setPendingNavigation(null);
+    }
+  };
+
+  // Handle modal cancel: stay on current page
+  const handleCancelExit = () => {
+    // User decided to stay in the test
+    setShowExitWarning(false);
+    setPendingNavigation(null);
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-lg backdrop-blur-sm">
+      <style>{`
+        /* Base Hover State (Light Mode) */
+        .nav-item-force:hover {
+          background-color: #F3E8FF !important; /* purple-100 */
+          color: #7E22CE !important; /* purple-700 */
+        }
+        
+        /* ICON COLOR FIX (Light Mode) */
+        .nav-item-force:hover svg,
+        .nav-item-force.active svg {
+          color: #7E22CE !important; /* purple-700 matches text */
+          stroke: #7E22CE !important; /* Force stroke color if needed */
+        }
+
+        /* Active State (Light Mode) */
+        .nav-item-force.active {
+          background-color: #F3E8FF !important;
+          color: #7E22CE !important;
+        }
+
+        /* Dark Mode Overrides */
+        .dark .nav-item-force:hover {
+          background-color: #1e293b !important; /* slate-800 */
+          color: #ffffff !important;
+        }
+        
+        .dark .nav-item-force.active {
+          background-color: #4f46e5 !important; /* indigo-600 */
+          color: #ffffff !important;
+        }
+
+        /* Dark Mode ICON FIX */
+        .dark .nav-item-force:hover svg,
+        .dark .nav-item-force.active svg {
+          color: #ffffff !important;
+          stroke: #ffffff !important;
+        }
+      `}</style>
       <nav className="container mx-auto flex items-center justify-between p-3 sm:p-4 gap-2 sm:gap-4">
         {/* Left Zone: Logo + CQT Chip (always visible) */}
         <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-shrink-0">
-          {/* Logo */}
-          <div className="flex items-center space-x-2 flex-shrink-0">
+          {/* Logo - Clickable to return home */}
+          <button
+            onClick={() => handlePageChange(null)}
+            className="flex items-center space-x-2 flex-shrink-0 hover:opacity-80 transition-opacity cursor-pointer"
+            aria-label="Return to home"
+          >
             <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">CQ</span>
             </div>
             <span className="hidden sm:inline text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent whitespace-nowrap">
               ChainQuest
             </span>
-          </div>
+          </button>
 
           {/* Token Balance Display - Always visible when available */}
           {(publicKey || isDemoMode) && claimableBalance > 0 && (
@@ -87,23 +168,22 @@ const Header = ({ currentPage, onPageChange }) => {
         <div className="hidden lg:flex items-center gap-1 flex-1 justify-center max-w-2xl mx-4">
           {navigationItems.map(item => {
             const IconComponent = item.icon;
-            // Allow access to learn-web3 and how-to-claim even without wallet
-            const isPublicPage = item.id === 'learn-web3' || item.id === 'how-to-claim';
-            const canShow = (publicKey || isDemoMode) || isPublicPage;
+            // Hide all navigation links for public users (not connected)
+            const canShow = (publicKey || isDemoMode);
             
             if (!canShow) return null;
             
             return (
               <button
                 key={item.id}
-                onClick={() => onPageChange(item.id)}
-                className={`inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer group whitespace-nowrap flex-shrink-0 ${
+                onClick={() => handlePageChange(item.id)}
+                className={`nav-item-force inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer whitespace-nowrap flex-shrink-0 ${
                   currentPage === item.id
-                    ? 'bg-indigo-600 text-white shadow-lg'
-                    : 'text-slate-600 dark:text-slate-400 hover:bg-indigo-600 hover:text-white dark:hover:text-white dark:hover:bg-slate-800'
+                    ? 'active shadow-lg'
+                    : 'bg-transparent text-slate-600 dark:text-slate-400'
                 }`}
               >
-                <IconComponent size={18} className={`${currentPage === item.id ? 'text-white' : 'text-[#8b5cf6] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200'} transition-colors flex-shrink-0`} />
+                <IconComponent size={18} className={`${currentPage === item.id ? 'text-purple-700 dark:text-white' : 'text-[#8b5cf6] dark:text-gray-300'} transition-colors flex-shrink-0`} />
                 {!isCompact && <span className="inline">{item.label}</span>}
               </button>
             );
@@ -137,7 +217,7 @@ const Header = ({ currentPage, onPageChange }) => {
                       exitDemoMode();
                     }
                   }}
-                  className="whitespace-nowrap flex-shrink-0"
+                  className="nav-item-force whitespace-nowrap flex-shrink-0 transition-colors"
                 >
                   {t('wallet.disconnect')}
                 </Button>
@@ -160,7 +240,7 @@ const Header = ({ currentPage, onPageChange }) => {
             variant="noFocus"
             className="group hidden lg:flex"
           >
-            <TbLanguage size={18} className="text-[#1a1a1a] dark:text-gray-300 group-hover:text-[#0a0a0a] dark:group-hover:text-gray-200 transition-colors" />
+            <TbLanguage size={18} className="text-slate-700 dark:text-gray-300 group-hover:text-slate-900 dark:group-hover:text-gray-200 transition-colors" />
           </IconButton>
 
           {/* Theme Toggle Button */}
@@ -172,9 +252,9 @@ const Header = ({ currentPage, onPageChange }) => {
             className="group hidden lg:flex"
           >
             {isDarkMode ? (
-              <TbSun size={18} className="text-[#1a1a1a] dark:text-gray-300 group-hover:text-[#0a0a0a] dark:group-hover:text-gray-200 transition-colors" />
+              <TbSun size={18} className="text-slate-700 dark:text-gray-300 group-hover:text-slate-900 dark:group-hover:text-gray-200 transition-colors" />
             ) : (
-              <TbMoon size={18} className="text-[#1a1a1a] dark:text-gray-300 group-hover:text-[#0a0a0a] dark:group-hover:text-gray-200 transition-colors" />
+              <TbMoon size={18} className="text-slate-700 dark:text-gray-300 group-hover:text-slate-900 dark:group-hover:text-gray-200 transition-colors" />
             )}
           </IconButton>
 
@@ -221,12 +301,11 @@ const Header = ({ currentPage, onPageChange }) => {
               </div>
             )}
             
-            {/* Navigation Items - Show when wallet connected or allow access to public pages */}
+            {/* Navigation Items - Show only when wallet connected or in demo mode */}
             {navigationItems.map(item => {
               const IconComponent = item.icon;
-              // Allow access to learn-web3 and how-to-claim even without wallet
-              const isPublicPage = item.id === 'learn-web3' || item.id === 'how-to-claim';
-              const canShow = (publicKey || isDemoMode) || isPublicPage;
+              // Hide all navigation links for public users (not connected)
+              const canShow = (publicKey || isDemoMode);
               
               if (!canShow) return null;
               
@@ -234,16 +313,16 @@ const Header = ({ currentPage, onPageChange }) => {
                 <button
                   key={item.id}
                   onClick={() => {
-                    onPageChange(item.id);
+                    handlePageChange(item.id);
                     setMobileMenuOpen(false);
                   }}
-                  className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all cursor-pointer inline-flex items-center gap-2 group ${
+                  className={`nav-item-force w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all cursor-pointer inline-flex items-center gap-2 ${
                     currentPage === item.id
-                      ? 'bg-indigo-600 text-white shadow-lg'
-                      : 'text-slate-600 dark:text-slate-400 hover:bg-indigo-600 hover:text-white dark:hover:text-white dark:hover:bg-slate-700'
+                      ? 'active shadow-lg'
+                      : 'bg-transparent text-slate-600 dark:text-slate-400'
                   }`}
                 >
-                  <IconComponent size={18} className={currentPage === item.id ? 'text-white' : 'text-[#8b5cf6] dark:text-gray-300 group-hover:text-white dark:group-hover:text-gray-200 transition-colors'} />
+                  <IconComponent size={18} className={currentPage === item.id ? 'text-purple-700 dark:text-white' : 'text-[#8b5cf6] dark:text-gray-300 transition-colors'} />
                   {item.label}
                 </button>
               );
@@ -287,7 +366,7 @@ const Header = ({ currentPage, onPageChange }) => {
                     }
                     setMobileMenuOpen(false);
                   }}
-                  className="w-full"
+                  className="nav-item-force w-full transition-colors"
                 >
                   {t('wallet.disconnect')}
                 </Button>
@@ -296,6 +375,11 @@ const Header = ({ currentPage, onPageChange }) => {
           </div>
         </div>
       )}
+      <ExitWarningModal
+        isOpen={showExitWarning}
+        onConfirm={handleConfirmExit}
+        onCancel={handleCancelExit}
+      />
     </header>
   );
 };

@@ -83,7 +83,10 @@ const HeroSection = ({ onPageChange }) => {
                 variant="secondary"
                 size="lg"
                 className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 !text-white font-semibold px-4 sm:px-6 md:px-8 py-3 sm:py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 cursor-pointer text-sm sm:text-base mb-4 sm:mb-3 md:mb-4"
-                onClick={() => onPageChange('learn-web3')}
+                onClick={() => {
+                  enterDemoMode(); // Activate demo session
+                  onPageChange('learn-web3'); // Navigate to the Learn page
+                }}
               >
                 {t('nav.learnWeb3')}
               </Button>

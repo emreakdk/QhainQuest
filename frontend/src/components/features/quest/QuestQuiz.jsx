@@ -6,6 +6,7 @@ import { useQuest } from '../../../context/QuestContext';
 import { useToken } from '../../../context/TokenContext';
 import { useBalance } from '../../../context/BalanceContext';
 import { useNotification } from '../../../context/NotificationContext';
+import { useTestStatus } from '../../../context/TestContext';
 import useSound from '../../../hooks/useSound';
 import { questApiService } from '../../../services/questApi';
 import { questDatabase } from '../../../data/questData';
@@ -21,6 +22,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
   const { submitAnswer, getQuestProgress, refreshUserBalance, setActiveQuiz, clearActiveQuiz } = useQuest();
   const { refreshTokenData } = useToken();
   const { addToClaimableBalance } = useBalance(); // Use global balance context
+  const { setIsTestActive } = useTestStatus();
   const { playSuccessSound, playErrorSound, playClickSound } = useSound();
   
   const [quest, setQuest] = useState(null);
@@ -88,6 +90,9 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
         // Set active quiz when quiz starts
         setActiveQuiz(questId);
         
+        // Set test as active for navigation guard
+        setIsTestActive(true);
+        
         console.log(`Quest yüklendi: ${t(realQuest.nameKey)}, Soru sayısı: ${realQuest.lessons.length}`);
       } catch (error) {
         console.error('Quest yükleme hatası:', error);
@@ -97,11 +102,12 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
 
     loadQuest();
     
-    // Cleanup: clear active quiz when component unmounts
+    // Cleanup: clear active quiz and test status when component unmounts
     return () => {
       clearActiveQuiz();
+      setIsTestActive(false);
     };
-  }, [questId, getQuestProgress, showError, setActiveQuiz, clearActiveQuiz]);
+  }, [questId, getQuestProgress, showError, setActiveQuiz, clearActiveQuiz, setIsTestActive, t]);
 
   const currentLesson = quest?.lessons[currentLessonIndex];
   const difficulty = quest ? getDifficultyLevel(quest) : { level: 'easy', color: 'green', label: 'Kolay' };
@@ -386,6 +392,7 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
               <Button
                 onClick={() => {
                   clearActiveQuiz();
+                  setIsTestActive(false);
                   onClose();
                 }}
                 variant="outline"
@@ -562,9 +569,13 @@ const QuestQuiz = ({ questId, onComplete, onClose }) => {
           onClose={() => {
             console.log('DEBUG: CelebrationModal closed');
             setShowCelebration(false);
+            setIsTestActive(false);
             onComplete();
           }}
-          onComplete={onComplete}
+          onComplete={() => {
+            setIsTestActive(false);
+            onComplete();
+          }}
         />
       )}
     </div>
