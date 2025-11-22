@@ -38,12 +38,20 @@ const Web3IdentityCard = ({
   const handleDownload = useCallback(() => {
     if (cardRef.current === null) return;
     
-    // Always use dark background for capture (card is always dark)
-    toPng(cardRef.current, { 
+    toPng(cardRef.current, {
       cacheBust: true,
       pixelRatio: 2,
       quality: 1.0,
-      backgroundColor: '#0f172a', // slate-900 - always dark
+      // Remove 'backgroundColor' prop so we don't overwrite the gradient with a solid color
+      style: {
+        // Force the text to be White
+        color: '#ffffff',
+        // Force the Background to match the visual Gradient (Slate-950 to Purple-900/Glow)
+        background: 'linear-gradient(135deg, #020617 0%, #2e1065 50%, #020617 100%)',
+        // Ensure font smoothing is crisp
+        '-webkit-font-smoothing': 'antialiased',
+        '-moz-osx-font-smoothing': 'grayscale',
+      },
     })
       .then((dataUrl) => {
         const link = document.createElement('a');
