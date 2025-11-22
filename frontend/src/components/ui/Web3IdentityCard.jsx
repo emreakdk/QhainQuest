@@ -35,23 +35,24 @@ const Web3IdentityCard = ({
     });
   };
 
+  // Fixed card style with gradient - ensures gradient is captured in image
+  const fixedCardStyle = {
+    // This mimics the 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900' look
+    background: 'linear-gradient(135deg, #0f172a 0%, #3b0764 50%, #0f172a 100%)',
+    color: '#ffffff',
+    borderColor: 'rgba(139, 92, 246, 0.2)', // purple-500/20
+    aspectRatio: '16/9',
+    minHeight: '320px',
+  };
+
   const handleDownload = useCallback(() => {
     if (cardRef.current === null) return;
     
-    toPng(cardRef.current, {
+    // Do NOT set backgroundColor here, let the element's inline style handle it
+    toPng(cardRef.current, { 
       cacheBust: true,
       pixelRatio: 2,
       quality: 1.0,
-      // Remove 'backgroundColor' prop so we don't overwrite the gradient with a solid color
-      style: {
-        // Force the text to be White
-        color: '#ffffff',
-        // Force the Background to match the visual Gradient (Slate-950 to Purple-900/Glow)
-        background: 'linear-gradient(135deg, #020617 0%, #2e1065 50%, #020617 100%)',
-        // Ensure font smoothing is crisp
-        '-webkit-font-smoothing': 'antialiased',
-        '-moz-osx-font-smoothing': 'grayscale',
-      },
     })
       .then((dataUrl) => {
         const link = document.createElement('a');
@@ -70,11 +71,8 @@ const Web3IdentityCard = ({
       {/* Identity Card - Always Dark/Premium appearance */}
       <div
         ref={cardRef}
-        className="relative bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 rounded-2xl p-8 shadow-2xl border border-purple-500/20 overflow-hidden"
-        style={{
-          aspectRatio: '16/9',
-          minHeight: '320px',
-        }}
+        className="relative rounded-2xl p-8 shadow-2xl border overflow-hidden"
+        style={fixedCardStyle}
       >
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
