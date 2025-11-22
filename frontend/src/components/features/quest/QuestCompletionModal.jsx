@@ -5,9 +5,43 @@ import Button from '../../ui/Button';
 import { TbLoader, TbLock, TbCheck, TbWallet } from 'react-icons/tb';
 
 const QuestCompletionModal = ({ quest, onClose, onComplete, onPageChange }) => {
-  const { t } = useLanguage();
-  const [step, setStep] = useState(1); // 1: Proof of Work, 2: Smart Contract, 3: Success
+  const { t, language } = useLanguage();
+  const [step, setStep] = useState(1); // 1: Proof of Work, 2: Smart Contract, 3: Minting Token, 4: Success
   const [showModal, setShowModal] = useState(false);
+
+  // Translations for modal content
+  const translations = {
+    tr: {
+      loading1: 'Proof of Work Doğrulanıyor...',
+      loading1Desc: 'İş kanıtınız blockchain üzerinde kontrol ediliyor',
+      loading2: 'Akıllı Kontrat İmzalanıyor...',
+      loading2Desc: 'Token transferi için güvenli imza oluşturuluyor',
+      loading3: 'CQT Token Basılıyor...',
+      loading3Desc: 'Ödül token\'larınız blockchain\'e basılıyor',
+      successTitle: 'GÖREV TAMAMLANDI!',
+      successDesc: 'Tebrikler! Blockchain bilginizi kanıtladınız ve ödülünüzü hak ettiniz.',
+      tokensAdded: 'Token\'larınız claimable balance\'a eklendi',
+      completedQuest: 'Tamamlanan Görev',
+      btnViewWallet: 'Cüzdanı Görüntüle',
+      btnNextQuest: 'Sıradaki Görev',
+    },
+    en: {
+      loading1: 'Verifying Proof of Work...',
+      loading1Desc: 'Your proof of work is being verified on the blockchain',
+      loading2: 'Signing Smart Contract...',
+      loading2Desc: 'Creating secure signature for token transfer',
+      loading3: 'Minting CQT Token...',
+      loading3Desc: 'Your reward tokens are being minted on the blockchain',
+      successTitle: 'QUEST COMPLETED!',
+      successDesc: 'Congratulations! You\'ve proven your blockchain knowledge and earned your reward.',
+      tokensAdded: 'Your tokens have been added to claimable balance',
+      completedQuest: 'Completed Quest',
+      btnViewWallet: 'View Wallet',
+      btnNextQuest: 'Next Quest',
+    },
+  };
+
+  const trans = translations[language] || translations.en;
 
   useEffect(() => {
     // Modal açılış animasyonu
@@ -21,13 +55,19 @@ const QuestCompletionModal = ({ quest, onClose, onComplete, onPageChange }) => {
     // Step 2: Akıllı Kontrat İmzalanıyor (1.5s - 3s)
     const step2Timer = setTimeout(() => {
       setStep(3);
+    }, 3000);
+
+    // Step 3: CQT Token Basılıyor (3s - 4.5s)
+    const step3Timer = setTimeout(() => {
+      setStep(4);
       // Confetti patlat
       triggerConfetti();
-    }, 3000);
+    }, 4500);
 
     return () => {
       clearTimeout(step1Timer);
       clearTimeout(step2Timer);
+      clearTimeout(step3Timer);
     };
   }, []);
 
@@ -95,10 +135,10 @@ const QuestCompletionModal = ({ quest, onClose, onComplete, onPageChange }) => {
                 </div>
                 <div className="text-center">
                   <h3 className="text-xl font-bold text-white mb-2">
-                    Proof of Work Doğrulanıyor...
+                    {trans.loading1}
                   </h3>
                   <p className="text-slate-400 text-sm">
-                    İş kanıtınız blockchain üzerinde kontrol ediliyor
+                    {trans.loading1Desc}
                   </p>
                 </div>
               </div>
@@ -112,16 +152,33 @@ const QuestCompletionModal = ({ quest, onClose, onComplete, onPageChange }) => {
                 </div>
                 <div className="text-center">
                   <h3 className="text-xl font-bold text-white mb-2">
-                    Akıllı Kontrat İmzalanıyor...
+                    {trans.loading2}
                   </h3>
                   <p className="text-slate-400 text-sm">
-                    Token transferi için güvenli imza oluşturuluyor
+                    {trans.loading2Desc}
                   </p>
                 </div>
               </div>
             )}
 
             {step === 3 && (
+              <div className="flex flex-col items-center justify-center space-y-4 py-8">
+                <div className="relative">
+                  <TbLoader className="w-16 h-16 text-orange-400 animate-spin" />
+                  <div className="absolute inset-0 bg-orange-400/20 rounded-full blur-xl animate-pulse"></div>
+                </div>
+                <div className="text-center">
+                  <h3 className="text-xl font-bold text-white mb-2">
+                    {trans.loading3}
+                  </h3>
+                  <p className="text-slate-400 text-sm">
+                    {trans.loading3Desc}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {step === 4 && (
               <div className="flex flex-col items-center justify-center space-y-4 py-8">
                 <div className="relative">
                   <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow-lg shadow-green-500/50 animate-scale-in">
@@ -131,10 +188,10 @@ const QuestCompletionModal = ({ quest, onClose, onComplete, onPageChange }) => {
                 </div>
                 <div className="text-center">
                   <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400 mb-2 animate-fade-in">
-                    BAŞARILI!
+                    {trans.successTitle}
                   </h2>
                   <p className="text-slate-300 text-sm">
-                    İşleminiz blockchain'e kaydedildi
+                    {trans.successDesc}
                   </p>
                 </div>
               </div>
@@ -142,7 +199,7 @@ const QuestCompletionModal = ({ quest, onClose, onComplete, onPageChange }) => {
           </div>
 
           {/* Body Section - Details Area */}
-          {step === 3 && (
+          {step === 4 && (
             <div className="px-8 py-6 space-y-6 animate-fade-in">
               {/* Token Reward */}
               <div className="text-center">
@@ -151,7 +208,7 @@ const QuestCompletionModal = ({ quest, onClose, onComplete, onPageChange }) => {
                     +{rewardAmount} CQT
                   </div>
                   <div className="text-slate-400 text-sm">
-                    Token'larınız claimable balance'a eklendi
+                    {trans.tokensAdded}
                   </div>
                 </div>
               </div>
@@ -159,9 +216,9 @@ const QuestCompletionModal = ({ quest, onClose, onComplete, onPageChange }) => {
               {/* Quest Info */}
               {quest && (
                 <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-                  <div className="text-slate-400 text-xs mb-1">Tamamlanan Görev</div>
+                  <div className="text-slate-400 text-xs mb-1">{trans.completedQuest}</div>
                   <div className="text-white font-semibold">
-                    {t(quest?.nameKey || quest?.name) || 'Quest Tamamlandı'}
+                    {t(quest?.nameKey || quest?.name) || trans.successTitle}
                   </div>
                 </div>
               )}
@@ -173,14 +230,14 @@ const QuestCompletionModal = ({ quest, onClose, onComplete, onPageChange }) => {
                   className="flex-1 cursor-pointer bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 flex items-center justify-center gap-2"
                 >
                   <TbWallet className="w-5 h-5" />
-                  Cüzdanı Görüntüle
+                  {trans.btnViewWallet}
                 </Button>
                 <Button
                   onClick={handleNextQuest}
                   variant="outline"
                   className="flex-1 cursor-pointer border-white/20 text-white hover:bg-white/10"
                 >
-                  Sıradaki Görev
+                  {trans.btnNextQuest}
                 </Button>
               </div>
             </div>
