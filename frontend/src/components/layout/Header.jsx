@@ -99,41 +99,26 @@ const Header = ({ currentPage, onPageChange }) => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-lg backdrop-blur-sm">
       <style>{`
-        /* Base Hover State (Light Mode) */
-        .nav-item-force:hover {
-          background-color: #F3E8FF !important; /* purple-100 */
-          color: #7E22CE !important; /* purple-700 */
+        /* Subtle hover states without !important */
+        .nav-item:hover {
+          background-color: rgba(0, 0, 0, 0.02);
+          color: #7c3aed;
         }
         
-        /* ICON COLOR FIX (Light Mode) */
-        .nav-item-force:hover svg,
-        .nav-item-force.active svg {
-          color: #7E22CE !important; /* purple-700 matches text */
-          stroke: #7E22CE !important; /* Force stroke color if needed */
+        .dark .nav-item:hover {
+          background-color: rgba(255, 255, 255, 0.05);
+          color: #a78bfa;
         }
 
-        /* Active State (Light Mode) */
-        .nav-item-force.active {
-          background-color: #F3E8FF !important;
-          color: #7E22CE !important;
-        }
-
-        /* Dark Mode Overrides */
-        .dark .nav-item-force:hover {
-          background-color: #1e293b !important; /* slate-800 */
-          color: #ffffff !important;
+        /* Active State */
+        .nav-item.active {
+          background-color: rgba(139, 92, 246, 0.1);
+          color: #7c3aed;
         }
         
-        .dark .nav-item-force.active {
-          background-color: #4f46e5 !important; /* indigo-600 */
-          color: #ffffff !important;
-        }
-
-        /* Dark Mode ICON FIX */
-        .dark .nav-item-force:hover svg,
-        .dark .nav-item-force.active svg {
-          color: #ffffff !important;
-          stroke: #ffffff !important;
+        .dark .nav-item.active {
+          background-color: rgba(99, 102, 241, 0.2);
+          color: #ffffff;
         }
       `}</style>
       <nav className="container mx-auto flex items-center justify-between p-3 sm:p-4 gap-2 sm:gap-4">
@@ -177,10 +162,10 @@ const Header = ({ currentPage, onPageChange }) => {
               <button
                 key={item.id}
                 onClick={() => handlePageChange(item.id)}
-                className={`nav-item-force inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer whitespace-nowrap flex-shrink-0 ${
+                className={`nav-item inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer whitespace-nowrap flex-shrink-0 ${
                   currentPage === item.id
                     ? 'active shadow-lg'
-                    : 'bg-transparent text-slate-600 dark:text-slate-400'
+                    : 'bg-transparent text-slate-600 dark:text-slate-400 hover:text-purple-600 dark:hover:text-purple-400'
                 }`}
               >
                 <IconComponent size={18} className={`${currentPage === item.id ? 'text-purple-700 dark:text-white' : 'text-[#8b5cf6] dark:text-gray-300'} transition-colors flex-shrink-0`} />
@@ -217,7 +202,7 @@ const Header = ({ currentPage, onPageChange }) => {
                       exitDemoMode();
                     }
                   }}
-                  className="nav-item-force whitespace-nowrap flex-shrink-0 transition-colors"
+                  className="whitespace-nowrap flex-shrink-0"
                 >
                   {t('wallet.disconnect')}
                 </Button>
@@ -316,10 +301,10 @@ const Header = ({ currentPage, onPageChange }) => {
                     handlePageChange(item.id);
                     setMobileMenuOpen(false);
                   }}
-                  className={`nav-item-force w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all cursor-pointer inline-flex items-center gap-2 ${
+                  className={`nav-item w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-all cursor-pointer inline-flex items-center gap-2 ${
                     currentPage === item.id
                       ? 'active shadow-lg'
-                      : 'bg-transparent text-slate-600 dark:text-slate-400'
+                      : 'bg-transparent text-slate-600 dark:text-slate-400 hover:text-purple-600 dark:hover:text-purple-400'
                   }`}
                 >
                   <IconComponent size={18} className={currentPage === item.id ? 'text-purple-700 dark:text-white' : 'text-[#8b5cf6] dark:text-gray-300 transition-colors'} />
@@ -366,7 +351,7 @@ const Header = ({ currentPage, onPageChange }) => {
                     }
                     setMobileMenuOpen(false);
                   }}
-                  className="nav-item-force w-full transition-colors"
+                  className="w-full"
                 >
                   {t('wallet.disconnect')}
                 </Button>
