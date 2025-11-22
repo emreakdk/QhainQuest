@@ -4,12 +4,14 @@ import { WalletContext } from '../../../context/WalletContext';
 import { useLanguage } from '../../../context/LanguageContext';
 import { useQuest } from '../../../context/QuestContext';
 import { useToken } from '../../../context/TokenContext';
+import { useBalance } from '../../../context/BalanceContext';
 import { getCompletedQuestsForUser } from '../../../utils/tokenBalanceCalculator';
 import { useDeviceType } from '../../../hooks/useDeviceType';
 import { TbChartBar, TbAward } from 'react-icons/tb';
 import ProfileStats from './ProfileStats';
 import CertificateCard from './CertificateCard';
 import ProfileDashboard from './ProfileDashboard';
+import Web3IdentityCard from '../../ui/Web3IdentityCard';
 import Button from '../../ui/Button';
 import Badge from '../../ui/Badge';
 import MobileWarning from '../../ui/MobileWarning';
@@ -20,6 +22,7 @@ const UserProfile = ({ onPageChange }) => {
   const { t } = useLanguage();
   const { userStats, userCertificates, loadUserProgress } = useQuest();
   const { tokenData } = useToken(); // Use centralized token data
+  const { totalEarned } = useBalance(); // Get total earned for identity card
   const { isMobile } = useDeviceType();
   const [activeTab, setActiveTab] = useState('overview');
   const [completedQuests, setCompletedQuests] = useState([]);
@@ -58,6 +61,14 @@ const UserProfile = ({ onPageChange }) => {
 
   return (
     <div className="space-y-6 sm:space-y-8 pt-4 sm:pt-6">
+      {/* Web3 Identity Card */}
+      <Web3IdentityCard
+        publicKey={publicKey}
+        totalEarned={totalEarned || tokenData.totalEarned || 0}
+        completedQuests={tokenData.completedQuests || 0}
+        isDemoMode={isDemoMode}
+      />
+
       {/* Profile Header */}
       <div className="text-center">
         <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center">
