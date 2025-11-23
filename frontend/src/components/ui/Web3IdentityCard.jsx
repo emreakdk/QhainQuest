@@ -1,5 +1,5 @@
 import { useRef, useCallback } from 'react';
-import { toPng } from 'html-to-image';
+import { domToPng } from 'modern-screenshot';
 import { useLanguage } from '../../context/LanguageContext';
 import { TbDownload, TbCheck } from 'react-icons/tb';
 import Button from './Button';
@@ -100,31 +100,42 @@ const Web3IdentityCard = ({
     opacity: 0.3,
   };
 
-  const handleDownload = useCallback(() => {
-    if (cardRef.current === null) return;
+  const handleDownload = useCallback(async () => {
+    if (!cardRef.current) return;
 
-    toPng(cardRef.current, {
-      cacheBust: true,
-      pixelRatio: 3, // High Quality
-      // FORCE the background color behind the element to be Dark Slate (filling any transparency)
-      backgroundColor: '#0f172a',
-      style: {
-        // Ensure the captured node ignores any parent opacity
-        opacity: '1',
-        visibility: 'visible',
-      }
-    })
-      .then((dataUrl) => {
-        const link = document.createElement('a');
-        link.download = `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 4) : 'User'}.png`;
-        link.href = dataUrl;
-        link.click();
-      })
-      .catch((err) => {
-        console.error('Download Error:', err);
-        alert("İndirme hatası oluştu. Lütfen tekrar deneyin.");
+    try {
+      // Visual feedback
+      const btn = document.getElementById('download-btn');
+      if (btn) btn.innerText = language === 'tr' ? 'İndiriliyor...' : 'Downloading...';
+
+      // modern-screenshot is much faster and handles styles better
+      const dataUrl = await domToPng(cardRef.current, {
+        scale: 3, // High quality
+        backgroundColor: '#0f172a', // Fallback color (Slate-900)
+        quality: 1,
+        style: {
+          // Force opacity and visibility to ensure capture
+          opacity: '1',
+          visibility: 'visible',
+        },
+        // Ensure all CSS transforms are captured
+        features: {
+          removeControlCharacter: false,
+        }
       });
-  }, [cardRef, publicKey]);
+
+      const link = document.createElement('a');
+      link.download = `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 4) : 'User'}.png`;
+      link.href = dataUrl;
+      link.click();
+
+      if (btn) btn.innerText = language === 'tr' ? 'Kartı İndir / Paylaş' : 'Download / Share Card';
+
+    } catch (err) {
+      console.error('Modern Screenshot Failed:', err);
+      alert(language === 'tr' ? 'İndirme sırasında bir hata oluştu.' : 'An error occurred during download.');
+    }
+  }, [cardRef, publicKey, language]);
 
 
   return (
@@ -132,6 +143,7 @@ const Web3IdentityCard = ({
       {/* Identity Card - Always Dark/Premium appearance */}
       <div
         ref={cardRef}
+        id="identity-card"
         className="relative rounded-2xl p-8 overflow-hidden"
         style={finalCardStyle}
       >
@@ -222,6 +234,7 @@ const Web3IdentityCard = ({
       {/* Download Button - Outside the card */}
       <div className="mt-6 flex justify-center">
         <Button
+          id="download-btn"
           onClick={handleDownload}
           className="cursor-pointer bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 flex items-center gap-2"
         >
