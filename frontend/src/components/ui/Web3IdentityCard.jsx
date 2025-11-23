@@ -1,5 +1,5 @@
 import { useRef, useCallback } from 'react';
-import { domToPng } from 'modern-screenshot';
+import { toPng } from 'html-to-image';
 import { useLanguage } from '../../context/LanguageContext';
 import { TbDownload, TbCheck } from 'react-icons/tb';
 import Button from './Button';
@@ -101,26 +101,21 @@ const Web3IdentityCard = ({
   };
 
   const handleDownload = useCallback(async () => {
-    if (!cardRef.current) return;
+    if (cardRef.current === null) return;
 
     try {
-      // Visual feedback
-      const btn = document.getElementById('download-btn');
-      if (btn) btn.innerText = language === 'tr' ? 'İndiriliyor...' : 'Downloading...';
+      // 1. Small delay to ensure rendering
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
-      // modern-screenshot is much faster and handles styles better
-      const dataUrl = await domToPng(cardRef.current, {
-        scale: 3, // High quality
-        backgroundColor: '#0f172a', // Fallback color (Slate-900)
-        quality: 1,
+      // 2. Capture with FORCED OPAQUE BACKGROUND
+      const dataUrl = await toPng(cardRef.current, {
+        cacheBust: true,
+        pixelRatio: 3,
+        // CRITICAL: This fills the transparent pixels with Dark Slate color
+        backgroundColor: '#0f172a',
         style: {
-          // Force opacity and visibility to ensure capture
-          opacity: '1',
+          // Ensure the gradient on the element itself is also visible
           visibility: 'visible',
-        },
-        // Ensure all CSS transforms are captured
-        features: {
-          removeControlCharacter: false,
         }
       });
 
@@ -128,11 +123,8 @@ const Web3IdentityCard = ({
       link.download = `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 4) : 'User'}.png`;
       link.href = dataUrl;
       link.click();
-
-      if (btn) btn.innerText = language === 'tr' ? 'Kartı İndir / Paylaş' : 'Download / Share Card';
-
     } catch (err) {
-      console.error('Modern Screenshot Failed:', err);
+      console.error('Download Failed:', err);
       alert(language === 'tr' ? 'İndirme sırasında bir hata oluştu.' : 'An error occurred during download.');
     }
   }, [cardRef, publicKey, language]);
