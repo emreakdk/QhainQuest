@@ -1,7 +1,7 @@
 'use client';
 
-import { useRef, useCallback, useState, useEffect } from 'react';
-import { toCanvas } from 'html-to-image';
+import { useRef, useCallback, useState } from 'react';
+import html2canvas from 'html2canvas';
 import { useLanguage } from '../../context/LanguageContext';
 import { TbDownload, TbCheck } from 'react-icons/tb';
 import Button from './Button';
@@ -13,53 +13,8 @@ const Web3IdentityCard = ({
   isDemoMode = false 
 }) => {
   const { t, language } = useLanguage();
-  const shareCardRef = useRef(null); // Dedicated wrapper for export
+  const shareCardRef = useRef(null);
   const [isDownloading, setIsDownloading] = useState(false);
-  
-  // Ensure we're on the client side and verify element exists
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      console.warn('[Web3IdentityCard] Running on server, download feature will not work');
-      return;
-    }
-
-    // Verify element exists after mount
-    const checkElement = () => {
-      if (shareCardRef.current) {
-        console.log('[Web3IdentityCard] Element #share-card found:', {
-          id: shareCardRef.current.id,
-          inDOM: document.body.contains(shareCardRef.current),
-          dimensions: {
-            width: shareCardRef.current.offsetWidth,
-            height: shareCardRef.current.offsetHeight,
-          }
-        });
-      } else {
-        console.warn('[Web3IdentityCard] Element #share-card ref is null');
-        // Try to find by ID
-        const byId = document.getElementById('share-card');
-        if (byId) {
-          console.warn('[Web3IdentityCard] Element found by ID but ref is null');
-        } else {
-          console.error('[Web3IdentityCard] Element #share-card not found in DOM');
-        }
-      }
-
-      // Verify button exists
-      const btn = document.getElementById('download-btn');
-      if (btn) {
-        console.log('[Web3IdentityCard] Download button found');
-      } else {
-        console.warn('[Web3IdentityCard] Download button not found');
-      }
-    };
-
-    // Check immediately and after a short delay
-    checkElement();
-    const timeout = setTimeout(checkElement, 500);
-    
-    return () => clearTimeout(timeout);
-  }, []);
 
   const formatAddress = (address) => {
     if (!address) return 'Demo Mode';
@@ -83,29 +38,19 @@ const Web3IdentityCard = ({
     });
   };
 
-  // Dedicated wrapper style for export - explicit background that will be captured
-  // This wrapper ensures the exported image has the exact same background as displayed
+  // Wrapper style with explicit dark background for export
   const shareCardWrapperStyle = {
-    // Explicit solid base color (ensures no transparency - matches gradient start/end)
-    backgroundColor: '#0f172a',
-    // Gradient overlay matching the card design exactly
+    backgroundColor: '#050012', // Explicit dark background
     backgroundImage: 'linear-gradient(135deg, #0f172a 0%, #3b0764 50%, #0f172a 100%)',
     backgroundSize: '100% 100%',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
-    // Ensure background is always rendered (no clipping)
-    backgroundClip: 'border-box',
-    // Padding to include shadows and glow effects in export
     padding: '24px',
-    // Display properties for proper rendering
     display: 'inline-block',
     width: '100%',
     maxWidth: '100%',
-    // Ensure wrapper doesn't interfere with card styling
     boxSizing: 'border-box',
-    // Force rendering context
     position: 'relative',
-    isolation: 'isolate', // Creates new stacking context for better capture
   };
 
   // Card container style (inside wrapper)
@@ -175,219 +120,81 @@ const Web3IdentityCard = ({
     opacity: 0.3,
   };
 
-  /**
-   * Single download function that creates a fully flattened, opaque image
-   * with no transparency. Uses two-stage canvas approach:
-   * 1. Capture #share-card to source canvas
-   * 2. Create blank canvas filled with dark background
-   * 3. Draw source on top
-   * 4. Verify all pixels have alpha = 255
-   * 5. Export as JPEG (no transparency support)
-   */
-  const handleDownload = useCallback(async (e) => {
-    // Prevent any default behavior
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-
-    console.log('[Download] ===== Starting flattened opaque image download =====');
-
-    // Client-side only check
-    if (typeof window === 'undefined') {
-      console.error('[Download Error] Download feature requires client-side execution');
-      alert(language === 'tr' ? 'İndirme özelliği tarayıcıda çalışmalıdır.' : 'Download feature must run in browser.');
-      return;
-    }
-
-    // Verify element exists
-    if (!shareCardRef.current) {
-      console.error('[Download Error] shareCardRef.current is null');
-      const fallbackElement = document.getElementById('share-card');
-      if (fallbackElement) {
-        console.warn('[Download] Found element by ID, but ref is null');
-        alert(language === 'tr' ? 'Kart elementi bulundu ama referans eksik. Lütfen sayfayı yenileyin.' : 'Card element found but ref is missing. Please refresh the page.');
-      } else {
-        console.error('[Download Error] Element #share-card not found in DOM');
-        alert(language === 'tr' ? 'Kart elementi bulunamadı. Lütfen sayfayı yenileyin.' : 'Card element not found. Please refresh the page.');
-      }
-      return;
-    }
-
-    // Verify element is in DOM
-    if (!document.body.contains(shareCardRef.current)) {
-      console.error('[Download Error] Element exists but is not in DOM');
-      alert(language === 'tr' ? 'Kart elementi DOM\'da değil. Lütfen sayfayı yenileyin.' : 'Card element not in DOM. Please refresh the page.');
-      return;
-    }
-
-    if (isDownloading) {
-      console.warn('[Download] Already downloading, skipping...');
-      return;
-    }
-
+  // Minimal download function using html2canvas + JPEG
+  const handleDownload = useCallback(async () => {
+    if (isDownloading) return;
+    
     setIsDownloading(true);
-
+    
     try {
-      // Visual feedback
-      const btn = document.getElementById('download-btn');
-      const originalText = btn?.innerText || '';
-      if (btn) {
-        btn.innerText = language === 'tr' ? 'İndiriliyor...' : 'Downloading...';
-        btn.disabled = true;
+      // Get #share-card element
+      const shareCardElement = document.getElementById('share-card');
+      if (!shareCardElement) {
+        throw new Error('Element #share-card not found');
       }
 
-      // Step 1: Wait for all styles, gradients, and effects to render completely
-      console.log('[Download] Step 1: Waiting for styles to render...');
-      await new Promise((resolve) => setTimeout(resolve, 300));
+      console.log('[Download] Capturing #share-card with html2canvas...');
 
-      // Step 2: Capture #share-card into source canvas
-      console.log('[Download] Step 2: Capturing #share-card to source canvas...');
-      const sourceCanvas = await toCanvas(shareCardRef.current, {
-        cacheBust: true,
-        pixelRatio: 2,
-        backgroundColor: '#0f172a', // Fallback background
-        filter: (node) => {
-          if (node.id === 'download-btn') return false;
-          if (node.hasAttribute?.('data-ignore-export')) return false;
-          return true;
-        },
-        style: {
-          opacity: '1',
-          visibility: 'visible',
-          transform: 'none',
-        },
+      // Capture element with html2canvas
+      const canvas = await html2canvas(shareCardElement, {
+        useCORS: true,
+        backgroundColor: '#050012',
+        scale: 2,
       });
 
-      if (!sourceCanvas) {
-        throw new Error('Source canvas generation returned null');
-      }
-      console.log('[Download] Source canvas created:', sourceCanvas.width, 'x', sourceCanvas.height);
-
-      // Step 3: Create second canvas of same size
-      console.log('[Download] Step 3: Creating flattened canvas with solid background...');
-      const flatCanvas = document.createElement('canvas');
-      flatCanvas.width = sourceCanvas.width;
-      flatCanvas.height = sourceCanvas.height;
-      const flatCtx = flatCanvas.getContext('2d', { alpha: false }); // Disable alpha channel
-      
-      if (!flatCtx) {
-        throw new Error('Failed to get 2D context from flattened canvas');
+      if (!canvas) {
+        throw new Error('Canvas generation returned null');
       }
 
-      // Step 4: Fill second canvas completely with dark background color
-      const darkBackground = '#0f172a'; // Dark slate background
-      flatCtx.fillStyle = darkBackground;
-      flatCtx.fillRect(0, 0, flatCanvas.width, flatCanvas.height);
-      console.log('[Download] Background filled with', darkBackground);
+      console.log('[Download] Canvas created:', canvas.width, 'x', canvas.height);
 
-      // Step 5: Draw source canvas on top of filled canvas
-      flatCtx.drawImage(sourceCanvas, 0, 0);
-      console.log('[Download] Source canvas drawn on top of background');
+      // Convert to JPEG Blob
+      const blob = await new Promise((resolve, reject) => {
+        canvas.toBlob(
+          (resultBlob) => {
+            if (resultBlob) {
+              resolve(resultBlob);
+            } else {
+              reject(new Error('toBlob returned null'));
+            }
+          },
+          'image/jpeg',
+          0.95
+        );
+      });
 
-      // Step 6: Verify all pixels have alpha = 255 (completely opaque)
-      console.log('[Download] Step 6: Verifying all pixels are opaque (alpha = 255)...');
-      const imageData = flatCtx.getImageData(0, 0, flatCanvas.width, flatCanvas.height);
-      const pixels = imageData.data;
-      let transparentPixels = 0;
-      let totalPixels = (flatCanvas.width * flatCanvas.height);
-      
-      // Check every 4th value (alpha channel) in RGBA array
-      for (let i = 3; i < pixels.length; i += 4) {
-        if (pixels[i] !== 255) {
-          transparentPixels++;
-          // Force to 255 if not already
-          pixels[i] = 255;
-        }
+      if (!blob) {
+        throw new Error('Blob generation failed');
       }
-      
-      if (transparentPixels > 0) {
-        console.warn(`[Download] Found ${transparentPixels} pixels with alpha < 255, forcing to 255...`);
-        // Put corrected image data back
-        flatCtx.putImageData(imageData, 0, 0);
-      }
-      
-      const opaquePixels = totalPixels - transparentPixels;
-      console.log(`[Download] Verification complete: ${opaquePixels}/${totalPixels} pixels are opaque (alpha = 255)`);
 
-      // Step 7: Generate final file as JPEG (no transparency support)
-      console.log('[Download] Step 7: Generating JPEG from flattened canvas...');
-      const dataUrl = flatCanvas.toDataURL('image/jpeg', 0.95);
-      
-      if (!dataUrl || dataUrl === 'data:,') {
-        throw new Error('Failed to generate JPEG data URL');
-      }
-      console.log('[Download] JPEG data URL created, length:', dataUrl.length);
+      console.log('[Download] JPEG Blob created, size:', blob.size, 'bytes');
 
-      // Step 8: Create download link and trigger download
-      console.log('[Download] Step 8: Creating download link...');
+      // Create download link
+      const objectUrl = URL.createObjectURL(blob);
       const link = document.createElement('a');
-      const filename = `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 4) : 'User'}-${Date.now()}.jpg`;
-      link.download = filename;
-      link.href = dataUrl;
+      link.download = `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 4) : 'User'}-${Date.now()}.jpg`;
+      link.href = objectUrl;
       link.style.display = 'none';
-      link.style.position = 'absolute';
-      link.style.left = '-9999px';
       
       document.body.appendChild(link);
       link.click();
-      console.log('[Download] Download triggered successfully');
-
-      // Clean up
+      
+      // Cleanup
       setTimeout(() => {
-        try {
-          if (document.body.contains(link)) {
-            document.body.removeChild(link);
-          }
-        } catch (cleanupError) {
-          console.warn('[Download] Cleanup error (non-critical):', cleanupError);
-        }
+        document.body.removeChild(link);
+        URL.revokeObjectURL(objectUrl);
       }, 100);
 
-      // Restore button state
-      if (btn) {
-        btn.innerText = originalText;
-        btn.disabled = false;
-      }
-
-      console.log('[Download] ===== Download completed successfully =====');
+      console.log('[Download] Download completed successfully');
       setIsDownloading(false);
     } catch (err) {
-      // Detailed error logging
-      console.error('[Download] ===== Download failed =====');
       console.error('[Download] Error:', err);
-      console.error('[Download] Error name:', err?.name);
-      console.error('[Download] Error message:', err?.message);
-      console.error('[Download] Error stack:', err?.stack);
-      
-      // More specific error messages
-      let errorMessage = language === 'tr' 
-        ? 'İndirme sırasında bir hata oluştu.' 
-        : 'An error occurred during download.';
-      
-      if (err?.message?.includes('Canvas')) {
-        errorMessage = language === 'tr'
-          ? 'Görüntü yakalama hatası. Lütfen sayfayı yenileyin.'
-          : 'Image capture error. Please refresh the page.';
-      } else if (err?.message?.includes('JPEG') || err?.message?.includes('data URL')) {
-        errorMessage = language === 'tr'
-          ? 'Görüntü oluşturulamadı. Lütfen sayfayı yenileyin ve tekrar deneyin.'
-          : 'Failed to create image. Please refresh the page and try again.';
-      }
-      
-      // Always show alert for download failures
-      alert(`${errorMessage}\n\n${language === 'tr' ? 'Hata detayları konsola yazıldı.' : 'Error details logged to console.'}`);
-      
-      // Restore button on error
-      const btn = document.getElementById('download-btn');
-      if (btn) {
-        btn.innerText = language === 'tr' ? 'Kartı İndir / Paylaş' : 'Download / Share Card';
-        btn.disabled = false;
-      }
-      
+      alert(language === 'tr' 
+        ? 'İndirme sırasında bir hata oluştu. Lütfen tekrar deneyin.' 
+        : 'An error occurred during download. Please try again.');
       setIsDownloading(false);
     }
-  }, [shareCardRef, publicKey, language, isDownloading]);
+  }, [publicKey, language, isDownloading]);
 
 
   return (
