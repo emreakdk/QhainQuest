@@ -10,9 +10,6 @@
     },
     "api/ai-assistant.js": {
       "maxDuration": 30
-    },
-    "api/profile-card.tsx": {
-      "runtime": "edge"
     }
   }
 }
