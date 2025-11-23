@@ -1,10 +1,10 @@
-import { ImageResponse } from 'next/og';
+import { ImageResponse } from 'next/server';
 
 /**
  * API Route: /api/profile-card
  * 
  * Server-side rendering of ChainQuest profile card as PNG image.
- * Uses ImageResponse (OG image API) to render React component to PNG.
+ * Uses ImageResponse from next/server to render React component to PNG.
  * 
  * Query parameters:
  * - wallet: Wallet address (optional, defaults to 'Demo Mode')
@@ -45,6 +45,7 @@ export async function GET(req: Request) {
     const width = 800;
     const height = 450;
 
+    // Full ChainQuest card layout with only hex/rgb colors
     const imageResponse = new ImageResponse(
       (
         <div
@@ -55,8 +56,8 @@ export async function GET(req: Request) {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            background: 'linear-gradient(135deg, #0f172a 0%, #3b0764 50%, #0f172a 100%)',
-            backgroundColor: '#050012',
+            background: 'linear-gradient(135deg, rgb(15, 23, 42) 0%, rgb(59, 7, 100) 50%, rgb(15, 23, 42) 100%)',
+            backgroundColor: 'rgb(5, 0, 18)',
             padding: '40px',
             fontFamily: 'system-ui, -apple-system, sans-serif',
           }}
@@ -92,7 +93,7 @@ export async function GET(req: Request) {
                   width: '96px',
                   height: '96px',
                   borderRadius: '50%',
-                  background: 'linear-gradient(to bottom right, #6366f1, #a855f7, #ec4899)',
+                  background: 'linear-gradient(to bottom right, rgb(99, 102, 241), rgb(168, 85, 247), rgb(236, 72, 153))',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -109,7 +110,7 @@ export async function GET(req: Request) {
                   border: '1px solid rgba(255, 255, 255, 0.2)',
                   borderRadius: '9999px',
                   padding: '8px 16px',
-                  color: '#ffffff',
+                  color: 'rgb(255, 255, 255)',
                   fontSize: '14px',
                   fontWeight: '600',
                 }}
@@ -140,11 +141,11 @@ export async function GET(req: Request) {
                   style={{
                     fontSize: '32px',
                     fontWeight: 'bold',
-                    background: 'linear-gradient(to right, #818cf8, #a78bfa)',
+                    background: 'linear-gradient(to right, rgb(129, 140, 248), rgb(167, 139, 250))',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text',
-                    color: '#818cf8', // Fallback
+                    color: 'rgb(129, 140, 248)',
                   }}
                 >
                   ChainQuest
@@ -152,7 +153,7 @@ export async function GET(req: Request) {
                 <div
                   style={{
                     fontSize: '12px',
-                    color: '#94a3b8',
+                    color: 'rgb(148, 163, 184)',
                     marginTop: '4px',
                   }}
                 >
@@ -171,7 +172,7 @@ export async function GET(req: Request) {
                 <div
                   style={{
                     fontSize: '12px',
-                    color: '#94a3b8',
+                    color: 'rgb(148, 163, 184)',
                     marginBottom: '8px',
                   }}
                 >
@@ -182,7 +183,7 @@ export async function GET(req: Request) {
                     fontFamily: 'monospace',
                     fontSize: '14px',
                     backgroundColor: 'rgba(0, 0, 0, 0.3)',
-                    color: '#ffffff',
+                    color: 'rgb(255, 255, 255)',
                     border: '1px solid rgba(255, 255, 255, 0.05)',
                     borderRadius: '8px',
                     padding: '8px 12px',
@@ -203,7 +204,7 @@ export async function GET(req: Request) {
                 <div
                   style={{
                     fontSize: '12px',
-                    color: '#94a3b8',
+                    color: 'rgb(148, 163, 184)',
                     marginBottom: '8px',
                   }}
                 >
@@ -213,11 +214,11 @@ export async function GET(req: Request) {
                   style={{
                     fontSize: '48px',
                     fontWeight: 'bold',
-                    background: 'linear-gradient(to right, #fbbf24, #fb923c, #fbbf24)',
+                    background: 'linear-gradient(to right, rgb(251, 191, 36), rgb(251, 146, 60), rgb(251, 191, 36))',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text',
-                    color: '#fbbf24', // Fallback
+                    color: 'rgb(251, 191, 36)',
                   }}
                 >
                   {cqt.toLocaleString()} CQT
@@ -248,11 +249,11 @@ export async function GET(req: Request) {
                       width: '24px',
                       height: '24px',
                       borderRadius: '50%',
-                      backgroundColor: '#22c55e',
+                      backgroundColor: 'rgb(34, 197, 94)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      color: '#ffffff',
+                      color: 'rgb(255, 255, 255)',
                       fontSize: '16px',
                     }}
                   >
@@ -262,7 +263,7 @@ export async function GET(req: Request) {
                     style={{
                       fontSize: '12px',
                       fontWeight: '500',
-                      color: '#cbd5e1',
+                      color: 'rgb(203, 213, 225)',
                     }}
                   >
                     {lang === 'tr' ? 'Doğrulanmış Öğrenci' : 'Verified Student'}
@@ -271,7 +272,7 @@ export async function GET(req: Request) {
                 <div
                   style={{
                     fontSize: '12px',
-                    color: '#94a3b8',
+                    color: 'rgb(148, 163, 184)',
                   }}
                 >
                   {date}
@@ -300,7 +301,7 @@ export async function GET(req: Request) {
     return response;
   } catch (error) {
     console.error('[API] Profile card generation error:', error);
-    return new Response('Failed to generate profile card', { 
+    return new Response(`Failed to generate profile card: ${error instanceof Error ? error.message : 'Unknown error'}`, { 
       status: 500,
       headers: {
         'Content-Type': 'text/plain',
@@ -308,4 +309,3 @@ export async function GET(req: Request) {
     });
   }
 }
-
