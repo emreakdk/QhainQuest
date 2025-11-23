@@ -30,7 +30,6 @@ export async function GET(req: Request) {
       day: 'numeric'
     });
     const lang = searchParams.get('lang') || 'en';
-    const filename = searchParams.get('filename') || `chainquest-card-${Date.now()}.png`;
 
     // Format wallet address
     const formatAddress = (address: string) => {
@@ -41,12 +40,12 @@ export async function GET(req: Request) {
 
     const formattedWallet = formatAddress(wallet);
 
-    // Card dimensions
-    const width = 800;
-    const height = 450;
+    // Card dimensions - 1293x768 as specified
+    const width = 1293;
+    const height = 768;
 
     // Full ChainQuest card layout with only hex/rgb colors
-    const imageResponse = new ImageResponse(
+    return new ImageResponse(
       (
         <div
           style={{
@@ -58,7 +57,7 @@ export async function GET(req: Request) {
             justifyContent: 'center',
             background: 'linear-gradient(135deg, rgb(15, 23, 42) 0%, rgb(59, 7, 100) 50%, rgb(15, 23, 42) 100%)',
             backgroundColor: 'rgb(5, 0, 18)',
-            padding: '40px',
+            padding: '60px',
             fontFamily: 'system-ui, -apple-system, sans-serif',
           }}
         >
@@ -70,11 +69,11 @@ export async function GET(req: Request) {
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
-              gap: '40px',
-              padding: '40px',
+              gap: '60px',
+              padding: '60px',
               backgroundColor: 'transparent',
               border: '1px solid rgba(255, 255, 255, 0.1)',
-              borderRadius: '16px',
+              borderRadius: '24px',
               boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
             }}
           >
@@ -84,20 +83,20 @@ export async function GET(req: Request) {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: '16px',
+                gap: '24px',
               }}
             >
               {/* Avatar Circle */}
               <div
                 style={{
-                  width: '96px',
-                  height: '96px',
+                  width: '144px',
+                  height: '144px',
                   borderRadius: '50%',
                   background: 'linear-gradient(to bottom right, rgb(99, 102, 241), rgb(168, 85, 247), rgb(236, 72, 153))',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '48px',
+                  fontSize: '72px',
                 }}
               >
                 {wallet !== 'Demo Mode' ? '👤' : '🎮'}
@@ -109,9 +108,9 @@ export async function GET(req: Request) {
                   backgroundColor: 'rgba(255, 255, 255, 0.1)',
                   border: '1px solid rgba(255, 255, 255, 0.2)',
                   borderRadius: '9999px',
-                  padding: '8px 16px',
+                  padding: '12px 24px',
                   color: 'rgb(255, 255, 255)',
-                  fontSize: '14px',
+                  fontSize: '18px',
                   fontWeight: '600',
                 }}
               >
@@ -134,12 +133,12 @@ export async function GET(req: Request) {
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
-                  marginBottom: '20px',
+                  marginBottom: '30px',
                 }}
               >
                 <div
                   style={{
-                    fontSize: '32px',
+                    fontSize: '48px',
                     fontWeight: 'bold',
                     background: 'linear-gradient(to right, rgb(129, 140, 248), rgb(167, 139, 250))',
                     WebkitBackgroundClip: 'text',
@@ -152,9 +151,9 @@ export async function GET(req: Request) {
                 </div>
                 <div
                   style={{
-                    fontSize: '12px',
+                    fontSize: '18px',
                     color: 'rgb(148, 163, 184)',
-                    marginTop: '4px',
+                    marginTop: '8px',
                   }}
                 >
                   {lang === 'tr' ? 'Web3 Öğrenme Platformu' : 'Web3 Learning Platform'}
@@ -166,14 +165,14 @@ export async function GET(req: Request) {
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
-                  marginBottom: '20px',
+                  marginBottom: '30px',
                 }}
               >
                 <div
                   style={{
-                    fontSize: '12px',
+                    fontSize: '18px',
                     color: 'rgb(148, 163, 184)',
-                    marginBottom: '8px',
+                    marginBottom: '12px',
                   }}
                 >
                   {lang === 'tr' ? 'Cüzdan Adresi' : 'Wallet Address'}
@@ -181,12 +180,12 @@ export async function GET(req: Request) {
                 <div
                   style={{
                     fontFamily: 'monospace',
-                    fontSize: '14px',
+                    fontSize: '20px',
                     backgroundColor: 'rgba(0, 0, 0, 0.3)',
                     color: 'rgb(255, 255, 255)',
                     border: '1px solid rgba(255, 255, 255, 0.05)',
-                    borderRadius: '8px',
-                    padding: '8px 12px',
+                    borderRadius: '12px',
+                    padding: '12px 18px',
                   }}
                 >
                   {formattedWallet}
@@ -198,21 +197,21 @@ export async function GET(req: Request) {
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
-                  marginBottom: '20px',
+                  marginBottom: '30px',
                 }}
               >
                 <div
                   style={{
-                    fontSize: '12px',
+                    fontSize: '18px',
                     color: 'rgb(148, 163, 184)',
-                    marginBottom: '8px',
+                    marginBottom: '12px',
                   }}
                 >
                   {lang === 'tr' ? 'Toplam Kazanılan' : 'Total Earned'}
                 </div>
                 <div
                   style={{
-                    fontSize: '48px',
+                    fontSize: '72px',
                     fontWeight: 'bold',
                     background: 'linear-gradient(to right, rgb(251, 191, 36), rgb(251, 146, 60), rgb(251, 191, 36))',
                     WebkitBackgroundClip: 'text',
@@ -232,7 +231,7 @@ export async function GET(req: Request) {
                   flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  paddingTop: '16px',
+                  paddingTop: '24px',
                   borderTop: '1px solid rgba(255, 255, 255, 0.1)',
                 }}
               >
@@ -241,27 +240,27 @@ export async function GET(req: Request) {
                     display: 'flex',
                     flexDirection: 'row',
                     alignItems: 'center',
-                    gap: '8px',
+                    gap: '12px',
                   }}
                 >
                   <div
                     style={{
-                      width: '24px',
-                      height: '24px',
+                      width: '36px',
+                      height: '36px',
                       borderRadius: '50%',
                       backgroundColor: 'rgb(34, 197, 94)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       color: 'rgb(255, 255, 255)',
-                      fontSize: '16px',
+                      fontSize: '24px',
                     }}
                   >
                     ✓
                   </div>
                   <span
                     style={{
-                      fontSize: '12px',
+                      fontSize: '18px',
                       fontWeight: '500',
                       color: 'rgb(203, 213, 225)',
                     }}
@@ -271,7 +270,7 @@ export async function GET(req: Request) {
                 </div>
                 <div
                   style={{
-                    fontSize: '12px',
+                    fontSize: '18px',
                     color: 'rgb(148, 163, 184)',
                   }}
                 >
@@ -287,25 +286,16 @@ export async function GET(req: Request) {
         height,
       }
     );
-
-    // Clone response to add download headers
-    const response = new Response(imageResponse.body, {
-      status: 200,
-      headers: {
-        'Content-Type': 'image/png',
-        'Content-Disposition': `attachment; filename="${filename}"`,
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-      },
-    });
-
-    return response;
   } catch (error) {
     console.error('[API] Profile card generation error:', error);
-    return new Response(`Failed to generate profile card: ${error instanceof Error ? error.message : 'Unknown error'}`, { 
-      status: 500,
-      headers: {
-        'Content-Type': 'text/plain',
+    return new Response(
+      `Failed to generate profile card: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      {
+        status: 500,
+        headers: {
+          'Content-Type': 'text/plain',
+        },
       }
-    });
+    );
   }
 }
