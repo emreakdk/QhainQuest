@@ -1,5 +1,5 @@
 import { useRef, useCallback } from 'react';
-import html2canvas from 'html2canvas';
+import { toPng } from 'html-to-image';
 import { useLanguage } from '../../context/LanguageContext';
 import { TbDownload, TbCheck } from 'react-icons/tb';
 import Button from './Button';
@@ -35,17 +35,22 @@ const Web3IdentityCard = ({
     });
   };
 
-  // Card capture style - FORCE opaque gradient background (no transparency)
-  // Using standard CSS syntax for html2canvas compatibility
-  const cardCaptureStyle = {
-    background: 'linear-gradient(135deg, #0f172a 0%, #3b0764 50%, #0f172a 100%)', // Explicit Gradient
-    color: 'white',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
+  // Safe capture style - Standard HEX colors (no oklch/Tailwind utilities)
+  // Ensures html-to-image can parse colors perfectly
+  const safeCaptureStyle = {
+    // Explicitly set the dark gradient in standard CSS
+    backgroundImage: 'linear-gradient(135deg, #0f172a 0%, #3b0764 50%, #0f172a 100%)',
+    backgroundColor: '#0f172a', // Fallback
+    color: '#ffffff',
+    // Fix border to be explicit RGBA
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderWidth: '1px',
+    borderStyle: 'solid',
     aspectRatio: '16/9',
     minHeight: '320px',
   };
 
-  const handleDownload = useCallback(async () => {
+  const handleDownload = useCallback(() => {
     console.log("Download button clicked!"); // LOG 1
 
     if (cardRef.current === null) {
@@ -53,30 +58,35 @@ const Web3IdentityCard = ({
       return;
     }
 
-    try {
-      console.log("Starting html2canvas capture..."); // LOG 3
-      
-      const canvas = await html2canvas(cardRef.current, {
-        scale: 2, // Higher quality
-        useCORS: true, // Handle cross-origin images (like avatars)
-        backgroundColor: '#0f172a', // FORCE Dark Background (Slate-900) as a fallback
-        logging: true, // Enable internal logger
-        allowTaint: true,
-      });
+    console.log("Starting html-to-image capture..."); // LOG 3
 
-      console.log("Canvas created, generating Data URL..."); // LOG 4
-      
-      const dataUrl = canvas.toDataURL('image/png');
-      const link = document.createElement('a');
-      link.download = `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 6) : 'Demo'}.png`;
-      link.href = dataUrl;
-      link.click();
-      
-      console.log("Download triggered."); // LOG 5
-    } catch (err) {
-      console.error('CRITICAL ERROR during image generation:', err); // LOG ERROR
-      alert("Kart indirilirken bir hata oluştu: " + err.message);
-    }
+    // Force strict dimensions and background to prevent transparency issues
+    toPng(cardRef.current, {
+      cacheBust: true,
+      pixelRatio: 3, // High Quality
+      backgroundColor: '#0f172a', // <--- PREVENTS TRANSPARENCY
+      style: {
+        // Ensure specific elements render correctly during capture
+        fontFamily: 'sans-serif',
+      }
+    })
+      .then((dataUrl) => {
+        console.log("Image generated successfully, triggering download..."); // LOG 4
+        const link = document.createElement('a');
+        link.download = `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 4) : 'User'}.png`;
+        link.href = dataUrl;
+        link.click();
+        console.log("Download triggered."); // LOG 5
+      })
+      .catch((err) => {
+        console.error('CRITICAL ERROR during image generation:', err); // LOG ERROR
+        // Fallback alert if something weird happens
+        if (err.message && err.message.includes('oklch')) {
+          alert("Tarayıcınız bu renk formatını desteklemiyor. Lütfen Chrome/Edge güncel sürüm deneyin.");
+        } else {
+          alert("Kart indirilirken bir hata oluştu: " + (err.message || err));
+        }
+      });
   }, [publicKey]);
 
 
@@ -86,7 +96,7 @@ const Web3IdentityCard = ({
       <div
         ref={cardRef}
         className="relative rounded-2xl p-8 shadow-2xl overflow-hidden"
-        style={cardCaptureStyle}
+        style={safeCaptureStyle}
       >
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
