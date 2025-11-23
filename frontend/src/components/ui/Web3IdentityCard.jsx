@@ -46,25 +46,36 @@ const Web3IdentityCard = ({
   };
 
   const handleDownload = useCallback(async () => {
-    if (cardRef.current === null) return;
-    
+    console.log("Download button clicked!"); // LOG 1
+
+    if (cardRef.current === null) {
+      console.error("Error: cardRef is null. The ref is not attached to the div."); // LOG 2
+      return;
+    }
+
     try {
-      // html2canvas captures the element exactly as rendered
+      console.log("Starting html2canvas capture..."); // LOG 3
+      
       const canvas = await html2canvas(cardRef.current, {
         scale: 2, // Higher quality
         useCORS: true, // Handle cross-origin images (like avatars)
         backgroundColor: '#0f172a', // FORCE Dark Background (Slate-900) as a fallback
-        logging: false,
+        logging: true, // Enable internal logger
         allowTaint: true,
       });
+
+      console.log("Canvas created, generating Data URL..."); // LOG 4
       
       const dataUrl = canvas.toDataURL('image/png');
       const link = document.createElement('a');
       link.download = `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 6) : 'Demo'}.png`;
       link.href = dataUrl;
       link.click();
+      
+      console.log("Download triggered."); // LOG 5
     } catch (err) {
-      console.error('Kimlik oluşturma hatası:', err);
+      console.error('CRITICAL ERROR during image generation:', err); // LOG ERROR
+      alert("Kart indirilirken bir hata oluştu: " + err.message);
     }
   }, [publicKey]);
 
