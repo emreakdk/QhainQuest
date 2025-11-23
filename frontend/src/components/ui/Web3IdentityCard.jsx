@@ -1,5 +1,5 @@
 import { useRef, useCallback } from 'react';
-import html2canvas from 'html2canvas';
+import { toPng } from 'html-to-image';
 import { useLanguage } from '../../context/LanguageContext';
 import { TbDownload, TbCheck } from 'react-icons/tb';
 import Button from './Button';
@@ -36,12 +36,11 @@ const Web3IdentityCard = ({
   };
 
   // Define styles using ONLY standard CSS and HEX/RGBA colors. No Tailwind variables.
-  const cardContainerStyle = {
-    // The exact dark purple gradient
+  // Style-First Architecture: Inline styles to ensure html-to-image captures correctly
+  const finalCardStyle = {
+    // Hardcoded Gradient to ensure it's captured
     background: 'linear-gradient(135deg, #0f172a 0%, #3b0764 50%, #0f172a 100%)',
-    // Explicit white text
-    color: '#ffffff',
-    // Explicit rgba border
+    color: 'white',
     border: '1px solid rgba(255, 255, 255, 0.1)',
     // Ensure background is clipped correctly
     backgroundClip: 'padding-box',
@@ -101,50 +100,30 @@ const Web3IdentityCard = ({
     opacity: 0.3,
   };
 
-  const handleDownload = useCallback(async () => {
-    console.log("⬇️ İndirme işlemi başlatılıyor...");
+  const handleDownload = useCallback(() => {
+    if (cardRef.current === null) return;
 
-    if (!cardRef.current) {
-      console.error("❌ HATA: Kart referansı bulunamadı (null).");
-      alert("Hata: Kart elementi bulunamadı.");
-      return;
-    }
-
-    try {
-      // Wait a tiny bit to ensure styles are settled
-      await new Promise(resolve => setTimeout(resolve, 100));
-
-      const canvas = await html2canvas(cardRef.current, {
-        scale: 3, // High Quality
-        useCORS: true, // Try to load images with CORS
-        allowTaint: false, // CRITICAL: Must be false to use toDataURL()
-        backgroundColor: '#0f172a', // Force Dark Background
-        logging: true, // Turn on internal html2canvas logs to see progress in console
-        imageTimeout: 0, // Wait for images to load
-        ignoreElements: (element) => {
-          // Optional: Ignore external images if they continue to fail CORS
-          // return element.tagName === 'IMG' && !element.src.includes('localhost');
-          return false;
-        }
+    toPng(cardRef.current, {
+      cacheBust: true,
+      pixelRatio: 3, // High Quality
+      // FORCE the background color behind the element to be Dark Slate (filling any transparency)
+      backgroundColor: '#0f172a',
+      style: {
+        // Ensure the captured node ignores any parent opacity
+        opacity: '1',
+        visibility: 'visible',
+      }
+    })
+      .then((dataUrl) => {
+        const link = document.createElement('a');
+        link.download = `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 4) : 'User'}.png`;
+        link.href = dataUrl;
+        link.click();
+      })
+      .catch((err) => {
+        console.error('Download Error:', err);
+        alert("İndirme hatası oluştu. Lütfen tekrar deneyin.");
       });
-
-      console.log("✅ Canvas oluşturuldu, resme çevriliyor...");
-      // This is where it usually fails if tainted
-      const dataUrl = canvas.toDataURL('image/png', 1.0);
-      
-      const link = document.createElement('a');
-      link.download = `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 4) : 'User'}.png`;
-      link.href = dataUrl;
-      link.click();
-      
-      console.log("🚀 İndirme tetiklendi.");
-    } catch (err) {
-      console.error("🔥 İNDİRME HATASI DETAYI:", err);
-      // Log the object structure in case it's not a standard Error
-      console.log("Hata Objesi:", JSON.stringify(err, null, 2));
-      
-      alert(`Kart indirilemedi!\nHata: ${err.message || 'Bilinmeyen bir güvenlik hatası oluştu.'}`);
-    }
   }, [cardRef, publicKey]);
 
 
@@ -153,8 +132,8 @@ const Web3IdentityCard = ({
       {/* Identity Card - Always Dark/Premium appearance */}
       <div
         ref={cardRef}
-        className="relative rounded-2xl p-8 shadow-2xl overflow-hidden"
-        style={cardContainerStyle}
+        className="relative rounded-2xl p-8 overflow-hidden"
+        style={finalCardStyle}
       >
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
