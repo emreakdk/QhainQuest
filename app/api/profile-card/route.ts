@@ -16,7 +16,7 @@ import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
 
-export async function GET(req) {
+export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     
@@ -33,7 +33,7 @@ export async function GET(req) {
     const filename = searchParams.get('filename') || `chainquest-card-${Date.now()}.png`;
 
     // Format wallet address
-    const formatAddress = (address) => {
+    const formatAddress = (address: string) => {
       if (!address || address === 'Demo Mode') return 'Demo Mode';
       if (address.length <= 12) return address;
       return `${address.slice(0, 6)}...${address.slice(-6)}`;
@@ -45,7 +45,7 @@ export async function GET(req) {
     const width = 800;
     const height = 450;
 
-    return new ImageResponse(
+    const imageResponse = new ImageResponse(
       (
         <div
           style={{
