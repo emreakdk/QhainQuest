@@ -1,5 +1,5 @@
 import { useRef, useCallback } from 'react';
-import { toPng } from 'html-to-image';
+import html2canvas from 'html2canvas';
 import { useLanguage } from '../../context/LanguageContext';
 import { TbDownload, TbCheck } from 'react-icons/tb';
 import Button from './Button';
@@ -37,6 +37,7 @@ const Web3IdentityCard = ({
 
   // Dedicated wrapper style for export - explicit background that will be captured
   // This wrapper ensures the exported PNG has the exact same background as displayed
+  // html2canvas will capture this wrapper's background perfectly
   const shareCardWrapperStyle = {
     // Explicit solid base color (ensures no transparency - matches gradient start/end)
     backgroundColor: '#0f172a',
@@ -55,6 +56,9 @@ const Web3IdentityCard = ({
     maxWidth: '100%',
     // Ensure wrapper doesn't interfere with card styling
     boxSizing: 'border-box',
+    // Force rendering context
+    position: 'relative',
+    isolation: 'isolate', // Creates new stacking context for better capture
   };
 
   // Card container style (inside wrapper)
@@ -140,26 +144,42 @@ const Web3IdentityCard = ({
       }
 
       // 1. Wait for all styles, gradients, and effects to render completely
-      await new Promise((resolve) => setTimeout(resolve, 300));
+      await new Promise((resolve) => setTimeout(resolve, 400));
 
-      // 2. Pixel-perfect capture targeting ONLY the dedicated wrapper
-      // The wrapper has explicit background, so export will match exactly
-      const dataUrl = await toPng(shareCardRef.current, {
-        cacheBust: true,
-        pixelRatio: 3, // High quality for crisp text and effects
-        // CRITICAL: Background color matches wrapper gradient start/end
-        // This ensures any edge cases are filled with the correct color
-        backgroundColor: '#0f172a',
-        // Style overrides to ensure maximum visibility
-        style: {
-          opacity: '1',
-          visibility: 'visible',
-          transform: 'none',
+      // 2. Force reflow to ensure all styles are applied
+      shareCardRef.current.offsetHeight;
+
+      // 3. Pixel-perfect capture using html2canvas with optimized settings
+      // html2canvas handles backgrounds, gradients, and effects much better
+      const canvas = await html2canvas(shareCardRef.current, {
+        // High quality rendering
+        scale: 3, // 3x for retina displays and crisp text
+        useCORS: true, // Allow cross-origin images if any
+        allowTaint: false, // Prevent canvas tainting
+        // CRITICAL: Background color fills any edge cases
+        backgroundColor: '#0f172a', // Matches gradient start/end
+        // Logging for debugging (can be removed in production)
+        logging: false,
+        // Window width/height for accurate sizing
+        windowWidth: shareCardRef.current.scrollWidth,
+        windowHeight: shareCardRef.current.scrollHeight,
+        // Ensure all elements are captured
+        ignoreElements: (element) => {
+          // Exclude download button if somehow inside wrapper
+          return element.id === 'download-btn';
         },
-        // No filter needed - wrapper only contains the card
+        // Image loading timeout
+        imageTimeout: 15000,
+        // Remove control characters that might cause issues
+        removeContainer: false,
+        // Foreign object rendering (for better SVG support)
+        foreignObjectRendering: true,
       });
 
-      // 3. Create download link
+      // 4. Convert canvas to PNG with maximum quality
+      const dataUrl = canvas.toDataURL('image/png', 1.0);
+
+      // 5. Create download link
       const link = document.createElement('a');
       link.download = `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 4) : 'User'}-${Date.now()}.png`;
       link.href = dataUrl;
@@ -167,7 +187,7 @@ const Web3IdentityCard = ({
       link.click();
       document.body.removeChild(link);
 
-      // 4. Restore button state
+      // 6. Restore button state
       if (btn) {
         btn.innerText = originalText;
         btn.disabled = false;
