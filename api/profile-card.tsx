@@ -1,10 +1,10 @@
-import { ImageResponse } from 'next/server';
+import { ImageResponse } from '@vercel/og';
 
 /**
  * API Route: /api/profile-card
  * 
  * Server-side rendering of ChainQuest profile card as PNG image.
- * Uses ImageResponse from next/server to render React component to PNG.
+ * Uses ImageResponse from @vercel/og to render React component to PNG.
  * 
  * Query parameters:
  * - wallet: Wallet address (optional, defaults to 'Demo Mode')
@@ -14,9 +14,11 @@ import { ImageResponse } from 'next/server';
  * - lang: Language ('tr' or 'en', optional, defaults to 'en')
  */
 
-export const runtime = 'edge';
+export const config = {
+  runtime: 'edge',
+};
 
-export async function GET(req: Request) {
+export default async function handler(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     
@@ -299,3 +301,4 @@ export async function GET(req: Request) {
     );
   }
 }
+
