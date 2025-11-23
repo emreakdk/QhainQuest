@@ -242,14 +242,26 @@ const Web3IdentityCard = ({
 
       console.log('[Download] Canvas created, dimensions:', canvas.width, 'x', canvas.height);
 
-      // 5. Convert canvas to PNG with maximum quality
-      let dataUrl;
+      // 5. Convert canvas to Blob (more reliable than data URL, especially in Firefox)
+      let blob;
       try {
-        dataUrl = canvas.toDataURL('image/png', 1.0);
-        console.log('[Download] Data URL created, length:', dataUrl.length);
-      } catch (dataUrlError) {
-        console.error('[Download] toDataURL error:', dataUrlError);
-        // If toDataURL fails due to tainted canvas, try with allowTaint
+        blob = await new Promise((resolve, reject) => {
+          canvas.toBlob(
+            (resultBlob) => {
+              if (resultBlob) {
+                resolve(resultBlob);
+              } else {
+                reject(new Error('Canvas toBlob returned null'));
+              }
+            },
+            'image/png',
+            1.0 // Maximum quality
+          );
+        });
+        console.log('[Download] Blob created, size:', blob.size, 'bytes');
+      } catch (blobError) {
+        console.error('[Download] toBlob error:', blobError);
+        // If toBlob fails due to tainted canvas, try with allowTaint
         console.warn('[Download] Retrying with allowTaint: true...');
         const retryCanvas = await html2canvas(shareCardRef.current, {
           scale: 2,
@@ -260,34 +272,52 @@ const Web3IdentityCard = ({
           windowWidth: shareCardRef.current.scrollWidth,
           windowHeight: shareCardRef.current.scrollHeight,
         });
-        dataUrl = retryCanvas.toDataURL('image/png', 1.0);
-        console.log('[Download] Retry successful');
+        
+        blob = await new Promise((resolve, reject) => {
+          retryCanvas.toBlob(
+            (resultBlob) => {
+              if (resultBlob) {
+                resolve(resultBlob);
+              } else {
+                reject(new Error('Retry canvas toBlob returned null'));
+              }
+            },
+            'image/png',
+            1.0
+          );
+        });
+        console.log('[Download] Retry successful, blob size:', blob.size, 'bytes');
       }
 
-      if (!dataUrl || dataUrl === 'data:,') {
-        throw new Error('Failed to generate image data URL');
+      if (!blob || blob.size === 0) {
+        throw new Error('Failed to generate image blob');
       }
 
-      // 6. Create download link
+      // 6. Create object URL from Blob (more reliable than data URL)
+      const objectUrl = URL.createObjectURL(blob);
+      console.log('[Download] Object URL created:', objectUrl);
+
+      // 7. Create download link with object URL
       const link = document.createElement('a');
       const filename = `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 4) : 'User'}-${Date.now()}.png`;
       link.download = filename;
-      link.href = dataUrl;
+      link.href = objectUrl;
+      link.style.display = 'none'; // Hide the link
       
       // Append to body, click, then remove
       document.body.appendChild(link);
+      
+      // Trigger download
       link.click();
       
-      // Clean up after a short delay
+      console.log('[Download] Download triggered successfully');
+
+      // Clean up: remove link and revoke object URL after a short delay
       setTimeout(() => {
         document.body.removeChild(link);
-        // Revoke object URL if it was created
-        if (dataUrl.startsWith('blob:')) {
-          URL.revokeObjectURL(dataUrl);
-        }
+        URL.revokeObjectURL(objectUrl);
+        console.log('[Download] Cleanup completed');
       }, 100);
-
-      console.log('[Download] Download triggered successfully');
 
       // 7. Restore button state
       if (btn) {
@@ -316,9 +346,23 @@ const Web3IdentityCard = ({
         errorMessage = language === 'tr'
           ? 'CORS hatası. Lütfen sayfayı yenileyin ve tekrar deneyin.'
           : 'CORS error. Please refresh the page and try again.';
+      } else if (err?.message?.includes('blob') || err?.message?.includes('Blob')) {
+        errorMessage = language === 'tr'
+          ? 'Görüntü oluşturulamadı. Lütfen sayfayı yenileyin ve tekrar deneyin.'
+          : 'Failed to create image. Please refresh the page and try again.';
+      } else if (err?.message?.includes('Canvas')) {
+        errorMessage = language === 'tr'
+          ? 'Görüntü yakalama hatası. Lütfen sayfayı yenileyin.'
+          : 'Image capture error. Please refresh the page.';
       }
       
-      alert(`${errorMessage}\n\n${language === 'tr' ? 'Hata detayları konsola yazıldı.' : 'Error details logged to console.'}`);
+      // Only show alert if Blob creation failed (critical error)
+      if (err?.message?.includes('blob') || err?.message?.includes('Blob') || err?.message?.includes('Failed to generate')) {
+        alert(`${errorMessage}\n\n${language === 'tr' ? 'Hata detayları konsola yazıldı.' : 'Error details logged to console.'}`);
+      } else {
+        // For other errors, just log to console
+        console.warn('[Download] Non-critical error, download may have succeeded:', err?.message);
+      }
       
       // Restore button on error
       const btn = document.getElementById('download-btn');
