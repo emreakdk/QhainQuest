@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useCallback, useState, useEffect } from 'react';
-import { toBlob } from 'html-to-image';
+import { toCanvas, toBlob } from 'html-to-image';
 import { useLanguage } from '../../context/LanguageContext';
 import { TbDownload, TbCheck } from 'react-icons/tb';
 import Button from './Button';
@@ -261,15 +261,14 @@ const Web3IdentityCard = ({
         console.warn('[Download] Found external images, may cause CORS issues:', externalImages.map(img => img.src));
       }
 
-      // 5. Generate Blob using html-to-image toBlob (more reliable)
-      console.log('[Download] Generating Blob from element...');
-      let blob;
+      // 5. Generate initial canvas from element
+      console.log('[Download] Generating initial canvas from element...');
+      let sourceCanvas;
       
       try {
-        blob = await toBlob(shareCardRef.current, {
+        sourceCanvas = await toCanvas(shareCardRef.current, {
           cacheBust: true,
           pixelRatio: 2, // High quality
-          quality: 1.0, // Maximum quality
           // CRITICAL: Background color fills any edge cases
           backgroundColor: '#0f172a', // Matches gradient start/end
           // Filter to exclude download button
@@ -286,28 +285,77 @@ const Web3IdentityCard = ({
           },
         });
 
-        if (!blob) {
-          throw new Error('toBlob returned null');
+        if (!sourceCanvas) {
+          throw new Error('toCanvas returned null');
         }
 
-        console.log('[Download] Blob created successfully, size:', blob.size, 'bytes, type:', blob.type);
-      } catch (blobError) {
-        console.error('[Download] toBlob error:', blobError);
+        console.log('[Download] Source canvas created, dimensions:', sourceCanvas.width, 'x', sourceCanvas.height);
+      } catch (canvasError) {
+        console.error('[Download] toCanvas error:', canvasError);
         console.error('[Download] Error details:', {
-          message: blobError?.message,
-          stack: blobError?.stack,
-          name: blobError?.name,
+          message: canvasError?.message,
+          stack: canvasError?.stack,
+          name: canvasError?.name,
         });
-        throw new Error(`Blob generation failed: ${blobError?.message || 'Unknown error'}`);
+        throw new Error(`Canvas generation failed: ${canvasError?.message || 'Unknown error'}`);
+      }
+
+      // 6. Create a second blank canvas with solid background (no transparency)
+      console.log('[Download] Creating flattened canvas with solid background...');
+      const finalCanvas = document.createElement('canvas');
+      finalCanvas.width = sourceCanvas.width;
+      finalCanvas.height = sourceCanvas.height;
+      const finalCtx = finalCanvas.getContext('2d', { alpha: false }); // Disable alpha channel
+      
+      if (!finalCtx) {
+        throw new Error('Failed to get 2D context from final canvas');
+      }
+
+      // Fill the entire canvas with the card's background color (no transparency)
+      // Using the darkest color from the gradient to ensure it matches
+      finalCtx.fillStyle = '#0f172a'; // Solid dark slate background
+      finalCtx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+      
+      console.log('[Download] Background filled with #0f172a');
+
+      // 7. Draw the source canvas on top of the solid background
+      finalCtx.drawImage(sourceCanvas, 0, 0);
+      console.log('[Download] Source canvas drawn on top of background');
+
+      // 8. Convert final canvas to Blob (completely opaque, no transparency)
+      let blob;
+      try {
+        blob = await new Promise((resolve, reject) => {
+          finalCanvas.toBlob(
+            (resultBlob) => {
+              if (resultBlob) {
+                resolve(resultBlob);
+              } else {
+                reject(new Error('Final canvas toBlob returned null'));
+              }
+            },
+            'image/png', // PNG format
+            1.0 // Maximum quality
+          );
+        });
+
+        if (!blob) {
+          throw new Error('Final canvas toBlob returned null');
+        }
+
+        console.log('[Download] Final Blob created successfully, size:', blob.size, 'bytes, type:', blob.type);
+      } catch (blobError) {
+        console.error('[Download] Final canvas toBlob error:', blobError);
+        throw new Error(`Final Blob generation failed: ${blobError?.message || 'Unknown error'}`);
       }
 
       if (!blob || blob.size === 0) {
-        throw new Error('Generated blob is null or empty');
+        throw new Error('Generated final blob is null or empty');
       }
 
-      // 6. Create object URL from Blob (more reliable than data URL)
+      // 9. Create object URL from Blob (completely opaque, no transparency)
       const objectUrl = URL.createObjectURL(blob);
-      console.log('[Download] Object URL created:', objectUrl);
+      console.log('[Download] Object URL created from opaque Blob:', objectUrl);
 
       if (!objectUrl || objectUrl === '') {
         throw new Error('Failed to create object URL from blob');
