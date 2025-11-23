@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useCallback, useState, useEffect } from 'react';
-import { toCanvas, toBlob } from 'html-to-image';
+import { toCanvas } from 'html-to-image';
 import { useLanguage } from '../../context/LanguageContext';
 import { TbDownload, TbCheck } from 'react-icons/tb';
 import Button from './Button';
@@ -84,8 +84,7 @@ const Web3IdentityCard = ({
   };
 
   // Dedicated wrapper style for export - explicit background that will be captured
-  // This wrapper ensures the exported PNG has the exact same background as displayed
-  // html2canvas will capture this wrapper's background perfectly
+  // This wrapper ensures the exported image has the exact same background as displayed
   const shareCardWrapperStyle = {
     // Explicit solid base color (ensures no transparency - matches gradient start/end)
     backgroundColor: '#0f172a',
@@ -176,6 +175,15 @@ const Web3IdentityCard = ({
     opacity: 0.3,
   };
 
+  /**
+   * Single download function that creates a fully flattened, opaque image
+   * with no transparency. Uses two-stage canvas approach:
+   * 1. Capture #share-card to source canvas
+   * 2. Create blank canvas filled with dark background
+   * 3. Draw source on top
+   * 4. Verify all pixels have alpha = 255
+   * 5. Export as JPEG (no transparency support)
+   */
   const handleDownload = useCallback(async (e) => {
     // Prevent any default behavior
     if (e) {
@@ -183,7 +191,7 @@ const Web3IdentityCard = ({
       e.stopPropagation();
     }
 
-    console.log('[Download] Button clicked - handler fired');
+    console.log('[Download] ===== Starting flattened opaque image download =====');
 
     // Client-side only check
     if (typeof window === 'undefined') {
@@ -195,7 +203,6 @@ const Web3IdentityCard = ({
     // Verify element exists
     if (!shareCardRef.current) {
       console.error('[Download Error] shareCardRef.current is null');
-      // Try to find by ID as fallback
       const fallbackElement = document.getElementById('share-card');
       if (fallbackElement) {
         console.warn('[Download] Found element by ID, but ref is null');
@@ -219,7 +226,6 @@ const Web3IdentityCard = ({
       return;
     }
 
-    console.log('[Download] Starting download process...');
     setIsDownloading(true);
 
     try {
@@ -231,188 +237,125 @@ const Web3IdentityCard = ({
         btn.disabled = true;
       }
 
-      console.log('[Download] Starting card export...');
-
-      // 1. Wait for all styles, gradients, and effects to render completely
+      // Step 1: Wait for all styles, gradients, and effects to render completely
+      console.log('[Download] Step 1: Waiting for styles to render...');
       await new Promise((resolve) => setTimeout(resolve, 300));
 
-      // 2. Force reflow to ensure all styles are applied
-      const offsetHeight = shareCardRef.current.offsetHeight;
-      const scrollWidth = shareCardRef.current.scrollWidth;
-      const scrollHeight = shareCardRef.current.scrollHeight;
-      console.log('[Download] Element dimensions:', { offsetHeight, scrollWidth, scrollHeight });
-
-      // 3. Verify element is still in DOM
-      if (!document.body.contains(shareCardRef.current)) {
-        throw new Error('Element removed from DOM during processing');
-      }
-
-      // 4. Check for any external images that might cause CORS issues
-      const images = shareCardRef.current.querySelectorAll('img');
-      const externalImages = Array.from(images).filter(img => {
-        try {
-          return img.src && !img.src.startsWith('data:') && !img.src.startsWith(window.location.origin);
-        } catch (e) {
-          return false;
-        }
+      // Step 2: Capture #share-card into source canvas
+      console.log('[Download] Step 2: Capturing #share-card to source canvas...');
+      const sourceCanvas = await toCanvas(shareCardRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+        backgroundColor: '#0f172a', // Fallback background
+        filter: (node) => {
+          if (node.id === 'download-btn') return false;
+          if (node.hasAttribute?.('data-ignore-export')) return false;
+          return true;
+        },
+        style: {
+          opacity: '1',
+          visibility: 'visible',
+          transform: 'none',
+        },
       });
 
-      if (externalImages.length > 0) {
-        console.warn('[Download] Found external images, may cause CORS issues:', externalImages.map(img => img.src));
+      if (!sourceCanvas) {
+        throw new Error('Source canvas generation returned null');
+      }
+      console.log('[Download] Source canvas created:', sourceCanvas.width, 'x', sourceCanvas.height);
+
+      // Step 3: Create second canvas of same size
+      console.log('[Download] Step 3: Creating flattened canvas with solid background...');
+      const flatCanvas = document.createElement('canvas');
+      flatCanvas.width = sourceCanvas.width;
+      flatCanvas.height = sourceCanvas.height;
+      const flatCtx = flatCanvas.getContext('2d', { alpha: false }); // Disable alpha channel
+      
+      if (!flatCtx) {
+        throw new Error('Failed to get 2D context from flattened canvas');
       }
 
-      // 5. Generate initial canvas from element
-      console.log('[Download] Generating initial canvas from element...');
-      let sourceCanvas;
-      
-      try {
-        sourceCanvas = await toCanvas(shareCardRef.current, {
-          cacheBust: true,
-          pixelRatio: 2, // High quality
-          // CRITICAL: Background color fills any edge cases
-          backgroundColor: '#0f172a', // Matches gradient start/end
-          // Filter to exclude download button
-          filter: (node) => {
-            if (node.id === 'download-btn') return false;
-            if (node.hasAttribute?.('data-ignore-export')) return false;
-            return true;
-          },
-          // Style overrides
-          style: {
-            opacity: '1',
-            visibility: 'visible',
-            transform: 'none',
-          },
-        });
+      // Step 4: Fill second canvas completely with dark background color
+      const darkBackground = '#0f172a'; // Dark slate background
+      flatCtx.fillStyle = darkBackground;
+      flatCtx.fillRect(0, 0, flatCanvas.width, flatCanvas.height);
+      console.log('[Download] Background filled with', darkBackground);
 
-        if (!sourceCanvas) {
-          throw new Error('toCanvas returned null');
-        }
-
-        console.log('[Download] Source canvas created, dimensions:', sourceCanvas.width, 'x', sourceCanvas.height);
-      } catch (canvasError) {
-        console.error('[Download] toCanvas error:', canvasError);
-        console.error('[Download] Error details:', {
-          message: canvasError?.message,
-          stack: canvasError?.stack,
-          name: canvasError?.name,
-        });
-        throw new Error(`Canvas generation failed: ${canvasError?.message || 'Unknown error'}`);
-      }
-
-      // 6. Create a second blank canvas with solid background (no transparency)
-      console.log('[Download] Creating flattened canvas with solid background...');
-      const finalCanvas = document.createElement('canvas');
-      finalCanvas.width = sourceCanvas.width;
-      finalCanvas.height = sourceCanvas.height;
-      const finalCtx = finalCanvas.getContext('2d', { alpha: false }); // Disable alpha channel
-      
-      if (!finalCtx) {
-        throw new Error('Failed to get 2D context from final canvas');
-      }
-
-      // Fill the entire canvas with the card's background color (no transparency)
-      // Using the darkest color from the gradient to ensure it matches
-      finalCtx.fillStyle = '#0f172a'; // Solid dark slate background
-      finalCtx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
-      
-      console.log('[Download] Background filled with #0f172a');
-
-      // 7. Draw the source canvas on top of the solid background
-      finalCtx.drawImage(sourceCanvas, 0, 0);
+      // Step 5: Draw source canvas on top of filled canvas
+      flatCtx.drawImage(sourceCanvas, 0, 0);
       console.log('[Download] Source canvas drawn on top of background');
 
-      // 8. Convert final canvas to Blob (completely opaque, no transparency)
-      let blob;
-      try {
-        blob = await new Promise((resolve, reject) => {
-          finalCanvas.toBlob(
-            (resultBlob) => {
-              if (resultBlob) {
-                resolve(resultBlob);
-              } else {
-                reject(new Error('Final canvas toBlob returned null'));
-              }
-            },
-            'image/png', // PNG format
-            1.0 // Maximum quality
-          );
-        });
-
-        if (!blob) {
-          throw new Error('Final canvas toBlob returned null');
+      // Step 6: Verify all pixels have alpha = 255 (completely opaque)
+      console.log('[Download] Step 6: Verifying all pixels are opaque (alpha = 255)...');
+      const imageData = flatCtx.getImageData(0, 0, flatCanvas.width, flatCanvas.height);
+      const pixels = imageData.data;
+      let transparentPixels = 0;
+      let totalPixels = (flatCanvas.width * flatCanvas.height);
+      
+      // Check every 4th value (alpha channel) in RGBA array
+      for (let i = 3; i < pixels.length; i += 4) {
+        if (pixels[i] !== 255) {
+          transparentPixels++;
+          // Force to 255 if not already
+          pixels[i] = 255;
         }
-
-        console.log('[Download] Final Blob created successfully, size:', blob.size, 'bytes, type:', blob.type);
-      } catch (blobError) {
-        console.error('[Download] Final canvas toBlob error:', blobError);
-        throw new Error(`Final Blob generation failed: ${blobError?.message || 'Unknown error'}`);
       }
-
-      if (!blob || blob.size === 0) {
-        throw new Error('Generated final blob is null or empty');
+      
+      if (transparentPixels > 0) {
+        console.warn(`[Download] Found ${transparentPixels} pixels with alpha < 255, forcing to 255...`);
+        // Put corrected image data back
+        flatCtx.putImageData(imageData, 0, 0);
       }
+      
+      const opaquePixels = totalPixels - transparentPixels;
+      console.log(`[Download] Verification complete: ${opaquePixels}/${totalPixels} pixels are opaque (alpha = 255)`);
 
-      // 9. Create object URL from Blob (completely opaque, no transparency)
-      const objectUrl = URL.createObjectURL(blob);
-      console.log('[Download] Object URL created from opaque Blob:', objectUrl);
-
-      if (!objectUrl || objectUrl === '') {
-        throw new Error('Failed to create object URL from blob');
+      // Step 7: Generate final file as JPEG (no transparency support)
+      console.log('[Download] Step 7: Generating JPEG from flattened canvas...');
+      const dataUrl = flatCanvas.toDataURL('image/jpeg', 0.95);
+      
+      if (!dataUrl || dataUrl === 'data:,') {
+        throw new Error('Failed to generate JPEG data URL');
       }
+      console.log('[Download] JPEG data URL created, length:', dataUrl.length);
 
-      // 7. Create download link with object URL
+      // Step 8: Create download link and trigger download
+      console.log('[Download] Step 8: Creating download link...');
       const link = document.createElement('a');
-      const filename = `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 4) : 'User'}-${Date.now()}.png`;
+      const filename = `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 4) : 'User'}-${Date.now()}.jpg`;
       link.download = filename;
-      link.href = objectUrl;
-      link.style.display = 'none'; // Hide the link
+      link.href = dataUrl;
+      link.style.display = 'none';
       link.style.position = 'absolute';
       link.style.left = '-9999px';
       
-      // Append to body
       document.body.appendChild(link);
-      console.log('[Download] Link element created and appended to body');
-      
-      // Trigger download with error handling
-      try {
-        link.click();
-        console.log('[Download] Download triggered successfully');
-      } catch (clickError) {
-        console.error('[Download] Link click failed:', clickError);
-        // Fallback: try programmatic download
-        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-          // IE/Edge fallback
-          window.navigator.msSaveOrOpenBlob(blob, filename);
-          console.log('[Download] Used IE/Edge fallback');
-        } else {
-          throw new Error(`Download trigger failed: ${clickError?.message || 'Unknown error'}`);
-        }
-      }
+      link.click();
+      console.log('[Download] Download triggered successfully');
 
-      // Clean up: remove link and revoke object URL after a delay
+      // Clean up
       setTimeout(() => {
         try {
           if (document.body.contains(link)) {
             document.body.removeChild(link);
           }
-          URL.revokeObjectURL(objectUrl);
-          console.log('[Download] Cleanup completed');
         } catch (cleanupError) {
           console.warn('[Download] Cleanup error (non-critical):', cleanupError);
         }
-      }, 200);
+      }, 100);
 
-      // 7. Restore button state
+      // Restore button state
       if (btn) {
         btn.innerText = originalText;
         btn.disabled = false;
       }
 
+      console.log('[Download] ===== Download completed successfully =====');
       setIsDownloading(false);
     } catch (err) {
       // Detailed error logging
-      console.error('[Download] Download failed with error:', err);
+      console.error('[Download] ===== Download failed =====');
+      console.error('[Download] Error:', err);
       console.error('[Download] Error name:', err?.name);
       console.error('[Download] Error message:', err?.message);
       console.error('[Download] Error stack:', err?.stack);
@@ -422,33 +365,18 @@ const Web3IdentityCard = ({
         ? 'İndirme sırasında bir hata oluştu.' 
         : 'An error occurred during download.';
       
-      if (err?.message?.includes('tainted')) {
-        errorMessage = language === 'tr'
-          ? 'Görüntü güvenlik nedeniyle engellendi. Lütfen farklı bir tarayıcı deneyin.'
-          : 'Image blocked due to security. Please try a different browser.';
-      } else if (err?.message?.includes('CORS')) {
-        errorMessage = language === 'tr'
-          ? 'CORS hatası. Lütfen sayfayı yenileyin ve tekrar deneyin.'
-          : 'CORS error. Please refresh the page and try again.';
-      } else if (err?.message?.includes('blob') || err?.message?.includes('Blob')) {
-        errorMessage = language === 'tr'
-          ? 'Görüntü oluşturulamadı. Lütfen sayfayı yenileyin ve tekrar deneyin.'
-          : 'Failed to create image. Please refresh the page and try again.';
-      } else if (err?.message?.includes('Canvas')) {
+      if (err?.message?.includes('Canvas')) {
         errorMessage = language === 'tr'
           ? 'Görüntü yakalama hatası. Lütfen sayfayı yenileyin.'
           : 'Image capture error. Please refresh the page.';
+      } else if (err?.message?.includes('JPEG') || err?.message?.includes('data URL')) {
+        errorMessage = language === 'tr'
+          ? 'Görüntü oluşturulamadı. Lütfen sayfayı yenileyin ve tekrar deneyin.'
+          : 'Failed to create image. Please refresh the page and try again.';
       }
       
-      // Always show alert for download failures (user needs to know)
-      alert(`${errorMessage}\n\n${language === 'tr' ? 'Hata detayları konsola yazıldı. Lütfen konsolu kontrol edin.' : 'Error details logged to console. Please check the console.'}`);
-      
-      // Additional debugging info
-      console.error('[Download] Element state at error:', {
-        refExists: !!shareCardRef.current,
-        inDOM: shareCardRef.current ? document.body.contains(shareCardRef.current) : false,
-        elementId: shareCardRef.current?.id,
-      });
+      // Always show alert for download failures
+      alert(`${errorMessage}\n\n${language === 'tr' ? 'Hata detayları konsola yazıldı.' : 'Error details logged to console.'}`);
       
       // Restore button on error
       const btn = document.getElementById('download-btn');
@@ -565,14 +493,7 @@ const Web3IdentityCard = ({
       <div className="mt-6 flex justify-center">
         <Button
           id="download-btn"
-          onClick={(e) => {
-            console.log('[Download] Button onClick handler called');
-            handleDownload(e);
-          }}
-          onMouseDown={(e) => {
-            // Additional event binding for reliability
-            console.log('[Download] Button onMouseDown fired');
-          }}
+          onClick={handleDownload}
           disabled={isDownloading}
           className="cursor-pointer bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 flex items-center gap-2"
         >
