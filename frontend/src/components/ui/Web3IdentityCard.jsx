@@ -1,5 +1,5 @@
 import { useRef, useCallback } from 'react';
-import { toPng } from 'html-to-image';
+import html2canvas from 'html2canvas';
 import { useLanguage } from '../../context/LanguageContext';
 import { TbDownload, TbCheck } from 'react-icons/tb';
 import Button from './Button';
@@ -35,59 +35,96 @@ const Web3IdentityCard = ({
     });
   };
 
-  // Safe capture style - Standard HEX colors (no oklch/Tailwind utilities)
-  // Ensures html-to-image can parse colors perfectly
-  const safeCaptureStyle = {
-    // Explicitly set the dark gradient in standard CSS
-    backgroundImage: 'linear-gradient(135deg, #0f172a 0%, #3b0764 50%, #0f172a 100%)',
-    backgroundColor: '#0f172a', // Fallback
+  // Define styles using ONLY standard CSS and HEX/RGBA colors. No Tailwind variables.
+  const cardContainerStyle = {
+    // The exact dark purple gradient
+    background: 'linear-gradient(135deg, #0f172a 0%, #3b0764 50%, #0f172a 100%)',
+    // Explicit white text
     color: '#ffffff',
-    // Fix border to be explicit RGBA
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-    borderWidth: '1px',
-    borderStyle: 'solid',
+    // Explicit rgba border
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    // Ensure background is clipped correctly
+    backgroundClip: 'padding-box',
     aspectRatio: '16/9',
     minHeight: '320px',
   };
 
-  const handleDownload = useCallback(() => {
-    console.log("Download button clicked!"); // LOG 1
+  const mutedTextStyle = {
+    color: '#94a3b8', // Hex for slate-400
+  };
 
-    if (cardRef.current === null) {
-      console.error("Error: cardRef is null. The ref is not attached to the div."); // LOG 2
-      return;
-    }
+  const goldTextStyle = {
+    color: '#fbbf24', // Hex for amber-400
+  };
 
-    console.log("Starting html-to-image capture..."); // LOG 3
+  const inputStyle = {
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    color: '#ffffff',
+    border: '1px solid rgba(255, 255, 255, 0.05)',
+  };
 
-    // Force strict dimensions and background to prevent transparency issues
-    toPng(cardRef.current, {
-      cacheBust: true,
-      pixelRatio: 3, // High Quality
-      backgroundColor: '#0f172a', // <--- PREVENTS TRANSPARENCY
-      style: {
-        // Ensure specific elements render correctly during capture
-        fontFamily: 'sans-serif',
-      }
-    })
-      .then((dataUrl) => {
-        console.log("Image generated successfully, triggering download..."); // LOG 4
-        const link = document.createElement('a');
-        link.download = `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 4) : 'User'}.png`;
-        link.href = dataUrl;
-        link.click();
-        console.log("Download triggered."); // LOG 5
-      })
-      .catch((err) => {
-        console.error('CRITICAL ERROR during image generation:', err); // LOG ERROR
-        // Fallback alert if something weird happens
-        if (err.message && err.message.includes('oklch')) {
-          alert("Tarayıcınız bu renk formatını desteklemiyor. Lütfen Chrome/Edge güncel sürüm deneyin.");
-        } else {
-          alert("Kart indirilirken bir hata oluştu: " + (err.message || err));
-        }
+  const logoGradientStyle = {
+    background: 'linear-gradient(to right, #818cf8, #a78bfa)', // indigo-400 to purple-400
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+  };
+
+  const cqtGradientStyle = {
+    background: 'linear-gradient(to right, #fbbf24, #fb923c, #fbbf24)', // yellow-400 to orange-400
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+  };
+
+  const rankBadgeStyle = {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
+    color: '#ffffff',
+  };
+
+  const verifiedTextStyle = {
+    color: '#cbd5e1', // slate-300
+  };
+
+  const avatarGradientStyle = {
+    background: 'linear-gradient(to bottom right, #6366f1, #a855f7, #ec4899)', // indigo-500, purple-500, pink-500
+  };
+
+  const avatarGlowStyle1 = {
+    background: 'linear-gradient(to bottom right, #818cf8, #a78bfa)', // indigo-400, purple-400
+    opacity: 0.5,
+  };
+
+  const avatarGlowStyle2 = {
+    background: 'linear-gradient(to bottom right, #818cf8, #a78bfa)', // indigo-400, purple-400
+    opacity: 0.3,
+  };
+
+  const handleDownload = useCallback(async () => {
+    if (cardRef.current === null) return;
+    
+    try {
+      const canvas = await html2canvas(cardRef.current, {
+        scale: 3, // High resolution
+        useCORS: true, // Important for external images like avatars
+        allowTaint: true,
+        // DOUBLE SAFETY: Force a solid background color behind the gradient
+        backgroundColor: '#0f172a', 
+        // Disable logging to speed it up
+        logging: false,
       });
-  }, [publicKey]);
+      
+      const dataUrl = canvas.toDataURL('image/png', 1.0);
+      const link = document.createElement('a');
+      link.download = `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 4) : 'User'}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error('Download Error:', err);
+      alert("Kart indirilemedi. Hata detayı konsolda.");
+    }
+  }, [cardRef, publicKey]);
 
 
   return (
@@ -96,7 +133,7 @@ const Web3IdentityCard = ({
       <div
         ref={cardRef}
         className="relative rounded-2xl p-8 shadow-2xl overflow-hidden"
-        style={safeCaptureStyle}
+        style={cardContainerStyle}
       >
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
@@ -114,16 +151,16 @@ const Web3IdentityCard = ({
             <div className="flex-shrink-0 flex flex-col items-center">
               {/* Avatar with Glowing Ring */}
               <div className="relative mb-4">
-                <div className="w-24 h-24 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-full flex items-center justify-center text-4xl shadow-lg">
+                <div className="w-24 h-24 rounded-full flex items-center justify-center text-4xl shadow-lg" style={avatarGradientStyle}>
                   {publicKey ? '👤' : '🎮'}
                 </div>
-                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-400 to-purple-400 opacity-50 blur-xl animate-pulse"></div>
-                <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-indigo-400 to-purple-400 opacity-30 blur-2xl"></div>
+                <div className="absolute inset-0 rounded-full blur-xl" style={avatarGlowStyle1}></div>
+                <div className="absolute -inset-1 rounded-full blur-2xl" style={avatarGlowStyle2}></div>
               </div>
               
               {/* Rank Badge */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20">
-                <span className="text-sm font-semibold text-white">
+              <div className="backdrop-blur-sm rounded-full px-4 py-2" style={rankBadgeStyle}>
+                <span className="text-sm font-semibold">
                   {getRank()}
                 </span>
               </div>
@@ -134,10 +171,10 @@ const Web3IdentityCard = ({
               {/* Top Section - Logo */}
               <div className="mb-4">
                 <div>
-                  <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 mb-1">
+                  <div className="text-2xl font-bold mb-1" style={logoGradientStyle}>
                     ChainQuest
                   </div>
-                  <div className="text-xs text-slate-400">
+                  <div className="text-xs" style={mutedTextStyle}>
                     {language === 'tr' ? 'Web3 Öğrenme Platformu' : 'Web3 Learning Platform'}
                   </div>
                 </div>
@@ -145,35 +182,35 @@ const Web3IdentityCard = ({
 
               {/* Wallet Address */}
               <div className="mb-4">
-                <div className="text-xs text-slate-400 mb-1">
+                <div className="text-xs mb-1" style={mutedTextStyle}>
                   {language === 'tr' ? 'Cüzdan Adresi' : 'Wallet Address'}
                 </div>
-                <div className="font-mono text-sm text-white bg-white/5 rounded px-3 py-2 border border-white/10">
+                <div className="font-mono text-sm rounded px-3 py-2" style={inputStyle}>
                   {formatAddress(publicKey)}
                 </div>
               </div>
 
               {/* CQT Earned - Large Gold Text */}
               <div className="mb-4">
-                <div className="text-xs text-slate-400 mb-2">
+                <div className="text-xs mb-2" style={mutedTextStyle}>
                   {language === 'tr' ? 'Toplam Kazanılan' : 'Total Earned'}
                 </div>
-                <div className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-400">
+                <div className="text-4xl font-bold" style={cqtGradientStyle}>
                   {totalEarned.toLocaleString()} CQT
                 </div>
               </div>
 
               {/* Footer - Verified Badge & Date */}
-              <div className="flex items-center justify-between pt-4 border-t border-white/10">
+              <div className="flex items-center justify-between pt-4" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                    <TbCheck className="w-4 h-4 text-white" />
+                  <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: '#22c55e' }}>
+                    <TbCheck className="w-4 h-4" style={{ color: '#ffffff' }} />
                   </div>
-                  <span className="text-xs text-slate-300 font-medium">
+                  <span className="text-xs font-medium" style={verifiedTextStyle}>
                     {language === 'tr' ? 'Doğrulanmış Öğrenci' : 'Verified Student'}
                   </span>
                 </div>
-                <div className="text-xs text-slate-400">
+                <div className="text-xs" style={mutedTextStyle}>
                   {getCurrentDate()}
                 </div>
               </div>
