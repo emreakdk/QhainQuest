@@ -1,7 +1,6 @@
 'use client';
 
-import { useRef, useCallback, useState } from 'react';
-import html2canvas from 'html2canvas';
+import { useCallback, useState } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { TbDownload, TbCheck } from 'react-icons/tb';
 import Button from './Button';
@@ -13,7 +12,6 @@ const Web3IdentityCard = ({
   isDemoMode = false 
 }) => {
   const { t, language } = useLanguage();
-  const shareCardRef = useRef(null);
   const [isDownloading, setIsDownloading] = useState(false);
 
   const formatAddress = (address) => {
@@ -120,161 +118,37 @@ const Web3IdentityCard = ({
     opacity: 0.3,
   };
 
-  // Download function using html2canvas + server-side API route
-  const handleDownload = useCallback(async () => {
+  // Download function using server-side ImageResponse API
+  const handleDownload = useCallback(() => {
     if (isDownloading) return;
     
     setIsDownloading(true);
     
     try {
-      // Get #share-card element
-      const shareCardElement = document.getElementById('share-card');
-      if (!shareCardElement) {
-        throw new Error('Element #share-card not found');
-      }
-
-      console.log('[Download] Step 1: Capturing #share-card with html2canvas...');
-
-      // Step 1: Capture element with html2canvas
-      // Use onclone to remove oklch colors by removing Tailwind classes and forcing inline styles
-      const canvas = await html2canvas(shareCardElement, {
-        useCORS: true,
-        backgroundColor: '#050012',
-        scale: 2,
-        foreignObjectRendering: false, // Disable foreign object rendering to avoid oklch issues
-        onclone: (clonedDoc) => {
-          // Find the cloned #share-card element
-          const clonedElement = clonedDoc.getElementById('share-card');
-          if (!clonedElement) return;
-
-          console.log('[Download] Processing cloned element to remove oklch colors...');
-
-          // Function to recursively remove Tailwind color classes and force inline styles
-          const processElement = (el) => {
-            if (!el) return;
-
-            // Remove all Tailwind color-related classes that might compute to oklch
-            if (el.className && typeof el.className === 'string') {
-              const classes = el.className.split(' ').filter(cls => {
-                // Remove color-related Tailwind classes (bg-*, text-*, border-*, from-*, to-*, etc.)
-                return !cls.match(/^(bg-|text-|border-|from-|to-|via-|indigo-|purple-|slate-|amber-|green-|red-|blue-|yellow-|orange-|pink-|violet-)/);
-              });
-              el.className = classes.join(' ');
-            }
-
-            // Get the original element to preserve its computed styles (converted to hex)
-            try {
-              const originalId = el.id;
-              const originalElement = originalId ? document.getElementById(originalId) : null;
-              
-              if (originalElement) {
-                const computed = window.getComputedStyle(originalElement);
-                const style = el.style;
-                
-                // Force all color properties to use hex/rgb (no oklch)
-                const colorProps = ['color', 'backgroundColor', 'borderColor'];
-                colorProps.forEach(prop => {
-                  try {
-                    let value = computed.getPropertyValue(prop);
-                    if (value && value.trim() && value !== 'rgba(0, 0, 0, 0)' && !value.includes('transparent')) {
-                      // If contains oklch, replace with hex
-                      if (value.includes('oklch')) {
-                        console.warn(`[Download] Replacing oklch in ${prop}:`, value);
-                        // Use appropriate fallback based on property
-                        if (prop === 'color') {
-                          style.setProperty(prop, '#ffffff', 'important');
-                        } else {
-                          style.setProperty(prop, '#0f172a', 'important');
-                        }
-                      } else if (!value.includes('oklch')) {
-                        // Keep non-oklch colors but ensure they're hex/rgb
-                        style.setProperty(prop, value, 'important');
-                      }
-                    }
-                  } catch (e) {
-                    // Ignore errors
-                  }
-                });
-
-                // Handle background-image (gradients)
-                try {
-                  const bgImage = computed.getPropertyValue('background-image');
-                  if (bgImage && bgImage.includes('oklch')) {
-                    console.warn('[Download] Replacing oklch in background-image');
-                    style.setProperty('background-image', 
-                      'linear-gradient(135deg, #0f172a 0%, #3b0764 50%, #0f172a 100%)', 
-                      'important');
-                  }
-                } catch (e) {
-                  // Ignore errors
-                }
-              }
-            } catch (e) {
-              // If we can't access original, element will use inline styles from component
-              console.warn('[Download] Could not process element:', el.id || el.className);
-            }
-
-            // Process all children recursively
-            Array.from(el.children).forEach(child => {
-              processElement(child);
-            });
-          };
-
-          // Process the cloned element and all its children
-          processElement(clonedElement);
-          
-          console.log('[Download] Finished processing cloned element - all oklch colors removed');
-        },
+      // Get current date
+      const currentDate = getCurrentDate();
+      
+      // Get rank/level
+      const rank = getRank();
+      
+      // Build query string
+      const params = new URLSearchParams({
+        wallet: publicKey || 'Demo Mode',
+        cqt: totalEarned.toString(),
+        level: rank,
+        date: currentDate,
+        lang: language,
+        filename: `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 4) : 'User'}-${Date.now()}.png`,
       });
 
-      if (!canvas) {
-        throw new Error('Canvas generation returned null');
-      }
-
-      console.log('[Download] Step 2: Canvas created:', canvas.width, 'x', canvas.height);
-
-      // Step 2: Convert canvas to base64 data URL
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+      const apiUrl = `/api/profile-card?${params.toString()}`;
       
-      if (!dataUrl || dataUrl === 'data:,') {
-        throw new Error('Failed to generate data URL from canvas');
-      }
+      console.log('[Download] Triggering download via server-side API:', apiUrl);
 
-      console.log('[Download] Step 3: Data URL generated, length:', dataUrl.length);
-
-      // Step 3: Prepare filename
-      const filename = `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 4) : 'User'}-${Date.now()}.jpg`;
-
-      // Step 4: POST to API route
-      console.log('[Download] Step 4: Sending image data to API route...');
-      const response = await fetch('/api/download-card', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          imageData: dataUrl,
-          filename: filename,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-        throw new Error(errorData.error || `API returned status ${response.status}`);
-      }
-
-      console.log('[Download] Step 5: API response received, triggering download...');
-
-      // Step 5: Get blob from response and trigger download
-      const blob = await response.blob();
-      
-      // Create object URL from blob
-      const objectUrl = URL.createObjectURL(blob);
-      
-      // Trigger download using window.location (more reliable than a.click())
+      // Trigger download by navigating to API route
       const link = document.createElement('a');
-      link.href = objectUrl;
-      link.download = filename;
+      link.href = apiUrl;
+      link.download = params.get('filename');
       link.style.display = 'none';
       
       document.body.appendChild(link);
@@ -283,10 +157,9 @@ const Web3IdentityCard = ({
       // Cleanup
       setTimeout(() => {
         document.body.removeChild(link);
-        URL.revokeObjectURL(objectUrl);
       }, 100);
 
-      console.log('[Download] Download completed successfully');
+      console.log('[Download] Download triggered successfully');
       setIsDownloading(false);
     } catch (err) {
       console.error('[Download] Error:', err);
@@ -295,14 +168,13 @@ const Web3IdentityCard = ({
         : `An error occurred during download: ${err.message || 'Unknown error'}`);
       setIsDownloading(false);
     }
-  }, [publicKey, language, isDownloading]);
+  }, [publicKey, totalEarned, completedQuests, language, isDownloading]);
 
 
   return (
     <div className="w-full max-w-2xl mx-auto">
       {/* Dedicated Share Card Wrapper - Explicit background for pixel-perfect export */}
       <div
-        ref={shareCardRef}
         id="share-card"
         style={shareCardWrapperStyle}
       >
