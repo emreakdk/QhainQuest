@@ -102,27 +102,48 @@ const Web3IdentityCard = ({
   };
 
   const handleDownload = useCallback(async () => {
-    if (cardRef.current === null) return;
-    
+    console.log("⬇️ İndirme işlemi başlatılıyor...");
+
+    if (!cardRef.current) {
+      console.error("❌ HATA: Kart referansı bulunamadı (null).");
+      alert("Hata: Kart elementi bulunamadı.");
+      return;
+    }
+
     try {
+      // Wait a tiny bit to ensure styles are settled
+      await new Promise(resolve => setTimeout(resolve, 100));
+
       const canvas = await html2canvas(cardRef.current, {
-        scale: 3, // High resolution
-        useCORS: true, // Important for external images like avatars
-        allowTaint: true,
-        // DOUBLE SAFETY: Force a solid background color behind the gradient
-        backgroundColor: '#0f172a', 
-        // Disable logging to speed it up
-        logging: false,
+        scale: 3, // High Quality
+        useCORS: true, // Try to load images with CORS
+        allowTaint: false, // CRITICAL: Must be false to use toDataURL()
+        backgroundColor: '#0f172a', // Force Dark Background
+        logging: true, // Turn on internal html2canvas logs to see progress in console
+        imageTimeout: 0, // Wait for images to load
+        ignoreElements: (element) => {
+          // Optional: Ignore external images if they continue to fail CORS
+          // return element.tagName === 'IMG' && !element.src.includes('localhost');
+          return false;
+        }
       });
-      
+
+      console.log("✅ Canvas oluşturuldu, resme çevriliyor...");
+      // This is where it usually fails if tainted
       const dataUrl = canvas.toDataURL('image/png', 1.0);
+      
       const link = document.createElement('a');
       link.download = `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 4) : 'User'}.png`;
       link.href = dataUrl;
       link.click();
+      
+      console.log("🚀 İndirme tetiklendi.");
     } catch (err) {
-      console.error('Download Error:', err);
-      alert("Kart indirilemedi. Hata detayı konsolda.");
+      console.error("🔥 İNDİRME HATASI DETAYI:", err);
+      // Log the object structure in case it's not a standard Error
+      console.log("Hata Objesi:", JSON.stringify(err, null, 2));
+      
+      alert(`Kart indirilemedi!\nHata: ${err.message || 'Bilinmeyen bir güvenlik hatası oluştu.'}`);
     }
   }, [cardRef, publicKey]);
 
