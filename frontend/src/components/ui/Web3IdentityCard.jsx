@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useCallback, useState, useEffect } from 'react';
-import html2canvas from 'html2canvas';
+import { toBlob } from 'html-to-image';
 import { useLanguage } from '../../context/LanguageContext';
 import { TbDownload, TbCheck } from 'react-icons/tb';
 import Button from './Button';
@@ -16,11 +16,49 @@ const Web3IdentityCard = ({
   const shareCardRef = useRef(null); // Dedicated wrapper for export
   const [isDownloading, setIsDownloading] = useState(false);
   
-  // Ensure we're on the client side
+  // Ensure we're on the client side and verify element exists
   useEffect(() => {
     if (typeof window === 'undefined') {
-      console.warn('Web3IdentityCard: Running on server, download feature will not work');
+      console.warn('[Web3IdentityCard] Running on server, download feature will not work');
+      return;
     }
+
+    // Verify element exists after mount
+    const checkElement = () => {
+      if (shareCardRef.current) {
+        console.log('[Web3IdentityCard] Element #share-card found:', {
+          id: shareCardRef.current.id,
+          inDOM: document.body.contains(shareCardRef.current),
+          dimensions: {
+            width: shareCardRef.current.offsetWidth,
+            height: shareCardRef.current.offsetHeight,
+          }
+        });
+      } else {
+        console.warn('[Web3IdentityCard] Element #share-card ref is null');
+        // Try to find by ID
+        const byId = document.getElementById('share-card');
+        if (byId) {
+          console.warn('[Web3IdentityCard] Element found by ID but ref is null');
+        } else {
+          console.error('[Web3IdentityCard] Element #share-card not found in DOM');
+        }
+      }
+
+      // Verify button exists
+      const btn = document.getElementById('download-btn');
+      if (btn) {
+        console.log('[Web3IdentityCard] Download button found');
+      } else {
+        console.warn('[Web3IdentityCard] Download button not found');
+      }
+    };
+
+    // Check immediately and after a short delay
+    checkElement();
+    const timeout = setTimeout(checkElement, 500);
+    
+    return () => clearTimeout(timeout);
   }, []);
 
   const formatAddress = (address) => {
@@ -138,17 +176,41 @@ const Web3IdentityCard = ({
     opacity: 0.3,
   };
 
-  const handleDownload = useCallback(async () => {
+  const handleDownload = useCallback(async (e) => {
+    // Prevent any default behavior
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    console.log('[Download] Button clicked - handler fired');
+
     // Client-side only check
     if (typeof window === 'undefined') {
-      console.error('Download feature requires client-side execution');
+      console.error('[Download Error] Download feature requires client-side execution');
       alert(language === 'tr' ? 'İndirme özelliği tarayıcıda çalışmalıdır.' : 'Download feature must run in browser.');
       return;
     }
 
-    if (shareCardRef.current === null) {
-      console.error('[Download Error] Share card wrapper element not found');
-      alert(language === 'tr' ? 'Kart elementi bulunamadı.' : 'Card element not found.');
+    // Verify element exists
+    if (!shareCardRef.current) {
+      console.error('[Download Error] shareCardRef.current is null');
+      // Try to find by ID as fallback
+      const fallbackElement = document.getElementById('share-card');
+      if (fallbackElement) {
+        console.warn('[Download] Found element by ID, but ref is null');
+        alert(language === 'tr' ? 'Kart elementi bulundu ama referans eksik. Lütfen sayfayı yenileyin.' : 'Card element found but ref is missing. Please refresh the page.');
+      } else {
+        console.error('[Download Error] Element #share-card not found in DOM');
+        alert(language === 'tr' ? 'Kart elementi bulunamadı. Lütfen sayfayı yenileyin.' : 'Card element not found. Please refresh the page.');
+      }
+      return;
+    }
+
+    // Verify element is in DOM
+    if (!document.body.contains(shareCardRef.current)) {
+      console.error('[Download Error] Element exists but is not in DOM');
+      alert(language === 'tr' ? 'Kart elementi DOM\'da değil. Lütfen sayfayı yenileyin.' : 'Card element not in DOM. Please refresh the page.');
       return;
     }
 
@@ -157,6 +219,7 @@ const Web3IdentityCard = ({
       return;
     }
 
+    console.log('[Download] Starting download process...');
     setIsDownloading(true);
 
     try {
@@ -171,13 +234,20 @@ const Web3IdentityCard = ({
       console.log('[Download] Starting card export...');
 
       // 1. Wait for all styles, gradients, and effects to render completely
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 300));
 
       // 2. Force reflow to ensure all styles are applied
       const offsetHeight = shareCardRef.current.offsetHeight;
-      console.log('[Download] Card height:', offsetHeight);
+      const scrollWidth = shareCardRef.current.scrollWidth;
+      const scrollHeight = shareCardRef.current.scrollHeight;
+      console.log('[Download] Element dimensions:', { offsetHeight, scrollWidth, scrollHeight });
 
-      // 3. Check for any external images that might cause CORS issues
+      // 3. Verify element is still in DOM
+      if (!document.body.contains(shareCardRef.current)) {
+        throw new Error('Element removed from DOM during processing');
+      }
+
+      // 4. Check for any external images that might cause CORS issues
       const images = shareCardRef.current.querySelectorAll('img');
       const externalImages = Array.from(images).filter(img => {
         try {
@@ -191,111 +261,57 @@ const Web3IdentityCard = ({
         console.warn('[Download] Found external images, may cause CORS issues:', externalImages.map(img => img.src));
       }
 
-      // 4. Pixel-perfect capture using html2canvas with optimized settings
-      console.log('[Download] Capturing canvas...');
-      const canvas = await html2canvas(shareCardRef.current, {
-        // High quality rendering
-        scale: 2, // Reduced from 3 to avoid memory issues, still high quality
-        useCORS: true, // Allow cross-origin images
-        allowTaint: false, // Prevent canvas tainting (will fail if CORS issues)
-        // CRITICAL: Background color fills any edge cases
-        backgroundColor: '#0f172a', // Matches gradient start/end
-        // Logging for debugging
-        logging: process.env.NODE_ENV === 'development',
-        // Window width/height for accurate sizing
-        windowWidth: shareCardRef.current.scrollWidth,
-        windowHeight: shareCardRef.current.scrollHeight,
-        // Ensure all elements are captured
-        ignoreElements: (element) => {
-          // Exclude download button if somehow inside wrapper
-          if (element.id === 'download-btn') return true;
-          // Exclude any elements with data-ignore-export attribute
-          if (element.hasAttribute?.('data-ignore-export')) return true;
-          return false;
-        },
-        // Image loading timeout
-        imageTimeout: 10000, // Reduced timeout
-        // Remove control characters that might cause issues
-        removeContainer: false,
-        // Foreign object rendering (for better SVG support)
-        foreignObjectRendering: true,
-        // Better font rendering
-        letterRendering: true,
-        // Onclone callback to ensure styles are applied
-        onclone: (clonedDoc) => {
-          // Ensure all styles are preserved in cloned document
-          const clonedElement = clonedDoc.getElementById('share-card');
-          if (clonedElement) {
-            clonedElement.style.backgroundColor = '#0f172a';
-            clonedElement.style.backgroundImage = 'linear-gradient(135deg, #0f172a 0%, #3b0764 50%, #0f172a 100%)';
-          }
-        },
-      }).catch((canvasError) => {
-        console.error('[Download] html2canvas error:', canvasError);
-        console.error('[Download] Error details:', {
-          message: canvasError?.message,
-          stack: canvasError?.stack,
-          name: canvasError?.name,
-        });
-        throw new Error(`Canvas capture failed: ${canvasError?.message || 'Unknown error'}`);
-      });
-
-      console.log('[Download] Canvas created, dimensions:', canvas.width, 'x', canvas.height);
-
-      // 5. Convert canvas to Blob (more reliable than data URL, especially in Firefox)
+      // 5. Generate Blob using html-to-image toBlob (more reliable)
+      console.log('[Download] Generating Blob from element...');
       let blob;
+      
       try {
-        blob = await new Promise((resolve, reject) => {
-          canvas.toBlob(
-            (resultBlob) => {
-              if (resultBlob) {
-                resolve(resultBlob);
-              } else {
-                reject(new Error('Canvas toBlob returned null'));
-              }
-            },
-            'image/png',
-            1.0 // Maximum quality
-          );
+        blob = await toBlob(shareCardRef.current, {
+          cacheBust: true,
+          pixelRatio: 2, // High quality
+          quality: 1.0, // Maximum quality
+          // CRITICAL: Background color fills any edge cases
+          backgroundColor: '#0f172a', // Matches gradient start/end
+          // Filter to exclude download button
+          filter: (node) => {
+            if (node.id === 'download-btn') return false;
+            if (node.hasAttribute?.('data-ignore-export')) return false;
+            return true;
+          },
+          // Style overrides
+          style: {
+            opacity: '1',
+            visibility: 'visible',
+            transform: 'none',
+          },
         });
-        console.log('[Download] Blob created, size:', blob.size, 'bytes');
+
+        if (!blob) {
+          throw new Error('toBlob returned null');
+        }
+
+        console.log('[Download] Blob created successfully, size:', blob.size, 'bytes, type:', blob.type);
       } catch (blobError) {
         console.error('[Download] toBlob error:', blobError);
-        // If toBlob fails due to tainted canvas, try with allowTaint
-        console.warn('[Download] Retrying with allowTaint: true...');
-        const retryCanvas = await html2canvas(shareCardRef.current, {
-          scale: 2,
-          useCORS: false,
-          allowTaint: true, // Allow tainted canvas as fallback
-          backgroundColor: '#0f172a',
-          logging: process.env.NODE_ENV === 'development',
-          windowWidth: shareCardRef.current.scrollWidth,
-          windowHeight: shareCardRef.current.scrollHeight,
+        console.error('[Download] Error details:', {
+          message: blobError?.message,
+          stack: blobError?.stack,
+          name: blobError?.name,
         });
-        
-        blob = await new Promise((resolve, reject) => {
-          retryCanvas.toBlob(
-            (resultBlob) => {
-              if (resultBlob) {
-                resolve(resultBlob);
-              } else {
-                reject(new Error('Retry canvas toBlob returned null'));
-              }
-            },
-            'image/png',
-            1.0
-          );
-        });
-        console.log('[Download] Retry successful, blob size:', blob.size, 'bytes');
+        throw new Error(`Blob generation failed: ${blobError?.message || 'Unknown error'}`);
       }
 
       if (!blob || blob.size === 0) {
-        throw new Error('Failed to generate image blob');
+        throw new Error('Generated blob is null or empty');
       }
 
       // 6. Create object URL from Blob (more reliable than data URL)
       const objectUrl = URL.createObjectURL(blob);
       console.log('[Download] Object URL created:', objectUrl);
+
+      if (!objectUrl || objectUrl === '') {
+        throw new Error('Failed to create object URL from blob');
+      }
 
       // 7. Create download link with object URL
       const link = document.createElement('a');
@@ -303,21 +319,41 @@ const Web3IdentityCard = ({
       link.download = filename;
       link.href = objectUrl;
       link.style.display = 'none'; // Hide the link
+      link.style.position = 'absolute';
+      link.style.left = '-9999px';
       
-      // Append to body, click, then remove
+      // Append to body
       document.body.appendChild(link);
+      console.log('[Download] Link element created and appended to body');
       
-      // Trigger download
-      link.click();
-      
-      console.log('[Download] Download triggered successfully');
+      // Trigger download with error handling
+      try {
+        link.click();
+        console.log('[Download] Download triggered successfully');
+      } catch (clickError) {
+        console.error('[Download] Link click failed:', clickError);
+        // Fallback: try programmatic download
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+          // IE/Edge fallback
+          window.navigator.msSaveOrOpenBlob(blob, filename);
+          console.log('[Download] Used IE/Edge fallback');
+        } else {
+          throw new Error(`Download trigger failed: ${clickError?.message || 'Unknown error'}`);
+        }
+      }
 
-      // Clean up: remove link and revoke object URL after a short delay
+      // Clean up: remove link and revoke object URL after a delay
       setTimeout(() => {
-        document.body.removeChild(link);
-        URL.revokeObjectURL(objectUrl);
-        console.log('[Download] Cleanup completed');
-      }, 100);
+        try {
+          if (document.body.contains(link)) {
+            document.body.removeChild(link);
+          }
+          URL.revokeObjectURL(objectUrl);
+          console.log('[Download] Cleanup completed');
+        } catch (cleanupError) {
+          console.warn('[Download] Cleanup error (non-critical):', cleanupError);
+        }
+      }, 200);
 
       // 7. Restore button state
       if (btn) {
@@ -356,13 +392,15 @@ const Web3IdentityCard = ({
           : 'Image capture error. Please refresh the page.';
       }
       
-      // Only show alert if Blob creation failed (critical error)
-      if (err?.message?.includes('blob') || err?.message?.includes('Blob') || err?.message?.includes('Failed to generate')) {
-        alert(`${errorMessage}\n\n${language === 'tr' ? 'Hata detayları konsola yazıldı.' : 'Error details logged to console.'}`);
-      } else {
-        // For other errors, just log to console
-        console.warn('[Download] Non-critical error, download may have succeeded:', err?.message);
-      }
+      // Always show alert for download failures (user needs to know)
+      alert(`${errorMessage}\n\n${language === 'tr' ? 'Hata detayları konsola yazıldı. Lütfen konsolu kontrol edin.' : 'Error details logged to console. Please check the console.'}`);
+      
+      // Additional debugging info
+      console.error('[Download] Element state at error:', {
+        refExists: !!shareCardRef.current,
+        inDOM: shareCardRef.current ? document.body.contains(shareCardRef.current) : false,
+        elementId: shareCardRef.current?.id,
+      });
       
       // Restore button on error
       const btn = document.getElementById('download-btn');
@@ -479,11 +517,22 @@ const Web3IdentityCard = ({
       <div className="mt-6 flex justify-center">
         <Button
           id="download-btn"
-          onClick={handleDownload}
+          onClick={(e) => {
+            console.log('[Download] Button onClick handler called');
+            handleDownload(e);
+          }}
+          onMouseDown={(e) => {
+            // Additional event binding for reliability
+            console.log('[Download] Button onMouseDown fired');
+          }}
+          disabled={isDownloading}
           className="cursor-pointer bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 flex items-center gap-2"
         >
           <TbDownload className="w-5 h-5" />
-          {language === 'tr' ? 'Kartı İndir / Paylaş' : 'Download / Share Card'}
+          {isDownloading 
+            ? (language === 'tr' ? 'İndiriliyor...' : 'Downloading...')
+            : (language === 'tr' ? 'Kartı İndir / Paylaş' : 'Download / Share Card')
+          }
         </Button>
       </div>
     </div>
