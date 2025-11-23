@@ -1,11 +1,10 @@
 'use client';
 
-import { useCallback, useState, useRef } from 'react';
-import html2canvas from 'html2canvas';
+import { useCallback, useState } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { TbDownload, TbCheck } from 'react-icons/tb';
 import Button from './Button';
-import ShareCardExport from '../share/ShareCardExport';
+import { downloadProfileCardImage } from '../../utils/profileCardRenderer';
 
 const Web3IdentityCard = ({ 
   publicKey, 
@@ -15,7 +14,6 @@ const Web3IdentityCard = ({
 }) => {
   const { t, language } = useLanguage();
   const [isDownloading, setIsDownloading] = useState(false);
-  const shareCardRef = useRef(null);
 
   const formatAddress = (address) => {
     if (!address) return 'Demo Mode';
@@ -121,89 +119,20 @@ const Web3IdentityCard = ({
     opacity: 0.3,
   };
 
-  // Download function using html2canvas
+  // Download function using pure Canvas renderer
   const handleDownload = useCallback(async () => {
     if (isDownloading) return;
     
     setIsDownloading(true);
     
     try {
-      if (!shareCardRef.current) {
-        throw new Error('Share card element not found');
-      }
-
-      console.log('[Download] Capturing share card with html2canvas...');
-
-      // Wait for styles to render
-      await new Promise((resolve) => setTimeout(resolve, 300));
-
-      // Capture the element
-      const canvas = await html2canvas(shareCardRef.current, {
-        useCORS: true,
-        backgroundColor: 'rgb(5, 0, 18)',
-        scale: 2,
-        logging: false,
-        allowTaint: false,
+      await downloadProfileCardImage({
+        publicKey,
+        totalEarned,
+        completedQuests,
+        language,
       });
-
-      if (!canvas) {
-        throw new Error('Canvas generation failed');
-      }
-
-      console.log('[Download] Canvas created:', canvas.width, 'x', canvas.height);
-
-      // Create a new canvas with solid dark background
-      const finalCanvas = document.createElement('canvas');
-      finalCanvas.width = canvas.width;
-      finalCanvas.height = canvas.height;
-      const ctx = finalCanvas.getContext('2d');
-
-      // Fill with dark background
-      ctx.fillStyle = 'rgb(5, 0, 18)';
-      ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
-
-      // Draw the captured canvas on top
-      ctx.drawImage(canvas, 0, 0);
-
-      // Convert to JPEG blob
-      const blob = await new Promise((resolve, reject) => {
-        finalCanvas.toBlob(
-          (resultBlob) => {
-            if (resultBlob) {
-              resolve(resultBlob);
-            } else {
-              reject(new Error('Blob generation failed'));
-            }
-          },
-          'image/jpeg',
-          0.95
-        );
-      });
-
-      if (!blob) {
-        throw new Error('Blob generation returned null');
-      }
-
-      console.log('[Download] JPEG blob created, size:', blob.size, 'bytes');
-
-      // Trigger download
-      const objectUrl = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      const filename = `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 4) : 'User'}-${Date.now()}.jpg`;
-      link.download = filename;
-      link.href = objectUrl;
-      link.style.display = 'none';
       
-      document.body.appendChild(link);
-      link.click();
-      
-      // Cleanup
-      setTimeout(() => {
-        document.body.removeChild(link);
-        URL.revokeObjectURL(objectUrl);
-      }, 100);
-
-      console.log('[Download] Download completed successfully');
       setIsDownloading(false);
     } catch (err) {
       console.error('[Download] Error:', err);
@@ -212,7 +141,7 @@ const Web3IdentityCard = ({
         : `An error occurred during download: ${err.message || 'Unknown error'}`);
       setIsDownloading(false);
     }
-  }, [publicKey, language, isDownloading]);
+  }, [publicKey, totalEarned, completedQuests, language, isDownloading]);
 
 
   return (
@@ -329,23 +258,6 @@ const Web3IdentityCard = ({
         </Button>
       </div>
 
-      {/* Offscreen ShareCardExport for download */}
-      <div
-        style={{
-          position: 'absolute',
-          left: '-9999px',
-          top: '-9999px',
-          visibility: 'hidden',
-        }}
-      >
-        <ShareCardExport
-          ref={shareCardRef}
-          publicKey={publicKey}
-          totalEarned={totalEarned}
-          completedQuests={completedQuests}
-          language={language}
-        />
-      </div>
     </div>
   );
 };
