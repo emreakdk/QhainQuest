@@ -11,7 +11,7 @@ const Web3IdentityCard = ({
   isDemoMode = false 
 }) => {
   const { t, language } = useLanguage();
-  const cardRef = useRef(null);
+  const shareCardRef = useRef(null); // Dedicated wrapper for export
 
   const formatAddress = (address) => {
     if (!address) return 'Demo Mode';
@@ -35,25 +35,41 @@ const Web3IdentityCard = ({
     });
   };
 
-  // Define styles using ONLY standard CSS and HEX/RGBA colors. No Tailwind variables.
-  // Style-First Architecture: Inline styles to ensure html-to-image captures correctly
-  // Pixel-perfect export: Solid background with gradient overlay for maximum compatibility
-  const finalCardStyle = {
-    // Base solid color (fallback for export - matches gradient start/end)
+  // Dedicated wrapper style for export - explicit background that will be captured
+  // This wrapper ensures the exported PNG has the exact same background as displayed
+  const shareCardWrapperStyle = {
+    // Explicit solid base color (ensures no transparency - matches gradient start/end)
     backgroundColor: '#0f172a',
-    // Gradient overlay (will be captured by html-to-image)
+    // Gradient overlay matching the card design exactly
     backgroundImage: 'linear-gradient(135deg, #0f172a 0%, #3b0764 50%, #0f172a 100%)',
     backgroundSize: '100% 100%',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
+    // Ensure background is always rendered (no clipping)
+    backgroundClip: 'border-box',
+    // Padding to include shadows and glow effects in export
+    padding: '24px',
+    // Display properties for proper rendering
+    display: 'inline-block',
+    width: '100%',
+    maxWidth: '100%',
+    // Ensure wrapper doesn't interfere with card styling
+    boxSizing: 'border-box',
+  };
+
+  // Card container style (inside wrapper)
+  const cardContainerStyle = {
+    // Card-specific styles
+    backgroundColor: 'transparent', // Transparent so wrapper gradient shows through
     color: 'white',
     border: '1px solid rgba(255, 255, 255, 0.1)',
-    // Shadow for depth (will be captured)
+    borderRadius: '16px',
+    // Shadow for depth (will be captured within wrapper)
     boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05)',
-    // Ensure background is always visible
-    backgroundClip: 'border-box',
     aspectRatio: '16/9',
     minHeight: '320px',
+    position: 'relative',
+    overflow: 'hidden',
   };
 
   const mutedTextStyle = {
@@ -109,7 +125,10 @@ const Web3IdentityCard = ({
   };
 
   const handleDownload = useCallback(async () => {
-    if (cardRef.current === null) return;
+    if (shareCardRef.current === null) {
+      console.error('Share card wrapper not found');
+      return;
+    }
 
     try {
       // Visual feedback
@@ -120,29 +139,24 @@ const Web3IdentityCard = ({
         btn.disabled = true;
       }
 
-      // 1. Wait for all styles and images to render completely
-      await new Promise((resolve) => setTimeout(resolve, 200));
+      // 1. Wait for all styles, gradients, and effects to render completely
+      await new Promise((resolve) => setTimeout(resolve, 300));
 
-      // 2. Pixel-perfect capture with optimized settings
-      const dataUrl = await toPng(cardRef.current, {
+      // 2. Pixel-perfect capture targeting ONLY the dedicated wrapper
+      // The wrapper has explicit background, so export will match exactly
+      const dataUrl = await toPng(shareCardRef.current, {
         cacheBust: true,
-        pixelRatio: 3, // High quality (3x for retina displays)
-        // CRITICAL: Base background color (matches gradient start/end)
-        // This fills any transparent areas and ensures opaque export
+        pixelRatio: 3, // High quality for crisp text and effects
+        // CRITICAL: Background color matches wrapper gradient start/end
+        // This ensures any edge cases are filled with the correct color
         backgroundColor: '#0f172a',
-        // Filter function to exclude download button from capture
-        filter: (node) => {
-          // Exclude download button and its container
-          if (node.id === 'download-btn') return false;
-          if (node.classList?.contains('mt-6')) return false; // Button container
-          return true;
-        },
-        // Style overrides to ensure all elements are visible
+        // Style overrides to ensure maximum visibility
         style: {
           opacity: '1',
           visibility: 'visible',
           transform: 'none',
         },
+        // No filter needed - wrapper only contains the card
       });
 
       // 3. Create download link
@@ -169,18 +183,23 @@ const Web3IdentityCard = ({
         btn.disabled = false;
       }
     }
-  }, [cardRef, publicKey, language]);
+  }, [shareCardRef, publicKey, language]);
 
 
   return (
     <div className="w-full max-w-2xl mx-auto">
-      {/* Identity Card - Always Dark/Premium appearance */}
+      {/* Dedicated Share Card Wrapper - Explicit background for pixel-perfect export */}
       <div
-        ref={cardRef}
-        id="identity-card"
-        className="relative rounded-2xl p-8 overflow-hidden"
-        style={finalCardStyle}
+        ref={shareCardRef}
+        id="share-card"
+        style={shareCardWrapperStyle}
       >
+        {/* Identity Card - Always Dark/Premium appearance */}
+        <div
+          id="identity-card"
+          className="relative p-8"
+          style={cardContainerStyle}
+        >
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
@@ -263,9 +282,10 @@ const Web3IdentityCard = ({
             </div>
           </div>
         </div>
+        </div>
       </div>
 
-      {/* Download Button - Outside the card */}
+      {/* Download Button - Outside the wrapper and card */}
       <div className="mt-6 flex justify-center">
         <Button
           id="download-btn"
