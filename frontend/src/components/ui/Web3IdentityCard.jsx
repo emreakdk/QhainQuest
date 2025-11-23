@@ -136,10 +136,95 @@ const Web3IdentityCard = ({
       console.log('[Download] Step 1: Capturing #share-card with html2canvas...');
 
       // Step 1: Capture element with html2canvas
+      // Use onclone to remove oklch colors by removing Tailwind classes and forcing inline styles
       const canvas = await html2canvas(shareCardElement, {
         useCORS: true,
         backgroundColor: '#050012',
         scale: 2,
+        foreignObjectRendering: false, // Disable foreign object rendering to avoid oklch issues
+        onclone: (clonedDoc) => {
+          // Find the cloned #share-card element
+          const clonedElement = clonedDoc.getElementById('share-card');
+          if (!clonedElement) return;
+
+          console.log('[Download] Processing cloned element to remove oklch colors...');
+
+          // Function to recursively remove Tailwind color classes and force inline styles
+          const processElement = (el) => {
+            if (!el) return;
+
+            // Remove all Tailwind color-related classes that might compute to oklch
+            if (el.className && typeof el.className === 'string') {
+              const classes = el.className.split(' ').filter(cls => {
+                // Remove color-related Tailwind classes (bg-*, text-*, border-*, from-*, to-*, etc.)
+                return !cls.match(/^(bg-|text-|border-|from-|to-|via-|indigo-|purple-|slate-|amber-|green-|red-|blue-|yellow-|orange-|pink-|violet-)/);
+              });
+              el.className = classes.join(' ');
+            }
+
+            // Get the original element to preserve its computed styles (converted to hex)
+            try {
+              const originalId = el.id;
+              const originalElement = originalId ? document.getElementById(originalId) : null;
+              
+              if (originalElement) {
+                const computed = window.getComputedStyle(originalElement);
+                const style = el.style;
+                
+                // Force all color properties to use hex/rgb (no oklch)
+                const colorProps = ['color', 'backgroundColor', 'borderColor'];
+                colorProps.forEach(prop => {
+                  try {
+                    let value = computed.getPropertyValue(prop);
+                    if (value && value.trim() && value !== 'rgba(0, 0, 0, 0)' && !value.includes('transparent')) {
+                      // If contains oklch, replace with hex
+                      if (value.includes('oklch')) {
+                        console.warn(`[Download] Replacing oklch in ${prop}:`, value);
+                        // Use appropriate fallback based on property
+                        if (prop === 'color') {
+                          style.setProperty(prop, '#ffffff', 'important');
+                        } else {
+                          style.setProperty(prop, '#0f172a', 'important');
+                        }
+                      } else if (!value.includes('oklch')) {
+                        // Keep non-oklch colors but ensure they're hex/rgb
+                        style.setProperty(prop, value, 'important');
+                      }
+                    }
+                  } catch (e) {
+                    // Ignore errors
+                  }
+                });
+
+                // Handle background-image (gradients)
+                try {
+                  const bgImage = computed.getPropertyValue('background-image');
+                  if (bgImage && bgImage.includes('oklch')) {
+                    console.warn('[Download] Replacing oklch in background-image');
+                    style.setProperty('background-image', 
+                      'linear-gradient(135deg, #0f172a 0%, #3b0764 50%, #0f172a 100%)', 
+                      'important');
+                  }
+                } catch (e) {
+                  // Ignore errors
+                }
+              }
+            } catch (e) {
+              // If we can't access original, element will use inline styles from component
+              console.warn('[Download] Could not process element:', el.id || el.className);
+            }
+
+            // Process all children recursively
+            Array.from(el.children).forEach(child => {
+              processElement(child);
+            });
+          };
+
+          // Process the cloned element and all its children
+          processElement(clonedElement);
+          
+          console.log('[Download] Finished processing cloned element - all oklch colors removed');
+        },
       });
 
       if (!canvas) {
