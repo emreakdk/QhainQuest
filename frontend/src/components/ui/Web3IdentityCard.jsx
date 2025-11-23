@@ -120,7 +120,7 @@ const Web3IdentityCard = ({
     opacity: 0.3,
   };
 
-  // Minimal download function using html2canvas + JPEG
+  // Download function using html2canvas + server-side API route
   const handleDownload = useCallback(async () => {
     if (isDownloading) return;
     
@@ -133,9 +133,9 @@ const Web3IdentityCard = ({
         throw new Error('Element #share-card not found');
       }
 
-      console.log('[Download] Capturing #share-card with html2canvas...');
+      console.log('[Download] Step 1: Capturing #share-card with html2canvas...');
 
-      // Capture element with html2canvas
+      // Step 1: Capture element with html2canvas
       const canvas = await html2canvas(shareCardElement, {
         useCORS: true,
         backgroundColor: '#050012',
@@ -146,34 +146,50 @@ const Web3IdentityCard = ({
         throw new Error('Canvas generation returned null');
       }
 
-      console.log('[Download] Canvas created:', canvas.width, 'x', canvas.height);
+      console.log('[Download] Step 2: Canvas created:', canvas.width, 'x', canvas.height);
 
-      // Convert to JPEG Blob
-      const blob = await new Promise((resolve, reject) => {
-        canvas.toBlob(
-          (resultBlob) => {
-            if (resultBlob) {
-              resolve(resultBlob);
-            } else {
-              reject(new Error('toBlob returned null'));
-            }
-          },
-          'image/jpeg',
-          0.95
-        );
-      });
-
-      if (!blob) {
-        throw new Error('Blob generation failed');
+      // Step 2: Convert canvas to base64 data URL
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+      
+      if (!dataUrl || dataUrl === 'data:,') {
+        throw new Error('Failed to generate data URL from canvas');
       }
 
-      console.log('[Download] JPEG Blob created, size:', blob.size, 'bytes');
+      console.log('[Download] Step 3: Data URL generated, length:', dataUrl.length);
 
-      // Create download link
+      // Step 3: Prepare filename
+      const filename = `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 4) : 'User'}-${Date.now()}.jpg`;
+
+      // Step 4: POST to API route
+      console.log('[Download] Step 4: Sending image data to API route...');
+      const response = await fetch('/api/download-card', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          imageData: dataUrl,
+          filename: filename,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || `API returned status ${response.status}`);
+      }
+
+      console.log('[Download] Step 5: API response received, triggering download...');
+
+      // Step 5: Get blob from response and trigger download
+      const blob = await response.blob();
+      
+      // Create object URL from blob
       const objectUrl = URL.createObjectURL(blob);
+      
+      // Trigger download using window.location (more reliable than a.click())
       const link = document.createElement('a');
-      link.download = `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 4) : 'User'}-${Date.now()}.jpg`;
       link.href = objectUrl;
+      link.download = filename;
       link.style.display = 'none';
       
       document.body.appendChild(link);
@@ -190,8 +206,8 @@ const Web3IdentityCard = ({
     } catch (err) {
       console.error('[Download] Error:', err);
       alert(language === 'tr' 
-        ? 'İndirme sırasında bir hata oluştu. Lütfen tekrar deneyin.' 
-        : 'An error occurred during download. Please try again.');
+        ? `İndirme sırasında bir hata oluştu: ${err.message || 'Bilinmeyen hata'}` 
+        : `An error occurred during download: ${err.message || 'Unknown error'}`);
       setIsDownloading(false);
     }
   }, [publicKey, language, isDownloading]);
