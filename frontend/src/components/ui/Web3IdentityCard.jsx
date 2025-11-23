@@ -37,13 +37,21 @@ const Web3IdentityCard = ({
 
   // Define styles using ONLY standard CSS and HEX/RGBA colors. No Tailwind variables.
   // Style-First Architecture: Inline styles to ensure html-to-image captures correctly
+  // Pixel-perfect export: Solid background with gradient overlay for maximum compatibility
   const finalCardStyle = {
-    // Hardcoded Gradient to ensure it's captured
-    background: 'linear-gradient(135deg, #0f172a 0%, #3b0764 50%, #0f172a 100%)',
+    // Base solid color (fallback for export - matches gradient start/end)
+    backgroundColor: '#0f172a',
+    // Gradient overlay (will be captured by html-to-image)
+    backgroundImage: 'linear-gradient(135deg, #0f172a 0%, #3b0764 50%, #0f172a 100%)',
+    backgroundSize: '100% 100%',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
     color: 'white',
     border: '1px solid rgba(255, 255, 255, 0.1)',
-    // Ensure background is clipped correctly
-    backgroundClip: 'padding-box',
+    // Shadow for depth (will be captured)
+    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05)',
+    // Ensure background is always visible
+    backgroundClip: 'border-box',
     aspectRatio: '16/9',
     minHeight: '320px',
   };
@@ -104,28 +112,62 @@ const Web3IdentityCard = ({
     if (cardRef.current === null) return;
 
     try {
-      // 1. Small delay to ensure rendering
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      // Visual feedback
+      const btn = document.getElementById('download-btn');
+      const originalText = btn?.innerText || '';
+      if (btn) {
+        btn.innerText = language === 'tr' ? 'İndiriliyor...' : 'Downloading...';
+        btn.disabled = true;
+      }
 
-      // 2. Capture with FORCED OPAQUE BACKGROUND
+      // 1. Wait for all styles and images to render completely
+      await new Promise((resolve) => setTimeout(resolve, 200));
+
+      // 2. Pixel-perfect capture with optimized settings
       const dataUrl = await toPng(cardRef.current, {
         cacheBust: true,
-        pixelRatio: 3,
-        // CRITICAL: This fills the transparent pixels with Dark Slate color
+        pixelRatio: 3, // High quality (3x for retina displays)
+        // CRITICAL: Base background color (matches gradient start/end)
+        // This fills any transparent areas and ensures opaque export
         backgroundColor: '#0f172a',
+        // Filter function to exclude download button from capture
+        filter: (node) => {
+          // Exclude download button and its container
+          if (node.id === 'download-btn') return false;
+          if (node.classList?.contains('mt-6')) return false; // Button container
+          return true;
+        },
+        // Style overrides to ensure all elements are visible
         style: {
-          // Ensure the gradient on the element itself is also visible
+          opacity: '1',
           visibility: 'visible',
-        }
+          transform: 'none',
+        },
       });
 
+      // 3. Create download link
       const link = document.createElement('a');
-      link.download = `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 4) : 'User'}.png`;
+      link.download = `ChainQuest-Kimlik-${publicKey ? publicKey.substring(0, 4) : 'User'}-${Date.now()}.png`;
       link.href = dataUrl;
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
+
+      // 4. Restore button state
+      if (btn) {
+        btn.innerText = originalText;
+        btn.disabled = false;
+      }
     } catch (err) {
       console.error('Download Failed:', err);
-      alert(language === 'tr' ? 'İndirme sırasında bir hata oluştu.' : 'An error occurred during download.');
+      alert(language === 'tr' ? 'İndirme sırasında bir hata oluştu. Lütfen tekrar deneyin.' : 'An error occurred during download. Please try again.');
+      
+      // Restore button on error
+      const btn = document.getElementById('download-btn');
+      if (btn) {
+        btn.innerText = language === 'tr' ? 'Kartı İndir / Paylaş' : 'Download / Share Card';
+        btn.disabled = false;
+      }
     }
   }, [cardRef, publicKey, language]);
 
