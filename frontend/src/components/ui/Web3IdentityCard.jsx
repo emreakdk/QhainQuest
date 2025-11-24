@@ -77,10 +77,6 @@ const Web3IdentityCard = ({
     color: '#94a3b8', // Hex for slate-400
   };
 
-  const goldTextStyle = {
-    color: '#fbbf24', // Hex for amber-400
-  };
-
   const inputStyle = {
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
     color: '#ffffff',
@@ -148,7 +144,7 @@ const Web3IdentityCard = ({
         : `An error occurred during download: ${err.message || 'Unknown error'}`);
       setIsDownloading(false);
     }
-  }, [publicKey, totalEarned, completedQuests, language, isDownloading]);
+  }, [publicKey, totalEarned, completedQuests, language, selectedAvatarId]);
 
 
   return (

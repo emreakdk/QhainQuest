@@ -10,12 +10,10 @@ import { getCompletedQuestsForUser } from '../../../utils/tokenBalanceCalculator
 import { useDeviceType } from '../../../hooks/useDeviceType';
 import { TbChartBar, TbAward, TbPencil } from 'react-icons/tb';
 import AvatarSelectorModal from '../../ui/AvatarSelectorModal';
-import { AVATARS } from '../../data/avatarData';
+import { AVATARS } from '../../../data/avatarData';
 import ProfileStats from './ProfileStats';
-import CertificateCard from './CertificateCard';
 import ProfileDashboard from './ProfileDashboard';
 import Web3IdentityCard from '../../ui/Web3IdentityCard';
-import Button from '../../ui/Button';
 import Badge from '../../ui/Badge';
 import MobileWarning from '../../ui/MobileWarning';
 import PublicKeyTooltip from '../../ui/PublicKeyTooltip';
@@ -24,7 +22,7 @@ const UserProfile = ({ onPageChange }) => {
   const { publicKey, isDemoMode } = useContext(WalletContext);
   const { t } = useLanguage();
   const { selectedAvatarId } = useUser();
-  const { userStats, userCertificates, loadUserProgress } = useQuest();
+  const { userStats, loadUserProgress } = useQuest();
   const { tokenData } = useToken(); // Use centralized token data
   const { totalEarned } = useBalance(); // Get total earned for identity card
   const { isMobile } = useDeviceType();
