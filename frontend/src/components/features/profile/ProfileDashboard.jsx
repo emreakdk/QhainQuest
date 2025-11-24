@@ -11,7 +11,6 @@ import AnimatedCounter from '../../ui/AnimatedCounter';
 import ProgressRing from '../../ui/ProgressRing';
 import Button from '../../ui/Button';
 import Badge from '../../ui/Badge';
-import MobileWarning from '../../ui/MobileWarning';
 
 const SimpleChart = ({ data, type = 'line', height = 200, t }) => {
   if (!data || data.length === 0) return <div className="h-48 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center">{t('common.noData')}</div>;
@@ -215,13 +214,6 @@ const ProfileDashboard = () => {
           </CardContent>
         </Card>
       </div>
-
-      {/* Mobile Warning */}
-      {isMobile && (
-        <div className="mb-6">
-          <MobileWarning variant="light" />
-        </div>
-      )}
 
       {/* Overview Content */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

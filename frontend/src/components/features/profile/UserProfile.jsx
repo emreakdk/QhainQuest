@@ -146,11 +146,11 @@ const UserProfile = ({ onPageChange }) => {
               </h1>
               <button
                 onClick={handleNameEdit}
-                className="absolute right-0 translate-x-full p-2 text-slate-500 hover:text-white hover:scale-110 cursor-pointer transition-all duration-200"
+                className="absolute right-0 translate-x-full p-2 cursor-pointer transition-all duration-200 hover:scale-110 group"
                 aria-label={t('profile.editName') || 'İsmi Düzenle'}
                 title={t('profile.editName') || 'İsmi Düzenle'}
               >
-                <TbPencil className="w-4 h-4 sm:w-5 sm:h-5" />
+                <TbPencil className="w-4 h-4 sm:w-5 sm:h-5 text-slate-400 group-hover:!text-slate-600 dark:text-slate-500  transition-colors duration-200" />
               </button>
             </div>
           )}

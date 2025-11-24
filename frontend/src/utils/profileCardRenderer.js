@@ -87,51 +87,78 @@ export async function renderProfileCardToCanvas(options = {}) {
   const rank = getRank();
   const date = getCurrentDate();
 
-  // Helper function to draw background with dotted grid
+  // Helper function to draw background with dotted grid - Premium deep space look
   const drawBackground = (ctx, width, height) => {
     // Fill with dark background color
     ctx.fillStyle = '#050012';
     ctx.fillRect(0, 0, width, height);
     
-    // Draw dotted grid pattern
-    const gridSpacing = 56;
-    const dotSize = 3;
-    ctx.fillStyle = 'rgba(148, 163, 184, 0.35)'; // slate-400 with opacity
+    // Draw gradient overlay (deep slate to indigo)
+    const bgGradient = ctx.createLinearGradient(0, 0, width, height);
+    bgGradient.addColorStop(0, 'rgba(15, 23, 42, 0.8)'); // Dark slate
+    bgGradient.addColorStop(0.5, 'rgba(49, 46, 129, 0.8)'); // Deep indigo
+    bgGradient.addColorStop(1, 'rgba(15, 23, 42, 0.8)'); // Dark slate
+    
+    ctx.fillStyle = bgGradient;
+    ctx.fillRect(0, 0, width, height);
+    
+    // Draw fine dotted grid pattern (matching screen: 20px spacing, subtle dots)
+    const gridSpacing = 20;
+    const dotSize = 1;
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.08)'; // Subtle white dots
     
     // Iterate over grid positions
     for (let x = 0; x < width; x += gridSpacing) {
       for (let y = 0; y < height; y += gridSpacing) {
-        // Draw small square dots
-        ctx.fillRect(x, y, dotSize, dotSize);
+        // Draw small circular dots
+        ctx.beginPath();
+        ctx.arc(x + 2, y + 2, dotSize, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
   };
 
-  // Helper function to draw avatar glow
+  // Helper function to draw avatar glow - Reduced brightness
   const drawAvatarGlow = (ctx, centerX, centerY, radius) => {
-    // Outer glow - larger radius with blur effect
+    // Outer glow - reduced intensity
     const outerRadius = radius * 2.5;
     const outerGradient = ctx.createRadialGradient(
-      centerX, centerY, radius * 0.8,
+      centerX, centerY, radius * 0.9,
       centerX, centerY, outerRadius
     );
-    outerGradient.addColorStop(0, 'rgba(129, 140, 248, 0.5)'); // indigo-400
-    outerGradient.addColorStop(0.5, 'rgba(167, 139, 250, 0.3)'); // purple-400
-    outerGradient.addColorStop(1, 'rgba(129, 140, 248, 0)'); // transparent
+    outerGradient.addColorStop(0, 'rgba(168, 85, 247, 0.2)'); // Reduced from 0.4
+    outerGradient.addColorStop(0.3, 'rgba(99, 102, 241, 0.15)'); // Reduced from 0.3
+    outerGradient.addColorStop(0.6, 'rgba(236, 72, 153, 0.1)'); // Reduced from 0.2
+    outerGradient.addColorStop(1, 'rgba(168, 85, 247, 0)'); // transparent
     
     ctx.fillStyle = outerGradient;
     ctx.beginPath();
     ctx.arc(centerX, centerY, outerRadius, 0, Math.PI * 2);
     ctx.fill();
     
-    // Inner glow - smaller radius
-    const innerRadius = radius * 1.8;
+    // Middle glow - reduced intensity
+    const middleRadius = radius * 2;
+    const middleGradient = ctx.createRadialGradient(
+      centerX, centerY, radius * 0.7,
+      centerX, centerY, middleRadius
+    );
+    middleGradient.addColorStop(0, 'rgba(129, 140, 248, 0.3)'); // Reduced from 0.5
+    middleGradient.addColorStop(0.5, 'rgba(167, 139, 250, 0.2)'); // Reduced from 0.3
+    middleGradient.addColorStop(1, 'rgba(129, 140, 248, 0)'); // transparent
+    
+    ctx.fillStyle = middleGradient;
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, middleRadius, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Inner glow - reduced intensity
+    const innerRadius = radius * 1.4;
     const innerGradient = ctx.createRadialGradient(
-      centerX, centerY, radius * 0.6,
+      centerX, centerY, radius * 0.5,
       centerX, centerY, innerRadius
     );
-    innerGradient.addColorStop(0, 'rgba(129, 140, 248, 0.3)'); // indigo-400
-    innerGradient.addColorStop(1, 'rgba(129, 140, 248, 0)'); // transparent
+    innerGradient.addColorStop(0, 'rgba(168, 85, 247, 0.3)'); // Reduced from 0.6
+    innerGradient.addColorStop(1, 'rgba(168, 85, 247, 0)'); // transparent
     
     ctx.fillStyle = innerGradient;
     ctx.beginPath();
@@ -139,17 +166,8 @@ export async function renderProfileCardToCanvas(options = {}) {
     ctx.fill();
   };
 
-  // 1. Draw background with dotted grid
+  // 1. Draw background with dotted grid and gradient (already includes gradient in drawBackground)
   drawBackground(ctx, width, height);
-  
-  // Overlay gradient on top of background
-  const bgGradient = ctx.createLinearGradient(0, 0, width, height);
-  bgGradient.addColorStop(0, 'rgba(15, 23, 42, 0.6)');
-  bgGradient.addColorStop(0.5, 'rgba(59, 7, 100, 0.6)');
-  bgGradient.addColorStop(1, 'rgba(15, 23, 42, 0.6)');
-  
-  ctx.fillStyle = bgGradient;
-  ctx.fillRect(0, 0, width, height);
 
   // Card container area (with padding)
   const padding = 60;
@@ -186,17 +204,35 @@ export async function renderProfileCardToCanvas(options = {}) {
   const contentWidth = cardWidth - (innerPadding * 2);
   const contentHeight = cardHeight - (innerPadding * 2);
 
-  // Left side - Avatar area
-  const avatarX = contentX;
-  const avatarY = contentY + (contentHeight / 2) - 100;
-  const avatarSize = 144;
+  // Left side - Avatar area (moved up and further to the right)
+  const avatarX = contentX + 80; // Moved 80px to the right (increased from 50)
+  const avatarSize = 160; // Increased size
   const avatarCenterX = avatarX + avatarSize / 2;
+  const avatarY = contentY + (contentHeight / 2) - (avatarSize / 2) - 140; // Moved up from -80 to -140
   const avatarCenterY = avatarY + avatarSize / 2;
 
   // 2. Draw avatar glow (before avatar circle)
   drawAvatarGlow(ctx, avatarCenterX, avatarCenterY, avatarSize / 2);
 
-  // 3. Draw avatar circle with gradient
+  // 3. Draw avatar circle with gradient and border effect (4px padding)
+  const avatarBorderSize = 4;
+  const avatarOuterRadius = (avatarSize / 2) + avatarBorderSize;
+  
+  // Outer border circle (glow effect)
+  const avatarBorderGradient = ctx.createLinearGradient(
+    avatarX - avatarBorderSize, avatarY - avatarBorderSize,
+    avatarX + avatarSize + avatarBorderSize, avatarY + avatarSize + avatarBorderSize
+  );
+  avatarBorderGradient.addColorStop(0, 'rgb(236, 72, 153)'); // Pink
+  avatarBorderGradient.addColorStop(0.5, 'rgb(168, 85, 247)'); // Purple
+  avatarBorderGradient.addColorStop(1, 'rgb(99, 102, 241)'); // Indigo
+  
+  ctx.fillStyle = avatarBorderGradient;
+  ctx.beginPath();
+  ctx.arc(avatarCenterX, avatarCenterY, avatarOuterRadius, 0, Math.PI * 2);
+  ctx.fill();
+  
+  // Inner avatar circle
   const avatarGradient = ctx.createLinearGradient(
     avatarX, avatarY,
     avatarX + avatarSize, avatarY + avatarSize
@@ -245,14 +281,23 @@ export async function renderProfileCardToCanvas(options = {}) {
     ctx.fillText(publicKey ? '👤' : '🎮', avatarCenterX, avatarCenterY);
   }
 
-  // Display name badge below avatar
-  const badgeY = avatarY + avatarSize + 24;
-  const badgePadding = 12;
+  // Display name below avatar (larger, reduced spacing)
+  const nameY = avatarY + avatarSize + 30; // Reduced from 35
+  ctx.font = 'bold 28px system-ui';
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  const nameText = displayName || 'Web3 Keşfedici';
+  ctx.fillText(nameText, avatarCenterX, nameY);
+
+  // Rank badge below name (larger, reduced spacing)
+  const badgeY = nameY + 35; // Reduced from 40
+  const badgePadding = 14;
   ctx.font = '600 18px system-ui';
-  const badgeText = displayName || 'Web3 Keşfedici';
+  const badgeText = getRank();
   const badgeMetrics = ctx.measureText(badgeText);
   const badgeWidth = badgeMetrics.width + (badgePadding * 2);
-  const badgeHeight = 24 + (badgePadding * 2);
+  const badgeHeight = 28 + (badgePadding * 2);
   const badgeX = avatarCenterX - (badgeWidth / 2);
 
   // Badge background
@@ -267,99 +312,108 @@ export async function renderProfileCardToCanvas(options = {}) {
   ctx.stroke();
 
   // Badge text
-  ctx.fillStyle = 'rgb(255, 255, 255)';
+  ctx.fillStyle = '#ffffff';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(badgeText, avatarCenterX, badgeY + badgeHeight / 2);
 
-  // Right side - Info area
+  // Wallet address below badge (left side, larger, reduced spacing)
+  const walletLabelY = badgeY + badgeHeight + 30; // Reduced from 35
+  ctx.font = '18px system-ui';
+  ctx.fillStyle = 'rgb(148, 163, 184)';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  const walletLabelText = language === 'tr' ? 'Cüzdan Adresi' : 'Wallet Address';
+  ctx.fillText(walletLabelText, avatarCenterX, walletLabelY);
+
+  const walletBoxY = walletLabelY + 25; // Reduced from 28
+  ctx.font = '20px monospace';
+  const walletMetrics = ctx.measureText(formattedWallet);
+  const walletBoxWidth = Math.max(walletMetrics.width + 40, 220);
+  const walletBoxHeight = 28 + 18;
+  const walletBoxX = avatarCenterX - (walletBoxWidth / 2);
+
+  // Wallet box background
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+  roundRect(walletBoxX, walletBoxY, walletBoxWidth, walletBoxHeight, 12);
+  ctx.fill();
+
+  // Wallet box border
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+  ctx.lineWidth = 1;
+  roundRect(walletBoxX, walletBoxY, walletBoxWidth, walletBoxHeight, 12);
+  ctx.stroke();
+
+  // Wallet text
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(formattedWallet, avatarCenterX, walletBoxY + walletBoxHeight / 2);
+
+  // Right side - Info area (centered)
   const infoX = avatarX + avatarSize + 60;
   const infoY = contentY;
   const infoWidth = contentWidth - avatarSize - 60;
+  const infoCenterX = infoX + (infoWidth / 2);
 
-  // 4. ChainQuest title
-  const titleY = infoY;
-  ctx.font = 'bold 48px system-ui';
+  // 4. ChainQuest title - Large & Centered (larger)
+  const titleY = infoY + 20;
+  ctx.font = 'bold 72px system-ui';
   const titleText = 'ChainQuest';
-  const titleGradient = ctx.createLinearGradient(infoX, titleY, infoX + 300, titleY);
+  const titleGradient = ctx.createLinearGradient(infoCenterX - 250, titleY, infoCenterX + 250, titleY);
   titleGradient.addColorStop(0, 'rgb(129, 140, 248)');
   titleGradient.addColorStop(1, 'rgb(167, 139, 250)');
   
   ctx.fillStyle = titleGradient;
-  ctx.textAlign = 'left';
+  ctx.textAlign = 'center';
   ctx.textBaseline = 'top';
-  ctx.fillText(titleText, infoX, titleY);
+  ctx.fillText(titleText, infoCenterX, titleY);
 
-  // Subtitle
-  const subtitleY = titleY + 60;
-  ctx.font = '18px system-ui';
+  // Subtitle (larger)
+  const subtitleY = titleY + 80;
+  ctx.font = '22px system-ui';
   ctx.fillStyle = 'rgb(148, 163, 184)';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
   const subtitleText = language === 'tr' ? 'Web3 Öğrenme Platformu' : 'Web3 Learning Platform';
-  ctx.fillText(subtitleText, infoX, subtitleY);
+  ctx.fillText(subtitleText, infoCenterX, subtitleY);
 
-  // 5. Wallet address
-  const walletLabelY = subtitleY + 50;
-  ctx.font = '18px system-ui';
+  // 5. CQT Earned - Large & Centered (moved down together)
+  const cqtLabelY = subtitleY + 80; // Increased spacing from subtitle
+  ctx.font = '22px system-ui';
   ctx.fillStyle = 'rgb(148, 163, 184)';
-  const walletLabelText = language === 'tr' ? 'Cüzdan Adresi' : 'Wallet Address';
-  ctx.fillText(walletLabelText, infoX, walletLabelY);
-
-  const walletBoxY = walletLabelY + 30;
-  ctx.font = '20px monospace';
-  const walletMetrics = ctx.measureText(formattedWallet);
-  const walletBoxWidth = walletMetrics.width + 36;
-  const walletBoxHeight = 20 + 24;
-
-  // Wallet box background
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-  roundRect(infoX, walletBoxY, walletBoxWidth, walletBoxHeight, 12);
-  ctx.fill();
-
-  // Wallet box border
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
-  ctx.lineWidth = 1;
-  roundRect(infoX, walletBoxY, walletBoxWidth, walletBoxHeight, 12);
-  ctx.stroke();
-
-  // Wallet text
-  ctx.fillStyle = 'rgb(255, 255, 255)';
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(formattedWallet, infoX + 18, walletBoxY + walletBoxHeight / 2);
-
-  // 6. CQT Earned
-  const cqtLabelY = walletBoxY + walletBoxHeight + 40;
-  ctx.font = '18px system-ui';
-  ctx.fillStyle = 'rgb(148, 163, 184)';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
   const cqtLabelText = language === 'tr' ? 'Toplam Kazanılan' : 'Total Earned';
-  ctx.fillText(cqtLabelText, infoX, cqtLabelY);
+  ctx.fillText(cqtLabelText, infoCenterX, cqtLabelY);
 
-  const cqtValueY = cqtLabelY + 40;
+  // Reduced spacing between label and value (closer together)
+  const cqtValueY = cqtLabelY + 35;
   const cqtText = `${totalEarned.toLocaleString()} CQT`;
-  ctx.font = 'bold 72px system-ui';
-  const cqtGradient = ctx.createLinearGradient(infoX, cqtValueY, infoX + 400, cqtValueY);
+  ctx.font = 'bold 90px system-ui';
+  const cqtGradient = ctx.createLinearGradient(infoCenterX - 280, cqtValueY, infoCenterX + 280, cqtValueY);
   cqtGradient.addColorStop(0, 'rgb(251, 191, 36)');
   cqtGradient.addColorStop(0.5, 'rgb(251, 146, 60)');
   cqtGradient.addColorStop(1, 'rgb(251, 191, 36)');
   
   ctx.fillStyle = cqtGradient;
-  ctx.textAlign = 'left';
+  ctx.textAlign = 'center';
   ctx.textBaseline = 'top';
-  ctx.fillText(cqtText, infoX, cqtValueY);
+  ctx.fillText(cqtText, infoCenterX, cqtValueY);
 
-  // 7. Footer - Verified badge & date
+  // 6. Footer - Verified badge & date (centered)
   const footerY = contentY + contentHeight - 50;
   const footerLineY = footerY - 30;
 
-  // Footer line
+  // Footer line (moved left - not full width)
   ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
   ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.moveTo(infoX, footerLineY);
-  ctx.lineTo(infoX + infoWidth, footerLineY);
+  ctx.lineTo(infoX + infoWidth - 100, footerLineY); // Moved left by 100px
   ctx.stroke();
 
-  // Verified badge
+  // Verified badge (left side)
   const checkSize = 36;
   const checkX = infoX;
   const checkY = footerY - checkSize / 2;
@@ -377,21 +431,21 @@ export async function renderProfileCardToCanvas(options = {}) {
   ctx.textBaseline = 'middle';
   ctx.fillText('✓', checkX + checkSize / 2, checkY + checkSize / 2);
 
-  // Verified text
+  // Verified text - Explicit color
   const verifiedTextX = checkX + checkSize + 12;
   ctx.font = '500 18px system-ui';
-  ctx.fillStyle = 'rgb(203, 213, 225)';
+  ctx.fillStyle = '#cbd5e1'; // slate-300
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
   const verifiedText = language === 'tr' ? 'Doğrulanmış Öğrenci' : 'Verified Student';
   ctx.fillText(verifiedText, verifiedTextX, footerY);
 
-  // Date
+  // Date - Right side (moved left)
   ctx.font = '18px system-ui';
-  ctx.fillStyle = 'rgb(148, 163, 184)';
+  ctx.fillStyle = '#94a3b8'; // slate-400
   ctx.textAlign = 'right';
   ctx.textBaseline = 'middle';
-  ctx.fillText(date, infoX + infoWidth, footerY);
+  ctx.fillText(date, infoX + infoWidth - 120, footerY); // Moved left by 100px
 
   return canvas;
 }

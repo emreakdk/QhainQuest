@@ -102,7 +102,7 @@ function AppContent() {
       case 'profile':
         return <UserProfile onPageChange={handlePageChange} />;
       case 'leaderboard':
-        return <Achievements />;
+        return <Achievements onPageChange={handlePageChange} />;
       case 'how-to-claim':
         return <HowToClaimPage onPageChange={handlePageChange} />;
       case 'learn-web3':

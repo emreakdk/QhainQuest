@@ -225,6 +225,7 @@ const translations = {
     'quiz.tryAgain': 'Tekrar deneyin',
     'quiz.timeEstimate': 'Tahmini Süre',
     'quiz.minutes': 'dakika',
+    'quiz.close': 'Testi Kapat',
     
     'celebration.title': 'Tebrikler! 🎉',
     'celebration.message': 'Quest\'i başarıyla tamamladınız!',
@@ -960,6 +961,7 @@ const translations = {
     'quiz.tryAgain': 'Try again',
     'quiz.timeEstimate': 'Estimated Time',
     'quiz.minutes': 'minutes',
+    'quiz.close': 'Close Quiz',
     
     'celebration.title': 'Congratulations! 🎉',
     'celebration.message': 'You have successfully completed the quest!',

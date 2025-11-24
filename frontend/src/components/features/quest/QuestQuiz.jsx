@@ -415,10 +415,7 @@ const QuestQuiz = ({ questId, onComplete, onClose, onPageChange }) => {
           <div className="space-y-4 mb-6">
             {/* Progress Bar */}
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-600 dark:text-slate-400">
-                  {t('quiz.progress')}
-                </span>
+              <div className="flex items-center justify-end">
                 <span className="text-sm font-medium text-slate-900 dark:text-white">
                   {currentLessonIndex + 1} / {quest.lessons.length}
                 </span>

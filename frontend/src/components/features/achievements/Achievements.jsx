@@ -9,7 +9,7 @@ import Badge from '../../ui/Badge';
 import Button from '../../ui/Button';
 import PublicKeyTooltip from '../../ui/PublicKeyTooltip';
 
-const Achievements = () => {
+const Achievements = ({ onPageChange }) => {
   const { t } = useLanguage();
   const { publicKey } = useContext(WalletContext);
   const { userStats } = useQuest();
@@ -121,7 +121,12 @@ const Achievements = () => {
         <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-4">
           {t('achievements.cta.title')}
         </h3>
-        <Button variant="primary" size="lg">
+        <Button 
+          variant="primary" 
+          size="lg"
+          onClick={() => onPageChange && onPageChange('quests')}
+          className="cursor-pointer"
+        >
           {t('achievements.cta.button')}
         </Button>
       </div>
