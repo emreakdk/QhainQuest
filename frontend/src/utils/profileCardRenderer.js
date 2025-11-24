@@ -57,14 +57,66 @@ export function renderProfileCardToCanvas(options = {}) {
   const rank = getRank();
   const date = getCurrentDate();
 
-  // 1. Draw dark background
-  const bgGradient = ctx.createLinearGradient(0, 0, width, height);
-  bgGradient.addColorStop(0, 'rgb(15, 23, 42)');
-  bgGradient.addColorStop(0.5, 'rgb(59, 7, 100)');
-  bgGradient.addColorStop(1, 'rgb(15, 23, 42)');
+  // Helper function to draw background with dotted grid
+  const drawBackground = (ctx, width, height) => {
+    // Fill with dark background color
+    ctx.fillStyle = '#050012';
+    ctx.fillRect(0, 0, width, height);
+    
+    // Draw dotted grid pattern
+    const gridSpacing = 56;
+    const dotSize = 3;
+    ctx.fillStyle = 'rgba(148, 163, 184, 0.35)'; // slate-400 with opacity
+    
+    // Iterate over grid positions
+    for (let x = 0; x < width; x += gridSpacing) {
+      for (let y = 0; y < height; y += gridSpacing) {
+        // Draw small square dots
+        ctx.fillRect(x, y, dotSize, dotSize);
+      }
+    }
+  };
+
+  // Helper function to draw avatar glow
+  const drawAvatarGlow = (ctx, centerX, centerY, radius) => {
+    // Outer glow - larger radius with blur effect
+    const outerRadius = radius * 2.5;
+    const outerGradient = ctx.createRadialGradient(
+      centerX, centerY, radius * 0.8,
+      centerX, centerY, outerRadius
+    );
+    outerGradient.addColorStop(0, 'rgba(129, 140, 248, 0.5)'); // indigo-400
+    outerGradient.addColorStop(0.5, 'rgba(167, 139, 250, 0.3)'); // purple-400
+    outerGradient.addColorStop(1, 'rgba(129, 140, 248, 0)'); // transparent
+    
+    ctx.fillStyle = outerGradient;
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, outerRadius, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Inner glow - smaller radius
+    const innerRadius = radius * 1.8;
+    const innerGradient = ctx.createRadialGradient(
+      centerX, centerY, radius * 0.6,
+      centerX, centerY, innerRadius
+    );
+    innerGradient.addColorStop(0, 'rgba(129, 140, 248, 0.3)'); // indigo-400
+    innerGradient.addColorStop(1, 'rgba(129, 140, 248, 0)'); // transparent
+    
+    ctx.fillStyle = innerGradient;
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, innerRadius, 0, Math.PI * 2);
+    ctx.fill();
+  };
+
+  // 1. Draw background with dotted grid
+  drawBackground(ctx, width, height);
   
-  ctx.fillStyle = 'rgb(5, 0, 18)';
-  ctx.fillRect(0, 0, width, height);
+  // Overlay gradient on top of background
+  const bgGradient = ctx.createLinearGradient(0, 0, width, height);
+  bgGradient.addColorStop(0, 'rgba(15, 23, 42, 0.6)');
+  bgGradient.addColorStop(0.5, 'rgba(59, 7, 100, 0.6)');
+  bgGradient.addColorStop(1, 'rgba(15, 23, 42, 0.6)');
   
   ctx.fillStyle = bgGradient;
   ctx.fillRect(0, 0, width, height);
@@ -111,7 +163,10 @@ export function renderProfileCardToCanvas(options = {}) {
   const avatarCenterX = avatarX + avatarSize / 2;
   const avatarCenterY = avatarY + avatarSize / 2;
 
-  // 2. Draw avatar circle with gradient
+  // 2. Draw avatar glow (before avatar circle)
+  drawAvatarGlow(ctx, avatarCenterX, avatarCenterY, avatarSize / 2);
+
+  // 3. Draw avatar circle with gradient
   const avatarGradient = ctx.createLinearGradient(
     avatarX, avatarY,
     avatarX + avatarSize, avatarY + avatarSize
@@ -164,7 +219,7 @@ export function renderProfileCardToCanvas(options = {}) {
   const infoY = contentY;
   const infoWidth = contentWidth - avatarSize - 60;
 
-  // 3. ChainQuest title
+  // 4. ChainQuest title
   const titleY = infoY;
   ctx.font = 'bold 48px system-ui';
   const titleText = 'ChainQuest';
@@ -184,7 +239,7 @@ export function renderProfileCardToCanvas(options = {}) {
   const subtitleText = language === 'tr' ? 'Web3 Öğrenme Platformu' : 'Web3 Learning Platform';
   ctx.fillText(subtitleText, infoX, subtitleY);
 
-  // 4. Wallet address
+  // 5. Wallet address
   const walletLabelY = subtitleY + 50;
   ctx.font = '18px system-ui';
   ctx.fillStyle = 'rgb(148, 163, 184)';
@@ -214,7 +269,7 @@ export function renderProfileCardToCanvas(options = {}) {
   ctx.textBaseline = 'middle';
   ctx.fillText(formattedWallet, infoX + 18, walletBoxY + walletBoxHeight / 2);
 
-  // 5. CQT Earned
+  // 6. CQT Earned
   const cqtLabelY = walletBoxY + walletBoxHeight + 40;
   ctx.font = '18px system-ui';
   ctx.fillStyle = 'rgb(148, 163, 184)';
@@ -234,7 +289,7 @@ export function renderProfileCardToCanvas(options = {}) {
   ctx.textBaseline = 'top';
   ctx.fillText(cqtText, infoX, cqtValueY);
 
-  // 6. Footer - Verified badge & date
+  // 7. Footer - Verified badge & date
   const footerY = contentY + contentHeight - 50;
   const footerLineY = footerY - 30;
 
