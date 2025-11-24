@@ -12,6 +12,15 @@ export const UserProvider = ({ children }) => {
     return 'default';
   });
 
+  const [displayName, setDisplayName] = useState(() => {
+    // Initialize from localStorage or default to 'Web3 Keşfedici'
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('chainquest-userDisplayName');
+      return saved || 'Web3 Keşfedici';
+    }
+    return 'Web3 Keşfedici';
+  });
+
   // Persist to localStorage whenever selectedAvatarId changes
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -19,9 +28,25 @@ export const UserProvider = ({ children }) => {
     }
   }, [selectedAvatarId]);
 
+  // Persist to localStorage whenever displayName changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('chainquest-userDisplayName', displayName);
+    }
+  }, [displayName]);
+
+  // Function to update display name
+  const updateDisplayName = (name) => {
+    if (name && name.trim()) {
+      setDisplayName(name.trim());
+    }
+  };
+
   const value = {
     selectedAvatarId,
     setSelectedAvatarId,
+    displayName,
+    updateDisplayName,
   };
 
   return (

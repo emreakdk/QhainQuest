@@ -21,7 +21,7 @@ import PublicKeyTooltip from '../../ui/PublicKeyTooltip';
 const UserProfile = ({ onPageChange }) => {
   const { publicKey, isDemoMode } = useContext(WalletContext);
   const { t } = useLanguage();
-  const { selectedAvatarId } = useUser();
+  const { selectedAvatarId, displayName, updateDisplayName } = useUser();
   const { userStats, loadUserProgress } = useQuest();
   const { tokenData } = useToken(); // Use centralized token data
   const { totalEarned } = useBalance(); // Get total earned for identity card
@@ -29,6 +29,8 @@ const UserProfile = ({ onPageChange }) => {
   const [activeTab, setActiveTab] = useState('overview');
   const [completedQuests, setCompletedQuests] = useState([]);
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [tempDisplayName, setTempDisplayName] = useState(displayName);
 
   // Get current avatar SVG
   const currentAvatar = AVATARS.find(avatar => avatar.id === selectedAvatarId) || AVATARS[0];
@@ -64,6 +66,34 @@ const UserProfile = ({ onPageChange }) => {
     setActiveTab(tabId);
   };
 
+  const handleNameEdit = () => {
+    setIsEditingName(true);
+    setTempDisplayName(displayName);
+  };
+
+  const handleNameSave = () => {
+    updateDisplayName(tempDisplayName);
+    setIsEditingName(false);
+  };
+
+  const handleNameCancel = () => {
+    setTempDisplayName(displayName);
+    setIsEditingName(false);
+  };
+
+  const handleNameKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleNameSave();
+    } else if (e.key === 'Escape') {
+      handleNameCancel();
+    }
+  };
+
+  // Update tempDisplayName when displayName changes externally
+  useEffect(() => {
+    setTempDisplayName(displayName);
+  }, [displayName]);
+
 
   return (
     <div className="space-y-6 sm:space-y-8 pt-4 sm:pt-6">
@@ -87,15 +117,48 @@ const UserProfile = ({ onPageChange }) => {
           {/* Edit Button */}
           <button
             onClick={() => setIsAvatarModalOpen(true)}
-            className="absolute bottom-0 right-0 sm:right-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full p-2 shadow-lg transition-colors"
+            className="absolute bottom-0 right-0 sm:right-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full p-2 shadow-lg cursor-pointer hover:scale-110 transition-all duration-200"
             aria-label={t('profile.editAvatar') || 'Edit Avatar'}
           >
             <TbPencil className="w-4 h-4" />
           </button>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-2">
+        
+        {/* Display Name - Editable */}
+        <div className="w-full flex justify-center mb-2">
+          {isEditingName ? (
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={tempDisplayName}
+                onChange={(e) => setTempDisplayName(e.target.value)}
+                onKeyDown={handleNameKeyPress}
+                onBlur={handleNameSave}
+                autoFocus
+                className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white bg-transparent border-b-2 border-indigo-500 focus:outline-none focus:border-indigo-600 text-center"
+                maxLength={30}
+              />
+            </div>
+          ) : (
+            <div className="relative inline-flex items-center justify-center">
+              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white text-center">
+                {displayName}
+              </h1>
+              <button
+                onClick={handleNameEdit}
+                className="absolute right-0 translate-x-full p-2 text-slate-500 hover:text-white hover:scale-110 cursor-pointer transition-all duration-200"
+                aria-label={t('profile.editName') || 'İsmi Düzenle'}
+                title={t('profile.editName') || 'İsmi Düzenle'}
+              >
+                <TbPencil className="w-4 h-4 sm:w-5 sm:h-5" />
+              </button>
+            </div>
+          )}
+        </div>
+        
+        <h2 className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 mb-2">
           {t('profile.title')}
-        </h1>
+        </h2>
         <div className="flex items-center justify-center">
           {/* Wallet Address Badge - Outlined style matching Streak badges */}
           <span className="inline-flex items-center rounded-full px-2.5 py-1 border border-indigo-200 bg-white text-indigo-900 dark:bg-slate-800 dark:border-indigo-500 dark:text-indigo-300 text-xs sm:text-sm font-medium">

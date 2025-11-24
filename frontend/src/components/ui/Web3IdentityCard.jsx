@@ -15,7 +15,7 @@ const Web3IdentityCard = ({
   isDemoMode = false 
 }) => {
   const { t, language } = useLanguage();
-  const { selectedAvatarId } = useUser();
+  const { selectedAvatarId, displayName } = useUser();
   const [isDownloading, setIsDownloading] = useState(false);
 
   // Get current avatar SVG
@@ -134,6 +134,7 @@ const Web3IdentityCard = ({
         completedQuests,
         language,
         avatarId: selectedAvatarId,
+        displayName: displayName,
       });
       
       setIsDownloading(false);
@@ -186,10 +187,10 @@ const Web3IdentityCard = ({
                 <div className="absolute -inset-1 rounded-full blur-2xl" style={avatarGlowStyle2}></div>
               </div>
               
-              {/* Rank Badge */}
+              {/* Display Name Badge */}
               <div className="backdrop-blur-sm rounded-full px-4 py-2" style={rankBadgeStyle}>
                 <span className="text-sm font-semibold">
-                  {getRank()}
+                  {displayName}
                 </span>
               </div>
             </div>

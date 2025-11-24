@@ -37,6 +37,7 @@ const loadSVGAsImage = (svgString) => {
  * @param {number} options.completedQuests - Number of completed quests
  * @param {string} options.language - Language ('tr' or 'en')
  * @param {string} options.avatarId - Selected avatar ID
+ * @param {string} options.displayName - Custom display name
  * @returns {Promise<HTMLCanvasElement>} - Canvas element with rendered card
  */
 export async function renderProfileCardToCanvas(options = {}) {
@@ -46,6 +47,7 @@ export async function renderProfileCardToCanvas(options = {}) {
     completedQuests = 0,
     language = 'en',
     avatarId = 'default',
+    displayName = 'Web3 Keşfedici',
   } = options;
 
   // Card dimensions
@@ -243,11 +245,11 @@ export async function renderProfileCardToCanvas(options = {}) {
     ctx.fillText(publicKey ? '👤' : '🎮', avatarCenterX, avatarCenterY);
   }
 
-  // Rank badge below avatar
+  // Display name badge below avatar
   const badgeY = avatarY + avatarSize + 24;
   const badgePadding = 12;
   ctx.font = '600 18px system-ui';
-  const badgeText = rank;
+  const badgeText = displayName || 'Web3 Keşfedici';
   const badgeMetrics = ctx.measureText(badgeText);
   const badgeWidth = badgeMetrics.width + (badgePadding * 2);
   const badgeHeight = 24 + (badgePadding * 2);
