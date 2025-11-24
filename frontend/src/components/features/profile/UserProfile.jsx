@@ -2,12 +2,15 @@ import { useState, useEffect, useMemo } from 'react';
 import { useContext } from 'react';
 import { WalletContext } from '../../../context/WalletContext';
 import { useLanguage } from '../../../context/LanguageContext';
+import { useUser } from '../../../context/UserContext';
 import { useQuest } from '../../../context/QuestContext';
 import { useToken } from '../../../context/TokenContext';
 import { useBalance } from '../../../context/BalanceContext';
 import { getCompletedQuestsForUser } from '../../../utils/tokenBalanceCalculator';
 import { useDeviceType } from '../../../hooks/useDeviceType';
-import { TbChartBar, TbAward } from 'react-icons/tb';
+import { TbChartBar, TbAward, TbPencil } from 'react-icons/tb';
+import AvatarSelectorModal from '../../ui/AvatarSelectorModal';
+import { AVATARS } from '../../data/avatarData';
 import ProfileStats from './ProfileStats';
 import CertificateCard from './CertificateCard';
 import ProfileDashboard from './ProfileDashboard';
@@ -20,12 +23,17 @@ import PublicKeyTooltip from '../../ui/PublicKeyTooltip';
 const UserProfile = ({ onPageChange }) => {
   const { publicKey, isDemoMode } = useContext(WalletContext);
   const { t } = useLanguage();
+  const { selectedAvatarId } = useUser();
   const { userStats, userCertificates, loadUserProgress } = useQuest();
   const { tokenData } = useToken(); // Use centralized token data
   const { totalEarned } = useBalance(); // Get total earned for identity card
   const { isMobile } = useDeviceType();
   const [activeTab, setActiveTab] = useState('overview');
   const [completedQuests, setCompletedQuests] = useState([]);
+  const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
+
+  // Get current avatar SVG
+  const currentAvatar = AVATARS.find(avatar => avatar.id === selectedAvatarId) || AVATARS[0];
 
   useEffect(() => {
     if (publicKey) {
@@ -71,8 +79,21 @@ const UserProfile = ({ onPageChange }) => {
 
       {/* Profile Header */}
       <div className="text-center">
-        <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-          <span className="text-2xl sm:text-3xl">👤</span>
+        <div className="relative inline-block mb-4">
+          <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full mx-auto flex items-center justify-center overflow-hidden">
+            <div 
+              className="w-full h-full flex items-center justify-center"
+              dangerouslySetInnerHTML={{ __html: currentAvatar.svg }}
+            />
+          </div>
+          {/* Edit Button */}
+          <button
+            onClick={() => setIsAvatarModalOpen(true)}
+            className="absolute bottom-0 right-0 sm:right-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full p-2 shadow-lg transition-colors"
+            aria-label={t('profile.editAvatar') || 'Edit Avatar'}
+          >
+            <TbPencil className="w-4 h-4" />
+          </button>
         </div>
         <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-2">
           {t('profile.title')}
@@ -203,6 +224,12 @@ const UserProfile = ({ onPageChange }) => {
         )}
 
       </div>
+
+      {/* Avatar Selector Modal */}
+      <AvatarSelectorModal 
+        isOpen={isAvatarModalOpen} 
+        onClose={() => setIsAvatarModalOpen(false)} 
+      />
     </div>
   );
 };

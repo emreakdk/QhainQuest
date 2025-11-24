@@ -2,9 +2,11 @@
 
 import { useCallback, useState } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
+import { useUser } from '../../context/UserContext';
 import { TbDownload, TbCheck } from 'react-icons/tb';
 import Button from './Button';
 import { downloadProfileCardImage } from '../../utils/profileCardRenderer';
+import { AVATARS } from '../../data/avatarData';
 
 const Web3IdentityCard = ({ 
   publicKey, 
@@ -13,7 +15,11 @@ const Web3IdentityCard = ({
   isDemoMode = false 
 }) => {
   const { t, language } = useLanguage();
+  const { selectedAvatarId } = useUser();
   const [isDownloading, setIsDownloading] = useState(false);
+
+  // Get current avatar SVG
+  const currentAvatar = AVATARS.find(avatar => avatar.id === selectedAvatarId) || AVATARS[0];
 
   const formatAddress = (address) => {
     if (!address) return 'Demo Mode';
@@ -131,6 +137,7 @@ const Web3IdentityCard = ({
         totalEarned,
         completedQuests,
         language,
+        avatarId: selectedAvatarId,
       });
       
       setIsDownloading(false);
@@ -173,8 +180,11 @@ const Web3IdentityCard = ({
             <div className="flex-shrink-0 flex flex-col items-center">
               {/* Avatar with Glowing Ring */}
               <div className="relative mb-4">
-                <div className="w-24 h-24 rounded-full flex items-center justify-center text-4xl shadow-lg" style={avatarGradientStyle}>
-                  {publicKey ? '👤' : '🎮'}
+                <div className="w-24 h-24 rounded-full flex items-center justify-center text-4xl shadow-lg overflow-hidden" style={avatarGradientStyle}>
+                  <div 
+                    className="w-full h-full flex items-center justify-center"
+                    dangerouslySetInnerHTML={{ __html: currentAvatar.svg }}
+                  />
                 </div>
                 <div className="absolute inset-0 rounded-full blur-xl" style={avatarGlowStyle1}></div>
                 <div className="absolute -inset-1 rounded-full blur-2xl" style={avatarGlowStyle2}></div>

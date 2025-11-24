@@ -3,6 +3,7 @@ import { WalletContext } from './context/WalletContext';
 import { TokenProvider, useToken } from './context/TokenContext';
 import { BalanceProvider, useBalance } from './context/BalanceContext';
 import { TestProvider } from './context/TestContext';
+import { UserProvider } from './context/UserContext';
 import { useQuest } from './context/QuestContext';
 import Header from './components/layout/Header';
 import HeroSection from './components/layout/HeroSection';
@@ -18,9 +19,11 @@ function App() {
   return (
     <TokenProvider>
       <BalanceProvider>
-        <TestProvider>
-          <AppContent />
-        </TestProvider>
+        <UserProvider>
+          <TestProvider>
+            <AppContent />
+          </TestProvider>
+        </UserProvider>
       </BalanceProvider>
     </TokenProvider>
   );

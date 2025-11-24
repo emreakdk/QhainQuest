@@ -3,6 +3,32 @@
  * No DOM/CSS reading, no Tailwind, no oklch - only Canvas 2D API
  */
 
+// Import avatar data
+import { AVATARS } from '../data/avatarData';
+
+/**
+ * Helper function to load SVG as image
+ */
+const loadSVGAsImage = (svgString) => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(svgBlob);
+    
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      resolve(img);
+    };
+    
+    img.onerror = (error) => {
+      URL.revokeObjectURL(url);
+      reject(error);
+    };
+    
+    img.src = url;
+  });
+};
+
 /**
  * Render profile card to canvas
  * @param {Object} options
@@ -10,14 +36,16 @@
  * @param {number} options.totalEarned - Total CQT earned
  * @param {number} options.completedQuests - Number of completed quests
  * @param {string} options.language - Language ('tr' or 'en')
- * @returns {HTMLCanvasElement} - Canvas element with rendered card
+ * @param {string} options.avatarId - Selected avatar ID
+ * @returns {Promise<HTMLCanvasElement>} - Canvas element with rendered card
  */
-export function renderProfileCardToCanvas(options = {}) {
+export async function renderProfileCardToCanvas(options = {}) {
   const {
     publicKey = '',
     totalEarned = 0,
     completedQuests = 0,
     language = 'en',
+    avatarId = 'default',
   } = options;
 
   // Card dimensions
@@ -180,12 +208,40 @@ export function renderProfileCardToCanvas(options = {}) {
   ctx.arc(avatarCenterX, avatarCenterY, avatarSize / 2, 0, Math.PI * 2);
   ctx.fill();
 
-  // Avatar emoji
-  ctx.font = '72px system-ui';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillStyle = 'rgb(255, 255, 255)';
-  ctx.fillText(publicKey ? '👤' : '🎮', avatarCenterX, avatarCenterY);
+  // 4. Draw avatar SVG
+  try {
+    const selectedAvatar = AVATARS.find(avatar => avatar.id === avatarId) || AVATARS[0];
+    const avatarImg = await loadSVGAsImage(selectedAvatar.svg);
+    
+    // Save context state
+    ctx.save();
+    
+    // Clip to circle
+    ctx.beginPath();
+    ctx.arc(avatarCenterX, avatarCenterY, avatarSize / 2, 0, Math.PI * 2);
+    ctx.clip();
+    
+    // Draw the SVG image
+    const padding = 8; // Small padding inside the circle
+    ctx.drawImage(
+      avatarImg,
+      avatarX + padding,
+      avatarY + padding,
+      avatarSize - (padding * 2),
+      avatarSize - (padding * 2)
+    );
+    
+    // Restore context state
+    ctx.restore();
+  } catch (error) {
+    console.warn('[ProfileCardRenderer] Failed to load avatar SVG, using fallback emoji:', error);
+    // Fallback to emoji if SVG loading fails
+    ctx.font = '72px system-ui';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'rgb(255, 255, 255)';
+    ctx.fillText(publicKey ? '👤' : '🎮', avatarCenterX, avatarCenterY);
+  }
 
   // Rank badge below avatar
   const badgeY = avatarY + avatarSize + 24;
@@ -348,8 +404,8 @@ export function renderProfileCardToCanvas(options = {}) {
  */
 export async function downloadProfileCardImage(props = {}) {
   try {
-    // Render card to canvas
-    const canvas = renderProfileCardToCanvas(props);
+    // Render card to canvas (now async)
+    const canvas = await renderProfileCardToCanvas(props);
 
     // Convert to JPEG blob (no alpha channel)
     const blob = await new Promise((resolve, reject) => {
