@@ -321,14 +321,16 @@ const AIAssistantWidget = () => {
   const tWidget = translations[currentLang] || translations.en;
 
   return (
-    <div ref={widgetRef} className="fixed bottom-6 right-6 z-50">
+    <>
       {/* Chat Window - Appears above the button when open */}
       {isOpen && (
-        <div className={`mb-4 w-[400px] sm:w-[450px] h-[600px] rounded-2xl shadow-2xl border ${
-          isDarkMode 
-            ? 'bg-slate-800/95 backdrop-blur-sm border-slate-700' 
-            : 'bg-white/95 backdrop-blur-sm border-slate-200'
-        } flex flex-col overflow-hidden`}>
+        <div className={`fixed z-50 bg-white dark:bg-slate-900 shadow-2xl flex flex-col transition-all duration-300
+          ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}
+          /* Mobile Styles */
+          w-[95vw] h-[70vh] bottom-20 left-1/2 -translate-x-1/2 rounded-2xl border border-slate-200 dark:border-slate-700
+          /* Desktop Styles (Override Mobile) */
+          sm:w-[450px] sm:h-[600px] sm:bottom-24 sm:right-6 sm:left-auto sm:translate-x-0
+        `}>
           {/* Header */}
           <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-4">
             <div className="flex items-center justify-between">
@@ -374,7 +376,7 @@ const AIAssistantWidget = () => {
               <p className={`text-xs mb-3 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
                 {tWidget.tryAsking}
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 overflow-x-hidden">
                 {tWidget.quickQuestions.map((q, idx) => {
                   const IconComponent = q.icon;
                   return (
@@ -627,20 +629,22 @@ const AIAssistantWidget = () => {
       )}
 
       {/* FAB Button - Launcher */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className={`w-14 h-14 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center ${
-          isOpen ? 'rotate-45' : 'hover:scale-110 hover:animate-pulse'
-        }`}
-        aria-label="Open AI Assistant"
-      >
-        {isOpen ? (
-          <TbX size={24} />
-        ) : (
-          <TbSparkles size={24} />
-        )}
-      </button>
-    </div>
+      <div ref={widgetRef} className="fixed bottom-6 right-6 z-50">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className={`w-14 h-14 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center ${
+            isOpen ? 'rotate-45' : 'hover:scale-110 hover:animate-pulse'
+          }`}
+          aria-label="Open AI Assistant"
+        >
+          {isOpen ? (
+            <TbX size={24} />
+          ) : (
+            <TbSparkles size={24} />
+          )}
+        </button>
+      </div>
+    </>
   );
 };
 

@@ -50,7 +50,7 @@ const Web3IdentityCard = ({
     backgroundSize: '100% 100%',
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
-    padding: '24px',
+    padding: '20px',
     display: 'inline-block',
     width: '100%',
     maxWidth: '100%',
@@ -71,6 +71,8 @@ const Web3IdentityCard = ({
     minHeight: '320px',
     position: 'relative',
     overflow: 'hidden',
+    width: '100%',
+    maxWidth: '100%',
   };
 
   const mutedTextStyle = {
@@ -149,7 +151,7 @@ const Web3IdentityCard = ({
 
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
+    <div className="w-full max-w-2xl mx-auto px-2 sm:px-0">
       {/* Dedicated Share Card Wrapper - Explicit background for pixel-perfect export */}
       <div
         id="share-card"
@@ -158,7 +160,7 @@ const Web3IdentityCard = ({
         {/* Identity Card - Always Dark/Premium appearance */}
         <div
           id="identity-card"
-          className="relative p-8"
+          className="relative p-6 sm:p-8 md:p-12"
           style={cardContainerStyle}
         >
         {/* Background Pattern */}
@@ -172,12 +174,12 @@ const Web3IdentityCard = ({
         {/* Content Container */}
         <div className="relative z-10 h-full flex flex-col">
           {/* Main Content Row */}
-          <div className="flex-1 flex items-center gap-8">
+          <div className="flex-1 flex flex-col sm:flex-row items-center sm:items-center gap-4 sm:gap-6 md:gap-8">
             {/* Left Side - Avatar & Rank */}
             <div className="flex-shrink-0 flex flex-col items-center">
               {/* Avatar with Glowing Ring */}
-              <div className="relative mb-4">
-                <div className="w-24 h-24 rounded-full flex items-center justify-center text-4xl shadow-lg overflow-hidden" style={avatarGradientStyle}>
+              <div className="relative mb-3 sm:mb-4">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-32 lg:h-32 rounded-full flex items-center justify-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl shadow-lg overflow-hidden" style={avatarGradientStyle}>
                   <div 
                     className="w-full h-full flex items-center justify-center"
                     dangerouslySetInnerHTML={{ __html: currentAvatar.svg }}
@@ -188,52 +190,52 @@ const Web3IdentityCard = ({
               </div>
               
               {/* Display Name Badge */}
-              <div className="backdrop-blur-sm rounded-full px-4 py-2" style={rankBadgeStyle}>
-                <span className="text-sm font-semibold">
+              <div className="backdrop-blur-sm rounded-full px-3 py-1.5 sm:px-4 sm:py-2" style={rankBadgeStyle}>
+                <span className="text-xs sm:text-sm md:text-base font-semibold">
                   {displayName}
                 </span>
               </div>
             </div>
 
             {/* Right Side - Info */}
-            <div className="flex-1 flex flex-col justify-between h-full">
+            <div className="flex-1 flex flex-col justify-between h-full w-full sm:w-auto">
               {/* Top Section - Logo */}
-              <div className="mb-4">
+              <div className="mb-3 sm:mb-4">
                 <div>
-                  <div className="text-2xl font-bold mb-1" style={logoGradientStyle}>
+                  <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-1" style={logoGradientStyle}>
                     ChainQuest
                   </div>
-                  <div className="text-xs" style={mutedTextStyle}>
+                  <div className="text-xs sm:text-sm md:text-base" style={mutedTextStyle}>
                     {language === 'tr' ? 'Web3 Öğrenme Platformu' : 'Web3 Learning Platform'}
                   </div>
                 </div>
               </div>
 
               {/* Wallet Address */}
-              <div className="mb-4">
+              <div className="mb-3 sm:mb-4">
                 <div className="text-xs mb-1" style={mutedTextStyle}>
                   {language === 'tr' ? 'Cüzdan Adresi' : 'Wallet Address'}
                 </div>
-                <div className="font-mono text-sm rounded px-3 py-2" style={inputStyle}>
+                <div className="font-mono text-xs sm:text-sm rounded px-2 py-1.5 sm:px-3 sm:py-2 break-all text-center overflow-wrap-anywhere" style={inputStyle}>
                   {formatAddress(publicKey)}
                 </div>
               </div>
 
               {/* CQT Earned - Large Gold Text */}
-              <div className="mb-4">
-                <div className="text-xs mb-2" style={mutedTextStyle}>
+              <div className="mb-3 sm:mb-4">
+                <div className="text-xs sm:text-sm mb-1 sm:mb-2" style={mutedTextStyle}>
                   {language === 'tr' ? 'Toplam Kazanılan' : 'Total Earned'}
                 </div>
-                <div className="text-4xl font-bold" style={cqtGradientStyle}>
+                <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold" style={cqtGradientStyle}>
                   {totalEarned.toLocaleString()} CQT
                 </div>
               </div>
 
               {/* Footer - Verified Badge & Date */}
-              <div className="flex items-center justify-between pt-4" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pt-3 sm:pt-4 gap-2 sm:gap-0" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: '#22c55e' }}>
-                    <TbCheck className="w-4 h-4" style={{ color: '#ffffff' }} />
+                  <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: '#22c55e' }}>
+                    <TbCheck className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: '#ffffff' }} />
                   </div>
                   <span className="text-xs font-medium" style={verifiedTextStyle}>
                     {language === 'tr' ? 'Doğrulanmış Öğrenci' : 'Verified Student'}
