@@ -219,6 +219,7 @@ const Header = ({ currentPage, onPageChange }) => {
             return (
               <button
                 key={item.id}
+                id={item.id === 'profile' ? 'tour-profile-link' : undefined}
                 onClick={() => handlePageChange(item.id)}
                 className={`nav-item-force inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer whitespace-nowrap flex-shrink-0 ${
                   currentPage === item.id
@@ -236,7 +237,7 @@ const Header = ({ currentPage, onPageChange }) => {
         {/* Right Zone: Wallet Controls + Language/Theme Toggles */}
         <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-4 flex-shrink-0 min-w-0">
           {/* Wallet Connection - Desktop: Full info, Mobile: Compact */}
-          <div className="hidden lg:flex items-center gap-2 sm:gap-3 flex-shrink-0">
+          <div id="tour-wallet-connect" className="hidden lg:flex items-center gap-2 sm:gap-3 flex-shrink-0">
             {publicKey ? (
               <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
                 <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">

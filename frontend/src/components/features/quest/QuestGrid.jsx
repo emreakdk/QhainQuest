@@ -265,6 +265,7 @@ const QuestGrid = ({ onPageChange }) => {
             
             {/* AI Quiz Generator Button */}
             <button
+              id="tour-ai-generator"
               onClick={() => onPageChange('ai-quiz')}
               className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold shadow-lg hover:shadow-indigo-500/30 hover:scale-105 transition-all duration-200 cursor-pointer text-sm sm:text-base"
             >
@@ -554,6 +555,7 @@ const QuestGrid = ({ onPageChange }) => {
           <div className="flex flex-wrap gap-2 items-center">
             {/* AI Quiz Generator Button - Desktop */}
             <button
+              id="tour-ai-generator"
               onClick={() => onPageChange('ai-quiz')}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold shadow-lg hover:shadow-indigo-500/30 hover:scale-105 transition-all duration-200 cursor-pointer text-sm"
             >
@@ -777,7 +779,7 @@ const QuestGrid = ({ onPageChange }) => {
       </div>
 
       {/* Quest Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 items-stretch">
+      <div id="tour-quest-list" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 items-stretch">
         {filteredQuests.map(quest => (
           <QuestCard
             key={quest.id}

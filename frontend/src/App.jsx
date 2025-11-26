@@ -15,6 +15,7 @@ import LearnWeb3 from './pages/LearnWeb3';
 import AIQuizGenerator from './pages/AIQuizGenerator';
 import GlobalLoader from './components/ui/GlobalLoader';
 import AIAssistantWidget from './components/features/ai/AIAssistantWidget';
+import AppTour from './components/features/onboarding/AppTour';
 
 function App() {
   return (
@@ -118,6 +119,7 @@ function AppContent() {
   return (
     <>
       <GlobalLoader isVisible={showGlobalLoader} />
+      <AppTour />
       <div className={`min-h-screen transition-colors duration-300 ${(publicKey || isDemoMode) ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white' : 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white'}`}>
         <Header currentPage={currentPage} onPageChange={handlePageChange} />
         <main className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white"> 
