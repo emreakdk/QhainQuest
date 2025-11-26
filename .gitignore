@@ -226,3 +226,4 @@ temp/
 .yarn/install-state.gz
 .pnp.*
 .vercel
+.cursor/
