@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect, useRef } from 'react';
 import { WalletContext } from '../../context/WalletContext';
 import { useToken } from '../../context/TokenContext';
 import { useBalance } from '../../context/BalanceContext';
@@ -22,7 +22,8 @@ import {
   TbMoon,
   TbMenu2,
   TbX,
-  TbCoins
+  TbCoins,
+  TbCheck
 } from 'react-icons/tb';
 
 const Header = ({ currentPage, onPageChange }) => {
@@ -30,12 +31,17 @@ const Header = ({ currentPage, onPageChange }) => {
   const { tokenData } = useToken(); // Get centralized token data
   const { claimableBalance, totalEarned } = useBalance(); // Get global balances
   const { theme, toggleTheme, isDarkMode } = useTheme();
-  const { t, toggleLanguage, language } = useLanguage();
+  const { t, toggleLanguage, language, setLanguage } = useLanguage();
   const { isTestActive, setIsTestActive } = useTestStatus();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isCompact, setIsCompact] = useState(false);
   const [showExitWarning, setShowExitWarning] = useState(false);
   const [pendingNavigation, setPendingNavigation] = useState(null);
+  const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
+  const langMenuRef = useRef(null);
+  
+  // Common style for header icon buttons (Language & Theme)
+  const headerButtonClass = "header-icon-btn p-2 rounded-lg transition-all duration-200 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/10 cursor-pointer";
 
   // Listen to window resize to toggle compact mode at 1500px breakpoint
   useEffect(() => {
@@ -53,6 +59,23 @@ const Header = ({ currentPage, onPageChange }) => {
       window.removeEventListener('resize', checkWidth);
     };
   }, []);
+
+  // Click outside handler for language menu
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (langMenuRef.current && !langMenuRef.current.contains(event.target)) {
+        setIsLangMenuOpen(false);
+      }
+    };
+
+    if (isLangMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isLangMenuOpen]);
 
   const navigationItems = [
     { id: 'learn-web3', label: t('nav.learnWeb3'), icon: TbSchool },
@@ -135,6 +158,26 @@ const Header = ({ currentPage, onPageChange }) => {
           color: #ffffff !important;
           stroke: #ffffff !important;
         }
+
+        /* Language Dropdown Hover Fix (Light Mode) */
+        .lang-menu-item:hover {
+          background-color: rgba(226, 232, 240, 0.7) !important; /* slate-200/70 */
+        }
+
+        /* Language Dropdown Hover Fix (Dark Mode) */
+        .dark .lang-menu-item:hover {
+          background-color: rgba(255, 255, 255, 0.1) !important; /* white/10 */
+        }
+
+        /* Header Icon Buttons Hover Fix (Light Mode Only) */
+        .header-icon-btn:hover {
+          background-color: #e2e8f0 !important; /* slate-200 */
+        }
+
+        /* Header Icon Buttons Hover Fix (Dark Mode) */
+        .dark .header-icon-btn:hover {
+          background-color: rgba(255, 255, 255, 0.1) !important; /* white/10 */
+        }
       `}</style>
       <nav className="container mx-auto flex items-center justify-between p-3 sm:p-4 gap-2 sm:gap-4">
         {/* Left Zone: Logo + CQT Chip (always visible) */}
@@ -191,7 +234,7 @@ const Header = ({ currentPage, onPageChange }) => {
         </div>
 
         {/* Right Zone: Wallet Controls + Language/Theme Toggles */}
-        <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-3 flex-shrink-0 min-w-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-4 flex-shrink-0 min-w-0">
           {/* Wallet Connection - Desktop: Full info, Mobile: Compact */}
           <div className="hidden lg:flex items-center gap-2 sm:gap-3 flex-shrink-0">
             {publicKey ? (
@@ -232,31 +275,59 @@ const Header = ({ currentPage, onPageChange }) => {
             )}
           </div>
 
-          {/* Language Toggle */}
-          <IconButton
-            onClick={toggleLanguage}
-            title={language === 'tr' ? 'Switch to English' : 'Türkçeye Geç'}
-            size="md"
-            variant="noFocus"
-            className="group hidden lg:flex"
-          >
-            <TbLanguage size={18} className="text-slate-700 dark:text-gray-300 group-hover:text-slate-900 dark:group-hover:text-gray-200 transition-colors" />
-          </IconButton>
+          {/* Language Dropdown Menu */}
+          <div className="relative hidden lg:block" ref={langMenuRef}>
+            {/* TRIGGER BUTTON */}
+            <button
+              onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
+              className={headerButtonClass}
+              title={t('nav.language') || 'Dil Seçimi'}
+            >
+              <TbLanguage size={20} />
+            </button>
+            
+            {/* DROPDOWN MENU */}
+            {isLangMenuOpen && (
+              <div className="absolute right-0 top-full mt-2 w-40 bg-white dark:bg-[#1f1f1f] border border-gray-200 dark:border-white/10 rounded-xl shadow-xl overflow-hidden z-50 p-1">
+                {['tr', 'en'].map((code) => (
+                  <button
+                    key={code}
+                    onClick={() => { setLanguage(code); setIsLangMenuOpen(false); }}
+                    className={`lang-menu-item w-full text-left px-3 py-2 rounded-lg text-sm font-medium flex items-center justify-between transition-colors cursor-pointer
+                      ${language === code 
+                        ? 'bg-slate-200/70 text-slate-900 dark:bg-white/10 dark:text-slate-200' 
+                        : 'text-slate-700 dark:text-slate-200'
+                      }
+                      hover:bg-slate-200 dark:hover:bg-white/10
+                    `}
+                  >
+                    <span>
+                      {language === 'tr' 
+                        ? (code === 'tr' ? 'Türkçe' : 'İngilizce')
+                        : (code === 'tr' ? 'Turkish' : 'English')
+                      }
+                    </span>
+                    {language === code && (
+                      <TbCheck size={16} className="text-slate-900 dark:text-white opacity-80" />
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* Theme Toggle Button */}
-          <IconButton
+          <button
             onClick={toggleTheme}
-            title={isDarkMode ? t('theme.switchToLight') : t('theme.switchToDark')}
-            size="md"
-            variant="noFocus"
-            className="group hidden lg:flex"
+            className={`${headerButtonClass} hidden lg:flex`}
+            title={isDarkMode ? t('theme.switchToLight') || 'Açık Tema' : t('theme.switchToDark') || 'Koyu Tema'}
           >
             {isDarkMode ? (
-              <TbSun size={18} className="text-slate-700 dark:text-gray-300 group-hover:text-slate-900 dark:group-hover:text-gray-200 transition-colors" />
+              <TbSun size={20} />
             ) : (
-              <TbMoon size={18} className="text-slate-700 dark:text-gray-300 group-hover:text-slate-900 dark:group-hover:text-gray-200 transition-colors" />
+              <TbMoon size={20} />
             )}
-          </IconButton>
+          </button>
 
           {/* Mobile Menu Button - Always show on mobile */}
           <IconButton

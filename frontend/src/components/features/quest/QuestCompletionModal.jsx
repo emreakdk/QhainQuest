@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import { useLanguage } from '../../../context/LanguageContext';
 import Button from '../../ui/Button';
-import { TbLoader, TbLock, TbCheck, TbWallet } from 'react-icons/tb';
+import { TbLoader, TbLock, TbCheck, TbWallet, TbAlertCircle } from 'react-icons/tb';
 
-const QuestCompletionModal = ({ quest, onClose, onComplete, onPageChange }) => {
+const QuestCompletionModal = ({ quest, onClose, onComplete, onPageChange, reward = null, isSuccess = true }) => {
   const { t, language } = useLanguage();
   const [step, setStep] = useState(1); // 1: Proof of Work, 2: Smart Contract, 3: Minting Token, 4: Success
   const [showModal, setShowModal] = useState(false);
@@ -43,33 +43,49 @@ const QuestCompletionModal = ({ quest, onClose, onComplete, onPageChange }) => {
 
   const trans = translations[language] || translations.en;
 
+  // Determine reward amount (use prop if provided, otherwise fallback to quest.rewardAmount)
+  const finalReward = reward !== null ? reward : (quest?.rewardAmount || 150);
+  const isFailure = finalReward === 0 || !isSuccess;
+
   useEffect(() => {
     // Modal açılış animasyonu
     setShowModal(true);
 
-    // Step 1: Proof of Work Doğrulanıyor (0s - 1.5s)
-    const step1Timer = setTimeout(() => {
-      setStep(2);
-    }, 1500);
+    // Only show loading steps if successful (has reward)
+    if (!isFailure) {
+      // Step 1: Proof of Work Doğrulanıyor (0s - 1.5s)
+      const step1Timer = setTimeout(() => {
+        setStep(2);
+      }, 1500);
 
-    // Step 2: Akıllı Kontrat İmzalanıyor (1.5s - 3s)
-    const step2Timer = setTimeout(() => {
-      setStep(3);
-    }, 3000);
+      // Step 2: Akıllı Kontrat İmzalanıyor (1.5s - 3s)
+      const step2Timer = setTimeout(() => {
+        setStep(3);
+      }, 3000);
 
-    // Step 3: CQT Token Basılıyor (3s - 4.5s)
-    const step3Timer = setTimeout(() => {
-      setStep(4);
-      // Confetti patlat
-      triggerConfetti();
-    }, 4500);
+      // Step 3: CQT Token Basılıyor (3s - 4.5s)
+      const step3Timer = setTimeout(() => {
+        setStep(4);
+        // Confetti patlat (only on success)
+        triggerConfetti();
+      }, 4500);
 
-    return () => {
-      clearTimeout(step1Timer);
-      clearTimeout(step2Timer);
-      clearTimeout(step3Timer);
-    };
-  }, []);
+      return () => {
+        clearTimeout(step1Timer);
+        clearTimeout(step2Timer);
+        clearTimeout(step3Timer);
+      };
+    } else {
+      // Failure: Skip loading steps, go directly to step 4 (failure UI)
+      const failureTimer = setTimeout(() => {
+        setStep(4);
+      }, 500);
+      
+      return () => {
+        clearTimeout(failureTimer);
+      };
+    }
+  }, [isFailure]);
 
   const triggerConfetti = () => {
     // Merkezden patlayan confetti
@@ -113,8 +129,6 @@ const QuestCompletionModal = ({ quest, onClose, onComplete, onPageChange }) => {
       onClose();
     }
   };
-
-  const rewardAmount = quest?.rewardAmount || 150;
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -180,20 +194,45 @@ const QuestCompletionModal = ({ quest, onClose, onComplete, onPageChange }) => {
 
             {step === 4 && (
               <div className="flex flex-col items-center justify-center space-y-4 py-8">
-                <div className="relative">
-                  <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow-lg shadow-green-500/50 animate-scale-in">
-                    <TbCheck className="w-12 h-12 text-white" />
-                  </div>
-                  <div className="absolute inset-0 bg-green-400/30 rounded-full blur-2xl animate-pulse"></div>
-                </div>
-                <div className="text-center">
-                  <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400 mb-2 animate-fade-in">
-                    {trans.successTitle}
-                  </h2>
-                  <p className="text-slate-300 text-sm">
-                    {trans.successDesc}
-                  </p>
-                </div>
+                {isFailure ? (
+                  // Failure State
+                  <>
+                    <div className="relative">
+                      <div className="w-20 h-20 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-full flex items-center justify-center shadow-lg shadow-yellow-500/50 animate-scale-in">
+                        <TbAlertCircle className="w-12 h-12 text-white" />
+                      </div>
+                      <div className="absolute inset-0 bg-yellow-500/30 rounded-full blur-2xl animate-pulse"></div>
+                    </div>
+                    <div className="text-center">
+                      <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-400 mb-2 animate-fade-in">
+                        {language === 'tr' ? 'Test Tamamlandı' : 'Quiz Completed'}
+                      </h2>
+                      <p className="text-slate-300 text-sm max-w-md">
+                        {language === 'tr' 
+                          ? 'Maalesef testte yanlış cevaplarınız olduğu için CQT Token kazanamadınız. Tekrar deneyerek kendinizi geliştirebilirsiniz.'
+                          : 'Unfortunately, you had incorrect answers in the quiz, so you could not earn CQT Tokens. You can improve yourself by trying again.'}
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  // Success State
+                  <>
+                    <div className="relative">
+                      <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow-lg shadow-green-500/50 animate-scale-in">
+                        <TbCheck className="w-12 h-12 text-white" />
+                      </div>
+                      <div className="absolute inset-0 bg-green-400/30 rounded-full blur-2xl animate-pulse"></div>
+                    </div>
+                    <div className="text-center">
+                      <h2 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400 mb-2 animate-fade-in">
+                        {trans.successTitle}
+                      </h2>
+                      <p className="text-slate-300 text-sm">
+                        {trans.successDesc}
+                      </p>
+                    </div>
+                  </>
+                )}
               </div>
             )}
           </div>
@@ -201,17 +240,33 @@ const QuestCompletionModal = ({ quest, onClose, onComplete, onPageChange }) => {
           {/* Body Section - Details Area */}
           {step === 4 && (
             <div className="px-8 py-6 space-y-6 animate-fade-in">
-              {/* Token Reward */}
-              <div className="text-center">
-                <div className="inline-block">
-                  <div className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-yellow-400 mb-2 animate-glow">
-                    +{rewardAmount} CQT
-                  </div>
-                  <div className="text-slate-400 text-sm">
-                    {trans.tokensAdded}
+              {/* Token Reward - Only show if reward > 0 */}
+              {!isFailure && finalReward > 0 && (
+                <div className="text-center">
+                  <div className="inline-block">
+                    <div className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-yellow-400 mb-2 animate-glow">
+                      +{finalReward} CQT
+                    </div>
+                    <div className="text-slate-400 text-sm">
+                      {trans.tokensAdded}
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
+              
+              {/* Failure State - Show 0 CQT or hide token display */}
+              {isFailure && (
+                <div className="text-center">
+                  <div className="inline-block">
+                    <div className="text-4xl font-bold text-slate-400 mb-2">
+                      0 CQT
+                    </div>
+                    <div className="text-slate-500 text-sm">
+                      {language === 'tr' ? 'Token kazanılamadı' : 'No tokens earned'}
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Quest Info */}
               {quest && (

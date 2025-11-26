@@ -25,7 +25,8 @@ import {
   TbRobot,
   TbPalette,
   TbCircle,
-  TbCircleDot
+  TbCircleDot,
+  TbSparkles
 } from 'react-icons/tb';
 
 const QuestQuiz = lazy(() => import('./QuestQuiz'));
@@ -247,8 +248,8 @@ const QuestGrid = ({ onPageChange }) => {
             {t('quest.description')}
           </p>
           
-          {/* Search Bar - Mobile optimized */}
-          <div className="mt-6 sm:mt-8 max-w-md mx-auto">
+          {/* Search Bar & AI Quiz Button - Mobile optimized */}
+          <div className="mt-6 sm:mt-8 max-w-md mx-auto space-y-3">
             <div className="relative">
               <input
                 type="text"
@@ -261,6 +262,15 @@ const QuestGrid = ({ onPageChange }) => {
                 <TbSearch size={18} className="text-[#4a90e2] dark:text-gray-300 flex-shrink-0" />
               </div>
             </div>
+            
+            {/* AI Quiz Generator Button */}
+            <button
+              onClick={() => onPageChange('ai-quiz')}
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold shadow-lg hover:shadow-indigo-500/30 hover:scale-105 transition-all duration-200 cursor-pointer text-sm sm:text-base"
+            >
+              <TbSparkles size={20} className="flex-shrink-0" />
+              <span>{t('quest.aiQuiz') || 'AI Sınavı Oluştur'}</span>
+            </button>
           </div>
         </div>
       </div>
@@ -541,7 +551,15 @@ const QuestGrid = ({ onPageChange }) => {
       {/* Desktop Filters - Keep existing layout for md and above */}
       <div className="hidden md:block bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
         <div className="flex flex-row items-center justify-between gap-4">
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 items-center">
+            {/* AI Quiz Generator Button - Desktop */}
+            <button
+              onClick={() => onPageChange('ai-quiz')}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold shadow-lg hover:shadow-indigo-500/30 hover:scale-105 transition-all duration-200 cursor-pointer text-sm"
+            >
+              <TbSparkles size={18} className="flex-shrink-0" />
+              <span>{t('quest.aiQuiz')}</span>
+            </button>
             {questCategories.map(category => {
               const categoryIcons = {
                 'all': TbBook,

@@ -48,9 +48,11 @@ class AIService {
    * @param {object} context - Additional context (quest data, etc.)
    * @param {string} questId - Optional quest ID
    * @param {string} language - Language code ('en' or 'tr')
+   * @param {array} history - Conversation history array
+   * @param {string} type - Request type ('explain', 'quiz', etc.), defaults to 'explain'
    * @returns {Promise<object>} AI response
    */
-  async explainConcept(prompt, context = {}, questId = null, language = 'en') {
+  async explainConcept(prompt, context = {}, questId = null, language = 'en', history = [], type = 'explain') {
     // Always call the API endpoint - no mock responses
     try {
       const response = await fetch(this.getApiUrl(), {
@@ -59,11 +61,12 @@ class AIService {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          type: 'explain',
+          type: type || 'explain',
           prompt,
           context,
           questId,
-          language: language || 'en'
+          language: language || 'en',
+          history: history || []
         }),
         signal: AbortSignal.timeout(this.timeout)
       });

@@ -4,6 +4,8 @@ import { useQuest } from '../../../context/QuestContext';
 import { WalletContext } from '../../../context/WalletContext';
 import { useBalance } from '../../../context/BalanceContext';
 import { useToken } from '../../../context/TokenContext';
+import { useUser } from '../../../context/UserContext';
+import { AVATARS } from '../../../data/avatarData';
 import { Card, CardContent } from '../../ui/Card';
 import Badge from '../../ui/Badge';
 import Button from '../../ui/Button';
@@ -12,14 +14,18 @@ import PublicKeyTooltip from '../../ui/PublicKeyTooltip';
 const Achievements = ({ onPageChange }) => {
   const { t } = useLanguage();
   const { publicKey } = useContext(WalletContext);
+  const { selectedAvatarId, displayName } = useUser();
   const { userStats } = useQuest();
   const { totalEarned } = useBalance(); // Live token balance
   const { tokenData } = useToken(); // Live quest data
   
+  // Get current avatar SVG
+  const currentAvatar = AVATARS.find(avatar => avatar.id === selectedAvatarId) || AVATARS[0];
+  
   const currentUser = {
     rank: 1, // Always #1 for personal dashboard
     address: publicKey || "Not Connected",
-    username: t('achievements.you'), // "You" in Turkish
+    username: displayName, // User's custom display name
     totalTokens: totalEarned || 0, // Live token balance
     certificates: tokenData.completedQuests || 0, // Live completed quests count
     completedQuests: tokenData.completedQuests || 0, // Live completed quests count
@@ -31,7 +37,7 @@ const Achievements = ({ onPageChange }) => {
       <div className="space-y-8 pt-4 sm:pt-6">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">
-            🏆 {t('achievements.pageTitle')}
+            {t('achievements.pageTitle')}
           </h1>
           <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
             {t('achievements.pageSubtitle')}
@@ -57,7 +63,7 @@ const Achievements = ({ onPageChange }) => {
       {/* Header */}
       <div className="text-center">
         <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">
-          🏆 {t('achievements.pageTitle')}
+          {t('achievements.pageTitle')}
         </h1>
         <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
           {t('achievements.pageSubtitle')}
@@ -68,9 +74,12 @@ const Achievements = ({ onPageChange }) => {
       <div className="max-w-md mx-auto mt-6 sm:mt-8">
         <Card className="relative overflow-hidden border-2 border-indigo-200 dark:border-indigo-700 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20">
           <CardContent className="p-8 text-center">
-            {/* Achievement Badge */}
-            <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-3xl font-bold text-white">
-              🏆
+            {/* User Avatar */}
+            <div className="w-24 h-24 md:w-32 md:h-32 mx-auto mb-6 rounded-full overflow-hidden border-4 border-indigo-500/30 dark:border-indigo-400/30 shadow-lg bg-gradient-to-br from-indigo-500 to-purple-600">
+              <div 
+                className="w-full h-full flex items-center justify-center"
+                dangerouslySetInnerHTML={{ __html: currentAvatar.svg }}
+              />
             </div>
 
             {/* User Info */}

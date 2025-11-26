@@ -43,7 +43,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { type, prompt, context = {}, questId, userAddress, language = 'en' } = req.body;
+    const { type, prompt, context = {}, questId, userAddress, language = 'en', history = [] } = req.body;
 
     // Normalize language early for error messages
     const requestLanguage = (language === 'tr' || language === 'turkish') ? 'tr' : 'en';
@@ -61,7 +61,7 @@ export default async function handler(req, res) {
     }
 
     // Validate type
-    const validTypes = ['explain', 'recommend', 'help', 'analyze'];
+    const validTypes = ['explain', 'recommend', 'help', 'analyze', 'quiz'];
     if (!validTypes.includes(type)) {
       const errorMessage = requestLanguage === 'tr'
         ? `Geçersiz tip. Şunlardan biri olmalıdır: ${validTypes.join(', ')}`
@@ -84,7 +84,7 @@ export default async function handler(req, res) {
     }
 
     // Get AI response with mode indicator
-    const aiResponseResult = await getAIResponse(type, prompt, context, questId, userAddress, normalizedLanguage);
+    const aiResponseResult = await getAIResponse(type, prompt, context, questId, userAddress, normalizedLanguage, history);
 
     const duration = Date.now() - startTime;
     console.log(`[${requestId}] AI response generated in ${duration}ms (type: ${type}, language: ${normalizedLanguage}, mode: ${aiResponseResult.mode})`);
@@ -138,7 +138,7 @@ export default async function handler(req, res) {
  * @param {string} language - Language code ('en' or 'tr')
  * @returns {Promise<{response: string, mode: 'huawei'|'cloud-fallback'}>} AI response with mode indicator
  */
-async function getAIResponse(type, prompt, context = {}, questId = null, userAddress = null, language = 'en') {
+async function getAIResponse(type, prompt, context = {}, questId = null, userAddress = null, language = 'en', history = []) {
   // Huawei Cloud LLM Configuration
   const HUAWEI_LLM_ENDPOINT = process.env.HUAWEI_LLM_ENDPOINT;
   const HUAWEI_LLM_TOKEN = process.env.HUAWEI_LLM_TOKEN;
@@ -151,7 +151,7 @@ async function getAIResponse(type, prompt, context = {}, questId = null, userAdd
   if (hasRequiredCredentials) {
     try {
       console.log('[AI Assistant] Calling Huawei Cloud LLM API with retry');
-      const response = await callHuaweiLLMWithRetry(type, prompt, context, questId, userAddress, language);
+      const response = await callHuaweiLLMWithRetry(type, prompt, context, questId, userAddress, language, history);
       return {
         response: response,
         mode: 'huawei'
@@ -187,7 +187,7 @@ async function getAIResponse(type, prompt, context = {}, questId = null, userAdd
  * @param {string} language - Language code ('en' or 'tr')
  * @returns {Promise<string>} AI response
  */
-async function callHuaweiLLMOnce(type, prompt, context, questId, userAddress, language = 'en') {
+async function callHuaweiLLMOnce(type, prompt, context, questId, userAddress, language = 'en', history = []) {
   const HUAWEI_LLM_ENDPOINT = process.env.HUAWEI_LLM_ENDPOINT;
   const HUAWEI_LLM_TOKEN = process.env.HUAWEI_LLM_TOKEN;
   const HUAWEI_LLM_MODEL = process.env.HUAWEI_LLM_MODEL || 'deepseek-v3.1';
@@ -199,11 +199,25 @@ async function callHuaweiLLMOnce(type, prompt, context, questId, userAddress, la
   // Build system prompt based on type and language
   const systemPrompt = buildSystemPrompt(type, context, questId, language);
 
-  // Prepare messages array
+  // Prepare messages array with conversation history
   const messages = [
-    { role: 'system', content: systemPrompt },
-    { role: 'user', content: prompt }
+    { role: 'system', content: systemPrompt }
   ];
+
+  // Add conversation history if provided (to maintain context and prevent repetitive introductions)
+  if (history && Array.isArray(history) && history.length > 0) {
+    history.forEach(entry => {
+      if (entry.prompt) {
+        messages.push({ role: 'user', content: entry.prompt });
+      }
+      if (entry.response) {
+        messages.push({ role: 'assistant', content: entry.response });
+      }
+    });
+  }
+
+  // Add current user message
+  messages.push({ role: 'user', content: prompt });
 
   // Use the exact endpoint provided (should already include /v1/chat/completions)
   // If it doesn't, append it
@@ -321,7 +335,7 @@ async function callHuaweiLLMOnce(type, prompt, context, questId, userAddress, la
  * @returns {Promise<string>} AI response
  * @throws {Error} If all attempts fail
  */
-async function callHuaweiLLMWithRetry(type, prompt, context, questId, userAddress, language = 'en') {
+async function callHuaweiLLMWithRetry(type, prompt, context, questId, userAddress, language = 'en', history = []) {
   const maxAttempts = 2;
   let lastError = null;
 
@@ -332,8 +346,8 @@ async function callHuaweiLLMWithRetry(type, prompt, context, questId, userAddres
         // Small delay before retry (exponential backoff: 500ms, 1000ms)
         await new Promise(resolve => setTimeout(resolve, 500 * attempt));
       }
-      
-      return await callHuaweiLLMOnce(type, prompt, context, questId, userAddress, language);
+
+      return await callHuaweiLLMOnce(type, prompt, context, questId, userAddress, language, history);
     } catch (error) {
       lastError = error;
       console.error(`[AI Assistant] Huawei LLM call attempt ${attempt}/${maxAttempts} failed:`, error.message);
@@ -455,8 +469,8 @@ function buildSystemPrompt(type, context, questId, language = 'en') {
   // Enhanced system prompt with ChainQuest Expert persona
   // This gives the AI a clear personality and role as a mentor
   const basePrompt = isTurkish
-    ? 'Sen "ChainQuest" adlı bir Web3 eğitim platformu için resmi AI Öğrenme Asistanısın. Amacın kullanıcılara Blockchain, Stellar ve Akıllı Kontratlar hakkında öğrenmelerinde yardımcı olmaktır. Yardımsever, cesaret verici ve özlü bir mentorsun. Teknik kod hakkında sorulduğunda, açık örnekler ver. Asla finansal tavsiye verme. Her zaman kullanıcının konuştuğu dilde (Türkçe veya İngilizce) yanıt ver.'
-    : 'You are the official AI Learning Assistant for "ChainQuest", a Web3 education platform. Your goal is to help users learn about Blockchain, Stellar, and Smart Contracts. You are helpful, encouraging, and concise. You act as a mentor. If asked about technical code, provide clear examples. Never give financial advice. Always answer in the language the user is speaking (Turkish or English).';
+    ? 'Sen "ChainQuest" adlı bir Web3 eğitim platformu için resmi AI Öğrenme Asistanısın. Amacın kullanıcılara Blockchain, Stellar ve Akıllı Kontratlar hakkında öğrenmelerinde yardımcı olmaktır. Yardımsever, cesaret verici ve özlü bir mentorsun. Teknik kod hakkında sorulduğunda, açık örnekler ver. Asla finansal tavsiye verme. Her zaman kullanıcının konuştuğu dilde (Türkçe veya İngilizce) yanıt ver. ÖNEMLİ: Kendini sadece konuşmanın ilk mesajında tanıt. Sonraki mesajlarda ismini veya unvanını tekrar etme. Kullanıcının sorularını doğrudan ve özlü bir şekilde yanıtla.'
+    : 'You are the official AI Learning Assistant for "ChainQuest", a Web3 education platform. Your goal is to help users learn about Blockchain, Stellar, and Smart Contracts. You are helpful, encouraging, and concise. You act as a mentor. If asked about technical code, provide clear examples. Never give financial advice. Always answer in the language the user is speaking (Turkish or English). IMPORTANT: Only introduce yourself in the very first message of the conversation. Do NOT repeat your name or title in subsequent responses. Answer the user\'s questions directly and concisely.';
 
   switch (type) {
     case 'explain':
@@ -478,6 +492,11 @@ function buildSystemPrompt(type, context, questId, language = 'en') {
       return isTurkish
         ? `${basePrompt} Kullanıcı ilerlemesini analiz et ve kişiselleştirilmiş öğrenme içgörüleri sağla.`
         : `${basePrompt} Analyze user progress and provide personalized learning insights.`;
+
+    case 'quiz':
+      return isTurkish
+        ? 'Sen bir Web3 eğitim platformu için uzman sınav hazırlayıcısısın. SADECE geçerli JSON çıktısı ver. Konuşma metni yazma. Hiçbir açıklama, ön ek veya son ek ekleme. Sadece JSON array döndür.'
+        : 'You are an expert exam creator for a Web3 education platform. Output ONLY valid JSON. No conversational text. Do not add any explanations, prefixes, or suffixes. Return only a JSON array.';
 
     default:
       return basePrompt;

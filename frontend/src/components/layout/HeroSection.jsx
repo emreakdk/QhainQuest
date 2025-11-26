@@ -6,6 +6,7 @@ import { useDeviceType } from '../../hooks/useDeviceType';
 import Button from '../ui/Button';
 import MobileWarning from '../ui/MobileWarning';
 import FreighterConnect from '../features/wallet/FreighterConnect';
+import Web3Particles from '../ui/Web3Particles';
 
 const HeroSection = ({ onPageChange }) => {
   const { publicKey, setPublicKey, isDemoMode, enterDemoMode, isConnected } = useContext(WalletContext);
@@ -30,6 +31,9 @@ const HeroSection = ({ onPageChange }) => {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 dark:from-slate-800 dark:via-purple-800 dark:to-slate-800">
+      {/* Web3 Particle Network Effect */}
+      <Web3Particles />
+      
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>

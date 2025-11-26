@@ -12,6 +12,7 @@ import UserProfile from './components/features/profile/UserProfile';
 import Achievements from './components/features/achievements/Achievements';
 import HowToClaimPage from './pages/HowToClaimPage';
 import LearnWeb3 from './pages/LearnWeb3';
+import AIQuizGenerator from './pages/AIQuizGenerator';
 import GlobalLoader from './components/ui/GlobalLoader';
 import AIAssistantWidget from './components/features/ai/AIAssistantWidget';
 
@@ -107,6 +108,8 @@ function AppContent() {
         return <HowToClaimPage onPageChange={handlePageChange} />;
       case 'learn-web3':
         return <LearnWeb3 onPageChange={handlePageChange} />;
+      case 'ai-quiz':
+        return <AIQuizGenerator onPageChange={handlePageChange} />;
       default:
         return <QuestGrid onPageChange={handlePageChange} />;
     }

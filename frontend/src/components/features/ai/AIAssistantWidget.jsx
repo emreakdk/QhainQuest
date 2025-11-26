@@ -172,8 +172,16 @@ const AIAssistantWidget = () => {
         console.log('[AI Assistant Widget] Submitting request:', { language, effectiveLanguage, prompt: userPrompt });
       }
       
-      // Call AI service with effective language
-      const result = await aiService.explainConcept(userPrompt, {}, null, effectiveLanguage);
+      // Prepare conversation history (excluding the current pending message)
+      const historyForAPI = history
+        .filter(entry => !entry.isPending && entry.response)
+        .map(entry => ({
+          prompt: entry.prompt,
+          response: entry.response
+        }));
+
+      // Call AI service with effective language and conversation history
+      const result = await aiService.explainConcept(userPrompt, {}, null, effectiveLanguage, historyForAPI);
       
       if (!result || !result.response) {
         throw new Error('Received empty response from AI service.');
@@ -238,8 +246,16 @@ const AIAssistantWidget = () => {
         console.log('[AI Assistant Widget] Quick question:', { language, effectiveLanguage, prompt: quickPrompt });
       }
       
-      // Call AI service with effective language
-      const result = await aiService.explainConcept(quickPrompt, {}, null, effectiveLanguage);
+      // Prepare conversation history (excluding the current pending message)
+      const historyForAPI = history
+        .filter(entry => !entry.isPending && entry.response)
+        .map(entry => ({
+          prompt: entry.prompt,
+          response: entry.response
+        }));
+
+      // Call AI service with effective language and conversation history
+      const result = await aiService.explainConcept(quickPrompt, {}, null, effectiveLanguage, historyForAPI);
       
       if (!result || !result.response) {
         throw new Error('Received empty response from AI service.');
@@ -284,7 +300,7 @@ const AIAssistantWidget = () => {
     en: {
       title: 'AI Assistant',
       subtitle: 'AI Learning Assistant',
-      subtitleHuawei: 'Powered by Huawei Cloud AI',
+      subtitleHuawei: 'Powered By Huawei.',
       tryAsking: 'Try asking:',
       placeholder: 'Ask me anything...',
       emptyState: 'Ask me anything about blockchain, Stellar, or your quests!',
@@ -301,7 +317,7 @@ const AIAssistantWidget = () => {
     tr: {
       title: 'AI Asistan',
       subtitle: 'AI Öğrenme Asistanı',
-      subtitleHuawei: 'Huawei Cloud AI ile desteklenmektedir',
+      subtitleHuawei: 'Huawei Tarafından Desteklenmektedir.',
       tryAsking: 'Şunu sormayı dene:',
       placeholder: 'Bana herhangi bir şey sor...',
       emptyState: 'Blockchain, Stellar veya görevlerin hakkında bana herhangi bir şey sor!',
@@ -353,7 +369,7 @@ const AIAssistantWidget = () => {
                 {history.length > 0 && (
                   <button
                     onClick={clearHistory}
-                    className="flex items-center gap-1 text-white/80 hover:text-white text-xs px-2 py-1 rounded-lg hover:bg-white/10 transition-colors"
+                    className="flex items-center gap-1 text-white/80 hover:text-white text-xs px-2 py-1 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
                     title="Clear history"
                   >
                     <TbTrash size={16} />
@@ -361,7 +377,7 @@ const AIAssistantWidget = () => {
                 )}
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="text-white/80 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/10"
+                  className="text-white/80 hover:text-white transition-colors p-1 rounded-lg hover:bg-white/10 cursor-pointer"
                   title="Close"
                 >
                   <TbX size={20} />
@@ -632,7 +648,7 @@ const AIAssistantWidget = () => {
       <div ref={widgetRef} className="fixed bottom-6 right-6 z-50">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className={`w-14 h-14 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center ${
+          className={`w-14 h-14 rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center cursor-pointer ${
             isOpen ? 'rotate-45' : 'hover:scale-110 hover:animate-pulse'
           }`}
           aria-label="Open AI Assistant"

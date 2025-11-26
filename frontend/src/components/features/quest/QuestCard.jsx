@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardFooter } from '../../ui/Card';
 import Button from '../../ui/Button';
 import Badge from '../../ui/Badge';
 import ProgressRing from '../../ui/ProgressRing';
+import SpotlightCard from '../../ui/SpotlightCard';
 import { difficultyLevels } from '../../../data/questData';
 import { 
   TbCheck, 
@@ -116,7 +117,8 @@ const QuestCard = ({ quest, userProgress, onStart, onContinue, userAddress }) =>
   };
 
   return (
-    <Card className="h-full flex flex-col hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 cursor-pointer group border-0 bg-white dark:bg-slate-800">
+    <SpotlightCard className="h-full">
+      <Card className="h-full flex flex-col hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 cursor-pointer group border-0 bg-white dark:bg-slate-800">
       <CardHeader className="relative overflow-hidden p-4 sm:p-6">
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-purple-500/5 to-pink-500/5 opacity-50"></div>
@@ -283,6 +285,7 @@ const QuestCard = ({ quest, userProgress, onStart, onContinue, userAddress }) =>
         {getActionButton(questStatus)}
       </CardFooter>
     </Card>
+    </SpotlightCard>
   );
 };
 
