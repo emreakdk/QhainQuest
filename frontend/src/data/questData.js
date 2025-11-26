@@ -381,248 +381,233 @@ export const questDatabase = [
   },
   
   {
-    id: 'blockchain-security',
-    nameKey: 'quests.blockchain_security.title',
-    descriptionKey: 'quests.blockchain_security.description',
-    category: 'blockchain',
+    id: 'smart-contract-gas-optimization',
+    nameKey: 'quests.smart_contract_gas_optimization.title',
+    descriptionKey: 'quests.smart_contract_gas_optimization.description',
+    category: 'smart-contracts',
     difficulty: 'intermediate',
     rewardAmount: 350,
-    timeEstimate: 35,
-    certificateNftUrl: 'https://ipfs.io/ipfs/QmBlockchainSecurityCert',
-    lessons: [
-      {
-        id: 'security-1',
-        questionKey: 'quests.blockchain_security.q1.question',
-        choices: [
-          'quests.blockchain_security.q1.option1',
-          'quests.blockchain_security.q1.option2',
-          'quests.blockchain_security.q1.option3',
-          'quests.blockchain_security.q1.option4',
-          'quests.blockchain_security.q1.option5'
-        ],
-        correctAnswerKey: 'quests.blockchain_security.q1.option3',
-        explanationKey: 'quests.blockchain_security.q1.explanation'
-      },
-      {
-        id: 'security-2',
-        questionKey: 'quests.blockchain_security.q2.question',
-        choices: [
-          'quests.blockchain_security.q2.option1',
-          'quests.blockchain_security.q2.option2',
-          'quests.blockchain_security.q2.option3',
-          'quests.blockchain_security.q2.option4',
-          'quests.blockchain_security.q2.option5'
-        ],
-        correctAnswerKey: 'quests.blockchain_security.q2.option2',
-        explanationKey: 'quests.blockchain_security.q2.explanation'
-      },
-      {
-        id: 'security-3',
-        questionKey: 'quests.blockchain_security.q3.question',
-        choices: [
-          'quests.blockchain_security.q3.option1',
-          'quests.blockchain_security.q3.option2',
-          'quests.blockchain_security.q3.option3',
-          'quests.blockchain_security.q3.option4',
-          'quests.blockchain_security.q3.option5'
-        ],
-        correctAnswerKey: 'quests.blockchain_security.q3.option3',
-        explanationKey: 'quests.blockchain_security.q3.explanation'
-      },
-      {
-        id: 'security-4',
-        questionKey: 'quests.blockchain_security.q4.question',
-        choices: [
-          'quests.blockchain_security.q4.option1',
-          'quests.blockchain_security.q4.option2',
-          'quests.blockchain_security.q4.option3',
-          'quests.blockchain_security.q4.option4',
-          'quests.blockchain_security.q4.option5'
-        ],
-        correctAnswerKey: 'quests.blockchain_security.q4.option1',
-        explanationKey: 'quests.blockchain_security.q4.explanation'
-      },
-      {
-        id: 'security-5',
-        questionKey: 'quests.blockchain_security.q5.question',
-        choices: [
-          'quests.blockchain_security.q5.option1',
-          'quests.blockchain_security.q5.option2',
-          'quests.blockchain_security.q5.option3',
-          'quests.blockchain_security.q5.option4',
-          'quests.blockchain_security.q5.option5'
-        ],
-        correctAnswerKey: 'quests.blockchain_security.q5.option3',
-        explanationKey: 'quests.blockchain_security.q5.explanation'
-      }
-    ],
-    prerequisites: [],
-    tags: ['security', 'blockchain', 'attacks'],
-    estimatedTime: '35 dakika',
-    completionRate: 0
-  },
-
-  {
-    id: 'decentralized-identity',
-    nameKey: 'quests.decentralized_identity.title',
-    descriptionKey: 'quests.decentralized_identity.description',
-    category: 'blockchain',
-    difficulty: 'advanced',
-    rewardAmount: 450,
     timeEstimate: 40,
-    certificateNftUrl: 'https://ipfs.io/ipfs/QmDIDCert',
+    certificateNftUrl: 'https://ipfs.io/ipfs/QmSmartContractGasOptimizationCert',
     lessons: [
       {
-        id: 'did-1',
-        questionKey: 'quests.decentralized_identity.q1.question',
+        id: 'sc-gas-1',
+        questionKey: 'quests.smart_contract_gas_optimization.q1.question',
         choices: [
-          'quests.decentralized_identity.q1.option1',
-          'quests.decentralized_identity.q1.option2',
-          'quests.decentralized_identity.q1.option3',
-          'quests.decentralized_identity.q1.option4',
-          'quests.decentralized_identity.q1.option5'
+          'quests.smart_contract_gas_optimization.q1.option1',
+          'quests.smart_contract_gas_optimization.q1.option2',
+          'quests.smart_contract_gas_optimization.q1.option3',
+          'quests.smart_contract_gas_optimization.q1.option4'
         ],
-        correctAnswerKey: 'quests.decentralized_identity.q1.option2',
-        explanationKey: 'quests.decentralized_identity.q1.explanation'
+        correctAnswerKey: 'quests.smart_contract_gas_optimization.q1.option2',
+        explanationKey: 'quests.smart_contract_gas_optimization.q1.explanation'
       },
       {
-        id: 'did-2',
-        questionKey: 'quests.decentralized_identity.q2.question',
+        id: 'sc-gas-2',
+        questionKey: 'quests.smart_contract_gas_optimization.q2.question',
         choices: [
-          'quests.decentralized_identity.q2.option1',
-          'quests.decentralized_identity.q2.option2',
-          'quests.decentralized_identity.q2.option3',
-          'quests.decentralized_identity.q2.option4',
-          'quests.decentralized_identity.q2.option5'
+          'quests.smart_contract_gas_optimization.q2.option1',
+          'quests.smart_contract_gas_optimization.q2.option2',
+          'quests.smart_contract_gas_optimization.q2.option3',
+          'quests.smart_contract_gas_optimization.q2.option4'
         ],
-        correctAnswerKey: 'quests.decentralized_identity.q2.option3',
-        explanationKey: 'quests.decentralized_identity.q2.explanation'
+        correctAnswerKey: 'quests.smart_contract_gas_optimization.q2.option3',
+        explanationKey: 'quests.smart_contract_gas_optimization.q2.explanation'
       },
       {
-        id: 'did-3',
-        questionKey: 'quests.decentralized_identity.q3.question',
+        id: 'sc-gas-3',
+        questionKey: 'quests.smart_contract_gas_optimization.q3.question',
         choices: [
-          'quests.decentralized_identity.q3.option1',
-          'quests.decentralized_identity.q3.option2',
-          'quests.decentralized_identity.q3.option3',
-          'quests.decentralized_identity.q3.option4',
-          'quests.decentralized_identity.q3.option5'
+          'quests.smart_contract_gas_optimization.q3.option1',
+          'quests.smart_contract_gas_optimization.q3.option2',
+          'quests.smart_contract_gas_optimization.q3.option3',
+          'quests.smart_contract_gas_optimization.q3.option4'
         ],
-        correctAnswerKey: 'quests.decentralized_identity.q3.option4',
-        explanationKey: 'quests.decentralized_identity.q3.explanation'
+        correctAnswerKey: 'quests.smart_contract_gas_optimization.q3.option1',
+        explanationKey: 'quests.smart_contract_gas_optimization.q3.explanation'
       },
       {
-        id: 'did-4',
-        questionKey: 'quests.decentralized_identity.q4.question',
+        id: 'sc-gas-4',
+        questionKey: 'quests.smart_contract_gas_optimization.q4.question',
         choices: [
-          'quests.decentralized_identity.q4.option1',
-          'quests.decentralized_identity.q4.option2',
-          'quests.decentralized_identity.q4.option3',
-          'quests.decentralized_identity.q4.option4',
-          'quests.decentralized_identity.q4.option5'
+          'quests.smart_contract_gas_optimization.q4.option1',
+          'quests.smart_contract_gas_optimization.q4.option2',
+          'quests.smart_contract_gas_optimization.q4.option3',
+          'quests.smart_contract_gas_optimization.q4.option4'
         ],
-        correctAnswerKey: 'quests.decentralized_identity.q4.option2',
-        explanationKey: 'quests.decentralized_identity.q4.explanation'
+        correctAnswerKey: 'quests.smart_contract_gas_optimization.q4.option4',
+        explanationKey: 'quests.smart_contract_gas_optimization.q4.explanation'
       },
       {
-        id: 'did-5',
-        questionKey: 'quests.decentralized_identity.q5.question',
+        id: 'sc-gas-5',
+        questionKey: 'quests.smart_contract_gas_optimization.q5.question',
         choices: [
-          'quests.decentralized_identity.q5.option1',
-          'quests.decentralized_identity.q5.option2',
-          'quests.decentralized_identity.q5.option3',
-          'quests.decentralized_identity.q5.option4',
-          'quests.decentralized_identity.q5.option5'
+          'quests.smart_contract_gas_optimization.q5.option1',
+          'quests.smart_contract_gas_optimization.q5.option2',
+          'quests.smart_contract_gas_optimization.q5.option3',
+          'quests.smart_contract_gas_optimization.q5.option4'
         ],
-        correctAnswerKey: 'quests.decentralized_identity.q5.option3',
-        explanationKey: 'quests.decentralized_identity.q5.explanation'
+        correctAnswerKey: 'quests.smart_contract_gas_optimization.q5.option2',
+        explanationKey: 'quests.smart_contract_gas_optimization.q5.explanation'
       }
     ],
     prerequisites: [],
-    tags: ['did', 'identity', 'web3', 'ssi'],
+    tags: ['smart-contracts', 'gas', 'optimization', 'efficiency'],
     estimatedTime: '40 dakika',
     completionRate: 0
   },
 
   {
-    id: 'layer2-scaling',
-    nameKey: 'quests.layer2_scaling.title',
-    descriptionKey: 'quests.layer2_scaling.description',
-    category: 'blockchain',
+    id: 'smart-contract-reentrancy',
+    nameKey: 'quests.smart_contract_reentrancy.title',
+    descriptionKey: 'quests.smart_contract_reentrancy.description',
+    category: 'smart-contracts',
     difficulty: 'advanced',
-    rewardAmount: 500,
+    rewardAmount: 450,
     timeEstimate: 45,
-    certificateNftUrl: 'https://ipfs.io/ipfs/QmLayer2Cert',
+    certificateNftUrl: 'https://ipfs.io/ipfs/QmSmartContractReentrancyCert',
     lessons: [
       {
-        id: 'l2-1',
-        questionKey: 'quests.layer2_scaling.q1.question',
+        id: 'sc-reentrancy-1',
+        questionKey: 'quests.smart_contract_reentrancy.q1.question',
         choices: [
-          'quests.layer2_scaling.q1.option1',
-          'quests.layer2_scaling.q1.option2',
-          'quests.layer2_scaling.q1.option3',
-          'quests.layer2_scaling.q1.option4',
-          'quests.layer2_scaling.q1.option5'
+          'quests.smart_contract_reentrancy.q1.option1',
+          'quests.smart_contract_reentrancy.q1.option2',
+          'quests.smart_contract_reentrancy.q1.option3',
+          'quests.smart_contract_reentrancy.q1.option4'
         ],
-        correctAnswerKey: 'quests.layer2_scaling.q1.option2',
-        explanationKey: 'quests.layer2_scaling.q1.explanation'
+        correctAnswerKey: 'quests.smart_contract_reentrancy.q1.option2',
+        explanationKey: 'quests.smart_contract_reentrancy.q1.explanation'
       },
       {
-        id: 'l2-2',
-        questionKey: 'quests.layer2_scaling.q2.question',
+        id: 'sc-reentrancy-2',
+        questionKey: 'quests.smart_contract_reentrancy.q2.question',
         choices: [
-          'quests.layer2_scaling.q2.option1',
-          'quests.layer2_scaling.q2.option2',
-          'quests.layer2_scaling.q2.option3',
-          'quests.layer2_scaling.q2.option4',
-          'quests.layer2_scaling.q2.option5'
+          'quests.smart_contract_reentrancy.q2.option1',
+          'quests.smart_contract_reentrancy.q2.option2',
+          'quests.smart_contract_reentrancy.q2.option3',
+          'quests.smart_contract_reentrancy.q2.option4'
         ],
-        correctAnswerKey: 'quests.layer2_scaling.q2.option3',
-        explanationKey: 'quests.layer2_scaling.q2.explanation'
+        correctAnswerKey: 'quests.smart_contract_reentrancy.q2.option3',
+        explanationKey: 'quests.smart_contract_reentrancy.q2.explanation'
       },
       {
-        id: 'l2-3',
-        questionKey: 'quests.layer2_scaling.q3.question',
+        id: 'sc-reentrancy-3',
+        questionKey: 'quests.smart_contract_reentrancy.q3.question',
         choices: [
-          'quests.layer2_scaling.q3.option1',
-          'quests.layer2_scaling.q3.option2',
-          'quests.layer2_scaling.q3.option3',
-          'quests.layer2_scaling.q3.option4',
-          'quests.layer2_scaling.q3.option5'
+          'quests.smart_contract_reentrancy.q3.option1',
+          'quests.smart_contract_reentrancy.q3.option2',
+          'quests.smart_contract_reentrancy.q3.option3',
+          'quests.smart_contract_reentrancy.q3.option4'
         ],
-        correctAnswerKey: 'quests.layer2_scaling.q3.option2',
-        explanationKey: 'quests.layer2_scaling.q3.explanation'
+        correctAnswerKey: 'quests.smart_contract_reentrancy.q3.option1',
+        explanationKey: 'quests.smart_contract_reentrancy.q3.explanation'
       },
       {
-        id: 'l2-4',
-        questionKey: 'quests.layer2_scaling.q4.question',
+        id: 'sc-reentrancy-4',
+        questionKey: 'quests.smart_contract_reentrancy.q4.question',
         choices: [
-          'quests.layer2_scaling.q4.option1',
-          'quests.layer2_scaling.q4.option2',
-          'quests.layer2_scaling.q4.option3',
-          'quests.layer2_scaling.q4.option4',
-          'quests.layer2_scaling.q4.option5'
+          'quests.smart_contract_reentrancy.q4.option1',
+          'quests.smart_contract_reentrancy.q4.option2',
+          'quests.smart_contract_reentrancy.q4.option3',
+          'quests.smart_contract_reentrancy.q4.option4'
         ],
-        correctAnswerKey: 'quests.layer2_scaling.q4.option3',
-        explanationKey: 'quests.layer2_scaling.q4.explanation'
+        correctAnswerKey: 'quests.smart_contract_reentrancy.q4.option4',
+        explanationKey: 'quests.smart_contract_reentrancy.q4.explanation'
       },
       {
-        id: 'l2-5',
-        questionKey: 'quests.layer2_scaling.q5.question',
+        id: 'sc-reentrancy-5',
+        questionKey: 'quests.smart_contract_reentrancy.q5.question',
         choices: [
-          'quests.layer2_scaling.q5.option1',
-          'quests.layer2_scaling.q5.option2',
-          'quests.layer2_scaling.q5.option3',
-          'quests.layer2_scaling.q5.option4',
-          'quests.layer2_scaling.q5.option5'
+          'quests.smart_contract_reentrancy.q5.option1',
+          'quests.smart_contract_reentrancy.q5.option2',
+          'quests.smart_contract_reentrancy.q5.option3',
+          'quests.smart_contract_reentrancy.q5.option4'
         ],
-        correctAnswerKey: 'quests.layer2_scaling.q5.option4',
-        explanationKey: 'quests.layer2_scaling.q5.explanation'
+        correctAnswerKey: 'quests.smart_contract_reentrancy.q5.option2',
+        explanationKey: 'quests.smart_contract_reentrancy.q5.explanation'
       }
     ],
     prerequisites: [],
-    tags: ['layer2', 'scaling', 'rollup'],
+    tags: ['smart-contracts', 'reentrancy', 'security', 'vulnerabilities'],
     estimatedTime: '45 dakika',
+    completionRate: 0
+  },
+
+  {
+    id: 'smart-contract-oracle',
+    nameKey: 'quests.smart_contract_oracle.title',
+    descriptionKey: 'quests.smart_contract_oracle.description',
+    category: 'smart-contracts',
+    difficulty: 'advanced',
+    rewardAmount: 420,
+    timeEstimate: 42,
+    certificateNftUrl: 'https://ipfs.io/ipfs/QmSmartContractOracleCert',
+    lessons: [
+      {
+        id: 'sc-oracle-1',
+        questionKey: 'quests.smart_contract_oracle.q1.question',
+        choices: [
+          'quests.smart_contract_oracle.q1.option1',
+          'quests.smart_contract_oracle.q1.option2',
+          'quests.smart_contract_oracle.q1.option3',
+          'quests.smart_contract_oracle.q1.option4'
+        ],
+        correctAnswerKey: 'quests.smart_contract_oracle.q1.option2',
+        explanationKey: 'quests.smart_contract_oracle.q1.explanation'
+      },
+      {
+        id: 'sc-oracle-2',
+        questionKey: 'quests.smart_contract_oracle.q2.question',
+        choices: [
+          'quests.smart_contract_oracle.q2.option1',
+          'quests.smart_contract_oracle.q2.option2',
+          'quests.smart_contract_oracle.q2.option3',
+          'quests.smart_contract_oracle.q2.option4'
+        ],
+        correctAnswerKey: 'quests.smart_contract_oracle.q2.option3',
+        explanationKey: 'quests.smart_contract_oracle.q2.explanation'
+      },
+      {
+        id: 'sc-oracle-3',
+        questionKey: 'quests.smart_contract_oracle.q3.question',
+        choices: [
+          'quests.smart_contract_oracle.q3.option1',
+          'quests.smart_contract_oracle.q3.option2',
+          'quests.smart_contract_oracle.q3.option3',
+          'quests.smart_contract_oracle.q3.option4'
+        ],
+        correctAnswerKey: 'quests.smart_contract_oracle.q3.option1',
+        explanationKey: 'quests.smart_contract_oracle.q3.explanation'
+      },
+      {
+        id: 'sc-oracle-4',
+        questionKey: 'quests.smart_contract_oracle.q4.question',
+        choices: [
+          'quests.smart_contract_oracle.q4.option1',
+          'quests.smart_contract_oracle.q4.option2',
+          'quests.smart_contract_oracle.q4.option3',
+          'quests.smart_contract_oracle.q4.option4'
+        ],
+        correctAnswerKey: 'quests.smart_contract_oracle.q4.option4',
+        explanationKey: 'quests.smart_contract_oracle.q4.explanation'
+      },
+      {
+        id: 'sc-oracle-5',
+        questionKey: 'quests.smart_contract_oracle.q5.question',
+        choices: [
+          'quests.smart_contract_oracle.q5.option1',
+          'quests.smart_contract_oracle.q5.option2',
+          'quests.smart_contract_oracle.q5.option3',
+          'quests.smart_contract_oracle.q5.option4'
+        ],
+        correctAnswerKey: 'quests.smart_contract_oracle.q5.option2',
+        explanationKey: 'quests.smart_contract_oracle.q5.explanation'
+      }
+    ],
+    prerequisites: [],
+    tags: ['smart-contracts', 'oracle', 'chainlink', 'price-feeds'],
+    estimatedTime: '42 dakika',
     completionRate: 0
   },
 
@@ -710,259 +695,259 @@ export const questDatabase = [
   
   // BEGINNER QUESTS (100-200 CQT)
   {
-    id: 'bitcoin-history',
-    nameKey: 'quests.bitcoin_history.title',
-    descriptionKey: 'quests.bitcoin_history.description',
-    category: 'blockchain',
-    difficulty: 'beginner',
-    rewardAmount: 150,
-    timeEstimate: 20,
-    certificateNftUrl: 'https://ipfs.io/ipfs/QmBitcoinHistoryCert',
+    id: 'defi-yield-farming',
+    nameKey: 'quests.defi_yield_farming.title',
+    descriptionKey: 'quests.defi_yield_farming.description',
+    category: 'defi',
+    difficulty: 'intermediate',
+    rewardAmount: 310,
+    timeEstimate: 38,
+    certificateNftUrl: 'https://ipfs.io/ipfs/QmDeFiYieldFarmingCert',
     lessons: [
       {
-        id: 'btc-1',
-        questionKey: 'quests.bitcoin_history.q1.question',
+        id: 'defi-yf-1',
+        questionKey: 'quests.defi_yield_farming.q1.question',
         choices: [
-          'quests.bitcoin_history.q1.option1',
-          'quests.bitcoin_history.q1.option2',
-          'quests.bitcoin_history.q1.option3',
-          'quests.bitcoin_history.q1.option4'
+          'quests.defi_yield_farming.q1.option1',
+          'quests.defi_yield_farming.q1.option2',
+          'quests.defi_yield_farming.q1.option3',
+          'quests.defi_yield_farming.q1.option4'
         ],
-        correctAnswerKey: 'quests.bitcoin_history.q1.option2',
-        explanationKey: 'quests.bitcoin_history.q1.explanation'
+        correctAnswerKey: 'quests.defi_yield_farming.q1.option2',
+        explanationKey: 'quests.defi_yield_farming.q1.explanation'
       },
       {
-        id: 'btc-2',
-        questionKey: 'quests.bitcoin_history.q2.question',
+        id: 'defi-yf-2',
+        questionKey: 'quests.defi_yield_farming.q2.question',
         choices: [
-          'quests.bitcoin_history.q2.option1',
-          'quests.bitcoin_history.q2.option2',
-          'quests.bitcoin_history.q2.option3',
-          'quests.bitcoin_history.q2.option4'
+          'quests.defi_yield_farming.q2.option1',
+          'quests.defi_yield_farming.q2.option2',
+          'quests.defi_yield_farming.q2.option3',
+          'quests.defi_yield_farming.q2.option4'
         ],
-        correctAnswerKey: 'quests.bitcoin_history.q2.option3',
-        explanationKey: 'quests.bitcoin_history.q2.explanation'
+        correctAnswerKey: 'quests.defi_yield_farming.q2.option3',
+        explanationKey: 'quests.defi_yield_farming.q2.explanation'
       },
       {
-        id: 'btc-3',
-        questionKey: 'quests.bitcoin_history.q3.question',
+        id: 'defi-yf-3',
+        questionKey: 'quests.defi_yield_farming.q3.question',
         choices: [
-          'quests.bitcoin_history.q3.option1',
-          'quests.bitcoin_history.q3.option2',
-          'quests.bitcoin_history.q3.option3',
-          'quests.bitcoin_history.q3.option4'
+          'quests.defi_yield_farming.q3.option1',
+          'quests.defi_yield_farming.q3.option2',
+          'quests.defi_yield_farming.q3.option3',
+          'quests.defi_yield_farming.q3.option4'
         ],
-        correctAnswerKey: 'quests.bitcoin_history.q3.option1',
-        explanationKey: 'quests.bitcoin_history.q3.explanation'
+        correctAnswerKey: 'quests.defi_yield_farming.q3.option1',
+        explanationKey: 'quests.defi_yield_farming.q3.explanation'
       },
       {
-        id: 'btc-4',
-        questionKey: 'quests.bitcoin_history.q4.question',
+        id: 'defi-yf-4',
+        questionKey: 'quests.defi_yield_farming.q4.question',
         choices: [
-          'quests.bitcoin_history.q4.option1',
-          'quests.bitcoin_history.q4.option2',
-          'quests.bitcoin_history.q4.option3',
-          'quests.bitcoin_history.q4.option4'
+          'quests.defi_yield_farming.q4.option1',
+          'quests.defi_yield_farming.q4.option2',
+          'quests.defi_yield_farming.q4.option3',
+          'quests.defi_yield_farming.q4.option4'
         ],
-        correctAnswerKey: 'quests.bitcoin_history.q4.option2',
-        explanationKey: 'quests.bitcoin_history.q4.explanation'
+        correctAnswerKey: 'quests.defi_yield_farming.q4.option2',
+        explanationKey: 'quests.defi_yield_farming.q4.explanation'
       }
     ],
     prerequisites: [],
-    tags: ['bitcoin', 'history', 'blockchain'],
-    estimatedTime: '20 dakika',
+    tags: ['defi', 'yield-farming', 'staking', 'rewards'],
+    estimatedTime: '38 dakika',
     completionRate: 0
   },
   {
-    id: 'wallet-types',
-    nameKey: 'quests.wallet_types.title',
-    descriptionKey: 'quests.wallet_types.description',
-    category: 'blockchain',
-    difficulty: 'beginner',
-    rewardAmount: 120,
-    timeEstimate: 15,
-    certificateNftUrl: 'https://ipfs.io/ipfs/QmWalletTypesCert',
+    id: 'defi-impermanent-loss',
+    nameKey: 'quests.defi_impermanent_loss.title',
+    descriptionKey: 'quests.defi_impermanent_loss.description',
+    category: 'defi',
+    difficulty: 'intermediate',
+    rewardAmount: 320,
+    timeEstimate: 35,
+    certificateNftUrl: 'https://ipfs.io/ipfs/QmDeFiImpermanentLossCert',
     lessons: [
       {
-        id: 'wallet-1',
-        questionKey: 'quests.wallet_types.q1.question',
+        id: 'defi-il-1',
+        questionKey: 'quests.defi_impermanent_loss.q1.question',
         choices: [
-          'quests.wallet_types.q1.option1',
-          'quests.wallet_types.q1.option2',
-          'quests.wallet_types.q1.option3',
-          'quests.wallet_types.q1.option4'
+          'quests.defi_impermanent_loss.q1.option1',
+          'quests.defi_impermanent_loss.q1.option2',
+          'quests.defi_impermanent_loss.q1.option3',
+          'quests.defi_impermanent_loss.q1.option4'
         ],
-        correctAnswerKey: 'quests.wallet_types.q1.option2',
-        explanationKey: 'quests.wallet_types.q1.explanation'
+        correctAnswerKey: 'quests.defi_impermanent_loss.q1.option2',
+        explanationKey: 'quests.defi_impermanent_loss.q1.explanation'
       },
       {
-        id: 'wallet-2',
-        questionKey: 'quests.wallet_types.q2.question',
+        id: 'defi-il-2',
+        questionKey: 'quests.defi_impermanent_loss.q2.question',
         choices: [
-          'quests.wallet_types.q2.option1',
-          'quests.wallet_types.q2.option2',
-          'quests.wallet_types.q2.option3',
-          'quests.wallet_types.q2.option4'
+          'quests.defi_impermanent_loss.q2.option1',
+          'quests.defi_impermanent_loss.q2.option2',
+          'quests.defi_impermanent_loss.q2.option3',
+          'quests.defi_impermanent_loss.q2.option4'
         ],
-        correctAnswerKey: 'quests.wallet_types.q2.option3',
-        explanationKey: 'quests.wallet_types.q2.explanation'
+        correctAnswerKey: 'quests.defi_impermanent_loss.q2.option3',
+        explanationKey: 'quests.defi_impermanent_loss.q2.explanation'
       },
       {
-        id: 'wallet-3',
-        questionKey: 'quests.wallet_types.q3.question',
+        id: 'defi-il-3',
+        questionKey: 'quests.defi_impermanent_loss.q3.question',
         choices: [
-          'quests.wallet_types.q3.option1',
-          'quests.wallet_types.q3.option2',
-          'quests.wallet_types.q3.option3',
-          'quests.wallet_types.q3.option4'
+          'quests.defi_impermanent_loss.q3.option1',
+          'quests.defi_impermanent_loss.q3.option2',
+          'quests.defi_impermanent_loss.q3.option3',
+          'quests.defi_impermanent_loss.q3.option4'
         ],
-        correctAnswerKey: 'quests.wallet_types.q3.option1',
-        explanationKey: 'quests.wallet_types.q3.explanation'
+        correctAnswerKey: 'quests.defi_impermanent_loss.q3.option1',
+        explanationKey: 'quests.defi_impermanent_loss.q3.explanation'
       },
       {
-        id: 'wallet-4',
-        questionKey: 'quests.wallet_types.q4.question',
+        id: 'defi-il-4',
+        questionKey: 'quests.defi_impermanent_loss.q4.question',
         choices: [
-          'quests.wallet_types.q4.option1',
-          'quests.wallet_types.q4.option2',
-          'quests.wallet_types.q4.option3',
-          'quests.wallet_types.q4.option4'
+          'quests.defi_impermanent_loss.q4.option1',
+          'quests.defi_impermanent_loss.q4.option2',
+          'quests.defi_impermanent_loss.q4.option3',
+          'quests.defi_impermanent_loss.q4.option4'
         ],
-        correctAnswerKey: 'quests.wallet_types.q4.option4',
-        explanationKey: 'quests.wallet_types.q4.explanation'
+        correctAnswerKey: 'quests.defi_impermanent_loss.q4.option4',
+        explanationKey: 'quests.defi_impermanent_loss.q4.explanation'
       }
     ],
     prerequisites: [],
-    tags: ['wallet', 'security', 'crypto'],
-    estimatedTime: '15 dakika',
+    tags: ['defi', 'impermanent-loss', 'liquidity', 'risk'],
+    estimatedTime: '35 dakika',
     completionRate: 0
   },
   {
-    id: 'gas-fees',
-    nameKey: 'quests.gas_fees.title',
-    descriptionKey: 'quests.gas_fees.description',
-    category: 'blockchain',
-    difficulty: 'beginner',
-    rewardAmount: 180,
-    timeEstimate: 18,
-    certificateNftUrl: 'https://ipfs.io/ipfs/QmGasFeesCert',
+    id: 'defi-amm',
+    nameKey: 'quests.defi_amm.title',
+    descriptionKey: 'quests.defi_amm.description',
+    category: 'defi',
+    difficulty: 'intermediate',
+    rewardAmount: 300,
+    timeEstimate: 32,
+    certificateNftUrl: 'https://ipfs.io/ipfs/QmDeFiAMMCert',
     lessons: [
       {
-        id: 'gas-1',
-        questionKey: 'quests.gas_fees.q1.question',
+        id: 'defi-amm-1',
+        questionKey: 'quests.defi_amm.q1.question',
         choices: [
-          'quests.gas_fees.q1.option1',
-          'quests.gas_fees.q1.option2',
-          'quests.gas_fees.q1.option3',
-          'quests.gas_fees.q1.option4'
+          'quests.defi_amm.q1.option1',
+          'quests.defi_amm.q1.option2',
+          'quests.defi_amm.q1.option3',
+          'quests.defi_amm.q1.option4'
         ],
-        correctAnswerKey: 'quests.gas_fees.q1.option3',
-        explanationKey: 'quests.gas_fees.q1.explanation'
+        correctAnswerKey: 'quests.defi_amm.q1.option2',
+        explanationKey: 'quests.defi_amm.q1.explanation'
       },
       {
-        id: 'gas-2',
-        questionKey: 'quests.gas_fees.q2.question',
+        id: 'defi-amm-2',
+        questionKey: 'quests.defi_amm.q2.question',
         choices: [
-          'quests.gas_fees.q2.option1',
-          'quests.gas_fees.q2.option2',
-          'quests.gas_fees.q2.option3',
-          'quests.gas_fees.q2.option4'
+          'quests.defi_amm.q2.option1',
+          'quests.defi_amm.q2.option2',
+          'quests.defi_amm.q2.option3',
+          'quests.defi_amm.q2.option4'
         ],
-        correctAnswerKey: 'quests.gas_fees.q2.option2',
-        explanationKey: 'quests.gas_fees.q2.explanation'
+        correctAnswerKey: 'quests.defi_amm.q2.option3',
+        explanationKey: 'quests.defi_amm.q2.explanation'
       },
       {
-        id: 'gas-3',
-        questionKey: 'quests.gas_fees.q3.question',
+        id: 'defi-amm-3',
+        questionKey: 'quests.defi_amm.q3.question',
         choices: [
-          'quests.gas_fees.q3.option1',
-          'quests.gas_fees.q3.option2',
-          'quests.gas_fees.q3.option3',
-          'quests.gas_fees.q3.option4'
+          'quests.defi_amm.q3.option1',
+          'quests.defi_amm.q3.option2',
+          'quests.defi_amm.q3.option3',
+          'quests.defi_amm.q3.option4'
         ],
-        correctAnswerKey: 'quests.gas_fees.q3.option1',
-        explanationKey: 'quests.gas_fees.q3.explanation'
+        correctAnswerKey: 'quests.defi_amm.q3.option1',
+        explanationKey: 'quests.defi_amm.q3.explanation'
       },
       {
-        id: 'gas-4',
-        questionKey: 'quests.gas_fees.q4.question',
+        id: 'defi-amm-4',
+        questionKey: 'quests.defi_amm.q4.question',
         choices: [
-          'quests.gas_fees.q4.option1',
-          'quests.gas_fees.q4.option2',
-          'quests.gas_fees.q4.option3',
-          'quests.gas_fees.q4.option4'
+          'quests.defi_amm.q4.option1',
+          'quests.defi_amm.q4.option2',
+          'quests.defi_amm.q4.option3',
+          'quests.defi_amm.q4.option4'
         ],
-        correctAnswerKey: 'quests.gas_fees.q4.option4',
-        explanationKey: 'quests.gas_fees.q4.explanation'
+        correctAnswerKey: 'quests.defi_amm.q4.option4',
+        explanationKey: 'quests.defi_amm.q4.explanation'
       }
     ],
     prerequisites: [],
-    tags: ['gas', 'fees', 'ethereum', 'transactions'],
-    estimatedTime: '18 dakika',
+    tags: ['defi', 'amm', 'uniswap', 'curve', 'balancer'],
+    estimatedTime: '32 dakika',
     completionRate: 0
   },
   {
-    id: 'mining-vs-staking',
-    nameKey: 'quests.mining_vs_staking.title',
-    descriptionKey: 'quests.mining_vs_staking.description',
-    category: 'blockchain',
-    difficulty: 'beginner',
-    rewardAmount: 160,
-    timeEstimate: 20,
-    certificateNftUrl: 'https://ipfs.io/ipfs/QmMiningStakingCert',
+    id: 'defi-liquidity-pools',
+    nameKey: 'quests.defi_liquidity_pools.title',
+    descriptionKey: 'quests.defi_liquidity_pools.description',
+    category: 'defi',
+    difficulty: 'intermediate',
+    rewardAmount: 280,
+    timeEstimate: 30,
+    certificateNftUrl: 'https://ipfs.io/ipfs/QmDeFiLiquidityPoolsCert',
     lessons: [
       {
-        id: 'ms-1',
-        questionKey: 'quests.mining_vs_staking.q1.question',
+        id: 'defi-lp-1',
+        questionKey: 'quests.defi_liquidity_pools.q1.question',
         choices: [
-          'quests.mining_vs_staking.q1.option1',
-          'quests.mining_vs_staking.q1.option2',
-          'quests.mining_vs_staking.q1.option3',
-          'quests.mining_vs_staking.q1.option4'
+          'quests.defi_liquidity_pools.q1.option1',
+          'quests.defi_liquidity_pools.q1.option2',
+          'quests.defi_liquidity_pools.q1.option3',
+          'quests.defi_liquidity_pools.q1.option4'
         ],
-        correctAnswerKey: 'quests.mining_vs_staking.q1.option1',
-        explanationKey: 'quests.mining_vs_staking.q1.explanation'
+        correctAnswerKey: 'quests.defi_liquidity_pools.q1.option2',
+        explanationKey: 'quests.defi_liquidity_pools.q1.explanation'
       },
       {
-        id: 'ms-2',
-        questionKey: 'quests.mining_vs_staking.q2.question',
+        id: 'defi-lp-2',
+        questionKey: 'quests.defi_liquidity_pools.q2.question',
         choices: [
-          'quests.mining_vs_staking.q2.option1',
-          'quests.mining_vs_staking.q2.option2',
-          'quests.mining_vs_staking.q2.option3',
-          'quests.mining_vs_staking.q2.option4'
+          'quests.defi_liquidity_pools.q2.option1',
+          'quests.defi_liquidity_pools.q2.option2',
+          'quests.defi_liquidity_pools.q2.option3',
+          'quests.defi_liquidity_pools.q2.option4'
         ],
-        correctAnswerKey: 'quests.mining_vs_staking.q2.option3',
-        explanationKey: 'quests.mining_vs_staking.q2.explanation'
+        correctAnswerKey: 'quests.defi_liquidity_pools.q2.option3',
+        explanationKey: 'quests.defi_liquidity_pools.q2.explanation'
       },
       {
-        id: 'ms-3',
-        questionKey: 'quests.mining_vs_staking.q3.question',
+        id: 'defi-lp-3',
+        questionKey: 'quests.defi_liquidity_pools.q3.question',
         choices: [
-          'quests.mining_vs_staking.q3.option1',
-          'quests.mining_vs_staking.q3.option2',
-          'quests.mining_vs_staking.q3.option3',
-          'quests.mining_vs_staking.q3.option4'
+          'quests.defi_liquidity_pools.q3.option1',
+          'quests.defi_liquidity_pools.q3.option2',
+          'quests.defi_liquidity_pools.q3.option3',
+          'quests.defi_liquidity_pools.q3.option4'
         ],
-        correctAnswerKey: 'quests.mining_vs_staking.q3.option2',
-        explanationKey: 'quests.mining_vs_staking.q3.explanation'
+        correctAnswerKey: 'quests.defi_liquidity_pools.q3.option1',
+        explanationKey: 'quests.defi_liquidity_pools.q3.explanation'
       },
       {
-        id: 'ms-4',
-        questionKey: 'quests.mining_vs_staking.q4.question',
+        id: 'defi-lp-4',
+        questionKey: 'quests.defi_liquidity_pools.q4.question',
         choices: [
-          'quests.mining_vs_staking.q4.option1',
-          'quests.mining_vs_staking.q4.option2',
-          'quests.mining_vs_staking.q4.option3',
-          'quests.mining_vs_staking.q4.option4'
+          'quests.defi_liquidity_pools.q4.option1',
+          'quests.defi_liquidity_pools.q4.option2',
+          'quests.defi_liquidity_pools.q4.option3',
+          'quests.defi_liquidity_pools.q4.option4'
         ],
-        correctAnswerKey: 'quests.mining_vs_staking.q4.option4',
-        explanationKey: 'quests.mining_vs_staking.q4.explanation'
+        correctAnswerKey: 'quests.defi_liquidity_pools.q4.option4',
+        explanationKey: 'quests.defi_liquidity_pools.q4.explanation'
       }
     ],
     prerequisites: [],
-    tags: ['mining', 'staking', 'pow', 'pos', 'consensus'],
-    estimatedTime: '20 dakika',
+    tags: ['defi', 'liquidity', 'pools', 'uniswap', 'amm'],
+    estimatedTime: '30 dakika',
     completionRate: 0
   },
   {
@@ -1030,131 +1015,131 @@ export const questDatabase = [
     completionRate: 0
   },
   {
-    id: 'web3-browsers',
-    nameKey: 'quests.web3_browsers.title',
-    descriptionKey: 'quests.web3_browsers.description',
-    category: 'blockchain',
+    id: 'nft-metadata',
+    nameKey: 'quests.nft_metadata.title',
+    descriptionKey: 'quests.nft_metadata.description',
+    category: 'nft',
     difficulty: 'beginner',
-    rewardAmount: 110,
-    timeEstimate: 15,
-    certificateNftUrl: 'https://ipfs.io/ipfs/QmWeb3BrowsersCert',
+    rewardAmount: 150,
+    timeEstimate: 20,
+    certificateNftUrl: 'https://ipfs.io/ipfs/QmNFTMetadataCert',
     lessons: [
       {
-        id: 'browser-1',
-        questionKey: 'quests.web3_browsers.q1.question',
+        id: 'nft-metadata-1',
+        questionKey: 'quests.nft_metadata.q1.question',
         choices: [
-          'quests.web3_browsers.q1.option1',
-          'quests.web3_browsers.q1.option2',
-          'quests.web3_browsers.q1.option3',
-          'quests.web3_browsers.q1.option4'
+          'quests.nft_metadata.q1.option1',
+          'quests.nft_metadata.q1.option2',
+          'quests.nft_metadata.q1.option3',
+          'quests.nft_metadata.q1.option4'
         ],
-        correctAnswerKey: 'quests.web3_browsers.q1.option2',
-        explanationKey: 'quests.web3_browsers.q1.explanation'
+        correctAnswerKey: 'quests.nft_metadata.q1.option2',
+        explanationKey: 'quests.nft_metadata.q1.explanation'
       },
       {
-        id: 'browser-2',
-        questionKey: 'quests.web3_browsers.q2.question',
+        id: 'nft-metadata-2',
+        questionKey: 'quests.nft_metadata.q2.question',
         choices: [
-          'quests.web3_browsers.q2.option1',
-          'quests.web3_browsers.q2.option2',
-          'quests.web3_browsers.q2.option3',
-          'quests.web3_browsers.q2.option4'
+          'quests.nft_metadata.q2.option1',
+          'quests.nft_metadata.q2.option2',
+          'quests.nft_metadata.q2.option3',
+          'quests.nft_metadata.q2.option4'
         ],
-        correctAnswerKey: 'quests.web3_browsers.q2.option3',
-        explanationKey: 'quests.web3_browsers.q2.explanation'
+        correctAnswerKey: 'quests.nft_metadata.q2.option3',
+        explanationKey: 'quests.nft_metadata.q2.explanation'
       },
       {
-        id: 'browser-3',
-        questionKey: 'quests.web3_browsers.q3.question',
+        id: 'nft-metadata-3',
+        questionKey: 'quests.nft_metadata.q3.question',
         choices: [
-          'quests.web3_browsers.q3.option1',
-          'quests.web3_browsers.q3.option2',
-          'quests.web3_browsers.q3.option3',
-          'quests.web3_browsers.q3.option4'
+          'quests.nft_metadata.q3.option1',
+          'quests.nft_metadata.q3.option2',
+          'quests.nft_metadata.q3.option3',
+          'quests.nft_metadata.q3.option4'
         ],
-        correctAnswerKey: 'quests.web3_browsers.q3.option1',
-        explanationKey: 'quests.web3_browsers.q3.explanation'
+        correctAnswerKey: 'quests.nft_metadata.q3.option1',
+        explanationKey: 'quests.nft_metadata.q3.explanation'
       },
       {
-        id: 'browser-4',
-        questionKey: 'quests.web3_browsers.q4.question',
+        id: 'nft-metadata-4',
+        questionKey: 'quests.nft_metadata.q4.question',
         choices: [
-          'quests.web3_browsers.q4.option1',
-          'quests.web3_browsers.q4.option2',
-          'quests.web3_browsers.q4.option3',
-          'quests.web3_browsers.q4.option4'
+          'quests.nft_metadata.q4.option1',
+          'quests.nft_metadata.q4.option2',
+          'quests.nft_metadata.q4.option3',
+          'quests.nft_metadata.q4.option4'
         ],
-        correctAnswerKey: 'quests.web3_browsers.q4.option4',
-        explanationKey: 'quests.web3_browsers.q4.explanation'
+        correctAnswerKey: 'quests.nft_metadata.q4.option4',
+        explanationKey: 'quests.nft_metadata.q4.explanation'
       }
     ],
     prerequisites: [],
-    tags: ['web3', 'browser', 'brave', 'wallet'],
-    estimatedTime: '15 dakika',
+    tags: ['nft', 'metadata', 'json', 'attributes'],
+    estimatedTime: '20 dakika',
     completionRate: 0
   },
   {
-    id: 'crypto-exchanges',
-    nameKey: 'quests.crypto_exchanges.title',
-    descriptionKey: 'quests.crypto_exchanges.description',
-    category: 'blockchain',
+    id: 'nft-minting',
+    nameKey: 'quests.nft_minting.title',
+    descriptionKey: 'quests.nft_minting.description',
+    category: 'nft',
     difficulty: 'beginner',
-    rewardAmount: 130,
-    timeEstimate: 16,
-    certificateNftUrl: 'https://ipfs.io/ipfs/QmCryptoExchangesCert',
+    rewardAmount: 160,
+    timeEstimate: 18,
+    certificateNftUrl: 'https://ipfs.io/ipfs/QmNFTMintingCert',
     lessons: [
       {
-        id: 'exchange-1',
-        questionKey: 'quests.crypto_exchanges.q1.question',
+        id: 'nft-minting-1',
+        questionKey: 'quests.nft_minting.q1.question',
         choices: [
-          'quests.crypto_exchanges.q1.option1',
-          'quests.crypto_exchanges.q1.option2',
-          'quests.crypto_exchanges.q1.option3',
-          'quests.crypto_exchanges.q1.option4'
+          'quests.nft_minting.q1.option1',
+          'quests.nft_minting.q1.option2',
+          'quests.nft_minting.q1.option3',
+          'quests.nft_minting.q1.option4'
         ],
-        correctAnswerKey: 'quests.crypto_exchanges.q1.option2',
-        explanationKey: 'quests.crypto_exchanges.q1.explanation'
+        correctAnswerKey: 'quests.nft_minting.q1.option2',
+        explanationKey: 'quests.nft_minting.q1.explanation'
       },
       {
-        id: 'exchange-2',
-        questionKey: 'quests.crypto_exchanges.q2.question',
+        id: 'nft-minting-2',
+        questionKey: 'quests.nft_minting.q2.question',
         choices: [
-          'quests.crypto_exchanges.q2.option1',
-          'quests.crypto_exchanges.q2.option2',
-          'quests.crypto_exchanges.q2.option3',
-          'quests.crypto_exchanges.q2.option4'
+          'quests.nft_minting.q2.option1',
+          'quests.nft_minting.q2.option2',
+          'quests.nft_minting.q2.option3',
+          'quests.nft_minting.q2.option4'
         ],
-        correctAnswerKey: 'quests.crypto_exchanges.q2.option1',
-        explanationKey: 'quests.crypto_exchanges.q2.explanation'
+        correctAnswerKey: 'quests.nft_minting.q2.option3',
+        explanationKey: 'quests.nft_minting.q2.explanation'
       },
       {
-        id: 'exchange-3',
-        questionKey: 'quests.crypto_exchanges.q3.question',
+        id: 'nft-minting-3',
+        questionKey: 'quests.nft_minting.q3.question',
         choices: [
-          'quests.crypto_exchanges.q3.option1',
-          'quests.crypto_exchanges.q3.option2',
-          'quests.crypto_exchanges.q3.option3',
-          'quests.crypto_exchanges.q3.option4'
+          'quests.nft_minting.q3.option1',
+          'quests.nft_minting.q3.option2',
+          'quests.nft_minting.q3.option3',
+          'quests.nft_minting.q3.option4'
         ],
-        correctAnswerKey: 'quests.crypto_exchanges.q3.option3',
-        explanationKey: 'quests.crypto_exchanges.q3.explanation'
+        correctAnswerKey: 'quests.nft_minting.q3.option1',
+        explanationKey: 'quests.nft_minting.q3.explanation'
       },
       {
-        id: 'exchange-4',
-        questionKey: 'quests.crypto_exchanges.q4.question',
+        id: 'nft-minting-4',
+        questionKey: 'quests.nft_minting.q4.question',
         choices: [
-          'quests.crypto_exchanges.q4.option1',
-          'quests.crypto_exchanges.q4.option2',
-          'quests.crypto_exchanges.q4.option3',
-          'quests.crypto_exchanges.q4.option4'
+          'quests.nft_minting.q4.option1',
+          'quests.nft_minting.q4.option2',
+          'quests.nft_minting.q4.option3',
+          'quests.nft_minting.q4.option4'
         ],
-        correctAnswerKey: 'quests.crypto_exchanges.q4.option4',
-        explanationKey: 'quests.crypto_exchanges.q4.explanation'
+        correctAnswerKey: 'quests.nft_minting.q4.option4',
+        explanationKey: 'quests.nft_minting.q4.explanation'
       }
     ],
     prerequisites: [],
-    tags: ['exchange', 'cex', 'dex', 'trading'],
-    estimatedTime: '16 dakika',
+    tags: ['nft', 'minting', 'creation', 'blockchain'],
+    estimatedTime: '18 dakika',
     completionRate: 0
   },
   
@@ -1300,79 +1285,79 @@ export const questDatabase = [
     completionRate: 0
   },
   {
-    id: 'dao-governance',
-    nameKey: 'quests.dao_governance.title',
-    descriptionKey: 'quests.dao_governance.description',
-    category: 'blockchain',
+    id: 'nft-erc721-vs-erc1155',
+    nameKey: 'quests.nft_erc721_vs_erc1155.title',
+    descriptionKey: 'quests.nft_erc721_vs_erc1155.description',
+    category: 'nft',
     difficulty: 'intermediate',
-    rewardAmount: 320,
-    timeEstimate: 40,
-    certificateNftUrl: 'https://ipfs.io/ipfs/QmDAOCert',
+    rewardAmount: 300,
+    timeEstimate: 35,
+    certificateNftUrl: 'https://ipfs.io/ipfs/QmNFTStandardsCert',
     lessons: [
       {
-        id: 'dao-1',
-        questionKey: 'quests.dao_governance.q1.question',
+        id: 'nft-standards-1',
+        questionKey: 'quests.nft_erc721_vs_erc1155.q1.question',
         choices: [
-          'quests.dao_governance.q1.option1',
-          'quests.dao_governance.q1.option2',
-          'quests.dao_governance.q1.option3',
-          'quests.dao_governance.q1.option4'
+          'quests.nft_erc721_vs_erc1155.q1.option1',
+          'quests.nft_erc721_vs_erc1155.q1.option2',
+          'quests.nft_erc721_vs_erc1155.q1.option3',
+          'quests.nft_erc721_vs_erc1155.q1.option4'
         ],
-        correctAnswerKey: 'quests.dao_governance.q1.option2',
-        explanationKey: 'quests.dao_governance.q1.explanation'
+        correctAnswerKey: 'quests.nft_erc721_vs_erc1155.q1.option2',
+        explanationKey: 'quests.nft_erc721_vs_erc1155.q1.explanation'
       },
       {
-        id: 'dao-2',
-        questionKey: 'quests.dao_governance.q2.question',
+        id: 'nft-standards-2',
+        questionKey: 'quests.nft_erc721_vs_erc1155.q2.question',
         choices: [
-          'quests.dao_governance.q2.option1',
-          'quests.dao_governance.q2.option2',
-          'quests.dao_governance.q2.option3',
-          'quests.dao_governance.q2.option4'
+          'quests.nft_erc721_vs_erc1155.q2.option1',
+          'quests.nft_erc721_vs_erc1155.q2.option2',
+          'quests.nft_erc721_vs_erc1155.q2.option3',
+          'quests.nft_erc721_vs_erc1155.q2.option4'
         ],
-        correctAnswerKey: 'quests.dao_governance.q2.option3',
-        explanationKey: 'quests.dao_governance.q2.explanation'
+        correctAnswerKey: 'quests.nft_erc721_vs_erc1155.q2.option3',
+        explanationKey: 'quests.nft_erc721_vs_erc1155.q2.explanation'
       },
       {
-        id: 'dao-3',
-        questionKey: 'quests.dao_governance.q3.question',
+        id: 'nft-standards-3',
+        questionKey: 'quests.nft_erc721_vs_erc1155.q3.question',
         choices: [
-          'quests.dao_governance.q3.option1',
-          'quests.dao_governance.q3.option2',
-          'quests.dao_governance.q3.option3',
-          'quests.dao_governance.q3.option4'
+          'quests.nft_erc721_vs_erc1155.q3.option1',
+          'quests.nft_erc721_vs_erc1155.q3.option2',
+          'quests.nft_erc721_vs_erc1155.q3.option3',
+          'quests.nft_erc721_vs_erc1155.q3.option4'
         ],
-        correctAnswerKey: 'quests.dao_governance.q3.option1',
-        explanationKey: 'quests.dao_governance.q3.explanation'
+        correctAnswerKey: 'quests.nft_erc721_vs_erc1155.q3.option1',
+        explanationKey: 'quests.nft_erc721_vs_erc1155.q3.explanation'
       },
       {
-        id: 'dao-4',
-        questionKey: 'quests.dao_governance.q4.question',
+        id: 'nft-standards-4',
+        questionKey: 'quests.nft_erc721_vs_erc1155.q4.question',
         choices: [
-          'quests.dao_governance.q4.option1',
-          'quests.dao_governance.q4.option2',
-          'quests.dao_governance.q4.option3',
-          'quests.dao_governance.q4.option4'
+          'quests.nft_erc721_vs_erc1155.q4.option1',
+          'quests.nft_erc721_vs_erc1155.q4.option2',
+          'quests.nft_erc721_vs_erc1155.q4.option3',
+          'quests.nft_erc721_vs_erc1155.q4.option4'
         ],
-        correctAnswerKey: 'quests.dao_governance.q4.option4',
-        explanationKey: 'quests.dao_governance.q4.explanation'
+        correctAnswerKey: 'quests.nft_erc721_vs_erc1155.q4.option4',
+        explanationKey: 'quests.nft_erc721_vs_erc1155.q4.explanation'
       },
       {
-        id: 'dao-5',
-        questionKey: 'quests.dao_governance.q5.question',
+        id: 'nft-standards-5',
+        questionKey: 'quests.nft_erc721_vs_erc1155.q5.question',
         choices: [
-          'quests.dao_governance.q5.option1',
-          'quests.dao_governance.q5.option2',
-          'quests.dao_governance.q5.option3',
-          'quests.dao_governance.q5.option4'
+          'quests.nft_erc721_vs_erc1155.q5.option1',
+          'quests.nft_erc721_vs_erc1155.q5.option2',
+          'quests.nft_erc721_vs_erc1155.q5.option3',
+          'quests.nft_erc721_vs_erc1155.q5.option4'
         ],
-        correctAnswerKey: 'quests.dao_governance.q5.option2',
-        explanationKey: 'quests.dao_governance.q5.explanation'
+        correctAnswerKey: 'quests.nft_erc721_vs_erc1155.q5.option2',
+        explanationKey: 'quests.nft_erc721_vs_erc1155.q5.explanation'
       }
     ],
     prerequisites: [],
-    tags: ['dao', 'governance', 'decentralized', 'voting'],
-    estimatedTime: '40 dakika',
+    tags: ['nft', 'erc721', 'erc1155', 'standards', 'ethereum'],
+    estimatedTime: '35 dakika',
     completionRate: 0
   },
   {
@@ -1440,67 +1425,67 @@ export const questDatabase = [
     completionRate: 0
   },
   {
-    id: 'cross-chain-bridges',
-    nameKey: 'quests.cross_chain_bridges.title',
-    descriptionKey: 'quests.cross_chain_bridges.description',
-    category: 'blockchain',
+    id: 'nft-royalty-fees',
+    nameKey: 'quests.nft_royalty_fees.title',
+    descriptionKey: 'quests.nft_royalty_fees.description',
+    category: 'nft',
     difficulty: 'intermediate',
-    rewardAmount: 290,
-    timeEstimate: 32,
-    certificateNftUrl: 'https://ipfs.io/ipfs/QmCrossChainBridgesCert',
+    rewardAmount: 280,
+    timeEstimate: 28,
+    certificateNftUrl: 'https://ipfs.io/ipfs/QmNFTRoyaltyCert',
     lessons: [
       {
-        id: 'bridge-1',
-        questionKey: 'quests.cross_chain_bridges.q1.question',
+        id: 'nft-royalty-1',
+        questionKey: 'quests.nft_royalty_fees.q1.question',
         choices: [
-          'quests.cross_chain_bridges.q1.option1',
-          'quests.cross_chain_bridges.q1.option2',
-          'quests.cross_chain_bridges.q1.option3',
-          'quests.cross_chain_bridges.q1.option4'
+          'quests.nft_royalty_fees.q1.option1',
+          'quests.nft_royalty_fees.q1.option2',
+          'quests.nft_royalty_fees.q1.option3',
+          'quests.nft_royalty_fees.q1.option4'
         ],
-        correctAnswerKey: 'quests.cross_chain_bridges.q1.option2',
-        explanationKey: 'quests.cross_chain_bridges.q1.explanation'
+        correctAnswerKey: 'quests.nft_royalty_fees.q1.option2',
+        explanationKey: 'quests.nft_royalty_fees.q1.explanation'
       },
       {
-        id: 'bridge-2',
-        questionKey: 'quests.cross_chain_bridges.q2.question',
+        id: 'nft-royalty-2',
+        questionKey: 'quests.nft_royalty_fees.q2.question',
         choices: [
-          'quests.cross_chain_bridges.q2.option1',
-          'quests.cross_chain_bridges.q2.option2',
-          'quests.cross_chain_bridges.q2.option3',
-          'quests.cross_chain_bridges.q2.option4'
+          'quests.nft_royalty_fees.q2.option1',
+          'quests.nft_royalty_fees.q2.option2',
+          'quests.nft_royalty_fees.q2.option3',
+          'quests.nft_royalty_fees.q2.option4'
         ],
-        correctAnswerKey: 'quests.cross_chain_bridges.q2.option3',
-        explanationKey: 'quests.cross_chain_bridges.q2.explanation'
+        correctAnswerKey: 'quests.nft_royalty_fees.q2.option3',
+        explanationKey: 'quests.nft_royalty_fees.q2.explanation'
       },
       {
-        id: 'bridge-3',
-        questionKey: 'quests.cross_chain_bridges.q3.question',
+        id: 'nft-royalty-3',
+        questionKey: 'quests.nft_royalty_fees.q3.question',
         choices: [
-          'quests.cross_chain_bridges.q3.option1',
-          'quests.cross_chain_bridges.q3.option2',
-          'quests.cross_chain_bridges.q3.option3',
-          'quests.cross_chain_bridges.q3.option4'
+          'quests.nft_royalty_fees.q3.option1',
+          'quests.nft_royalty_fees.q3.option2',
+          'quests.nft_royalty_fees.q3.option3',
+          'quests.nft_royalty_fees.q3.option4'
         ],
-        correctAnswerKey: 'quests.cross_chain_bridges.q3.option1',
-        explanationKey: 'quests.cross_chain_bridges.q3.explanation'
+        correctAnswerKey: 'quests.nft_royalty_fees.q3.option1',
+        explanationKey: 'quests.nft_royalty_fees.q3.explanation'
       },
       {
-        id: 'bridge-4',
-        questionKey: 'quests.cross_chain_bridges.q4.question',
+        id: 'nft-royalty-4',
+        questionKey: 'quests.nft_royalty_fees.q4.question',
         choices: [
-          'quests.cross_chain_bridges.q4.option1',
-          'quests.cross_chain_bridges.q4.option2',
-          'quests.cross_chain_bridges.q4.option3',
-          'quests.cross_chain_bridges.q4.option4'
+          'quests.nft_royalty_fees.q4.option1',
+          'quests.nft_royalty_fees.q4.option2',
+          'quests.nft_royalty_fees.q4.option3',
+          'quests.nft_royalty_fees.q4.option4'
         ],
-        correctAnswerKey: 'quests.cross_chain_bridges.q4.option4',
-        explanationKey: 'quests.cross_chain_bridges.q4.explanation'
+        correctAnswerKey: 'quests.nft_royalty_fees.q4.option4',
+        explanationKey: 'quests.nft_royalty_fees.q4.explanation'
       }
     ],
     prerequisites: [],
-    tags: ['bridge', 'cross-chain', 'interoperability'],
-    estimatedTime: '32 dakika',
+    tags: ['nft', 'royalty', 'fees', 'erc2981', 'marketplace'],
+    estimatedTime: '28 dakika',
     completionRate: 0
   },
   {
@@ -1646,79 +1631,79 @@ export const questDatabase = [
   
   // ADVANCED QUESTS (400-500 CQT)
   {
-    id: 'zero-knowledge-proofs',
-    nameKey: 'quests.zero_knowledge_proofs.title',
-    descriptionKey: 'quests.zero_knowledge_proofs.description',
-    category: 'blockchain',
-    difficulty: 'advanced',
-    rewardAmount: 450,
-    timeEstimate: 50,
-    certificateNftUrl: 'https://ipfs.io/ipfs/QmZKProofsCert',
+    id: 'smart-contract-solidity-basics',
+    nameKey: 'quests.smart_contract_solidity_basics.title',
+    descriptionKey: 'quests.smart_contract_solidity_basics.description',
+    category: 'smart-contracts',
+    difficulty: 'beginner',
+    rewardAmount: 200,
+    timeEstimate: 30,
+    certificateNftUrl: 'https://ipfs.io/ipfs/QmSmartContractSolidityBasicsCert',
     lessons: [
       {
-        id: 'zk-1',
-        questionKey: 'quests.zero_knowledge_proofs.q1.question',
+        id: 'sc-solidity-1',
+        questionKey: 'quests.smart_contract_solidity_basics.q1.question',
         choices: [
-          'quests.zero_knowledge_proofs.q1.option1',
-          'quests.zero_knowledge_proofs.q1.option2',
-          'quests.zero_knowledge_proofs.q1.option3',
-          'quests.zero_knowledge_proofs.q1.option4'
+          'quests.smart_contract_solidity_basics.q1.option1',
+          'quests.smart_contract_solidity_basics.q1.option2',
+          'quests.smart_contract_solidity_basics.q1.option3',
+          'quests.smart_contract_solidity_basics.q1.option4'
         ],
-        correctAnswerKey: 'quests.zero_knowledge_proofs.q1.option2',
-        explanationKey: 'quests.zero_knowledge_proofs.q1.explanation'
+        correctAnswerKey: 'quests.smart_contract_solidity_basics.q1.option2',
+        explanationKey: 'quests.smart_contract_solidity_basics.q1.explanation'
       },
       {
-        id: 'zk-2',
-        questionKey: 'quests.zero_knowledge_proofs.q2.question',
+        id: 'sc-solidity-2',
+        questionKey: 'quests.smart_contract_solidity_basics.q2.question',
         choices: [
-          'quests.zero_knowledge_proofs.q2.option1',
-          'quests.zero_knowledge_proofs.q2.option2',
-          'quests.zero_knowledge_proofs.q2.option3',
-          'quests.zero_knowledge_proofs.q2.option4'
+          'quests.smart_contract_solidity_basics.q2.option1',
+          'quests.smart_contract_solidity_basics.q2.option2',
+          'quests.smart_contract_solidity_basics.q2.option3',
+          'quests.smart_contract_solidity_basics.q2.option4'
         ],
-        correctAnswerKey: 'quests.zero_knowledge_proofs.q2.option3',
-        explanationKey: 'quests.zero_knowledge_proofs.q2.explanation'
+        correctAnswerKey: 'quests.smart_contract_solidity_basics.q2.option3',
+        explanationKey: 'quests.smart_contract_solidity_basics.q2.explanation'
       },
       {
-        id: 'zk-3',
-        questionKey: 'quests.zero_knowledge_proofs.q3.question',
+        id: 'sc-solidity-3',
+        questionKey: 'quests.smart_contract_solidity_basics.q3.question',
         choices: [
-          'quests.zero_knowledge_proofs.q3.option1',
-          'quests.zero_knowledge_proofs.q3.option2',
-          'quests.zero_knowledge_proofs.q3.option3',
-          'quests.zero_knowledge_proofs.q3.option4'
+          'quests.smart_contract_solidity_basics.q3.option1',
+          'quests.smart_contract_solidity_basics.q3.option2',
+          'quests.smart_contract_solidity_basics.q3.option3',
+          'quests.smart_contract_solidity_basics.q3.option4'
         ],
-        correctAnswerKey: 'quests.zero_knowledge_proofs.q3.option1',
-        explanationKey: 'quests.zero_knowledge_proofs.q3.explanation'
+        correctAnswerKey: 'quests.smart_contract_solidity_basics.q3.option1',
+        explanationKey: 'quests.smart_contract_solidity_basics.q3.explanation'
       },
       {
-        id: 'zk-4',
-        questionKey: 'quests.zero_knowledge_proofs.q4.question',
+        id: 'sc-solidity-4',
+        questionKey: 'quests.smart_contract_solidity_basics.q4.question',
         choices: [
-          'quests.zero_knowledge_proofs.q4.option1',
-          'quests.zero_knowledge_proofs.q4.option2',
-          'quests.zero_knowledge_proofs.q4.option3',
-          'quests.zero_knowledge_proofs.q4.option4'
+          'quests.smart_contract_solidity_basics.q4.option1',
+          'quests.smart_contract_solidity_basics.q4.option2',
+          'quests.smart_contract_solidity_basics.q4.option3',
+          'quests.smart_contract_solidity_basics.q4.option4'
         ],
-        correctAnswerKey: 'quests.zero_knowledge_proofs.q4.option4',
-        explanationKey: 'quests.zero_knowledge_proofs.q4.explanation'
+        correctAnswerKey: 'quests.smart_contract_solidity_basics.q4.option4',
+        explanationKey: 'quests.smart_contract_solidity_basics.q4.explanation'
       },
       {
-        id: 'zk-5',
-        questionKey: 'quests.zero_knowledge_proofs.q5.question',
+        id: 'sc-solidity-5',
+        questionKey: 'quests.smart_contract_solidity_basics.q5.question',
         choices: [
-          'quests.zero_knowledge_proofs.q5.option1',
-          'quests.zero_knowledge_proofs.q5.option2',
-          'quests.zero_knowledge_proofs.q5.option3',
-          'quests.zero_knowledge_proofs.q5.option4'
+          'quests.smart_contract_solidity_basics.q5.option1',
+          'quests.smart_contract_solidity_basics.q5.option2',
+          'quests.smart_contract_solidity_basics.q5.option3',
+          'quests.smart_contract_solidity_basics.q5.option4'
         ],
-        correctAnswerKey: 'quests.zero_knowledge_proofs.q5.option2',
-        explanationKey: 'quests.zero_knowledge_proofs.q5.explanation'
+        correctAnswerKey: 'quests.smart_contract_solidity_basics.q5.option2',
+        explanationKey: 'quests.smart_contract_solidity_basics.q5.explanation'
       }
     ],
     prerequisites: [],
-    tags: ['zk', 'privacy', 'scalability', 'cryptography'],
-    estimatedTime: '50 dakika',
+    tags: ['smart-contracts', 'solidity', 'ethereum', 'programming'],
+    estimatedTime: '30 dakika',
     completionRate: 0
   },
   {
@@ -1862,143 +1847,143 @@ export const questDatabase = [
     completionRate: 0
   },
   {
-    id: 'ipfs-filecoin',
-    nameKey: 'quests.ipfs_filecoin.title',
-    descriptionKey: 'quests.ipfs_filecoin.description',
-    category: 'blockchain',
+    id: 'defi-stablecoins-algorithmic',
+    nameKey: 'quests.defi_stablecoins_algorithmic.title',
+    descriptionKey: 'quests.defi_stablecoins_algorithmic.description',
+    category: 'defi',
     difficulty: 'advanced',
-    rewardAmount: 420,
-    timeEstimate: 48,
-    certificateNftUrl: 'https://ipfs.io/ipfs/QmIPFSFilecoinCert',
+    rewardAmount: 400,
+    timeEstimate: 45,
+    certificateNftUrl: 'https://ipfs.io/ipfs/QmDeFiStablecoinsAlgorithmicCert',
     lessons: [
       {
-        id: 'ipfs-1',
-        questionKey: 'quests.ipfs_filecoin.q1.question',
+        id: 'defi-stable-algo-1',
+        questionKey: 'quests.defi_stablecoins_algorithmic.q1.question',
         choices: [
-          'quests.ipfs_filecoin.q1.option1',
-          'quests.ipfs_filecoin.q1.option2',
-          'quests.ipfs_filecoin.q1.option3',
-          'quests.ipfs_filecoin.q1.option4'
+          'quests.defi_stablecoins_algorithmic.q1.option1',
+          'quests.defi_stablecoins_algorithmic.q1.option2',
+          'quests.defi_stablecoins_algorithmic.q1.option3',
+          'quests.defi_stablecoins_algorithmic.q1.option4'
         ],
-        correctAnswerKey: 'quests.ipfs_filecoin.q1.option2',
-        explanationKey: 'quests.ipfs_filecoin.q1.explanation'
+        correctAnswerKey: 'quests.defi_stablecoins_algorithmic.q1.option2',
+        explanationKey: 'quests.defi_stablecoins_algorithmic.q1.explanation'
       },
       {
-        id: 'ipfs-2',
-        questionKey: 'quests.ipfs_filecoin.q2.question',
+        id: 'defi-stable-algo-2',
+        questionKey: 'quests.defi_stablecoins_algorithmic.q2.question',
         choices: [
-          'quests.ipfs_filecoin.q2.option1',
-          'quests.ipfs_filecoin.q2.option2',
-          'quests.ipfs_filecoin.q2.option3',
-          'quests.ipfs_filecoin.q2.option4'
+          'quests.defi_stablecoins_algorithmic.q2.option1',
+          'quests.defi_stablecoins_algorithmic.q2.option2',
+          'quests.defi_stablecoins_algorithmic.q2.option3',
+          'quests.defi_stablecoins_algorithmic.q2.option4'
         ],
-        correctAnswerKey: 'quests.ipfs_filecoin.q2.option3',
-        explanationKey: 'quests.ipfs_filecoin.q2.explanation'
+        correctAnswerKey: 'quests.defi_stablecoins_algorithmic.q2.option3',
+        explanationKey: 'quests.defi_stablecoins_algorithmic.q2.explanation'
       },
       {
-        id: 'ipfs-3',
-        questionKey: 'quests.ipfs_filecoin.q3.question',
+        id: 'defi-stable-algo-3',
+        questionKey: 'quests.defi_stablecoins_algorithmic.q3.question',
         choices: [
-          'quests.ipfs_filecoin.q3.option1',
-          'quests.ipfs_filecoin.q3.option2',
-          'quests.ipfs_filecoin.q3.option3',
-          'quests.ipfs_filecoin.q3.option4'
+          'quests.defi_stablecoins_algorithmic.q3.option1',
+          'quests.defi_stablecoins_algorithmic.q3.option2',
+          'quests.defi_stablecoins_algorithmic.q3.option3',
+          'quests.defi_stablecoins_algorithmic.q3.option4'
         ],
-        correctAnswerKey: 'quests.ipfs_filecoin.q3.option1',
-        explanationKey: 'quests.ipfs_filecoin.q3.explanation'
+        correctAnswerKey: 'quests.defi_stablecoins_algorithmic.q3.option1',
+        explanationKey: 'quests.defi_stablecoins_algorithmic.q3.explanation'
       },
       {
-        id: 'ipfs-4',
-        questionKey: 'quests.ipfs_filecoin.q4.question',
+        id: 'defi-stable-algo-4',
+        questionKey: 'quests.defi_stablecoins_algorithmic.q4.question',
         choices: [
-          'quests.ipfs_filecoin.q4.option1',
-          'quests.ipfs_filecoin.q4.option2',
-          'quests.ipfs_filecoin.q4.option3',
-          'quests.ipfs_filecoin.q4.option4'
+          'quests.defi_stablecoins_algorithmic.q4.option1',
+          'quests.defi_stablecoins_algorithmic.q4.option2',
+          'quests.defi_stablecoins_algorithmic.q4.option3',
+          'quests.defi_stablecoins_algorithmic.q4.option4'
         ],
-        correctAnswerKey: 'quests.ipfs_filecoin.q4.option4',
-        explanationKey: 'quests.ipfs_filecoin.q4.explanation'
+        correctAnswerKey: 'quests.defi_stablecoins_algorithmic.q4.option4',
+        explanationKey: 'quests.defi_stablecoins_algorithmic.q4.explanation'
       }
     ],
     prerequisites: [],
-    tags: ['ipfs', 'filecoin', 'storage', 'decentralized'],
-    estimatedTime: '48 dakika',
+    tags: ['defi', 'stablecoin', 'algorithmic', 'dai', 'frax'],
+    estimatedTime: '45 dakika',
     completionRate: 0
   },
   {
-    id: 'tokenomics',
-    nameKey: 'quests.tokenomics.title',
-    descriptionKey: 'quests.tokenomics.description',
-    category: 'blockchain',
-    difficulty: 'advanced',
-    rewardAmount: 460,
-    timeEstimate: 50,
-    certificateNftUrl: 'https://ipfs.io/ipfs/QmTokenomicsCert',
+    id: 'smart-contract-soroban-structure',
+    nameKey: 'quests.smart_contract_soroban_structure.title',
+    descriptionKey: 'quests.smart_contract_soroban_structure.description',
+    category: 'smart-contracts',
+    difficulty: 'intermediate',
+    rewardAmount: 330,
+    timeEstimate: 40,
+    certificateNftUrl: 'https://ipfs.io/ipfs/QmSmartContractSorobanStructureCert',
     lessons: [
       {
-        id: 'tokenomics-1',
-        questionKey: 'quests.tokenomics.q1.question',
+        id: 'sc-soroban-1',
+        questionKey: 'quests.smart_contract_soroban_structure.q1.question',
         choices: [
-          'quests.tokenomics.q1.option1',
-          'quests.tokenomics.q1.option2',
-          'quests.tokenomics.q1.option3',
-          'quests.tokenomics.q1.option4'
+          'quests.smart_contract_soroban_structure.q1.option1',
+          'quests.smart_contract_soroban_structure.q1.option2',
+          'quests.smart_contract_soroban_structure.q1.option3',
+          'quests.smart_contract_soroban_structure.q1.option4'
         ],
-        correctAnswerKey: 'quests.tokenomics.q1.option2',
-        explanationKey: 'quests.tokenomics.q1.explanation'
+        correctAnswerKey: 'quests.smart_contract_soroban_structure.q1.option2',
+        explanationKey: 'quests.smart_contract_soroban_structure.q1.explanation'
       },
       {
-        id: 'tokenomics-2',
-        questionKey: 'quests.tokenomics.q2.question',
+        id: 'sc-soroban-2',
+        questionKey: 'quests.smart_contract_soroban_structure.q2.question',
         choices: [
-          'quests.tokenomics.q2.option1',
-          'quests.tokenomics.q2.option2',
-          'quests.tokenomics.q2.option3',
-          'quests.tokenomics.q2.option4'
+          'quests.smart_contract_soroban_structure.q2.option1',
+          'quests.smart_contract_soroban_structure.q2.option2',
+          'quests.smart_contract_soroban_structure.q2.option3',
+          'quests.smart_contract_soroban_structure.q2.option4'
         ],
-        correctAnswerKey: 'quests.tokenomics.q2.option3',
-        explanationKey: 'quests.tokenomics.q2.explanation'
+        correctAnswerKey: 'quests.smart_contract_soroban_structure.q2.option3',
+        explanationKey: 'quests.smart_contract_soroban_structure.q2.explanation'
       },
       {
-        id: 'tokenomics-3',
-        questionKey: 'quests.tokenomics.q3.question',
+        id: 'sc-soroban-3',
+        questionKey: 'quests.smart_contract_soroban_structure.q3.question',
         choices: [
-          'quests.tokenomics.q3.option1',
-          'quests.tokenomics.q3.option2',
-          'quests.tokenomics.q3.option3',
-          'quests.tokenomics.q3.option4'
+          'quests.smart_contract_soroban_structure.q3.option1',
+          'quests.smart_contract_soroban_structure.q3.option2',
+          'quests.smart_contract_soroban_structure.q3.option3',
+          'quests.smart_contract_soroban_structure.q3.option4'
         ],
-        correctAnswerKey: 'quests.tokenomics.q3.option1',
-        explanationKey: 'quests.tokenomics.q3.explanation'
+        correctAnswerKey: 'quests.smart_contract_soroban_structure.q3.option1',
+        explanationKey: 'quests.smart_contract_soroban_structure.q3.explanation'
       },
       {
-        id: 'tokenomics-4',
-        questionKey: 'quests.tokenomics.q4.question',
+        id: 'sc-soroban-4',
+        questionKey: 'quests.smart_contract_soroban_structure.q4.question',
         choices: [
-          'quests.tokenomics.q4.option1',
-          'quests.tokenomics.q4.option2',
-          'quests.tokenomics.q4.option3',
-          'quests.tokenomics.q4.option4'
+          'quests.smart_contract_soroban_structure.q4.option1',
+          'quests.smart_contract_soroban_structure.q4.option2',
+          'quests.smart_contract_soroban_structure.q4.option3',
+          'quests.smart_contract_soroban_structure.q4.option4'
         ],
-        correctAnswerKey: 'quests.tokenomics.q4.option4',
-        explanationKey: 'quests.tokenomics.q4.explanation'
+        correctAnswerKey: 'quests.smart_contract_soroban_structure.q4.option4',
+        explanationKey: 'quests.smart_contract_soroban_structure.q4.explanation'
       },
       {
-        id: 'tokenomics-5',
-        questionKey: 'quests.tokenomics.q5.question',
+        id: 'sc-soroban-5',
+        questionKey: 'quests.smart_contract_soroban_structure.q5.question',
         choices: [
-          'quests.tokenomics.q5.option1',
-          'quests.tokenomics.q5.option2',
-          'quests.tokenomics.q5.option3',
-          'quests.tokenomics.q5.option4'
+          'quests.smart_contract_soroban_structure.q5.option1',
+          'quests.smart_contract_soroban_structure.q5.option2',
+          'quests.smart_contract_soroban_structure.q5.option3',
+          'quests.smart_contract_soroban_structure.q5.option4'
         ],
-        correctAnswerKey: 'quests.tokenomics.q5.option2',
-        explanationKey: 'quests.tokenomics.q5.explanation'
+        correctAnswerKey: 'quests.smart_contract_soroban_structure.q5.option2',
+        explanationKey: 'quests.smart_contract_soroban_structure.q5.explanation'
       }
     ],
-    prerequisites: [],
-    tags: ['tokenomics', 'supply', 'demand', 'burn', 'economics'],
-    estimatedTime: '50 dakika',
+    prerequisites: ['soroban-smart-contracts'],
+    tags: ['smart-contracts', 'soroban', 'stellar', 'rust', 'structure'],
+    estimatedTime: '40 dakika',
     completionRate: 0
   },
   {

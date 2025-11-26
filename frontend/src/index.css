@@ -642,3 +642,118 @@
 .animate-fade-in-up {
   animation: fade-in-up 0.6s ease-out forwards;
 }
+
+/* Modern Driver.js Tour Theme - Toast Notification Style */
+.driver-popover.chainquest-tour-theme {
+  background: white !important;
+  border-radius: 1rem !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  border: 1px solid #e2e8f0 !important;
+  padding: 1rem !important;
+  max-width: 24rem !important;
+  font-family: inherit !important;
+}
+
+.dark .driver-popover.chainquest-tour-theme {
+  background: #1e293b !important;
+  border: 1px solid #475569 !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3) !important;
+}
+
+.driver-popover.chainquest-tour-theme .driver-popover-title {
+  display: flex !important;
+  align-items: center !important;
+  font-size: 1.125rem !important;
+  font-weight: 700 !important;
+  color: #1e293b !important;
+  margin-bottom: 0.5rem !important;
+  font-family: inherit !important;
+}
+
+.dark .driver-popover.chainquest-tour-theme .driver-popover-title {
+  color: #f1f5f9 !important;
+}
+
+.driver-popover.chainquest-tour-theme .driver-popover-description {
+  color: #475569 !important;
+  font-size: 0.875rem !important;
+  line-height: 1.5 !important;
+  font-family: inherit !important;
+}
+
+.dark .driver-popover.chainquest-tour-theme .driver-popover-description {
+  color: #cbd5e1 !important;
+}
+
+/* Buttons */
+.driver-popover.chainquest-tour-theme .driver-popover-footer {
+  margin-top: 1rem !important;
+  display: flex !important;
+  gap: 0.5rem !important;
+}
+
+.driver-popover.chainquest-tour-theme .driver-popover-footer button {
+  border-radius: 0.5rem !important;
+  padding: 0.5rem 1rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  transition: all 0.2s !important;
+  border: none !important;
+}
+
+.driver-popover.chainquest-tour-theme .driver-popover-next-btn,
+.driver-popover.chainquest-tour-theme .driver-popover-done-btn {
+  background: linear-gradient(to right, #4f46e5, #7c3aed) !important;
+  color: white !important;
+  box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2) !important;
+}
+
+.driver-popover.chainquest-tour-theme .driver-popover-next-btn:hover,
+.driver-popover.chainquest-tour-theme .driver-popover-done-btn:hover {
+  background: linear-gradient(to right, #4338ca, #6d28d9) !important;
+  box-shadow: 0 6px 8px -1px rgba(79, 70, 229, 0.3) !important;
+}
+
+.driver-popover.chainquest-tour-theme .driver-popover-prev-btn {
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+}
+
+.driver-popover.chainquest-tour-theme .driver-popover-prev-btn:hover {
+  background: #e2e8f0 !important;
+}
+
+.dark .driver-popover.chainquest-tour-theme .driver-popover-prev-btn {
+  background: #334155 !important;
+  color: #cbd5e1 !important;
+}
+
+.dark .driver-popover.chainquest-tour-theme .driver-popover-prev-btn:hover {
+  background: #475569 !important;
+}
+
+.driver-popover.chainquest-tour-theme .driver-popover-progress-text {
+  color: #94a3b8 !important;
+  font-size: 0.75rem !important;
+}
+
+.dark .driver-popover.chainquest-tour-theme .driver-popover-progress-text {
+  color: #64748b !important;
+}
+
+/* Close button */
+.driver-popover.chainquest-tour-theme .driver-popover-close-btn {
+  color: #94a3b8 !important;
+}
+
+.driver-popover.chainquest-tour-theme .driver-popover-close-btn:hover {
+  color: #64748b !important;
+}
+
+.dark .driver-popover.chainquest-tour-theme .driver-popover-close-btn {
+  color: #64748b !important;
+}
+
+.dark .driver-popover.chainquest-tour-theme .driver-popover-close-btn:hover {
+  color: #cbd5e1 !important;
+}

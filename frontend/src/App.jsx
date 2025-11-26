@@ -119,7 +119,7 @@ function AppContent() {
   return (
     <>
       <GlobalLoader isVisible={showGlobalLoader} />
-      <AppTour />
+      <AppTour currentPage={currentPage} isAuthenticated={!!(publicKey || isDemoMode)} />
       <div className={`min-h-screen transition-colors duration-300 ${(publicKey || isDemoMode) ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white' : 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white'}`}>
         <Header currentPage={currentPage} onPageChange={handlePageChange} />
         <main className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white"> 

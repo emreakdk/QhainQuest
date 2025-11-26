@@ -1,156 +1,122 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
+import { useLanguage } from "../../../context/LanguageContext";
 
-const AppTour = () => {
+const AppTour = ({ currentPage, isAuthenticated }) => {
+  const driverRef = useRef(null);
+  const { t, language } = useLanguage();
+
   useEffect(() => {
-    const hasSeenTour = localStorage.getItem("hasSeenTour");
-    
-    if (!hasSeenTour) {
-      // Check if dark mode is active
-      const isDarkMode = document.documentElement.classList.contains('dark');
-      
-      const driverObj = driver({
-        showProgress: true,
-        animate: true,
-        allowClose: true,
-        doneBtnText: "Tamamla",
-        nextBtnText: "İleri",
-        prevBtnText: "Geri",
-        popoverClass: isDarkMode ? 'driver-popover-dark' : 'driver-popover-light',
-        steps: [
-          {
-            element: "#tour-wallet-connect",
-            popover: {
-              title: "Cüzdanını Bağla 💼",
-              description: "Freighter cüzdanını bağlayarak ilerlemeyi kaydet ve ödülleri topla. Cüzdan bağlı değilse bu butona tıklayarak başlayabilirsin.",
-              side: "bottom",
-              align: "end"
-            }
-          },
-          {
-            element: "#tour-ai-generator",
-            popover: {
-              title: "AI Sınav Modu ✨",
-              description: "Yapay zeka ile istediğin konuda sınırsız test oluştur. Her test 20 CQT değerinde!",
-              side: "bottom",
-              align: "start"
-            }
-          },
-          {
-            element: "#tour-quest-list",
-            popover: {
-              title: "Görevleri Tamamla 📚",
-              description: "Farklı zorluk seviyelerindeki görevleri tamamla, CQT Token kazan ve sertifika al.",
-              side: "top",
-              align: "start"
-            }
-          },
-          {
-            element: "#tour-profile-link",
-            popover: {
-              title: "Profilin 👤",
-              description: "Kazandığın sertifikaları, rozetleri ve gelişmiş Web3 Kimlik Kartını buradan görüntüle.",
-              side: "bottom",
-              align: "start"
-            }
-          }
-        ],
-        onDestroy: () => {
-          localStorage.setItem("hasSeenTour", "true");
-        }
-      });
-
-      // Small delay to ensure DOM is ready
-      setTimeout(() => {
-        driverObj.drive();
-      }, 1500);
+    // 1. RESTRICTION: Do not run on Landing Page (user not authenticated)
+    if (!isAuthenticated) {
+      return;
     }
-  }, []);
 
-  return (
-    <>
-      <style>{`
-        /* Light Mode Styling */
-        .driver-popover-light {
-          background: white !important;
-          color: #1e293b !important;
-          border: 1px solid #e2e8f0 !important;
+    // 2. PERSISTENCE CHECK: Stop if already seen
+    const hasSeenTour = localStorage.getItem("hasSeenTour");
+    if (hasSeenTour === "true") {
+      return;
+    }
+
+    // 3. Guard: Only start tour on main app pages
+    if (!currentPage || currentPage === '') {
+      return;
+    }
+
+    // 4. CRITICAL: Mark as seen IMMEDIATELY before starting tour
+    // This prevents the tour from restarting on page refresh
+    localStorage.setItem("hasSeenTour", "true");
+
+    // 5. Check if dark mode is active
+    const isDarkMode = document.documentElement.classList.contains('dark');
+
+    // 6. Create icon HTML strings with proper Tabler icon paths
+    const iconStyle = `display: inline-flex; align-items: center; justify-content: center; padding: 6px; background: ${isDarkMode ? 'rgba(99, 102, 241, 0.2)' : '#eef2ff'}; color: ${isDarkMode ? '#818cf8' : '#4f46e5'}; border-radius: 8px; margin-right: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.1);`;
+    const svgBase = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">`;
+    
+    // TbWallet icon
+    const walletIconHtml = `<div style="${iconStyle}">${svgBase}<path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path></svg></div>`;
+    
+    // TbBrain icon (simplified brain icon)
+    const brainIconHtml = `<div style="${iconStyle}">${svgBase}<path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44L2.5 13.5a2.5 2.5 0 0 1 0-3.01l2.04-6.45A2.5 2.5 0 0 1 9.5 2Z"></path><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44L21.5 13.5a2.5 2.5 0 0 0 0-3.01l-2.04-6.45A2.5 2.5 0 0 0 14.5 2Z"></path></svg></div>`;
+    
+    // TbListCheck icon
+    const listIconHtml = `<div style="${iconStyle}">${svgBase}<path d="M10 6h11"></path><path d="M10 12h11"></path><path d="M10 18h11"></path><path d="M4 6h.01"></path><path d="M4 12h.01"></path><path d="M4 18h.01"></path></svg></div>`;
+    
+    // TbUserCircle icon
+    const userIconHtml = `<div style="${iconStyle}">${svgBase}<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>`;
+
+    // 7. Initialize Driver with localized content
+    driverRef.current = driver({
+      showProgress: true,
+      animate: true,
+      allowClose: true,
+      doneBtnText: t('tour.done'),
+      nextBtnText: t('tour.next'),
+      prevBtnText: t('tour.prev'),
+      popoverClass: 'chainquest-tour-theme',
+      steps: [
+        {
+          element: "#tour-wallet-connect",
+          popover: {
+            title: `${walletIconHtml}${t('tour.wallet.title')}`,
+            description: t('tour.wallet.desc'),
+            side: "bottom",
+            align: "end"
+          }
+        },
+        {
+          element: "#tour-ai-generator",
+          popover: {
+            title: `${brainIconHtml}${t('tour.ai.title')}`,
+            description: t('tour.ai.desc'),
+            side: "bottom",
+            align: "start"
+          }
+        },
+        {
+          element: "#tour-quest-list",
+          popover: {
+            title: `${listIconHtml}${t('tour.quests.title')}`,
+            description: t('tour.quests.desc'),
+            side: "top",
+            align: "start"
+          }
+        },
+        {
+          element: "#tour-profile-link",
+          popover: {
+            title: `${userIconHtml}${t('tour.profile.title')}`,
+            description: t('tour.profile.desc'),
+            side: "bottom",
+            align: "start"
+          }
         }
-        
-        .driver-popover-light .driver-popover-title {
-          color: #4f46e5 !important;
-          font-weight: 700 !important;
-        }
-        
-        .driver-popover-light .driver-popover-description {
-          color: #475569 !important;
-        }
-        
-        .driver-popover-light .driver-popover-footer button {
-          background: linear-gradient(to right, #4f46e5, #7c3aed) !important;
-          color: white !important;
-          border: none !important;
-          font-weight: 600 !important;
-        }
-        
-        .driver-popover-light .driver-popover-footer button:hover {
-          background: linear-gradient(to right, #4338ca, #6d28d9) !important;
-        }
-        
-        .driver-popover-light .driver-popover-footer button.driver-popover-prev-btn {
-          background: #f1f5f9 !important;
-          color: #475569 !important;
-        }
-        
-        .driver-popover-light .driver-popover-footer button.driver-popover-prev-btn:hover {
-          background: #e2e8f0 !important;
-        }
-        
-        /* Dark Mode Styling */
-        .driver-popover-dark {
-          background: #1e293b !important;
-          color: #f1f5f9 !important;
-          border: 1px solid #475569 !important;
-        }
-        
-        .driver-popover-dark .driver-popover-title {
-          color: #818cf8 !important;
-          font-weight: 700 !important;
-        }
-        
-        .driver-popover-dark .driver-popover-description {
-          color: #cbd5e1 !important;
-        }
-        
-        .driver-popover-dark .driver-popover-footer button {
-          background: linear-gradient(to right, #6366f1, #8b5cf6) !important;
-          color: white !important;
-          border: none !important;
-          font-weight: 600 !important;
-        }
-        
-        .driver-popover-dark .driver-popover-footer button:hover {
-          background: linear-gradient(to right, #4f46e5, #7c3aed) !important;
-        }
-        
-        .driver-popover-dark .driver-popover-footer button.driver-popover-prev-btn {
-          background: #334155 !important;
-          color: #cbd5e1 !important;
-        }
-        
-        .driver-popover-dark .driver-popover-footer button.driver-popover-prev-btn:hover {
-          background: #475569 !important;
-        }
-        
-        /* Overlay styling */
-        .driver-overlay {
-          background: rgba(0, 0, 0, 0.5) !important;
-        }
-      `}</style>
-    </>
-  );
+      ],
+      // 8. Additional safety: Mark as seen when tour is closed or finished
+      onDestroy: () => {
+        localStorage.setItem("hasSeenTour", "true");
+      }
+    });
+
+    // 9. Start Tour (With slight delay to ensure rendering)
+    const timer = setTimeout(() => {
+      if (driverRef.current) {
+        driverRef.current.drive();
+      }
+    }, 1500);
+
+    // Cleanup on unmount
+    return () => {
+      clearTimeout(timer);
+      if (driverRef.current) {
+        driverRef.current.destroy();
+      }
+    };
+  }, [currentPage, isAuthenticated, t, language]); // Re-run when page, auth, or language changes
+
+  return null;
 };
 
 export default AppTour;
-
