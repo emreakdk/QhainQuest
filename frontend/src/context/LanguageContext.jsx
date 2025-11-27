@@ -75,6 +75,36 @@ const translations = {
     'learn.cta.action3': 'Blockchain quest\'lerini tamamlayın',
     'learn.cta.button': 'İlk Görevinize Başlayın',
     
+    'portal.hero.badge': 'Günün Öne Çıkan Konusu',
+    'portal.hero.title': 'Web3 Dünyasına Hoş Geldin',
+    'portal.hero.subtitle': 'Günün Konusu: DeFi ve Gelecek',
+    'portal.hero.description': 'Merkezi olmayan finans (DeFi) ekosistemini keşfet, akıllı sözleşmeleri öğren ve Web3\'ün geleceğini şekillendir. Her ders tamamlandığında token kazan!',
+    'portal.hero.button': 'Hemen Öğren',
+    
+    'portal.section.title': 'Öğrenme İçerikleri',
+    'portal.section.subtitle': 'Web3 ekosistemini keşfetmek için hazırlanmış kapsamlı dersler',
+    'portal.loadMore': 'Daha Fazla Yükle',
+    
+    'portal.sidebar.ai.title': 'Huawei AI Asistan',
+    'portal.sidebar.ai.powered': 'Powered by Huawei Cloud',
+    'portal.sidebar.ai.placeholder': 'Sorunuzu yazın...',
+    'portal.sidebar.ai.footer': 'AI destekli öğrenme asistanı',
+    
+    'portal.sidebar.wallet.title': 'Cüzdan Durumu',
+    'portal.sidebar.wallet.balance': 'Token Bakiyesi',
+    'portal.sidebar.wallet.connected': 'Testnet\'e Bağlı',
+    
+    'portal.sidebar.trending.title': 'Trend Konular',
+    'portal.sidebar.trending.students': 'öğrenci',
+    'portal.sidebar.trending.viewAll': 'Tümünü Gör',
+    
+    'portal.card.readMore': 'Devamını Oku',
+    'portal.card.token': 'Token',
+    
+    'portal.card.difficulty.beginner': 'Başlangıç',
+    'portal.card.difficulty.intermediate': 'Orta',
+    'portal.card.difficulty.advanced': 'İleri',
+    
     'navigation.warning.title': 'Test Devam Ediyor',
     'navigation.warning.message': 'Şu anda bir test çözüyorsunuz. Sayfadan ayrılırsanız ilerlemeniz sıfırlanacaktır.',
     'navigation.warning.currentQuest': 'Mevcut Test',
@@ -2194,6 +2224,36 @@ const translations = {
     'learn.cta.action2': 'Earn tokens by learning',
     'learn.cta.action3': 'Complete blockchain quests',
     'learn.cta.button': 'Start Your First Mission',
+    
+    'portal.hero.badge': 'Featured Topic of the Day',
+    'portal.hero.title': 'Welcome to the Web3 World',
+    'portal.hero.subtitle': 'Today\'s Topic: DeFi and the Future',
+    'portal.hero.description': 'Explore the decentralized finance (DeFi) ecosystem, learn smart contracts, and shape the future of Web3. Earn tokens with every completed lesson!',
+    'portal.hero.button': 'Start Learning',
+    
+    'portal.section.title': 'Learning Content',
+    'portal.section.subtitle': 'Comprehensive courses prepared to explore the Web3 ecosystem',
+    'portal.loadMore': 'Load More',
+    
+    'portal.sidebar.ai.title': 'Huawei AI Assistant',
+    'portal.sidebar.ai.powered': 'Powered by Huawei Cloud',
+    'portal.sidebar.ai.placeholder': 'Type your question...',
+    'portal.sidebar.ai.footer': 'AI-powered learning assistant',
+    
+    'portal.sidebar.wallet.title': 'Wallet Status',
+    'portal.sidebar.wallet.balance': 'Token Balance',
+    'portal.sidebar.wallet.connected': 'Connected to Testnet',
+    
+    'portal.sidebar.trending.title': 'Trending Topics',
+    'portal.sidebar.trending.students': 'students',
+    'portal.sidebar.trending.viewAll': 'View All',
+    
+    'portal.card.readMore': 'Read More',
+    'portal.card.token': 'Token',
+    
+    'portal.card.difficulty.beginner': 'Beginner',
+    'portal.card.difficulty.intermediate': 'Intermediate',
+    'portal.card.difficulty.advanced': 'Advanced',
     
     'navigation.warning.title': 'Quiz in Progress',
     'navigation.warning.message': 'You are currently taking a quiz. Leaving this page will reset your progress.',
