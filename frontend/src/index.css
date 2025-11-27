@@ -699,6 +699,18 @@
   font-weight: 600 !important;
   transition: all 0.2s !important;
   border: none !important;
+  /* Force remove any default text shadow causing the "double text" look */
+  text-shadow: none !important;
+  /* Ensure crisp font rendering */
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Prevent any pseudo-element duplication */
+.driver-popover.chainquest-tour-theme .driver-popover-footer button::after,
+.driver-popover.chainquest-tour-theme .driver-popover-footer button::before {
+  content: none !important;
+  display: none !important;
 }
 
 .driver-popover.chainquest-tour-theme .driver-popover-next-btn,
@@ -706,30 +718,54 @@
   background: linear-gradient(to right, #4f46e5, #7c3aed) !important;
   color: white !important;
   box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2) !important;
+  text-shadow: none !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+.driver-popover.chainquest-tour-theme .driver-popover-next-btn::after,
+.driver-popover.chainquest-tour-theme .driver-popover-next-btn::before,
+.driver-popover.chainquest-tour-theme .driver-popover-done-btn::after,
+.driver-popover.chainquest-tour-theme .driver-popover-done-btn::before {
+  content: none !important;
+  display: none !important;
 }
 
 .driver-popover.chainquest-tour-theme .driver-popover-next-btn:hover,
 .driver-popover.chainquest-tour-theme .driver-popover-done-btn:hover {
   background: linear-gradient(to right, #4338ca, #6d28d9) !important;
   box-shadow: 0 6px 8px -1px rgba(79, 70, 229, 0.3) !important;
+  text-shadow: none !important;
 }
 
 .driver-popover.chainquest-tour-theme .driver-popover-prev-btn {
   background: #f1f5f9 !important;
   color: #475569 !important;
+  text-shadow: none !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+.driver-popover.chainquest-tour-theme .driver-popover-prev-btn::after,
+.driver-popover.chainquest-tour-theme .driver-popover-prev-btn::before {
+  content: none !important;
+  display: none !important;
 }
 
 .driver-popover.chainquest-tour-theme .driver-popover-prev-btn:hover {
   background: #e2e8f0 !important;
+  text-shadow: none !important;
 }
 
 .dark .driver-popover.chainquest-tour-theme .driver-popover-prev-btn {
   background: #334155 !important;
   color: #cbd5e1 !important;
+  text-shadow: none !important;
 }
 
 .dark .driver-popover.chainquest-tour-theme .driver-popover-prev-btn:hover {
   background: #475569 !important;
+  text-shadow: none !important;
 }
 
 .driver-popover.chainquest-tour-theme .driver-popover-progress-text {
