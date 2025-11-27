@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { 
   TbClock, 
   TbCoins, 
@@ -18,6 +19,7 @@ import Button from '../ui/Button';
  * A list item component for articles/lessons with image on left, content on right
  */
 const Web3Card = ({ 
+  articleId,
   title, 
   description, 
   duration, 
@@ -51,8 +53,11 @@ const Web3Card = ({
     advanced: t('portal.card.difficulty.advanced')
   };
 
+  const articleUrl = `/web3-article/${articleId}`;
+
   return (
-    <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-2 border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-600">
+    <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-2 border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-600 cursor-pointer">
+      <Link to={articleUrl} className="block">
       <CardContent className="p-0">
         <div className="flex flex-col sm:flex-row">
           {/* Image Section - Left */}
@@ -129,18 +134,15 @@ const Web3Card = ({
 
             {/* Action Button */}
             <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-700">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="group-hover:text-indigo-600 dark:group-hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-800"
-              >
+              <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 group-hover:text-indigo-700 dark:group-hover:text-indigo-300 font-semibold text-sm">
                 {t('portal.card.readMore')}
-                <TbArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-              </Button>
+                <TbArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </div>
             </div>
           </div>
         </div>
       </CardContent>
+      </Link>
     </Card>
   );
 };

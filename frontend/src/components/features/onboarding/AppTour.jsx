@@ -19,8 +19,8 @@ const AppTour = ({ currentPage, isAuthenticated }) => {
       return;
     }
 
-    // 3. Guard: Only start tour on main app pages
-    if (!currentPage || currentPage === '') {
+    // 3. Guard: Only start tour on quests page (tour is designed for quests page)
+    if (currentPage !== 'quests') {
       return;
     }
 

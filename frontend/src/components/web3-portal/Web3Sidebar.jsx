@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { 
   TbRobot, 
   TbTrendingUp, 
@@ -21,13 +22,13 @@ const Web3Sidebar = ({ tokenBalance = 0, isConnected = false }) => {
   const { t } = useLanguage();
   const [aiPrompt, setAiPrompt] = useState('');
 
-  // Dummy data
+  // Dummy data - Map to article IDs
   const trendingTopics = [
-    { id: 1, title: 'DeFi Liquidity Pools', count: 1240 },
-    { id: 2, title: 'Smart Contract Security', count: 892 },
-    { id: 3, title: 'NFT Metadata Standards', count: 756 },
-    { id: 4, title: 'Stellar Soroban', count: 634 },
-    { id: 5, title: 'Yield Farming Basics', count: 521 },
+    { id: 1, articleId: 1, title: 'DeFi Liquidity Pools', count: 1240 },
+    { id: 2, articleId: 2, title: 'Smart Contract Security', count: 892 },
+    { id: 3, articleId: 3, title: 'NFT Metadata Standards', count: 756 },
+    { id: 4, articleId: 4, title: 'Stellar Soroban', count: 634 },
+    { id: 5, articleId: 5, title: 'Yield Farming Basics', count: 521 },
   ];
 
   const handleAISubmit = (e) => {
@@ -141,26 +142,29 @@ const Web3Sidebar = ({ tokenBalance = 0, isConnected = false }) => {
 
           <div className="space-y-3">
             {trendingTopics.map((topic, index) => (
-              <div
+              <Link
                 key={topic.id}
-                className="group p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+                to={`/web3-article/${topic.articleId}`}
+                className="block"
               >
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs font-bold text-slate-400 dark:text-slate-500">
-                        #{index + 1}
-                      </span>
-                      <h4 className="text-sm font-semibold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                        {topic.title}
-                      </h4>
+                <div className="group p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-slate-700">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-xs font-bold text-slate-400 dark:text-slate-500">
+                          #{index + 1}
+                        </span>
+                        <h4 className="text-sm font-semibold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                          {topic.title}
+                        </h4>
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">
+                        {topic.count} {t('portal.sidebar.trending.students')}
+                      </p>
                     </div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
-                      {topic.count} {t('portal.sidebar.trending.students')}
-                    </p>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
 

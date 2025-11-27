@@ -1,7 +1,9 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { useToken } from '../context/TokenContext';
 import { WalletContext } from '../context/WalletContext';
+import { web3Articles } from '../data/web3ArticlesData';
 import Web3Hero from '../components/web3-portal/Web3Hero';
 import Web3Sidebar from '../components/web3-portal/Web3Sidebar';
 import Web3Card from '../components/web3-portal/Web3Card';
@@ -10,82 +12,24 @@ const LearnWeb3 = ({ onPageChange }) => {
   const { t } = useLanguage();
   const { tokenData } = useToken();
   const { publicKey, isDemoMode } = useContext(WalletContext);
-
-  // Articles/Lessons data
-  const articles = [
-    {
-      id: 1,
-      title: 'DeFi Liquidity Pools: Temel Kavramlar',
-      description: 'Merkezi olmayan finans ekosisteminde likidite havuzlarının nasıl çalıştığını öğrenin. AMM protokollerini keşfedin ve token takas mekanizmalarını anlayın.',
-      duration: '15 dk',
-      tokenReward: 25,
-      category: 'defi',
-      difficulty: 'beginner'
-    },
-    {
-      id: 2,
-      title: 'Smart Contract Security: Reentrancy Saldırıları',
-      description: 'Akıllı sözleşmelerdeki güvenlik açıklarını öğrenin. Reentrancy saldırılarını nasıl önleyeceğinizi ve güvenli kod yazma pratiklerini keşfedin.',
-      duration: '25 dk',
-      tokenReward: 30,
-      category: 'smartcontract',
-      difficulty: 'intermediate'
-    },
-    {
-      id: 3,
-      title: 'NFT Metadata ve IPFS Entegrasyonu',
-      description: 'NFT metadata standartlarını öğrenin, IPFS ile merkezi olmayan depolama çözümlerini keşfedin ve metadata yapılarını anlayın.',
-      duration: '20 dk',
-      tokenReward: 28,
-      category: 'nft',
-      difficulty: 'beginner'
-    },
-    {
-      id: 4,
-      title: 'Stellar Soroban: Smart Contract Platform',
-      description: 'Stellar blockchain üzerinde çalışan Soroban akıllı sözleşme platformunu keşfedin. Rust ile kontrat yazma ve deploy etme süreçlerini öğrenin.',
-      duration: '30 dk',
-      tokenReward: 35,
-      category: 'smartcontract',
-      difficulty: 'advanced'
-    },
-    {
-      id: 5,
-      title: 'Yield Farming Stratejileri ve Risk Yönetimi',
-      description: 'Yield farming mekanizmalarını öğrenin, farklı stratejileri karşılaştırın ve risk yönetimi tekniklerini keşfedin.',
-      duration: '22 dk',
-      tokenReward: 30,
-      category: 'defi',
-      difficulty: 'intermediate'
-    },
-    {
-      id: 6,
-      title: 'Web3 Wallet Security: Best Practices',
-      description: 'Web3 cüzdanlarınızı nasıl güvende tutacağınızı öğrenin. Seed phrase yönetimi, multi-sig cüzdanlar ve güvenlik pratikleri.',
-      duration: '18 dk',
-      tokenReward: 25,
-      category: 'security',
-      difficulty: 'beginner'
-    },
-    {
-      id: 7,
-      title: 'AMM (Automated Market Maker) Algoritmaları',
-      description: 'Uniswap, Curve ve diğer AMM protokollerinin matematiksel temellerini öğrenin. Constant product formula ve farklı bonding curve türlerini keşfedin.',
-      duration: '28 dk',
-      tokenReward: 32,
-      category: 'defi',
-      difficulty: 'advanced'
-    },
-    {
-      id: 8,
-      title: 'ERC-721 vs ERC-1155: NFT Standartları Karşılaştırması',
-      description: 'Ethereum NFT standartlarını karşılaştırın. Hangi standardın ne zaman kullanılacağını öğrenin ve pratik uygulama örneklerini inceleyin.',
-      duration: '20 dk',
-      tokenReward: 27,
-      category: 'nft',
-      difficulty: 'intermediate'
+  const navigate = useNavigate();
+  
+  // Sync URL with page state - only if user explicitly navigated to learn-web3
+  // Don't force navigation when wallet connection changes
+  useEffect(() => {
+    // Only update URL if we're actually on the learn-web3 page
+    // This prevents unwanted redirects when wallet connection changes
+    const currentPath = window.location.pathname;
+    const urlParams = new URLSearchParams(window.location.search);
+    const pageParam = urlParams.get('page');
+    
+    // Only navigate if:
+    // 1. We're not already on /learn-web3 AND
+    // 2. The page param is 'learn-web3' (user explicitly navigated here)
+    if (currentPath !== '/learn-web3' && pageParam === 'learn-web3') {
+      navigate('/learn-web3', { replace: true });
     }
-  ];
+  }, [navigate]);
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900">
@@ -113,12 +57,13 @@ const LearnWeb3 = ({ onPageChange }) => {
 
             {/* Articles Grid */}
             <div className="space-y-6">
-              {articles.map((article) => (
+              {web3Articles.map((article) => (
                 <Web3Card
                   key={article.id}
-                  title={article.title}
-                  description={article.description}
-                  duration={article.duration}
+                  articleId={article.id}
+                  title={t(article.titleKey)}
+                  description={t(article.descriptionKey)}
+                  duration={`${article.duration} ${t('portal.duration.min')}`}
                   tokenReward={article.tokenReward}
                   category={article.category}
                   difficulty={article.difficulty}

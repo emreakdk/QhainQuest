@@ -27,7 +27,7 @@ import {
 } from 'react-icons/tb';
 
 const Header = ({ currentPage, onPageChange }) => {
-  const { publicKey, setPublicKey, isDemoMode, exitDemoMode } = useContext(WalletContext);
+  const { publicKey, setPublicKey, isDemoMode, exitDemoMode, enterDemoMode, setIsDemoMode } = useContext(WalletContext);
   const { tokenData } = useToken(); // Get centralized token data
   const { claimableBalance, totalEarned } = useBalance(); // Get global balances
   const { theme, toggleTheme, isDarkMode } = useTheme();
@@ -120,7 +120,7 @@ const Header = ({ currentPage, onPageChange }) => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 shadow-lg backdrop-blur-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-slate-900 shadow-lg backdrop-blur-sm">
       <style>{`
         /* Base Hover State (Light Mode) */
         .nav-item-force:hover {
@@ -182,9 +182,19 @@ const Header = ({ currentPage, onPageChange }) => {
       <nav className="container mx-auto flex items-center justify-between p-3 sm:p-4 gap-2 sm:gap-4">
         {/* Left Zone: Logo + CQT Chip (always visible) */}
         <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-shrink-0">
-          {/* Logo - Clickable to return home */}
+          {/* Logo - Clickable to return home (landing page) */}
           <button
-            onClick={() => handlePageChange(null)}
+            onClick={() => {
+              // Disconnect wallet and exit demo mode to show HeroSection (landing page)
+              setPublicKey('');
+              setIsDemoMode(false);
+              // Clear saved page to ensure landing page is shown
+              localStorage.removeItem('chainquest-current-page');
+              // Clear URL params
+              const url = new URL(window.location);
+              url.searchParams.delete('page');
+              window.history.pushState({}, '', url);
+            }}
             className="flex items-center space-x-2 flex-shrink-0 hover:opacity-80 transition-opacity cursor-pointer"
             aria-label="Return to home"
           >
@@ -256,10 +266,10 @@ const Header = ({ currentPage, onPageChange }) => {
                   variant="ghost" 
                   size="sm"
                   onClick={() => {
+                    // When disconnecting wallet, switch to demo mode instead of logging out
+                    // This keeps the user on the current page
                     setPublicKey('');
-                    if (isDemoMode) {
-                      exitDemoMode();
-                    }
+                    enterDemoMode();
                   }}
                   className="nav-item-force whitespace-nowrap flex-shrink-0 transition-colors"
                 >
@@ -432,10 +442,10 @@ const Header = ({ currentPage, onPageChange }) => {
                   variant="ghost" 
                   size="sm"
                   onClick={() => {
+                    // When disconnecting wallet, switch to demo mode instead of logging out
+                    // This keeps the user on the current page
                     setPublicKey('');
-                    if (isDemoMode) {
-                      exitDemoMode();
-                    }
+                    enterDemoMode();
                     setMobileMenuOpen(false);
                   }}
                   className="nav-item-force w-full transition-colors"
