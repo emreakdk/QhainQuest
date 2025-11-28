@@ -88,15 +88,17 @@ const AboutPage = () => {
       
       {/* Animated Background Elements */}
       <div className="fixed inset-0 -z-10 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500 dark:bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 dark:opacity-20 animate-blob"></div>
-        <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-cyan-500 dark:bg-cyan-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 dark:opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-8 left-1/3 w-96 h-96 bg-pink-500 dark:bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 dark:opacity-20 animate-blob animation-delay-4000"></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600/20 dark:bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 dark:opacity-20 animate-blob"></div>
+        <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-cyan-600/20 dark:bg-cyan-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 dark:opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-1/3 w-96 h-96 bg-pink-600/20 dark:bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 dark:opacity-20 animate-blob animation-delay-4000"></div>
       </div>
 
       {/* Grid Pattern */}
-      <div className="fixed inset-0 opacity-20 dark:opacity-40 -z-10 pointer-events-none">
+      <div className="fixed inset-0 opacity-30 dark:opacity-40 -z-10 pointer-events-none">
         <div className="w-full h-full" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          backgroundImage: isDarkMode 
+            ? `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+            : `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23475569' fill-opacity='0.15'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
         }}></div>
       </div>
 
@@ -128,7 +130,7 @@ const AboutPage = () => {
                 : 'Teaching Future Technology with Future Methods.'
               }
             </h1>
-            <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl text-slate-800 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
               {language === 'tr'
                 ? 'ChainQuest, Web3 ve Yapay Zeka gücüyle eğitimi merkeziyetsizleştiriyor.'
                 : 'ChainQuest is decentralizing education with the power of Web3 and Artificial Intelligence.'
@@ -145,10 +147,10 @@ const AboutPage = () => {
             {/* Mission Card */}
             <div className="relative group">
               <div 
-                className="relative p-8 rounded-2xl bg-white/80 dark:bg-white/5 backdrop-blur-sm border border-purple-300/50 dark:border-purple-500/30 hover:border-purple-400/80 dark:hover:border-purple-400/60 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20 dark:hover:shadow-purple-500/20"
+                className="relative p-8 rounded-2xl bg-white shadow-xl border border-slate-200 dark:bg-white/5 dark:backdrop-blur-sm dark:border-purple-500/30 hover:border-purple-400/80 dark:hover:border-purple-400/60 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/20 dark:hover:shadow-purple-500/20"
                 style={{
-                  background: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.8)',
-                  backdropFilter: 'blur(10px)',
+                  background: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 1)',
+                  backdropFilter: isDarkMode ? 'blur(10px)' : 'none',
                 }}
               >
                 <div className="flex items-center justify-center space-x-4 mb-6">
@@ -159,7 +161,7 @@ const AboutPage = () => {
                     {language === 'tr' ? 'Misyonumuz' : 'Our Mission'}
                   </h2>
                 </div>
-                <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
+                <p className="text-slate-800 dark:text-slate-300 leading-relaxed">
                   {language === 'tr'
                     ? 'Karmaşık blokzincir teknolojilerini, Huawei AI desteği ve oyunlaştırılmış (Gamified) yapılarla herkes için erişilebilir, anlaşılır ve kazançlı hale getirmek.'
                     : 'Making complex blockchain technologies accessible, understandable, and rewarding for everyone through Huawei AI support and gamified structures.'
@@ -171,10 +173,10 @@ const AboutPage = () => {
             {/* Vision Card */}
             <div className="relative group">
               <div 
-                className="relative p-8 rounded-2xl bg-white/80 dark:bg-white/5 backdrop-blur-sm border border-cyan-300/50 dark:border-cyan-500/30 hover:border-cyan-400/80 dark:hover:border-cyan-400/60 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/20 dark:hover:shadow-cyan-500/20"
+                className="relative p-8 rounded-2xl bg-white shadow-xl border border-slate-200 dark:bg-white/5 dark:backdrop-blur-sm dark:border-cyan-500/30 hover:border-cyan-400/80 dark:hover:border-cyan-400/60 transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-500/20 dark:hover:shadow-cyan-500/20"
                 style={{
-                  background: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.8)',
-                  backdropFilter: 'blur(10px)',
+                  background: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 1)',
+                  backdropFilter: isDarkMode ? 'blur(10px)' : 'none',
                 }}
               >
                 <div className="flex items-center justify-center space-x-4 mb-6">
@@ -185,7 +187,7 @@ const AboutPage = () => {
                     {language === 'tr' ? 'Vizyonumuz' : 'Our Vision'}
                   </h2>
                 </div>
-                <p className="text-slate-700 dark:text-slate-300 leading-relaxed">
+                <p className="text-slate-800 dark:text-slate-300 leading-relaxed">
                   {language === 'tr'
                     ? 'Bilginin sadece öğrenildiği değil, aynı zamanda değer gördüğü; merkeziyetsiz, şeffaf ve sınırların olmadığı küresel bir eğitim ekosistemi oluşturmak.'
                     : 'Creating a global education ecosystem where knowledge is not only learned but also valued; decentralized, transparent, and without boundaries.'
@@ -220,7 +222,7 @@ const AboutPage = () => {
                 <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">
                   {language === 'tr' ? 'AI Destekli Eğitim' : 'AI-Powered Education'}
                 </h3>
-                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                <p className="text-slate-700 dark:text-slate-400 text-sm leading-relaxed">
                   {language === 'tr' ? 'Kişiselleştirilmiş öğrenme deneyimi.' : 'Personalized learning experience.'}
                 </p>
               </div>
@@ -229,10 +231,10 @@ const AboutPage = () => {
             {/* Value 2: Learn & Earn */}
             <div className="relative group">
               <div 
-                className="relative p-6 rounded-xl bg-white/80 dark:bg-white/5 backdrop-blur-sm border border-cyan-300/40 dark:border-cyan-500/20 hover:border-cyan-400/60 dark:hover:border-cyan-400/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/10 dark:hover:shadow-cyan-500/10 text-center"
+                className="relative p-6 rounded-xl bg-white shadow-lg border border-slate-200 dark:bg-white/5 dark:backdrop-blur-sm dark:border-cyan-500/20 hover:border-cyan-400/60 dark:hover:border-cyan-400/50 transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/10 dark:hover:shadow-cyan-500/10 text-center"
                 style={{
-                  background: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.8)',
-                  backdropFilter: 'blur(10px)',
+                  background: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 1)',
+                  backdropFilter: isDarkMode ? 'blur(10px)' : 'none',
                 }}
               >
                 <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-cyan-500/20 to-purple-500/20 flex items-center justify-center border border-cyan-400/40 dark:border-cyan-500/30 group-hover:scale-110 transition-transform">
@@ -241,7 +243,7 @@ const AboutPage = () => {
                 <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">
                   {language === 'tr' ? 'Öğren & Kazan' : 'Learn & Earn'}
                 </h3>
-                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                <p className="text-slate-700 dark:text-slate-400 text-sm leading-relaxed">
                   {language === 'tr' ? 'Başarının token ile ödüllendirildiği yapı.' : 'Structure where success is rewarded with tokens.'}
                 </p>
               </div>
@@ -262,7 +264,7 @@ const AboutPage = () => {
                 <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">
                   {language === 'tr' ? 'Topluluk Odaklı' : 'Community-Focused'}
                 </h3>
-                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                <p className="text-slate-700 dark:text-slate-400 text-sm leading-relaxed">
                   {language === 'tr' ? 'Birlikte gelişen ve üreten bir ekosistem.' : 'An ecosystem that grows and creates together.'}
                 </p>
               </div>
@@ -316,10 +318,10 @@ const AboutPage = () => {
                       {/* Content Card */}
                       <div className={`ml-24 md:ml-0 md:w-[45%] ${isEven ? 'md:mr-auto md:pr-8' : 'md:ml-auto md:pl-8'}`}>
                         <div 
-                          className="p-6 rounded-xl bg-white/80 dark:bg-white/5 backdrop-blur-sm border border-slate-300/50 dark:border-slate-700/50 hover:border-purple-400/60 dark:hover:border-purple-400/50 transition-all duration-300"
+                          className="p-6 rounded-xl bg-white shadow-lg border border-slate-200 dark:bg-white/5 dark:backdrop-blur-sm dark:border-slate-700/50 hover:border-purple-400/60 dark:hover:border-purple-400/50 transition-all duration-300"
                           style={{
-                            background: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.8)',
-                            backdropFilter: 'blur(10px)',
+                            background: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 1)',
+                            backdropFilter: isDarkMode ? 'blur(10px)' : 'none',
                           }}
                         >
                           <div className="flex items-center justify-between mb-2">
@@ -366,10 +368,10 @@ const AboutPage = () => {
               return (
                 <div key={index} className="relative group">
                   <div 
-                    className={`relative p-8 rounded-2xl bg-white/80 dark:bg-white/5 backdrop-blur-sm border ${tech.borderColor} hover:border-opacity-80 dark:hover:border-opacity-60 transition-all duration-300 hover:shadow-lg ${tech.shadowColor} text-center`}
+                    className={`relative p-8 rounded-2xl bg-white shadow-xl border border-slate-200 dark:bg-white/5 dark:backdrop-blur-sm ${tech.borderColor} hover:border-opacity-80 dark:hover:border-opacity-60 transition-all duration-300 hover:shadow-2xl ${tech.shadowColor} text-center`}
                     style={{
-                      background: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.8)',
-                      backdropFilter: 'blur(10px)',
+                      background: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 1)',
+                      backdropFilter: isDarkMode ? 'blur(10px)' : 'none',
                     }}
                   >
                     <div className={`w-20 h-20 mx-auto mb-6 rounded-xl bg-gradient-to-br ${tech.glowColor} flex items-center justify-center border ${tech.borderColor} group-hover:scale-110 transition-transform`}>
@@ -378,7 +380,7 @@ const AboutPage = () => {
                     <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">
                       {tech.name}
                     </h3>
-                    <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                    <p className="text-slate-700 dark:text-slate-400 text-sm leading-relaxed">
                       {tech.description}
                     </p>
                   </div>
@@ -404,7 +406,7 @@ const AboutPage = () => {
               : 'Be Part of the Web3 Revolution.'
             }
           </h2>
-          <p className="text-lg text-slate-600 dark:text-slate-400 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg text-slate-800 dark:text-slate-400 mb-8 max-w-2xl mx-auto">
             {language === 'tr'
               ? 'Eğitimi merkeziyetsizleştiren bu yolculuğa katıl ve geleceği birlikte inşa edelim.'
               : 'Join this journey of decentralizing education and let\'s build the future together.'

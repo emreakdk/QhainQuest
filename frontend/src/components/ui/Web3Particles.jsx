@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState, memo } from "react";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
+import { useTheme } from "../../context/ThemeContext";
 
 const Web3Particles = () => {
   const [init, setInit] = useState(false);
+  const { isDarkMode } = useTheme();
 
   // this should be run only once per application lifetime
   useEffect(() => {
@@ -42,13 +44,13 @@ const Web3Particles = () => {
       },
       particles: {
         color: {
-          value: "#ffffff", // White nodes
+          value: isDarkMode ? "#ffffff" : "#1e293b", // White in dark mode, dark slate in light mode
         },
         links: {
-          color: "#ffffff", // White connecting lines
+          color: isDarkMode ? "#ffffff" : "#475569", // White in dark mode, slate-600 in light mode
           distance: 150,
           enable: true,
-          opacity: 0.2, // Subtle lines
+          opacity: isDarkMode ? 0.2 : 0.3, // More visible in light mode
           width: 1,
         },
         move: {
@@ -69,7 +71,7 @@ const Web3Particles = () => {
           value: 60, // Number of nodes over the area
         },
         opacity: {
-          value: 0.3, // Subtle nodes
+          value: isDarkMode ? 0.3 : 0.4, // More visible in light mode
         },
         shape: {
           type: "circle",
@@ -80,7 +82,7 @@ const Web3Particles = () => {
       },
       detectRetina: true,
     }),
-    [],
+    [isDarkMode],
   );
 
   if (init) {
