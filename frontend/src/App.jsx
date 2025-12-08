@@ -17,13 +17,16 @@ import LearnWeb3 from './pages/LearnWeb3';
 import AIQuizGenerator from './pages/AIQuizGenerator';
 import AboutPage from './pages/AboutPage';
 import Web3ArticleDetail from './components/web3-portal/Web3ArticleDetail';
+import ArticleDetail from './pages/ArticleDetail';
 import GlobalLoader from './components/ui/GlobalLoader';
 import AIAssistantWidget from './components/features/ai/AIAssistantWidget';
 import AppTour from './components/features/onboarding/AppTour';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <TokenProvider>
         <BalanceProvider>
           <UserProvider>
@@ -47,13 +50,14 @@ function AppContent() {
   
   // Check if we're on an article detail page
   const isArticleDetailPage = location.pathname.startsWith('/web3-article/');
+  const isNewArticleDetailPage = location.pathname.startsWith('/article/');
   
   // Check if we're on the about page
   const isAboutPage = location.pathname === '/about';
   
   const [currentPage, setCurrentPage] = useState(() => {
     // If on article detail page, set page to 'learn-web3'
-    if (isArticleDetailPage) {
+    if (isArticleDetailPage || isNewArticleDetailPage) {
       return 'learn-web3';
     }
     
@@ -72,47 +76,40 @@ function AppContent() {
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
-    
     localStorage.setItem('chainquest-current-page', page);
     
-    // If we're on /about route, navigate away from it first
-    if (location.pathname === '/about') {
-      // If changing to learn-web3, navigate to it directly
-      if (page === 'learn-web3') {
-        navigate('/learn-web3');
-        return;
-      }
-      // For other pages, navigate to root with page param
-      navigate(`/?page=${page}`);
-      return;
-    }
+    // Scroll to top immediately when page changes
+    window.scrollTo(0, 0);
     
-    // If changing to learn-web3, navigate to it
-    if (page === 'learn-web3' && !isArticleDetailPage) {
-      navigate('/learn-web3');
-      return;
-    }
-    
-    // For other pages, use URL params as before
-    const url = new URL(window.location);
-    url.searchParams.set('page', page);
-    window.history.pushState({}, '', url);
+    // Navigate to root with page param for all pages (consistent routing)
+    navigate(`/?page=${page}`, { replace: false });
   };
   
-  // Sync currentPage with location and handle initial page for unauthenticated users
+  // Sync currentPage with URL parameters
   useEffect(() => {
-    if (isArticleDetailPage) {
+    if (isArticleDetailPage || isNewArticleDetailPage) {
       setCurrentPage('learn-web3');
-    } else if (location.pathname === '/learn-web3') {
-      setCurrentPage('learn-web3');
-    } else if (isInitialized && !publicKey && !isDemoMode) {
-      // If user is not authenticated and not on learn-web3, ensure HeroSection shows
-      // The rendering logic will handle showing HeroSection when user is not authenticated
-      // currentPage can be anything, but HeroSection will be shown regardless
+      return;
     }
-    // Note: We don't change currentPage when publicKey or isDemoMode changes
-    // This ensures users stay on their current page when disconnecting wallet
-  }, [location.pathname, isArticleDetailPage, isInitialized]);
+    
+    // Read page from URL params
+    const urlParams = new URLSearchParams(location.search);
+    const pageFromUrl = urlParams.get('page');
+    
+    if (pageFromUrl) {
+      // If page param exists in URL, use it
+      setCurrentPage(pageFromUrl);
+      localStorage.setItem('chainquest-current-page', pageFromUrl);
+    } else if (location.pathname === '/' && !isAboutPage) {
+      // If on root and no page param, check localStorage or default to 'quests'
+      const savedPage = localStorage.getItem('chainquest-current-page');
+      if (savedPage) {
+        setCurrentPage(savedPage);
+      } else {
+        setCurrentPage('quests');
+      }
+    }
+  }, [location.pathname, location.search, isArticleDetailPage, isNewArticleDetailPage, isAboutPage]);
 
   // Track initial data loading
   useEffect(() => {
@@ -188,6 +185,8 @@ function AppContent() {
       </>
     );
   }
+
+  // Note: Article detail pages are now handled by Routes below
   
   // Render about page directly if on that route
   if (isAboutPage) {
@@ -210,26 +209,48 @@ function AppContent() {
     <>
       <GlobalLoader isVisible={showGlobalLoader} />
       <AppTour currentPage={currentPage} isAuthenticated={!!(publicKey || isDemoMode)} />
-      <div className={`min-h-screen transition-colors duration-300 ${(publicKey || isDemoMode) ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white' : 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white'}`}>
-        <Header currentPage={currentPage} onPageChange={handlePageChange} />
-        <main className={(publicKey || isDemoMode) ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white" : ""}> 
-          {(publicKey || isDemoMode) ? (
-            <div className="container mx-auto p-4 pt-24">
-              {renderPage()}
+      <Routes>
+        {/* Article Detail Route */}
+        <Route 
+          path="/article/:id" 
+          element={
+            <div className={`min-h-screen transition-colors duration-300 ${(publicKey || isDemoMode) ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white' : 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white'}`}>
+              <Header currentPage="learn-web3" onPageChange={handlePageChange} />
+              <main className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
+                <ArticleDetail onPageChange={handlePageChange} />
+              </main>
+              {(publicKey || isDemoMode) && <AIAssistantWidget />}
+              <Footer onPageChange={handlePageChange} />
             </div>
-          ) : currentPage === 'learn-web3' ? (
-            <div className="pt-20 bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
-              {renderPage()}
+          } 
+        />
+        {/* Default Route - Existing Logic */}
+        <Route 
+          path="*" 
+          element={
+            <div className={`min-h-screen transition-colors duration-300 ${(publicKey || isDemoMode) ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white' : 'bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white'}`}>
+              <Header currentPage={currentPage} onPageChange={handlePageChange} />
+              <main className={(publicKey || isDemoMode) ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-white" : ""}> 
+                {(publicKey || isDemoMode) ? (
+                  <div className="container mx-auto p-4 pt-24">
+                    {renderPage()}
+                  </div>
+                ) : currentPage === 'learn-web3' ? (
+                  <div className="pt-20 bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
+                    {renderPage()}
+                  </div>
+                ) : (
+                  // Show HeroSection (landing page) when user is not authenticated
+                  <HeroSection onPageChange={handlePageChange} />
+                )}
+              </main>
+              {/* Global AI Assistant Widget - Available on all pages */}
+              {(publicKey || isDemoMode) && <AIAssistantWidget />}
+              <Footer onPageChange={handlePageChange} />
             </div>
-          ) : (
-            // Show HeroSection (landing page) when user is not authenticated
-            <HeroSection onPageChange={handlePageChange} />
-          )}
-        </main>
-        {/* Global AI Assistant Widget - Available on all pages */}
-        {(publicKey || isDemoMode) && <AIAssistantWidget />}
-        <Footer onPageChange={handlePageChange} />
-      </div>
+          } 
+        />
+      </Routes>
     </>
   );
 }

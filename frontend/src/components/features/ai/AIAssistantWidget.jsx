@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { aiService } from '../../../services/aiService';
 import { useLanguage } from '../../../context/LanguageContext';
@@ -15,7 +16,8 @@ import {
   TbBulb,
   TbSend,
   TbX,
-  TbSparkles
+  TbSparkles,
+  TbArrowUp
 } from 'react-icons/tb';
 
 /**
@@ -24,11 +26,24 @@ import {
  * Global Floating Action Button (FAB) widget that provides AI-powered help.
  * Appears on all pages at the bottom-right corner.
  * Integrates with Huawei Cloud LLM via backend API.
+ * 
+ * State is persisted across page changes to maintain chat open/closed state.
  */
 const AIAssistantWidget = () => {
   const { t, language, setLanguage } = useLanguage();
   const { isDarkMode } = useTheme();
-  const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+  
+  // Initialize isOpen from localStorage to persist across page changes
+  const [isOpen, setIsOpen] = useState(() => {
+    const saved = localStorage.getItem('ai-assistant-is-open');
+    return saved === 'true';
+  });
+  
+  // Save isOpen state to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('ai-assistant-is-open', isOpen.toString());
+  }, [isOpen]);
   const [prompt, setPrompt] = useState('');
   const [response, setResponse] = useState('');
   const [loading, setLoading] = useState(false);
@@ -132,6 +147,33 @@ const AIAssistantWidget = () => {
       responseRef.current.scrollTop = responseRef.current.scrollHeight;
     }
   }, [response, history]);
+
+  // Scroll to top button visibility state
+  const [showScrollToTop, setShowScrollToTop] = useState(false);
+
+  // Listen to scroll events to show/hide scroll to top button
+  useEffect(() => {
+    const handleScroll = () => {
+      // Show button when scrolled down more than 300px
+      setShowScrollToTop(window.scrollY > 300);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    // Check initial scroll position
+    handleScroll();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  // Scroll to top function
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -343,9 +385,15 @@ const AIAssistantWidget = () => {
         <div className={`fixed z-50 bg-white dark:bg-slate-900 shadow-2xl flex flex-col transition-all duration-300
           ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}
           /* Mobile Styles */
-          w-[95vw] h-[70vh] bottom-20 left-1/2 -translate-x-1/2 rounded-2xl border border-slate-200 dark:border-slate-700
+          w-[95vw] h-[70vh] left-1/2 -translate-x-1/2 rounded-2xl border border-slate-200 dark:border-slate-700
           /* Desktop Styles (Override Mobile) */
-          sm:w-[450px] sm:h-[600px] sm:bottom-24 sm:right-6 sm:left-auto sm:translate-x-0
+          sm:w-[450px] sm:h-[600px] sm:right-6 sm:left-auto sm:translate-x-0
+          /* Dynamic bottom position: move up when scroll-to-top is active */
+          /* Scroll-to-top button: bottom-24 (96px) + button height (56px) + margin (24px) = 176px */
+          ${showScrollToTop 
+            ? 'bottom-[176px]' 
+            : 'bottom-20 sm:bottom-24'
+          }
         `}>
           {/* Header */}
           <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-4">
@@ -643,6 +691,24 @@ const AIAssistantWidget = () => {
           </form>
         </div>
       )}
+
+      {/* Scroll to Top Button - Appears above AI Assistant button when scrolled */}
+      <div 
+        className={`fixed bottom-24 right-6 z-50 transition-all duration-300 ease-out ${
+          showScrollToTop 
+            ? 'opacity-100 translate-y-0 pointer-events-auto' 
+            : 'opacity-0 translate-y-4 pointer-events-none'
+        }`}
+      >
+        <button
+          onClick={scrollToTop}
+          className="w-14 h-14 rounded-full bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 dark:from-slate-700 dark:to-slate-800 dark:hover:from-slate-600 dark:hover:to-slate-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center cursor-pointer hover:scale-110"
+          aria-label={language === 'tr' ? 'Yukarı Çık' : 'Scroll to Top'}
+          title={language === 'tr' ? 'Yukarı Çık' : 'Scroll to Top'}
+        >
+          <TbArrowUp size={24} />
+        </button>
+      </div>
 
       {/* FAB Button - Launcher */}
       <div ref={widgetRef} className="fixed bottom-6 right-6 z-50">

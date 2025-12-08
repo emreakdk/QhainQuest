@@ -2,12 +2,27 @@ import { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import { useLanguage } from '../../../context/LanguageContext';
 import Button from '../../ui/Button';
-import { TbLoader, TbLock, TbCheck, TbWallet, TbAlertCircle } from 'react-icons/tb';
+import { TbLoader, TbLock, TbCheck, TbWallet, TbAlertCircle, TbRobot } from 'react-icons/tb';
+import { aiService } from '../../../services/aiService';
 
-const QuestCompletionModal = ({ quest, onClose, onComplete, onPageChange, reward = null, isSuccess = true }) => {
+const QuestCompletionModal = ({ quest, onClose, onComplete, onPageChange, reward = null, isSuccess = true, wrongAnswers = [] }) => {
   const { t, language } = useLanguage();
   const [step, setStep] = useState(1); // 1: Proof of Work, 2: Smart Contract, 3: Minting Token, 4: Success
   const [showModal, setShowModal] = useState(false);
+  const [loadingAdvice, setLoadingAdvice] = useState(false);
+  const [aiAdvice, setAiAdvice] = useState(null);
+  const [aiAdviceError, setAiAdviceError] = useState(null);
+
+  // Debug: Log props on mount
+  useEffect(() => {
+    console.log('[QuestCompletionModal] Props received:', {
+      isSuccess,
+      reward,
+      wrongAnswersLength: wrongAnswers?.length || 0,
+      wrongAnswers,
+      isFailure: (reward === 0 || !isSuccess)
+    });
+  }, [isSuccess, reward, wrongAnswers]);
 
   // Translations for modal content
   const translations = {
@@ -24,6 +39,9 @@ const QuestCompletionModal = ({ quest, onClose, onComplete, onPageChange, reward
       completedQuest: 'Tamamlanan Görev',
       btnViewWallet: 'Cüzdanı Görüntüle',
       btnNextQuest: 'Sıradaki Görev',
+      btnGetAiTips: '🤖 Huawei AI Eğitim Koçuna Sor',
+      aiAdviceLoading: 'AI tavsiyesi hazırlanıyor...',
+      aiAdviceError: 'AI tavsiyesi alınırken bir hata oluştu.',
     },
     en: {
       loading1: 'Verifying Proof of Work...',
@@ -38,6 +56,9 @@ const QuestCompletionModal = ({ quest, onClose, onComplete, onPageChange, reward
       completedQuest: 'Completed Quest',
       btnViewWallet: 'View Wallet',
       btnNextQuest: 'Next Quest',
+      btnGetAiTips: '🤖 Ask Huawei AI Coach',
+      aiAdviceLoading: 'Getting AI advice...',
+      aiAdviceError: 'An error occurred while getting AI advice.',
     },
   };
 
@@ -127,6 +148,61 @@ const QuestCompletionModal = ({ quest, onClose, onComplete, onPageChange, reward
   const handleNextQuest = () => {
     if (onClose) {
       onClose();
+    }
+  };
+
+  const handleGetAIAdvice = async () => {
+    if (!Array.isArray(wrongAnswers) || wrongAnswers.length === 0) {
+      console.warn('[QuestCompletionModal] Cannot get AI advice: wrongAnswers is empty or invalid', wrongAnswers);
+      return;
+    }
+    
+    console.log('[QuestCompletionModal] Getting AI advice for wrongAnswers:', wrongAnswers);
+
+    setLoadingAdvice(true);
+    setAiAdviceError(null);
+    setAiAdvice(null);
+
+    try {
+      // Map wrongAnswers to get question text
+      const failedQuestions = wrongAnswers.map((wrong, index) => {
+        const questionText = wrong.lesson?.questionKey 
+          ? (wrong.lesson.questionKey.startsWith('quests.') ? t(wrong.lesson.questionKey) : wrong.lesson.questionKey)
+          : wrong.lesson?.question || `Question ${index + 1}`;
+        return questionText;
+      });
+
+      // Construct prompt as specified
+      const prompt = language === 'tr'
+        ? `Kullanıcı şu sorularda hata yaptı: ${failedQuestions.join(', ')}. 2-3 cümle ile cesaret verici çalışma tavsiyesi ver ve hangi konuları gözden geçirmesi gerektiğini kısaca açıkla.`
+        : `The user failed these questions: ${failedQuestions.join(', ')}. Provide 2-3 sentences of encouraging study advice and explain briefly what topics they should review.`;
+
+      const context = {
+        questId: quest?.id,
+        questName: quest?.nameKey || quest?.name,
+        wrongAnswersCount: wrongAnswers.length,
+        failedQuestions: failedQuestions
+      };
+
+      const response = await aiService.explainConcept(
+        prompt,
+        context,
+        quest?.id,
+        language,
+        [],
+        'explain'
+      );
+
+      if (response.success && response.response) {
+        setAiAdvice(response.response);
+      } else {
+        throw new Error('No response from AI service');
+      }
+    } catch (error) {
+      console.error('[QuestCompletionModal] AI advice error:', error);
+      setAiAdviceError(error.message || trans.aiAdviceError);
+    } finally {
+      setLoadingAdvice(false);
     }
   };
 
@@ -275,6 +351,59 @@ const QuestCompletionModal = ({ quest, onClose, onComplete, onPageChange, reward
                   <div className="text-white font-semibold">
                     {t(quest?.nameKey || quest?.name) || trans.successTitle}
                   </div>
+                </div>
+              )}
+
+              {/* AI Study Coach Section - Only show on failure */}
+              {isFailure && Array.isArray(wrongAnswers) && wrongAnswers.length > 0 && (
+                <div className="space-y-3">
+                  {!aiAdvice && !loadingAdvice && !aiAdviceError && (
+                    <Button
+                      onClick={handleGetAIAdvice}
+                      className="w-full cursor-pointer bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 flex items-center justify-center gap-2"
+                    >
+                      <TbRobot className="w-5 h-5" />
+                      {trans.btnGetAiTips}
+                    </Button>
+                  )}
+
+                  {loadingAdvice && (
+                    <div className="bg-white/5 rounded-xl p-4 border border-white/10 flex items-center justify-center gap-3">
+                      <TbLoader className="w-5 h-5 text-indigo-400 animate-spin" />
+                      <span className="text-slate-300 text-sm">{trans.aiAdviceLoading}</span>
+                    </div>
+                  )}
+
+                  {aiAdviceError && (
+                    <div className="bg-red-500/10 rounded-xl p-4 border border-red-500/20">
+                      <p className="text-red-300 text-sm">{aiAdviceError}</p>
+                      <Button
+                        onClick={handleGetAIAdvice}
+                        variant="outline"
+                        className="mt-2 w-full cursor-pointer border-red-500/30 text-red-300 hover:bg-red-500/10"
+                      >
+                        {language === 'tr' ? 'Tekrar Dene' : 'Try Again'}
+                      </Button>
+                    </div>
+                  )}
+
+                  {aiAdvice && (
+                    <div className="bg-gradient-to-br from-indigo-500/10 to-indigo-600/10 rounded-xl p-5 border border-indigo-500/20 animate-fade-in">
+                      <div className="flex items-start gap-3">
+                        <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-full flex items-center justify-center flex-shrink-0">
+                          <TbRobot className="w-5 h-5 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-white font-semibold mb-2">
+                            {language === 'tr' ? 'Huawei AI Eğitim Koçu Tavsiyesi' : 'Huawei AI Coach Advice'}
+                          </h3>
+                          <p className="text-slate-300 text-sm leading-relaxed whitespace-pre-wrap">
+                            {aiAdvice}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 

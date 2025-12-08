@@ -5,7 +5,7 @@ class QuestApiService {
     this.timeout = 30000; // 30 seconds
   }
 
-  async completeQuest(userAddress, questId, answers, isDemoMode = false) {
+  async completeQuest(userAddress, questId, answers, isDemoMode = false, mistakeCount = 0) {
     try {
       const response = await fetch(`${this.baseUrl}/complete-quest`, {
         method: 'POST',
@@ -16,7 +16,8 @@ class QuestApiService {
           userAddress: isDemoMode ? null : userAddress,
           questId,
           answers,
-          isDemoMode
+          isDemoMode,
+          mistakeCount: mistakeCount || 0
         }),
         signal: AbortSignal.timeout(this.timeout)
       });

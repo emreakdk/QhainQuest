@@ -1,4 +1,5 @@
 import { useContext, useState, useEffect, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { WalletContext } from '../../context/WalletContext';
 import { useToken } from '../../context/TokenContext';
 import { useBalance } from '../../context/BalanceContext';
@@ -27,6 +28,8 @@ import {
 } from 'react-icons/tb';
 
 const Header = ({ currentPage, onPageChange }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { publicKey, setPublicKey, isDemoMode, exitDemoMode, enterDemoMode, setIsDemoMode } = useContext(WalletContext);
   const { tokenData } = useToken(); // Get centralized token data
   const { claimableBalance, totalEarned } = useBalance(); // Get global balances
@@ -185,15 +188,18 @@ const Header = ({ currentPage, onPageChange }) => {
           {/* Logo - Clickable to return home (landing page) */}
           <button
             onClick={() => {
-              // Disconnect wallet and exit demo mode to show HeroSection (landing page)
-              setPublicKey('');
-              setIsDemoMode(false);
               // Clear saved page to ensure landing page is shown
               localStorage.removeItem('chainquest-current-page');
-              // Clear URL params
-              const url = new URL(window.location);
-              url.searchParams.delete('page');
-              window.history.pushState({}, '', url);
+              // If wallet is connected, disconnect to show HeroSection (landing page)
+              if (publicKey) {
+                setPublicKey('');
+              }
+              if (isDemoMode) {
+                setIsDemoMode(false);
+              }
+              // Navigate to root without page param to show HeroSection (landing page)
+              // This works for all routes including article routes
+              navigate('/', { replace: true });
             }}
             className="flex items-center space-x-2 flex-shrink-0 hover:opacity-80 transition-opacity cursor-pointer"
             aria-label="Return to home"

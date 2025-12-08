@@ -19,7 +19,7 @@ class AIService {
     
     // Store as instance property for use in methods
     this.API_BASE_URL = API_BASE_URL;
-    this.timeout = 30000; // 30 seconds
+    this.timeout = 120000;
     
     // Log for debugging
     if (import.meta.env.DEV) {
@@ -39,6 +39,18 @@ class AIService {
     // Ensure no double slashes by normalizing the base URL
     const base = this.API_BASE_URL ? this.API_BASE_URL.replace(/\/+$/, '') : '';
     return `${base}/api/ai-assistant`;
+  }
+
+  /**
+   * Build the full API URL for summarize endpoint
+   * Always uses exactly "/api/summarize" path (no duplicate /api segments)
+   * Uses relative path to work on both localhost and production (same origin)
+   * @returns {string} Full URL to the summarize endpoint
+   */
+  getSummarizeApiUrl() {
+    // Use relative path - works on both localhost (dev server) and production (same origin)
+    // This avoids CORS issues and 404 errors from targeting production URL on localhost
+    return '/api/summarize';
   }
 
   /**
@@ -444,6 +456,107 @@ class AIService {
       }
       
       throw new Error(error.message || 'Failed to analyze progress. Please try again.');
+    }
+  }
+
+  /**
+   * Summarize an article using AI
+   * 
+   * @param {string} title - Article title
+   * @param {string} summary - Article summary/description
+   * @param {array} tags - Article tags
+   * @param {string} language - Language code ('en' or 'tr')
+   * @returns {Promise<object>} AI summary response
+   */
+  async summarizeArticle(title, summary, tags = [], language = 'tr') {
+    // Always call the API endpoint - no mock responses
+    try {
+      const response = await fetch(this.getSummarizeApiUrl(), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+          summary,
+          tags,
+          language: language || 'tr'
+        }),
+        signal: AbortSignal.timeout(this.timeout)
+      });
+
+      // Check if response is OK before parsing
+      if (!response.ok) {
+        // Try to parse error response, but handle empty body
+        let errorData;
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          try {
+            const text = await response.text();
+            errorData = text ? JSON.parse(text) : { error: `HTTP ${response.status}: ${response.statusText}` };
+          } catch (parseError) {
+            errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
+          }
+        } else {
+          errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
+        }
+        throw new Error(errorData.error || errorData.message || `HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      // Safely parse JSON response
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Invalid response format. Expected JSON.');
+      }
+
+      const text = await response.text();
+      if (!text || text.trim() === '') {
+        throw new Error('Empty response from server.');
+      }
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (parseError) {
+        console.error('[AI Service] JSON parse error:', parseError, 'Response text:', text);
+        throw new Error('Invalid JSON response from server.');
+      }
+
+      // Check for error in response
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to summarize article');
+      }
+
+      // Return response with mode field
+      return {
+        success: true,
+        summary: data.summary,
+        mode: data.mode || 'fallback', // 'huawei' or 'fallback'
+      };
+
+    } catch (error) {
+      console.error('[AI Service] Summarize error:', error);
+      
+      // Handle network/CORS errors with clear user-facing messages
+      if (error.message && (
+        error.message.includes('Failed to fetch') ||
+        error.message.includes('NetworkError') ||
+        error.message.includes('CORS') ||
+        error.message.includes('Network request failed') ||
+        error.message.includes('Missing Allow Origin')
+      )) {
+        throw new Error('Network error: Unable to connect to the AI service. This may be a CORS issue or the service is unavailable. Please check your connection and try again.');
+      }
+      
+      if (error instanceof Error && error.message) {
+        throw error;
+      }
+      
+      throw new Error(error.message || 'Failed to summarize article. Please try again.');
     }
   }
 }

@@ -75,13 +75,14 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { userAddress, questId, answers, isDemoMode } = req.body;
+    const { userAddress, questId, answers, isDemoMode, mistakeCount } = req.body;
 
     console.log('--- VALIDATION DIAGNOSTIC ---');
     console.log('userAddress:', userAddress, 'Type:', typeof userAddress);
     console.log('questId:', questId, 'Type:', typeof questId);
     console.log('answers:', answers, 'Type:', typeof answers);
     console.log('isDemoMode:', isDemoMode, 'Type:', typeof isDemoMode);
+    console.log('mistakeCount:', mistakeCount, 'Type:', typeof mistakeCount);
     console.log('answers is Array:', Array.isArray(answers));
     
     if (!questId || !answers) {
@@ -168,12 +169,16 @@ export default async function handler(req, res) {
       completedQuests.add(completionKey);
     }
 
+    // Log mistakeCount for security audit
+    console.log(`[${requestId}] Quest completed - mistakeCount: ${mistakeCount || 0}, userAddress: ${userAddress || 'demo'}, questId: ${questId}`);
+    
     return res.status(200).json({
       success: true,
       message: 'Quest completed successfully!',
       data: {
         questId,
         rewardAmount: quest.rewardAmount,
+        mistakeCount: mistakeCount || 0,
         completedAt: new Date().toISOString()
       }
     });
