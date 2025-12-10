@@ -2,9 +2,13 @@
   "name": "chainquest-api",
   "version": "1.0.0",
   "description": "ChainQuest API for secure quest completion and token distribution",
-  "main": "complete-quest.js",
+  "main": "server.js",
+  "type": "module",
   "dependencies": {
-    "stellar-sdk": "^11.2.2"
+    "stellar-sdk": "^11.2.2",
+    "express": "^4.18.2",
+    "node-fetch": "^2.7.0",
+    "dotenv": "^16.3.1"
   },
   "engines": {
     "node": ">=18.0.0"

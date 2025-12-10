@@ -1,5 +1,8 @@
+// ✅ Load environment variables first (before any other imports that might need them)
+import dotenv from 'dotenv';
+dotenv.config();
 
-const StellarSdk = require('stellar-sdk');
+import StellarSdk from 'stellar-sdk';
 
 let server, Network, Keypair, Asset, Operation, TransactionBuilder;
 
@@ -24,6 +27,14 @@ const TOKEN_CODE = process.env.TOKEN_CODE || 'CQT';
 const TOKEN_ISSUER = process.env.TOKEN_ISSUER_PUBLIC_KEY;
 const DISTRIBUTOR_SECRET_KEY = process.env.DISTRIBUTOR_SECRET_KEY;
 const NETWORK_PASSPHRASE = 'Test SDF Network ; September 2015';
+
+// Debug: Log environment variable status (only in development)
+if (process.env.NODE_ENV !== 'production') {
+  console.log('[claim-tokens] Environment variables loaded:');
+  console.log(`  TOKEN_CODE: ${TOKEN_CODE}`);
+  console.log(`  TOKEN_ISSUER: ${TOKEN_ISSUER ? '✅ Set' : '❌ Missing'}`);
+  console.log(`  DISTRIBUTOR_SECRET_KEY: ${DISTRIBUTOR_SECRET_KEY ? '✅ Set' : '❌ Missing'}`);
+}
 
 try {
   if (Network && typeof Network.use === 'function') {
@@ -102,15 +113,21 @@ export default async function handler(req, res) {
       });
     }
 
+    console.log(`[${requestId}] Calling performTokenPayment for ${userAddress}, amount: ${claimAmount}`);
+    
     const paymentResult = await performTokenPayment(userAddress, claimAmount);
 
     if (!paymentResult.success) {
+      console.error(`[${requestId}] Token payment failed:`, paymentResult.error);
       return res.status(500).json({
         success: false,
         error: 'Token payment failed.',
-        details: paymentResult.error
+        details: paymentResult.error,
+        requestId
       });
     }
+
+    console.log(`[${requestId}] ✅ Token payment successful. Transaction hash: ${paymentResult.transactionHash}`);
 
     return res.status(200).json({
       success: true,
@@ -144,19 +161,57 @@ async function performTokenPayment(userAddress, amount) {
     console.log('Claim Amount:', amount);
     console.log('Token Code:', TOKEN_CODE);
     console.log('Token Issuer:', TOKEN_ISSUER);
+    console.log('Distributor Secret Key:', DISTRIBUTOR_SECRET_KEY ? '✅ Set' : '❌ Missing');
+
+    // Validate environment variables
+    if (!TOKEN_ISSUER || !DISTRIBUTOR_SECRET_KEY) {
+      const errorMsg = 'Token configuration missing. TOKEN_ISSUER or DISTRIBUTOR_SECRET_KEY not set.';
+      console.error('❌', errorMsg);
+      return {
+        success: false,
+        error: errorMsg
+      };
+    }
 
     if (!Asset || !Keypair || !Operation || !TransactionBuilder) {
-      throw new Error('Stellar SDK components not properly initialized');
+      const errorMsg = 'Stellar SDK components not properly initialized';
+      console.error('❌', errorMsg);
+      return {
+        success: false,
+        error: errorMsg
+      };
     }
 
     const customAsset = new Asset(TOKEN_CODE, TOKEN_ISSUER);
 
-    const distributorKeypair = Keypair.fromSecret(DISTRIBUTOR_SECRET_KEY);
-    const distributorPublicKey = distributorKeypair.publicKey();
-    const distributorAccount = await server.loadAccount(distributorPublicKey);
+    let distributorKeypair;
+    try {
+      distributorKeypair = Keypair.fromSecret(DISTRIBUTOR_SECRET_KEY);
+    } catch (keyError) {
+      const errorMsg = `Invalid distributor secret key: ${keyError.message}`;
+      console.error('❌', errorMsg);
+      return {
+        success: false,
+        error: errorMsg
+      };
+    }
 
+    const distributorPublicKey = distributorKeypair.publicKey();
     console.log('Distributor Account:', distributorPublicKey);
     console.log('User Destination:', userAddress);
+
+    let distributorAccount;
+    try {
+      distributorAccount = await server.loadAccount(distributorPublicKey);
+      console.log('✅ Distributor account loaded successfully');
+    } catch (accountError) {
+      const errorMsg = `Failed to load distributor account: ${accountError.message}`;
+      console.error('❌', errorMsg);
+      return {
+        success: false,
+        error: errorMsg
+      };
+    }
 
     const paymentOperation = Operation.payment({
       destination: userAddress,
@@ -172,11 +227,13 @@ async function performTokenPayment(userAddress, amount) {
       .setTimeout(30) // 30 seconds timeout
       .build();
 
+    console.log('Signing transaction...');
     transaction.sign(distributorKeypair);
 
+    console.log('Submitting transaction to Stellar network...');
     const result = await server.submitTransaction(transaction);
 
-    console.log('Transaction successful:', result.hash);
+    console.log('✅ Transaction successful! Hash:', result.hash);
 
     return {
       success: true,
@@ -184,19 +241,34 @@ async function performTokenPayment(userAddress, amount) {
     };
 
   } catch (error) {
-    console.error('Token payment error:', error);
+    console.error('❌ Token payment error:', error);
+    console.error('Error stack:', error.stack);
     
-    if (error.response && error.response.data && error.response.data.extras) {
-      console.error('Stellar Transaction Error:', error.response.data.extras.result_codes);
-      return {
-        success: false,
-        error: `Stellar transaction failed: ${JSON.stringify(error.response.data.extras.result_codes)}`
-      };
+    if (error.response && error.response.data) {
+      console.error('Stellar Horizon Error Response:', error.response.data);
+      
+      if (error.response.data.extras && error.response.data.extras.result_codes) {
+        const resultCodes = error.response.data.extras.result_codes;
+        console.error('Stellar Transaction Error Codes:', resultCodes);
+        
+        let errorMsg = 'Stellar transaction failed: ';
+        if (resultCodes.transaction) {
+          errorMsg += `Transaction: ${resultCodes.transaction}. `;
+        }
+        if (resultCodes.operations && resultCodes.operations.length > 0) {
+          errorMsg += `Operations: ${resultCodes.operations.join(', ')}.`;
+        }
+        
+        return {
+          success: false,
+          error: errorMsg
+        };
+      }
     }
     
     return {
       success: false,
-      error: error.message
+      error: error.message || 'Unknown error during token payment'
     };
   }
 }
